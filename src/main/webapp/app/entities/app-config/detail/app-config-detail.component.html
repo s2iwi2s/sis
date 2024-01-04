@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (appConfig) {
+      <div>
+        <h2 data-cy="appConfigDetailsHeading"><span jhiTranslate="schInfoSysApp.appConfig.detail.title">App Config</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ appConfig.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.appConfig.code">Code</span></dt>
+          <dd>
+            <span>{{ appConfig.code }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.appConfig.value">Value</span></dt>
+          <dd>
+            <span>{{ appConfig.value }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.appConfig.description">Description</span></dt>
+          <dd>
+            <span>{{ appConfig.description }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.appConfig.json">Json</span></dt>
+          <dd>
+            <span>{{ appConfig.json }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.appConfig.priority">Priority</span></dt>
+          <dd>
+            <span>{{ appConfig.priority }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.appConfig.user">User</span></dt>
+          <dd>
+            <span>{{ appConfig.user?.id }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/app-config', appConfig.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,143 @@
+// jdbc:postgresql://ubuntu.vm:5432/SchInfoSys?ssl=require
+// jdbc:postgresql://pg-db-s2iwi2s-a12a.a.aivencloud.com:14536/defaultdb?ssl=require&user=avnadmin
+
+application {
+  config {
+    baseName SchInfoSys
+    applicationType monolith,
+    packageName com.sis
+    authenticationType jwt
+    prodDatabaseType postgresql
+    devDatabaseType postgresql
+    buildTool maven
+    clientFramework angular
+  }
+  entities *
+}
+
+entity Org{
+    name String,
+    logo String,
+    address String
+}
+
+entity Instructor {
+	firstName String,
+	middleName String,
+	lastName String,
+	email String,
+	phoneNumber String,
+	hireDate Instant,
+	salary Long,
+	commissionPct Long,
+}
+
+entity Student {
+    lrn String,
+    firstName String maxlength(50),
+    middleName String maxlength(50),
+    lastName String maxlength(50),
+    extName String maxlength(10),
+    birthDate Instant,
+    birthPlace String maxlength(50),
+    contactNo String maxlength(12),
+    address1 String maxlength(200),
+    address2 String maxlength(200),
+    city String maxlength(50),
+    zipCode String maxlength(10),
+    country String maxlength(50),
+    nationality String maxlength(100),
+    motherTongue String maxlength(50),
+    religion String maxlength(100),
+    fathersLastName String maxlength(50),
+    fathersMiddleName String maxlength(50),
+    fathersFirstName String maxlength(50),
+    fathersExtName String maxlength(50),
+    fathersOccupation String maxlength(50),
+    fathersContacts String maxlength(50),
+    mothersLastName String maxlength(50),
+    mothersMiddleName String maxlength(50),   
+    mothersFirstName String maxlength(50),
+    mothersOccupation String maxlength(50),
+    mothersContacts String maxlength(50),
+    guardianFullName String maxlength(50), 
+    guardianContacts String maxlength(50)
+}
+
+entity Course {
+	gradelevel String maxlength(50),
+	subject String maxlength(50),
+	hoursPerQuarter Long,
+	courseDescription TextBlob,
+	courseObjectives TextBlob
+}
+
+entity AppConfig {
+	code String,
+    value String,
+ 	description String,
+    json TextBlob,
+	priority Integer
+}
+
+entity CurriculumMap {
+	quarterNo Integer,
+	weekNo Integer,
+	topic String,
+	contentStandards String,
+	performanceStandards String
+}
+
+entity LearningCompetency {
+	seqNo Integer,
+	competencyCode String maxlength(50),
+	description String
+}
+
+entity Strategies {
+	name String,
+	description String
+}
+
+entity Assessment {
+	name String,
+	instruction String,
+	markScheme TextBlob
+}
+
+entity Resources {
+	fileName String maxlength(50),
+	fileNameOnServer String,
+    document AnyBlob
+}
+
+relationship OneToOne {
+  Org{currSchYr} to AppConfig,
+  Student{gender} to AppConfig,
+  Instructor{gender} to AppConfig,
+  Course{schYr} to AppConfig,
+}
+
+relationship ManyToMany {
+    Course{instructor} to Instructor{course}
+    Course{student} to Student{course}
+}
+
+relationship ManyToOne {
+    AppConfig{user} to User with builtInEntity
+}
+
+relationship OneToMany {
+	Course{curriculumMap} to CurriculumMap
+	CurriculumMap{learningCompetency} to LearningCompetency
+    LearningCompetency{strategies} to Strategies
+    LearningCompetency{assessment} to Assessment
+	Strategies{resources} to Resources
+	Assessment{resources} to Resources
+}
+
+// paginate Org, Instructor, Student, Course, AppConfig, CurriculumMap, LearningCompetency, Strategies, Assessment, Resources with pagination
+// dto * with mapstruct
+// service all with serviceImpl
+
+use mapstruct, serviceImpl, pagination for *

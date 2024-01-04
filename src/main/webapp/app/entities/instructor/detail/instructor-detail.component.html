@@ -1,0 +1,70 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (instructor) {
+      <div>
+        <h2 data-cy="instructorDetailsHeading"><span jhiTranslate="schInfoSysApp.instructor.detail.title">Instructor</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ instructor.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.firstName">First Name</span></dt>
+          <dd>
+            <span>{{ instructor.firstName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.middleName">Middle Name</span></dt>
+          <dd>
+            <span>{{ instructor.middleName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.lastName">Last Name</span></dt>
+          <dd>
+            <span>{{ instructor.lastName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.email">Email</span></dt>
+          <dd>
+            <span>{{ instructor.email }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.phoneNumber">Phone Number</span></dt>
+          <dd>
+            <span>{{ instructor.phoneNumber }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.hireDate">Hire Date</span></dt>
+          <dd>
+            <span>{{ instructor.hireDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.salary">Salary</span></dt>
+          <dd>
+            <span>{{ instructor.salary }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.commissionPct">Commission Pct</span></dt>
+          <dd>
+            <span>{{ instructor.commissionPct }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.gender">Gender</span></dt>
+          <dd>
+            @if (instructor.gender) {
+              <div>
+                <a [routerLink]="['/app-config', instructor.gender.id, 'view']">{{ instructor.gender.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/instructor', instructor.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

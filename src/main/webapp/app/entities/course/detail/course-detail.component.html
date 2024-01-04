@@ -1,0 +1,76 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (course) {
+      <div>
+        <h2 data-cy="courseDetailsHeading"><span jhiTranslate="schInfoSysApp.course.detail.title">Course</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ course.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.gradelevel">Gradelevel</span></dt>
+          <dd>
+            <span>{{ course.gradelevel }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.subject">Subject</span></dt>
+          <dd>
+            <span>{{ course.subject }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.hoursPerQuarter">Hours Per Quarter</span></dt>
+          <dd>
+            <span>{{ course.hoursPerQuarter }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.courseDescription">Course Description</span></dt>
+          <dd>
+            <span>{{ course.courseDescription }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.courseObjectives">Course Objectives</span></dt>
+          <dd>
+            <span>{{ course.courseObjectives }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.schYr">Sch Yr</span></dt>
+          <dd>
+            @if (course.schYr) {
+              <div>
+                <a [routerLink]="['/app-config', course.schYr.id, 'view']">{{ course.schYr.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.instructor">Instructor</span></dt>
+          <dd>
+            @for (instructor of course.instructors; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/instructor', instructor.id, 'view']">{{ instructor.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.student">Student</span></dt>
+          <dd>
+            @for (student of course.students; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/student', student.id, 'view']">{{ student.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/course', course.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

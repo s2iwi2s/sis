@@ -1,0 +1,139 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-resources-heading" data-cy="ResourcesCreateUpdateHeading" jhiTranslate="schInfoSysApp.resources.home.createOrEditLabel">
+        Create or edit a Resources
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.resources.fileName" for="field_fileName">File Name</label>
+          <input type="text" class="form-control" name="fileName" id="field_fileName" data-cy="fileName" formControlName="fileName" />
+          @if (editForm.get('fileName')!.invalid && (editForm.get('fileName')!.dirty || editForm.get('fileName')!.touched)) {
+            <div>
+              @if (editForm.get('fileName')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 50 }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.resources.fileNameOnServer" for="field_fileNameOnServer"
+            >File Name On Server</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="fileNameOnServer"
+            id="field_fileNameOnServer"
+            data-cy="fileNameOnServer"
+            formControlName="fileNameOnServer"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.resources.document" for="field_document">Document</label>
+          <div>
+            @if (editForm.get('document')!.value) {
+              <div class="form-text text-danger clearfix">
+                <a
+                  class="pull-start"
+                  (click)="openFile(editForm.get('document')!.value!, editForm.get('documentContentType')!.value!)"
+                  jhiTranslate="entity.action.open"
+                  >Open</a
+                ><br />
+                <span class="pull-start"
+                  >{{ editForm.get('documentContentType')!.value }}, {{ byteSize(editForm.get('document')!.value!) }}</span
+                >
+                <button
+                  type="button"
+                  (click)="editForm.patchValue({ document: undefined, documentContentType: undefined })"
+                  class="btn btn-secondary btn-xs pull-end"
+                >
+                  <fa-icon icon="times"></fa-icon>
+                </button>
+              </div>
+            }
+            <input
+              type="file"
+              id="file_document"
+              data-cy="document"
+              (change)="setFileData($event, 'document', false)"
+              jhiTranslate="entity.action.addblob"
+            />
+          </div>
+          <input type="hidden" class="form-control" name="document" id="field_document" data-cy="document" formControlName="document" />
+          <input
+            type="hidden"
+            class="form-control"
+            name="documentContentType"
+            id="field_documentContentType"
+            formControlName="documentContentType"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.resources.strategies" for="field_strategies">Strategies</label>
+          <select
+            class="form-control"
+            id="field_strategies"
+            data-cy="strategies"
+            name="strategies"
+            formControlName="strategies"
+            [compareWith]="compareStrategies"
+          >
+            <option [ngValue]="null"></option>
+            @for (strategiesOption of strategiesSharedCollection; track $index) {
+              <option [ngValue]="strategiesOption">{{ strategiesOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.resources.assessment" for="field_assessment">Assessment</label>
+          <select
+            class="form-control"
+            id="field_assessment"
+            data-cy="assessment"
+            name="assessment"
+            formControlName="assessment"
+            [compareWith]="compareAssessment"
+          >
+            <option [ngValue]="null"></option>
+            @for (assessmentOption of assessmentsSharedCollection; track $index) {
+              <option [ngValue]="assessmentOption">{{ assessmentOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

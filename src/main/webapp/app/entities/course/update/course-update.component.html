@@ -1,0 +1,162 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-course-heading" data-cy="CourseCreateUpdateHeading" jhiTranslate="schInfoSysApp.course.home.createOrEditLabel">
+        Create or edit a Course
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.course.gradelevel" for="field_gradelevel">Gradelevel</label>
+          <input
+            type="text"
+            class="form-control"
+            name="gradelevel"
+            id="field_gradelevel"
+            data-cy="gradelevel"
+            formControlName="gradelevel"
+          />
+          @if (editForm.get('gradelevel')!.invalid && (editForm.get('gradelevel')!.dirty || editForm.get('gradelevel')!.touched)) {
+            <div>
+              @if (editForm.get('gradelevel')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 50 }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.course.subject" for="field_subject">Subject</label>
+          <input type="text" class="form-control" name="subject" id="field_subject" data-cy="subject" formControlName="subject" />
+          @if (editForm.get('subject')!.invalid && (editForm.get('subject')!.dirty || editForm.get('subject')!.touched)) {
+            <div>
+              @if (editForm.get('subject')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 50 }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.course.hoursPerQuarter" for="field_hoursPerQuarter"
+            >Hours Per Quarter</label
+          >
+          <input
+            type="number"
+            class="form-control"
+            name="hoursPerQuarter"
+            id="field_hoursPerQuarter"
+            data-cy="hoursPerQuarter"
+            formControlName="hoursPerQuarter"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.course.courseDescription" for="field_courseDescription"
+            >Course Description</label
+          >
+          <textarea
+            class="form-control"
+            name="courseDescription"
+            id="field_courseDescription"
+            data-cy="courseDescription"
+            formControlName="courseDescription"
+          ></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.course.courseObjectives" for="field_courseObjectives"
+            >Course Objectives</label
+          >
+          <textarea
+            class="form-control"
+            name="courseObjectives"
+            id="field_courseObjectives"
+            data-cy="courseObjectives"
+            formControlName="courseObjectives"
+          ></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.course.schYr" for="field_schYr">Sch Yr</label>
+          <select
+            class="form-control"
+            id="field_schYr"
+            data-cy="schYr"
+            name="schYr"
+            formControlName="schYr"
+            [compareWith]="compareAppConfig"
+          >
+            <option [ngValue]="null"></option>
+            @for (appConfigOption of schYrsCollection; track $index) {
+              <option [ngValue]="appConfigOption">{{ appConfigOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label jhiTranslate="schInfoSysApp.course.instructor" for="field_instructors">Instructor</label>
+          <select
+            class="form-control"
+            id="field_instructors"
+            data-cy="instructor"
+            multiple
+            name="instructors"
+            formControlName="instructors"
+            [compareWith]="compareInstructor"
+          >
+            @for (instructorOption of instructorsSharedCollection; track $index) {
+              <option [ngValue]="instructorOption">{{ instructorOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label jhiTranslate="schInfoSysApp.course.student" for="field_students">Student</label>
+          <select
+            class="form-control"
+            id="field_students"
+            data-cy="student"
+            multiple
+            name="students"
+            formControlName="students"
+            [compareWith]="compareStudent"
+          >
+            @for (studentOption of studentsSharedCollection; track $index) {
+              <option [ngValue]="studentOption">{{ studentOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

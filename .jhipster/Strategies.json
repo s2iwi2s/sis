@@ -1,0 +1,30 @@
+{
+  "annotations": {
+    "changelogDate": "20240104092214"
+  },
+  "applications": ["SchInfoSys"],
+  "dto": "mapstruct",
+  "entityTableName": "strategies",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    }
+  ],
+  "name": "Strategies",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "resources",
+      "relationshipName": "resources",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

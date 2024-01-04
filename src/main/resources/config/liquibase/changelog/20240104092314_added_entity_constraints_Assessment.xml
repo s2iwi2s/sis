@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!--
+        Added the constraints for entity Assessment.
+    -->
+    <changeSet id="20240104092314-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="learning_competency_id"
+                                 baseTableName="assessment"
+                                 constraintName="fk_assessment__learning_competency_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="learning_competency"
+                                 />
+    </changeSet>
+</databaseChangeLog>

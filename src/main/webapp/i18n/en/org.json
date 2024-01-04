@@ -1,0 +1,27 @@
+{
+  "schInfoSysApp": {
+    "org": {
+      "home": {
+        "title": "Orgs",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Org",
+        "createOrEditLabel": "Create or edit a Org",
+        "notFound": "No Orgs found"
+      },
+      "created": "A new Org is created with identifier {{ param }}",
+      "updated": "A Org is updated with identifier {{ param }}",
+      "deleted": "A Org is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Org {{ id }}?"
+      },
+      "detail": {
+        "title": "Org"
+      },
+      "id": "ID",
+      "name": "Name",
+      "logo": "Logo",
+      "address": "Address",
+      "currSchYr": "Curr Sch Yr"
+    }
+  }
+}

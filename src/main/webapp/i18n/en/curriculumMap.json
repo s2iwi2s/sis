@@ -1,0 +1,30 @@
+{
+  "schInfoSysApp": {
+    "curriculumMap": {
+      "home": {
+        "title": "Curriculum Maps",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Curriculum Map",
+        "createOrEditLabel": "Create or edit a Curriculum Map",
+        "notFound": "No Curriculum Maps found"
+      },
+      "created": "A new Curriculum Map is created with identifier {{ param }}",
+      "updated": "A Curriculum Map is updated with identifier {{ param }}",
+      "deleted": "A Curriculum Map is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Curriculum Map {{ id }}?"
+      },
+      "detail": {
+        "title": "Curriculum Map"
+      },
+      "id": "ID",
+      "quarterNo": "Quarter No",
+      "weekNo": "Week No",
+      "topic": "Topic",
+      "contentStandards": "Content Standards",
+      "performanceStandards": "Performance Standards",
+      "learningCompetency": "Learning Competency",
+      "course": "Course"
+    }
+  }
+}
