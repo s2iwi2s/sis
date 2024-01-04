@@ -8,11 +8,18 @@
     -->
     <changeSet id="20240104091914-2" author="jhipster">
 
-        <addForeignKeyConstraint baseColumnNames="user_id"
+        <addForeignKeyConstraint baseColumnNames="created_by"
                                  baseTableName="app_config"
-                                 constraintName="fk_app_config__user_id"
+                                 constraintName="fk_app_config__created_by"
                                  referencedColumnNames="id"
                                  referencedTableName="jhi_user"
                                  />
+
+        <addForeignKeyConstraint baseColumnNames="last_modified_by"
+                                 baseTableName="app_config"
+                                 constraintName="fk_app_config__last_modified_by"
+                                 referencedColumnNames="id"
+                                 referencedTableName="jhi_user"
+        />
     </changeSet>
 </databaseChangeLog>

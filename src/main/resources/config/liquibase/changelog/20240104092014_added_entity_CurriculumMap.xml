@@ -11,7 +11,7 @@
     -->
     <changeSet id="20240104092014-1" author="jhipster">
         <createTable tableName="curriculum_map">
-            <column name="id" type="bigint">
+            <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="quarter_no" type="integer">

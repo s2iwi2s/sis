@@ -11,7 +11,7 @@
     -->
     <changeSet id="20240104092114-1" author="jhipster">
         <createTable tableName="learning_competency">
-            <column name="id" type="bigint">
+            <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="seq_no" type="integer">

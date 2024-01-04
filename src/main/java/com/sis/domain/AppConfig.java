@@ -13,13 +13,12 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "app_config")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class AppConfig implements Serializable {
+public class AppConfig extends AbstractAuditingEntity<Long> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -38,9 +37,6 @@ public class AppConfig implements Serializable {
 
     @Column(name = "priority")
     private Integer priority;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
 
     @JsonIgnoreProperties(value = { "currSchYr" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "currSchYr")
@@ -136,19 +132,6 @@ public class AppConfig implements Serializable {
 
     public void setPriority(Integer priority) {
         this.priority = priority;
-    }
-
-    public User getUser() {
-        return this.user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public AppConfig user(User user) {
-        this.setUser(user);
-        return this;
     }
 
     public Org getOrg() {

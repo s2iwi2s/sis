@@ -10,7 +10,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface AppConfigRepository extends JpaRepository<AppConfig, Long> {
-    @Query("select appConfig from AppConfig appConfig where appConfig.user.login = ?#{authentication.name}")
-    List<AppConfig> findByUserIsCurrentUser();
-}
+public interface AppConfigRepository extends JpaRepository<AppConfig, Long> {}
