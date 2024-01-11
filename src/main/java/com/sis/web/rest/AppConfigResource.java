@@ -148,25 +148,6 @@ public class AppConfigResource {
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
         @RequestParam(name = "filter", required = false) String filter
     ) {
-        if ("org-is-null".equals(filter)) {
-            log.debug("REST request to get all AppConfigs where org is null");
-            return new ResponseEntity<>(appConfigService.findAllWhereOrgIsNull(), HttpStatus.OK);
-        }
-
-        if ("instructor-is-null".equals(filter)) {
-            log.debug("REST request to get all AppConfigs where instructor is null");
-            return new ResponseEntity<>(appConfigService.findAllWhereInstructorIsNull(), HttpStatus.OK);
-        }
-
-        if ("student-is-null".equals(filter)) {
-            log.debug("REST request to get all AppConfigs where student is null");
-            return new ResponseEntity<>(appConfigService.findAllWhereStudentIsNull(), HttpStatus.OK);
-        }
-
-        if ("course-is-null".equals(filter)) {
-            log.debug("REST request to get all AppConfigs where course is null");
-            return new ResponseEntity<>(appConfigService.findAllWhereCourseIsNull(), HttpStatus.OK);
-        }
         log.debug("REST request to get a page of AppConfigs");
         Page<AppConfigDTO> page = appConfigService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);

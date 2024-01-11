@@ -29,16 +29,7 @@
             <column name="priority" type="integer">
                 <constraints nullable="true" />
             </column>
-            <column name="created_by" type="bigint">
-                <constraints nullable="true" />
-            </column>
-            <column name="created_date" type="${datetimeType}">
-                <constraints nullable="true" />
-            </column>
-            <column name="last_modified_by" type="bigint">
-                <constraints nullable="true" />
-            </column>
-            <column name="last_modified_date" type="${datetimeType}">
+            <column name="created_by_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->

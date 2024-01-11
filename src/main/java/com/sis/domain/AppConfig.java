@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.springframework.data.annotation.CreatedBy;
 
 /**
  * A AppConfig.
@@ -13,7 +14,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "app_config")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class AppConfig extends AbstractAuditingEntity<Long> implements Serializable {
+public class AppConfig implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -38,21 +39,9 @@ public class AppConfig extends AbstractAuditingEntity<Long> implements Serializa
     @Column(name = "priority")
     private Integer priority;
 
-    @JsonIgnoreProperties(value = { "currSchYr" }, allowSetters = true)
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "currSchYr")
-    private Org org;
-
-    @JsonIgnoreProperties(value = { "gender", "courses" }, allowSetters = true)
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "gender")
-    private Instructor instructor;
-
-    @JsonIgnoreProperties(value = { "gender", "courses" }, allowSetters = true)
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "gender")
-    private Student student;
-
-    @JsonIgnoreProperties(value = { "schYr", "curriculumMaps", "instructors", "students" }, allowSetters = true)
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "schYr")
-    private Course course;
+    @CreatedBy
+    @OneToOne(fetch = FetchType.LAZY)
+    private User createdBy;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -134,80 +123,17 @@ public class AppConfig extends AbstractAuditingEntity<Long> implements Serializa
         this.priority = priority;
     }
 
-    public Org getOrg() {
-        return this.org;
+    public User getCreatedBy() {
+        return createdBy;
     }
 
-    public void setOrg(Org org) {
-        if (this.org != null) {
-            this.org.setCurrSchYr(null);
-        }
-        if (org != null) {
-            org.setCurrSchYr(this);
-        }
-        this.org = org;
-    }
-
-    public AppConfig org(Org org) {
-        this.setOrg(org);
+    public AppConfig createdBy(User createdBy) {
+        this.setCreatedBy(createdBy);
         return this;
     }
 
-    public Instructor getInstructor() {
-        return this.instructor;
-    }
-
-    public void setInstructor(Instructor instructor) {
-        if (this.instructor != null) {
-            this.instructor.setGender(null);
-        }
-        if (instructor != null) {
-            instructor.setGender(this);
-        }
-        this.instructor = instructor;
-    }
-
-    public AppConfig instructor(Instructor instructor) {
-        this.setInstructor(instructor);
-        return this;
-    }
-
-    public Student getStudent() {
-        return this.student;
-    }
-
-    public void setStudent(Student student) {
-        if (this.student != null) {
-            this.student.setGender(null);
-        }
-        if (student != null) {
-            student.setGender(this);
-        }
-        this.student = student;
-    }
-
-    public AppConfig student(Student student) {
-        this.setStudent(student);
-        return this;
-    }
-
-    public Course getCourse() {
-        return this.course;
-    }
-
-    public void setCourse(Course course) {
-        if (this.course != null) {
-            this.course.setSchYr(null);
-        }
-        if (course != null) {
-            course.setSchYr(this);
-        }
-        this.course = course;
-    }
-
-    public AppConfig course(Course course) {
-        this.setCourse(course);
-        return this;
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
