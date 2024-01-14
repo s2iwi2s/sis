@@ -7,7 +7,7 @@ export interface IAssessment {
   instruction?: string | null;
   markScheme?: string | null;
   resources?: Pick<IResources, 'id'>[] | null;
-  learningCompetency?: Pick<ILearningCompetency, 'id'> | null;
+  learningCompetency?: Pick<ILearningCompetency, 'id'|'competencyCode'|'description'> | null;
 }
 
 export type NewAssessment = Omit<IAssessment, 'id'> & { id: null };

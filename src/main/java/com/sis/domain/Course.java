@@ -24,10 +24,10 @@ public class Course implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
-    @Size(max = 50)
-    @Column(name = "gradelevel", length = 50)
-    private String gradelevel;
+    @JsonIgnoreProperties(value = { "user", "org", "instructor", "student", "course" }, allowSetters = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(unique = true)
+    private AppConfig gradelevel;
 
     @Size(max = 50)
     @Column(name = "subject", length = 50)
@@ -89,16 +89,16 @@ public class Course implements Serializable {
         this.id = id;
     }
 
-    public String getGradelevel() {
+    public AppConfig getGradelevel() {
         return this.gradelevel;
     }
 
-    public Course gradelevel(String gradelevel) {
+    public Course gradelevel(AppConfig gradelevel) {
         this.setGradelevel(gradelevel);
         return this;
     }
 
-    public void setGradelevel(String gradelevel) {
+    public void setGradelevel(AppConfig gradelevel) {
         this.gradelevel = gradelevel;
     }
 

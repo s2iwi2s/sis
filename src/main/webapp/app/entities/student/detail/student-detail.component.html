@@ -135,7 +135,7 @@
           <dd>
             @if (student.gender) {
               <div>
-                <a [routerLink]="['/app-config', student.gender.id, 'view']">{{ student.gender.id }}</a>
+                <a [routerLink]="['/app-config', student.gender.id, 'view']">{{ student.gender.description  }}</a>
               </div>
             }
           </dd>

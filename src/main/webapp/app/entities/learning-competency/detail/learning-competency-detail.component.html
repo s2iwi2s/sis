@@ -34,7 +34,7 @@
             @if (learningCompetency.curriculumMap) {
               <div>
                 <a [routerLink]="['/curriculum-map', learningCompetency.curriculumMap.id, 'view']">{{
-                  learningCompetency.curriculumMap.id
+                    '[' + learningCompetency.curriculumMap.quarterNo + '-' + learningCompetency.curriculumMap.weekNo +'] ' + learningCompetency.curriculumMap.topic
                 }}</a>
               </div>
             }

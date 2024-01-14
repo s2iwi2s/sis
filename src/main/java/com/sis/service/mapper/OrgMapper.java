@@ -17,5 +17,6 @@ public interface OrgMapper extends EntityMapper<OrgDTO, Org> {
     @Named("appConfigId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "description", source = "description")
     AppConfigDTO toDtoAppConfigId(AppConfig appConfig);
 }

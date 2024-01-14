@@ -92,17 +92,19 @@
               <td>
                 <a [routerLink]="['/course', course.id, 'view']">{{ course.id }}</a>
               </td>
-              <td>{{ course.gradelevel }}</td>
+              <td>
+                <div *ngIf="course.gradelevel">
+                  <a [routerLink]="['/app-config', course.gradelevel.id, 'view']">{{ course.gradelevel.description }}</a>
+                </div>
+              </td>
               <td>{{ course.subject }}</td>
               <td>{{ course.hoursPerQuarter }}</td>
               <td>{{ course.courseDescription }}</td>
               <td>{{ course.courseObjectives }}</td>
               <td>
-                @if (course.schYr) {
-                  <div>
-                    <a [routerLink]="['/app-config', course.schYr.id, 'view']">{{ course.schYr.id }}</a>
+                  <div *ngIf="course.schYr">
+                    <a [routerLink]="['/app-config', course.schYr.id, 'view']">{{ course.schYr.description }}</a>
                   </div>
-                }
               </td>
               <td class="text-end">
                 <div class="btn-group">

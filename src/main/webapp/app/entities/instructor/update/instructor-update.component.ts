@@ -12,6 +12,7 @@ import { AppConfigService } from 'app/entities/app-config/service/app-config.ser
 import { IInstructor } from '../instructor.model';
 import { InstructorService } from '../service/instructor.service';
 import { InstructorFormService, InstructorFormGroup } from './instructor-form.service';
+import {OPT_GENDER} from "../../../app.constants";
 
 @Component({
   standalone: true,
@@ -89,7 +90,7 @@ export class InstructorUpdateComponent implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     this.appConfigService
-      .query({ filter: 'instructor-is-null' })
+      .query(OPT_GENDER)
       .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
       .pipe(
         map((appConfigs: IAppConfig[]) =>

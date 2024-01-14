@@ -12,6 +12,7 @@ import { AppConfigService } from 'app/entities/app-config/service/app-config.ser
 import { IStudent } from '../student.model';
 import { StudentService } from '../service/student.service';
 import { StudentFormService, StudentFormGroup } from './student-form.service';
+import {OPT_GENDER} from "../../../app.constants";
 
 @Component({
   standalone: true,
@@ -89,7 +90,7 @@ export class StudentUpdateComponent implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     this.appConfigService
-      .query({ filter: 'student-is-null' })
+      .query(OPT_GENDER)
       .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
       .pipe(
         map((appConfigs: IAppConfig[]) =>

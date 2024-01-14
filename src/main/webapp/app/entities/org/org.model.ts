@@ -5,7 +5,7 @@ export interface IOrg {
   name?: string | null;
   logo?: string | null;
   address?: string | null;
-  currSchYr?: Pick<IAppConfig, 'id'> | null;
+  currSchYr?: Pick<IAppConfig, 'id'|'description'> | null;
 }
 
 export type NewOrg = Omit<IOrg, 'id'> & { id: null };

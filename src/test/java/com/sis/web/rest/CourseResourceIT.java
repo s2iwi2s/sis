@@ -40,9 +40,6 @@ import org.springframework.transaction.annotation.Transactional;
 @WithMockUser
 class CourseResourceIT {
 
-    private static final String DEFAULT_GRADELEVEL = "AAAAAAAAAA";
-    private static final String UPDATED_GRADELEVEL = "BBBBBBBBBB";
-
     private static final String DEFAULT_SUBJECT = "AAAAAAAAAA";
     private static final String UPDATED_SUBJECT = "BBBBBBBBBB";
 
@@ -89,7 +86,6 @@ class CourseResourceIT {
      */
     public static Course createEntity(EntityManager em) {
         Course course = new Course()
-            .gradelevel(DEFAULT_GRADELEVEL)
             .subject(DEFAULT_SUBJECT)
             .hoursPerQuarter(DEFAULT_HOURS_PER_QUARTER)
             .courseDescription(DEFAULT_COURSE_DESCRIPTION)
@@ -105,7 +101,6 @@ class CourseResourceIT {
      */
     public static Course createUpdatedEntity(EntityManager em) {
         Course course = new Course()
-            .gradelevel(UPDATED_GRADELEVEL)
             .subject(UPDATED_SUBJECT)
             .hoursPerQuarter(UPDATED_HOURS_PER_QUARTER)
             .courseDescription(UPDATED_COURSE_DESCRIPTION)
@@ -132,7 +127,6 @@ class CourseResourceIT {
         List<Course> courseList = courseRepository.findAll();
         assertThat(courseList).hasSize(databaseSizeBeforeCreate + 1);
         Course testCourse = courseList.get(courseList.size() - 1);
-        assertThat(testCourse.getGradelevel()).isEqualTo(DEFAULT_GRADELEVEL);
         assertThat(testCourse.getSubject()).isEqualTo(DEFAULT_SUBJECT);
         assertThat(testCourse.getHoursPerQuarter()).isEqualTo(DEFAULT_HOURS_PER_QUARTER);
         assertThat(testCourse.getCourseDescription()).isEqualTo(DEFAULT_COURSE_DESCRIPTION);
@@ -170,7 +164,6 @@ class CourseResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(course.getId().intValue())))
-            .andExpect(jsonPath("$.[*].gradelevel").value(hasItem(DEFAULT_GRADELEVEL)))
             .andExpect(jsonPath("$.[*].subject").value(hasItem(DEFAULT_SUBJECT)))
             .andExpect(jsonPath("$.[*].hoursPerQuarter").value(hasItem(DEFAULT_HOURS_PER_QUARTER.intValue())))
             .andExpect(jsonPath("$.[*].courseDescription").value(hasItem(DEFAULT_COURSE_DESCRIPTION.toString())))
@@ -206,7 +199,6 @@ class CourseResourceIT {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(course.getId().intValue()))
-            .andExpect(jsonPath("$.gradelevel").value(DEFAULT_GRADELEVEL))
             .andExpect(jsonPath("$.subject").value(DEFAULT_SUBJECT))
             .andExpect(jsonPath("$.hoursPerQuarter").value(DEFAULT_HOURS_PER_QUARTER.intValue()))
             .andExpect(jsonPath("$.courseDescription").value(DEFAULT_COURSE_DESCRIPTION.toString()))
@@ -233,7 +225,6 @@ class CourseResourceIT {
         // Disconnect from session so that the updates on updatedCourse are not directly saved in db
         em.detach(updatedCourse);
         updatedCourse
-            .gradelevel(UPDATED_GRADELEVEL)
             .subject(UPDATED_SUBJECT)
             .hoursPerQuarter(UPDATED_HOURS_PER_QUARTER)
             .courseDescription(UPDATED_COURSE_DESCRIPTION)
@@ -252,7 +243,6 @@ class CourseResourceIT {
         List<Course> courseList = courseRepository.findAll();
         assertThat(courseList).hasSize(databaseSizeBeforeUpdate);
         Course testCourse = courseList.get(courseList.size() - 1);
-        assertThat(testCourse.getGradelevel()).isEqualTo(UPDATED_GRADELEVEL);
         assertThat(testCourse.getSubject()).isEqualTo(UPDATED_SUBJECT);
         assertThat(testCourse.getHoursPerQuarter()).isEqualTo(UPDATED_HOURS_PER_QUARTER);
         assertThat(testCourse.getCourseDescription()).isEqualTo(UPDATED_COURSE_DESCRIPTION);
@@ -336,7 +326,7 @@ class CourseResourceIT {
         Course partialUpdatedCourse = new Course();
         partialUpdatedCourse.setId(course.getId());
 
-        partialUpdatedCourse.gradelevel(UPDATED_GRADELEVEL).subject(UPDATED_SUBJECT);
+        partialUpdatedCourse.subject(UPDATED_SUBJECT);
 
         restCourseMockMvc
             .perform(
@@ -350,7 +340,6 @@ class CourseResourceIT {
         List<Course> courseList = courseRepository.findAll();
         assertThat(courseList).hasSize(databaseSizeBeforeUpdate);
         Course testCourse = courseList.get(courseList.size() - 1);
-        assertThat(testCourse.getGradelevel()).isEqualTo(UPDATED_GRADELEVEL);
         assertThat(testCourse.getSubject()).isEqualTo(UPDATED_SUBJECT);
         assertThat(testCourse.getHoursPerQuarter()).isEqualTo(DEFAULT_HOURS_PER_QUARTER);
         assertThat(testCourse.getCourseDescription()).isEqualTo(DEFAULT_COURSE_DESCRIPTION);
@@ -370,7 +359,6 @@ class CourseResourceIT {
         partialUpdatedCourse.setId(course.getId());
 
         partialUpdatedCourse
-            .gradelevel(UPDATED_GRADELEVEL)
             .subject(UPDATED_SUBJECT)
             .hoursPerQuarter(UPDATED_HOURS_PER_QUARTER)
             .courseDescription(UPDATED_COURSE_DESCRIPTION)
@@ -388,7 +376,6 @@ class CourseResourceIT {
         List<Course> courseList = courseRepository.findAll();
         assertThat(courseList).hasSize(databaseSizeBeforeUpdate);
         Course testCourse = courseList.get(courseList.size() - 1);
-        assertThat(testCourse.getGradelevel()).isEqualTo(UPDATED_GRADELEVEL);
         assertThat(testCourse.getSubject()).isEqualTo(UPDATED_SUBJECT);
         assertThat(testCourse.getHoursPerQuarter()).isEqualTo(UPDATED_HOURS_PER_QUARTER);
         assertThat(testCourse.getCourseDescription()).isEqualTo(UPDATED_COURSE_DESCRIPTION);

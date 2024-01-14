@@ -17,6 +17,7 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface CourseMapper extends EntityMapper<CourseDTO, Course> {
+    @Mapping(target = "gradelevel", source = "gradelevel", qualifiedByName = "appConfigId")
     @Mapping(target = "schYr", source = "schYr", qualifiedByName = "appConfigId")
     @Mapping(target = "instructors", source = "instructors", qualifiedByName = "instructorIdSet")
     @Mapping(target = "students", source = "students", qualifiedByName = "studentIdSet")
@@ -29,6 +30,7 @@ public interface CourseMapper extends EntityMapper<CourseDTO, Course> {
     @Named("appConfigId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "description", source = "description")
     AppConfigDTO toDtoAppConfigId(AppConfig appConfig);
 
     @Named("instructorId")

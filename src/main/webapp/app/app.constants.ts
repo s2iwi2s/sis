@@ -7,3 +7,7 @@ declare const __VERSION__: string;
 
 export const VERSION = __VERSION__;
 export const DEBUG_INFO_ENABLED = __DEBUG_INFO_ENABLED__;
+
+export const OPT_SY = { code: 'SY', size: 100 };
+export const OPT_GRADE_LEVEL = { code: 'GRADE_LEVEL', size: 100 };
+export const OPT_GENDER = { code: 'GENDER', size: 100 };

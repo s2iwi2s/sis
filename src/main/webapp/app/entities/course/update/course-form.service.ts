@@ -76,9 +76,7 @@ export class CourseFormService {
 
   private getFormDefaults(): CourseFormDefaults {
     return {
-      id: null,
-      instructors: [],
-      students: [],
+      id: null
     };
   }
 }

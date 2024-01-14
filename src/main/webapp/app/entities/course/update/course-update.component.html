@@ -16,24 +16,21 @@
         }
 
         <div class="mb-3">
+
           <label class="form-label" jhiTranslate="schInfoSysApp.course.gradelevel" for="field_gradelevel">Gradelevel</label>
-          <input
-            type="text"
+          <select
             class="form-control"
-            name="gradelevel"
             id="field_gradelevel"
             data-cy="gradelevel"
+            name="gradelevel"
             formControlName="gradelevel"
-          />
-          @if (editForm.get('gradelevel')!.invalid && (editForm.get('gradelevel')!.dirty || editForm.get('gradelevel')!.touched)) {
-            <div>
-              @if (editForm.get('gradelevel')?.errors?.maxlength) {
-                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 50 }"
-                  >This field cannot be longer than 50 characters.</small
-                >
-              }
-            </div>
-          }
+            [compareWith]="compareAppConfig"
+          >
+            <option [ngValue]="null"></option>
+            @for (appConfigOption of gradelevelsCollection; track $index) {
+              <option [ngValue]="appConfigOption">{{ appConfigOption.description }}</option>
+            }
+          </select>
         </div>
 
         <div class="mb-3">
@@ -102,44 +99,12 @@
           >
             <option [ngValue]="null"></option>
             @for (appConfigOption of schYrsCollection; track $index) {
-              <option [ngValue]="appConfigOption">{{ appConfigOption.id }}</option>
+              <option [ngValue]="appConfigOption">{{ appConfigOption.description }}</option>
             }
           </select>
         </div>
 
-        <div class="mb-3">
-          <label jhiTranslate="schInfoSysApp.course.instructor" for="field_instructors">Instructor</label>
-          <select
-            class="form-control"
-            id="field_instructors"
-            data-cy="instructor"
-            multiple
-            name="instructors"
-            formControlName="instructors"
-            [compareWith]="compareInstructor"
-          >
-            @for (instructorOption of instructorsSharedCollection; track $index) {
-              <option [ngValue]="instructorOption">{{ instructorOption.id }}</option>
-            }
-          </select>
-        </div>
 
-        <div class="mb-3">
-          <label jhiTranslate="schInfoSysApp.course.student" for="field_students">Student</label>
-          <select
-            class="form-control"
-            id="field_students"
-            data-cy="student"
-            multiple
-            name="students"
-            formControlName="students"
-            [compareWith]="compareStudent"
-          >
-            @for (studentOption of studentsSharedCollection; track $index) {
-              <option [ngValue]="studentOption">{{ studentOption.id }}</option>
-            }
-          </select>
-        </div>
       </div>
 
       <div>

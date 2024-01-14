@@ -85,7 +85,7 @@
                 @if (assessment.learningCompetency) {
                   <div>
                     <a [routerLink]="['/learning-competency', assessment.learningCompetency.id, 'view']">{{
-                      assessment.learningCompetency.id
+                      '[' + assessment.learningCompetency.competencyCode + '] ' + assessment.learningCompetency.description
                     }}</a>
                   </div>
                 }

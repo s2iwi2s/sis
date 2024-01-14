@@ -124,7 +124,7 @@
               <td>
                 @if (instructor.gender) {
                   <div>
-                    <a [routerLink]="['/app-config', instructor.gender.id, 'view']">{{ instructor.gender.id }}</a>
+                    <a [routerLink]="['/app-config', instructor.gender.id, 'view']">{{ instructor.gender.description }}</a>
                   </div>
                 }
               </td>

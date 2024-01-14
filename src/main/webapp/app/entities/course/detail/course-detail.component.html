@@ -17,7 +17,11 @@
           </dd>
           <dt><span jhiTranslate="schInfoSysApp.course.gradelevel">Gradelevel</span></dt>
           <dd>
-            <span>{{ course.gradelevel }}</span>
+            @if (course.gradelevel) {
+              <div>
+                <a [routerLink]="['/app-config', course.gradelevel.id, 'view']">{{ course.gradelevel.description}} </a>
+              </div>
+            }
           </dd>
           <dt><span jhiTranslate="schInfoSysApp.course.subject">Subject</span></dt>
           <dd>
@@ -39,7 +43,7 @@
           <dd>
             @if (course.schYr) {
               <div>
-                <a [routerLink]="['/app-config', course.schYr.id, 'view']">{{ course.schYr.id }}</a>
+                <a [routerLink]="['/app-config', course.schYr.id, 'view']">{{ course.schYr.description }}</a>
               </div>
             }
           </dd>
