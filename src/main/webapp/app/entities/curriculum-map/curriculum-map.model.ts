@@ -9,7 +9,7 @@ export interface ICurriculumMap {
   contentStandards?: string | null;
   performanceStandards?: string | null;
   learningCompetencies?: Pick<ILearningCompetency, 'id'>[] | null;
-  course?: Pick<ICourse, 'id'> | null;
+  course?: Pick<ICourse, 'id'|'courseDescription'> | null;
 }
 
 export type NewCurriculumMap = Omit<ICurriculumMap, 'id'> & { id: null };

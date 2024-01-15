@@ -17,5 +17,8 @@ public interface StrategiesMapper extends EntityMapper<StrategiesDTO, Strategies
     @Named("learningCompetencyId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "competencyCode", source = "competencyCode")
+    @Mapping(target = "description", source = "description")
+
     LearningCompetencyDTO toDtoLearningCompetencyId(LearningCompetency learningCompetency);
 }

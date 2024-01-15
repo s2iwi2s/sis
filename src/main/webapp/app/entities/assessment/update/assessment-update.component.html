@@ -61,7 +61,7 @@
           >
             <option [ngValue]="null"></option>
             @for (learningCompetencyOption of learningCompetenciesSharedCollection; track $index) {
-              <option [ngValue]="learningCompetencyOption">{{ learningCompetencyOption.id }}</option>
+              <option [ngValue]="learningCompetencyOption">{{ '[' + learningCompetencyOption.competencyCode + '] ' + learningCompetencyOption.description }}</option>
             }
           </select>
         </div>

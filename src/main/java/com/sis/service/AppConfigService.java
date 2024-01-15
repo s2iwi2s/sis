@@ -40,7 +40,7 @@ public interface AppConfigService {
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Page<AppConfigDTO> findAll(Pageable pageable);
+    Page<AppConfigDTO> findAll(AppConfigDTO filter, Pageable pageable);
 
     /**
      * Get the "id" appConfig.

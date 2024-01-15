@@ -17,5 +17,6 @@ public interface InstructorMapper extends EntityMapper<InstructorDTO, Instructor
     @Named("appConfigId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "description", source = "description")
     AppConfigDTO toDtoAppConfigId(AppConfig appConfig);
 }

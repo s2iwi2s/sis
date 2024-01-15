@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
-import { DATE_TIME_FORMAT } from 'app/config/input.constants';
+import { DATE_FORMAT } from 'app/config/input.constants';
 import { IStudent, NewStudent } from '../student.model';
 
 /**
@@ -193,7 +193,7 @@ export class StudentFormService {
   private convertStudentRawValueToStudent(rawStudent: StudentFormRawValue | NewStudentFormRawValue): IStudent | NewStudent {
     return {
       ...rawStudent,
-      birthDate: dayjs(rawStudent.birthDate, DATE_TIME_FORMAT),
+      birthDate: dayjs(rawStudent.birthDate, DATE_FORMAT),
     };
   }
 
@@ -202,7 +202,7 @@ export class StudentFormService {
   ): StudentFormRawValue | PartialWithRequiredKeyOf<NewStudentFormRawValue> {
     return {
       ...student,
-      birthDate: student.birthDate ? student.birthDate.format(DATE_TIME_FORMAT) : undefined,
+      birthDate: student.birthDate ? student.birthDate.format(DATE_FORMAT) : undefined,
     };
   }
 }

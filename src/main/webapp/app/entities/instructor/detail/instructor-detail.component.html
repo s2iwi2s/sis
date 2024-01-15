@@ -37,7 +37,7 @@
           </dd>
           <dt><span jhiTranslate="schInfoSysApp.instructor.hireDate">Hire Date</span></dt>
           <dd>
-            <span>{{ instructor.hireDate | formatMediumDatetime }}</span>
+            <span>{{ instructor.hireDate | formatMediumDate }}</span>
           </dd>
           <dt><span jhiTranslate="schInfoSysApp.instructor.salary">Salary</span></dt>
           <dd>
@@ -51,7 +51,7 @@
           <dd>
             @if (instructor.gender) {
               <div>
-                <a [routerLink]="['/app-config', instructor.gender.id, 'view']">{{ instructor.gender.id }}</a>
+                <a [routerLink]="['/app-config', instructor.gender.id, 'view']">{{ instructor.gender.description }}</a>
               </div>
             }
           </dd>

@@ -15,8 +15,7 @@ public class CourseDTO implements Serializable {
 
     private Long id;
 
-    @Size(max = 50)
-    private String gradelevel;
+    private AppConfigDTO gradelevel;
 
     @Size(max = 50)
     private String subject;
@@ -43,11 +42,11 @@ public class CourseDTO implements Serializable {
         this.id = id;
     }
 
-    public String getGradelevel() {
+    public AppConfigDTO getGradelevel() {
         return gradelevel;
     }
 
-    public void setGradelevel(String gradelevel) {
+    public void setGradelevel(AppConfigDTO gradelevel) {
         this.gradelevel = gradelevel;
     }
 

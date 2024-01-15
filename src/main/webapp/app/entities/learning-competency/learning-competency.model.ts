@@ -9,7 +9,7 @@ export interface ILearningCompetency {
   description?: string | null;
   strategies?: Pick<IStrategies, 'id'>[] | null;
   assessments?: Pick<IAssessment, 'id'>[] | null;
-  curriculumMap?: Pick<ICurriculumMap, 'id'> | null;
+  curriculumMap?: Pick<ICurriculumMap, 'id'|'quarterNo'|'weekNo'|'topic'> | null;
 }
 
 export type NewLearningCompetency = Omit<ILearningCompetency, 'id'> & { id: null };

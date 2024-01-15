@@ -145,11 +145,12 @@ public class AppConfigResource {
      */
     @GetMapping("")
     public ResponseEntity<List<AppConfigDTO>> getAllAppConfigs(
-        @org.springdoc.core.annotations.ParameterObject Pageable pageable,
-        @RequestParam(name = "filter", required = false) String filter
+        @org.springdoc.core.annotations.ParameterObject AppConfigDTO filter,
+        @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
         log.debug("REST request to get a page of AppConfigs");
-        Page<AppConfigDTO> page = appConfigService.findAll(pageable);
+        log.debug("REST filter of AppConfigs, {}", filter);
+        Page<AppConfigDTO> page = appConfigService.findAll(filter, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

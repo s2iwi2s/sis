@@ -84,20 +84,6 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="salary">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.instructor.salary">Salary</span>
-
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="commissionPct">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.instructor.commissionPct">Commission Pct</span>
-
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
             <th scope="col" jhiSortBy="gender.id">
               <div class="d-flex">
                 <span jhiTranslate="schInfoSysApp.instructor.gender">Gender</span>
@@ -118,13 +104,11 @@
               <td>{{ instructor.lastName }}</td>
               <td>{{ instructor.email }}</td>
               <td>{{ instructor.phoneNumber }}</td>
-              <td>{{ instructor.hireDate | formatMediumDatetime }}</td>
-              <td>{{ instructor.salary }}</td>
-              <td>{{ instructor.commissionPct }}</td>
+              <td>{{ instructor.hireDate | formatMediumDate }}</td>
               <td>
                 @if (instructor.gender) {
                   <div>
-                    <a [routerLink]="['/app-config', instructor.gender.id, 'view']">{{ instructor.gender.id }}</a>
+                    <a [routerLink]="['/app-config', instructor.gender.id, 'view']">{{ instructor.gender.description }}</a>
                   </div>
                 }
               </td>

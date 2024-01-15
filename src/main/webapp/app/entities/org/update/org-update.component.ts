@@ -12,6 +12,7 @@ import { AppConfigService } from 'app/entities/app-config/service/app-config.ser
 import { IOrg } from '../org.model';
 import { OrgService } from '../service/org.service';
 import { OrgFormService, OrgFormGroup } from './org-form.service';
+import {OPT_SY} from "../../../app.constants";
 
 @Component({
   standalone: true,
@@ -92,7 +93,7 @@ export class OrgUpdateComponent implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     this.appConfigService
-      .query({ filter: 'org-is-null' })
+      .query(OPT_SY)
       .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
       .pipe(
         map((appConfigs: IAppConfig[]) =>

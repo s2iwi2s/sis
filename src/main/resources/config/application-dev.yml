@@ -33,6 +33,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     url: jdbc:postgresql://ubuntu.vm:5432/SchInfoSys
+    #url: jdbc:postgresql://localhost:5432/postgres
     username: SchInfoSys
     password: sis
     hikari:

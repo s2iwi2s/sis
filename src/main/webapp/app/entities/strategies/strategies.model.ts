@@ -6,7 +6,7 @@ export interface IStrategies {
   name?: string | null;
   description?: string | null;
   resources?: Pick<IResources, 'id'>[] | null;
-  learningCompetency?: Pick<ILearningCompetency, 'id'> | null;
+  learningCompetency?: Pick<ILearningCompetency, 'id'|'competencyCode'|'description'> | null;
 }
 
 export type NewStrategies = Omit<IStrategies, 'id'> & { id: null };

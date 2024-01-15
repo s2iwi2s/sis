@@ -19,6 +19,7 @@ import { StudentService } from 'app/entities/student/service/student.service';
 import { CourseService } from '../service/course.service';
 import { ICourse } from '../course.model';
 import { CourseFormService, CourseFormGroup } from './course-form.service';
+import {OPT_GRADE_LEVEL, OPT_SY} from "../../../app.constants";
 
 @Component({
   standalone: true,
@@ -30,6 +31,7 @@ export class CourseUpdateComponent implements OnInit {
   isSaving = false;
   course: ICourse | null = null;
 
+  gradelevelsCollection: IAppConfig[] = [];
   schYrsCollection: IAppConfig[] = [];
   instructorsSharedCollection: IInstructor[] = [];
   studentsSharedCollection: IStudent[] = [];
@@ -115,7 +117,7 @@ export class CourseUpdateComponent implements OnInit {
   protected updateForm(course: ICourse): void {
     this.course = course;
     this.courseFormService.resetForm(this.editForm, course);
-
+    this.gradelevelsCollection = this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(this.gradelevelsCollection, course.gradelevel);
     this.schYrsCollection = this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(this.schYrsCollection, course.schYr);
     this.instructorsSharedCollection = this.instructorService.addInstructorToCollectionIfMissing<IInstructor>(
       this.instructorsSharedCollection,
@@ -128,8 +130,21 @@ export class CourseUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
+
+
+
     this.appConfigService
-      .query({ filter: 'course-is-null' })
+      .query(OPT_GRADE_LEVEL)
+      .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
+      .pipe(
+        map((appConfigs: IAppConfig[]) =>
+          this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.course?.gradelevel),
+        ),
+      )
+      .subscribe((appConfigs: IAppConfig[]) => (this.gradelevelsCollection = appConfigs));
+
+    this.appConfigService
+      .query(OPT_SY)
       .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
       .pipe(
         map((appConfigs: IAppConfig[]) =>

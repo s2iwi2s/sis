@@ -33,8 +33,8 @@ export interface IStudent {
   mothersContacts?: string | null;
   guardianFullName?: string | null;
   guardianContacts?: string | null;
-  gender?: Pick<IAppConfig, 'id'> | null;
-  courses?: Pick<ICourse, 'id'>[] | null;
+  gender?: Pick<IAppConfig, 'id'|'description'> | null;
+  courses?: Pick<ICourse, 'id'|'courseDescription'>[] | null;
 }
 
 export type NewStudent = Omit<IStudent, 'id'> & { id: null };

@@ -17,5 +17,7 @@ public interface AssessmentMapper extends EntityMapper<AssessmentDTO, Assessment
     @Named("learningCompetencyId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "competencyCode", source = "competencyCode")
+    @Mapping(target = "description", source = "description")
     LearningCompetencyDTO toDtoLearningCompetencyId(LearningCompetency learningCompetency);
 }
