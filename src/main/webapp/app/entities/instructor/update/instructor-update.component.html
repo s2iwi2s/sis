@@ -9,22 +9,22 @@
         Create or edit a Instructor
       </h2>
 
-      <div>
+      <div class="row">
         <jhi-alert-error></jhi-alert-error>
 
         @if (editForm.controls.id.value !== null) {
-          <div class="mb-3">
+          <div class="col-sm-12 mb-3">
             <label class="form-label" jhiTranslate="global.field.id" for="field_id">ID</label>
             <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
           </div>
         }
 
-        <div class="mb-3">
+        <div class="col-sm-4 mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.instructor.firstName" for="field_firstName">First Name</label>
           <input type="text" class="form-control" name="firstName" id="field_firstName" data-cy="firstName" formControlName="firstName" />
         </div>
 
-        <div class="mb-3">
+        <div class="col-sm-4 mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.instructor.middleName" for="field_middleName">Middle Name</label>
           <input
             type="text"
@@ -36,17 +36,17 @@
           />
         </div>
 
-        <div class="mb-3">
+        <div class="col-sm-4 mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.instructor.lastName" for="field_lastName">Last Name</label>
           <input type="text" class="form-control" name="lastName" id="field_lastName" data-cy="lastName" formControlName="lastName" />
         </div>
 
-        <div class="mb-3">
+        <div class="col-sm-4 mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.instructor.email" for="field_email">Email</label>
           <input type="text" class="form-control" name="email" id="field_email" data-cy="email" formControlName="email" />
         </div>
 
-        <div class="mb-3">
+        <div class="col-sm-4 mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.instructor.phoneNumber" for="field_phoneNumber">Phone Number</label>
           <input
             type="text"
@@ -58,7 +58,7 @@
           />
         </div>
 
-        <div class="mb-3">
+        <div class="col-sm-4 mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.instructor.hireDate" for="field_hireDate">Hire Date</label>
           <div class="d-flex">
             <input
@@ -73,12 +73,12 @@
           </div>
         </div>
 
-        <div class="mb-3">
+        <div class="col-sm-4  mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.instructor.salary" for="field_salary">Salary</label>
           <input type="number" class="form-control" name="salary" id="field_salary" data-cy="salary" formControlName="salary" />
         </div>
 
-        <div class="mb-3">
+        <div class="col-sm-4 mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.instructor.commissionPct" for="field_commissionPct">Commission Pct</label>
           <input
             type="number"
@@ -90,7 +90,7 @@
           />
         </div>
 
-        <div class="mb-3">
+        <div class="col-sm-4 mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.instructor.gender" for="field_gender">Gender</label>
           <select
             class="form-control"
