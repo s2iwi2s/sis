@@ -236,4 +236,32 @@ angular-cli removes postcss-rtl processed inline css, processed rules must be ad
     }
   }
 }
+
+div.editor {
+  .NgxEditor__MenuBar {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .NgxEditor {
+    min-height: 100px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border: none;
+    line-height: 110%;
+  }
+
+  .CodeMirror {
+    border: 1px solid #eee;
+    height: auto;
+    margin-bottom: 0.7rem;
+
+    pre {
+      white-space: pre !important;
+    }
+  }
+}
+
 /* jhipster-needle-scss-add-main JHipster will add new css style */

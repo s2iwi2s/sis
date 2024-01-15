@@ -63,20 +63,6 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="courseDescription">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.course.courseDescription">Course Description</span>
-
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="courseObjectives">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.course.courseObjectives">Course Objectives</span>
-
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
             <th scope="col" jhiSortBy="schYr.id">
               <div class="d-flex">
                 <span jhiTranslate="schInfoSysApp.course.schYr">Sch Yr</span>
@@ -99,8 +85,6 @@
               </td>
               <td>{{ course.subject }}</td>
               <td>{{ course.hoursPerQuarter }}</td>
-              <td>{{ course.courseDescription }}</td>
-              <td>{{ course.courseObjectives }}</td>
               <td>
                   <div *ngIf="course.schYr">
                     <a [routerLink]="['/app-config', course.schYr.id, 'view']">{{ course.schYr.description }}</a>
