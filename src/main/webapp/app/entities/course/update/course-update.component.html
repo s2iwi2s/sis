@@ -14,24 +14,56 @@
             <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
           </div>
         }
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label" jhiTranslate="schInfoSysApp.course.gradelevel" for="field_gradelevel">Gradelevel</label>
+            <select
+              class="form-control"
+              id="field_gradelevel"
+              data-cy="gradelevel"
+              name="gradelevel"
+              formControlName="gradelevel"
+              [compareWith]="compareAppConfig"
+            >
+              <option [ngValue]="null"></option>
+              @for (appConfigOption of gradelevelsCollection; track $index) {
+                <option [ngValue]="appConfigOption">{{ appConfigOption.description }}</option>
+              }
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="form-label" jhiTranslate="schInfoSysApp.course.schYr" for="field_schYr">Sch Yr</label>
+            <select
+              class="form-control"
+              id="field_schYr"
+              data-cy="schYr"
+              name="schYr"
+              formControlName="schYr"
+              [compareWith]="compareAppConfig"
+            >
+              <option [ngValue]="null"></option>
+              @for (appConfigOption of schYrsCollection; track $index) {
+                <option [ngValue]="appConfigOption">{{ appConfigOption.description }}</option>
+              }
+            </select>
+          </div>
 
-        <div class="mb-3">
 
-          <label class="form-label" jhiTranslate="schInfoSysApp.course.gradelevel" for="field_gradelevel">Gradelevel</label>
-          <select
-            class="form-control"
-            id="field_gradelevel"
-            data-cy="gradelevel"
-            name="gradelevel"
-            formControlName="gradelevel"
-            [compareWith]="compareAppConfig"
-          >
-            <option [ngValue]="null"></option>
-            @for (appConfigOption of gradelevelsCollection; track $index) {
-              <option [ngValue]="appConfigOption">{{ appConfigOption.description }}</option>
-            }
-          </select>
+          <div class="col-md-2 mb-3">
+            <label class="form-label" jhiTranslate="schInfoSysApp.course.hoursPerQuarter" for="field_hoursPerQuarter"
+            >Hours Per Quarter</label
+            >
+            <input
+              type="number"
+              class="form-control"
+              name="hoursPerQuarter"
+              id="field_hoursPerQuarter"
+              data-cy="hoursPerQuarter"
+              formControlName="hoursPerQuarter"
+            />
+          </div>
         </div>
+
 
         <div class="mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.course.subject" for="field_subject">Subject</label>
@@ -48,20 +80,6 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" jhiTranslate="schInfoSysApp.course.hoursPerQuarter" for="field_hoursPerQuarter"
-            >Hours Per Quarter</label
-          >
-          <input
-            type="number"
-            class="form-control"
-            name="hoursPerQuarter"
-            id="field_hoursPerQuarter"
-            data-cy="hoursPerQuarter"
-            formControlName="hoursPerQuarter"
-          />
-        </div>
-
-        <div class="mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.course.courseDescription" for="field_courseDescription"
             >Course Description</label
           >
@@ -71,6 +89,7 @@
             id="field_courseDescription"
             data-cy="courseDescription"
             formControlName="courseDescription"
+            rows="4"
           ></textarea>
         </div>
 
@@ -84,25 +103,11 @@
             id="field_courseObjectives"
             data-cy="courseObjectives"
             formControlName="courseObjectives"
+            rows="4"
           ></textarea>
         </div>
 
-        <div class="mb-3">
-          <label class="form-label" jhiTranslate="schInfoSysApp.course.schYr" for="field_schYr">Sch Yr</label>
-          <select
-            class="form-control"
-            id="field_schYr"
-            data-cy="schYr"
-            name="schYr"
-            formControlName="schYr"
-            [compareWith]="compareAppConfig"
-          >
-            <option [ngValue]="null"></option>
-            @for (appConfigOption of schYrsCollection; track $index) {
-              <option [ngValue]="appConfigOption">{{ appConfigOption.description }}</option>
-            }
-          </select>
-        </div>
+
 
 
       </div>

@@ -18,9 +18,9 @@
         "title": "Course"
       },
       "id": "ID",
-      "gradelevel": "Gradelevel",
+      "gradelevel": "Grade Level",
       "subject": "Subject",
-      "hoursPerQuarter": "Hours Per Quarter",
+      "hoursPerQuarter": "Hrs/Qtr",
       "courseDescription": "Course Description",
       "courseObjectives": "Course Objectives",
       "schYr": "Sch Yr",

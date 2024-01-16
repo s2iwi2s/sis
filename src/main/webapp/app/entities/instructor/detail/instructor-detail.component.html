@@ -10,45 +10,45 @@
 
         <jhi-alert></jhi-alert>
 
-        <dl class="row-md jh-entity-details">
-          <dt><span jhiTranslate="global.field.id">ID</span></dt>
-          <dd>
+        <dl class="row jh-entity-details">
+          <dt class="col-sm-2"><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd class="col-sm-10">
             <span>{{ instructor.id }}</span>
           </dd>
-          <dt><span jhiTranslate="schInfoSysApp.instructor.firstName">First Name</span></dt>
-          <dd>
+          <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.instructor.firstName">First Name</span></dt>
+          <dd class="col-sm-2">
             <span>{{ instructor.firstName }}</span>
           </dd>
-          <dt><span jhiTranslate="schInfoSysApp.instructor.middleName">Middle Name</span></dt>
-          <dd>
+          <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.instructor.middleName">Middle Name</span></dt>
+          <dd class="col-sm-2">
             <span>{{ instructor.middleName }}</span>
           </dd>
-          <dt><span jhiTranslate="schInfoSysApp.instructor.lastName">Last Name</span></dt>
-          <dd>
+          <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.instructor.lastName">Last Name</span></dt>
+          <dd class="col-sm-2">
             <span>{{ instructor.lastName }}</span>
           </dd>
-          <dt><span jhiTranslate="schInfoSysApp.instructor.email">Email</span></dt>
-          <dd>
+          <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.instructor.email">Email</span></dt>
+          <dd class="col-sm-2">
             <span>{{ instructor.email }}</span>
           </dd>
-          <dt><span jhiTranslate="schInfoSysApp.instructor.phoneNumber">Phone Number</span></dt>
-          <dd>
+          <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.instructor.phoneNumber">Phone Number</span></dt>
+          <dd class="col-sm-2">
             <span>{{ instructor.phoneNumber }}</span>
           </dd>
-          <dt><span jhiTranslate="schInfoSysApp.instructor.hireDate">Hire Date</span></dt>
-          <dd>
+          <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.instructor.hireDate">Hire Date</span></dt>
+          <dd class="col-sm-2">
             <span>{{ instructor.hireDate | formatMediumDate }}</span>
           </dd>
-          <dt><span jhiTranslate="schInfoSysApp.instructor.salary">Salary</span></dt>
-          <dd>
+          <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.instructor.salary">Salary</span></dt>
+          <dd class="col-sm-2">
             <span>{{ instructor.salary }}</span>
           </dd>
-          <dt><span jhiTranslate="schInfoSysApp.instructor.commissionPct">Commission Pct</span></dt>
-          <dd>
+          <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.instructor.commissionPct">Commission Pct</span></dt>
+          <dd class="col-sm-2">
             <span>{{ instructor.commissionPct }}</span>
           </dd>
-          <dt><span jhiTranslate="schInfoSysApp.instructor.gender">Gender</span></dt>
-          <dd>
+          <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.instructor.gender">Gender</span></dt>
+          <dd class="col-sm-2">
             @if (instructor.gender) {
               <div>
                 <a [routerLink]="['/app-config', instructor.gender.id, 'view']">{{ instructor.gender.description }}</a>
