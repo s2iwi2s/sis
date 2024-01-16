@@ -19,7 +19,9 @@ entity Org{
     name String,
     logo String,
     address String,
+    createdBy String maxlength(50),
     createdDate ZonedDateTime,
+    lastModifiedBy String maxlength(50),
     lastModifiedDate ZonedDateTime
 }
 
@@ -32,7 +34,9 @@ entity Instructor {
 	hireDate Instant,
 	salary Long,
 	commissionPct Long,
+    createdBy String maxlength(50),
     createdDate ZonedDateTime,
+    lastModifiedBy String maxlength(50),
     lastModifiedDate ZonedDateTime
 }
 
@@ -65,8 +69,10 @@ entity Student {
     mothersOccupation String maxlength(50),
     mothersContacts String maxlength(50),
     guardianFullName String maxlength(50), 
-    guardianContacts String maxlength(50)
+    guardianContacts String maxlength(50),
+    createdBy String maxlength(50),
     createdDate ZonedDateTime,
+    lastModifiedBy String maxlength(50),
     lastModifiedDate ZonedDateTime
 }
 
@@ -74,8 +80,10 @@ entity Course {
 	subject String maxlength(50),
 	hoursPerQuarter Long,
 	courseDescription TextBlob,
-	courseObjectives TextBlob
+	courseObjectives TextBlob,
+    createdBy String maxlength(50),
     createdDate ZonedDateTime,
+    lastModifiedBy String maxlength(50),
     lastModifiedDate ZonedDateTime
 }
 
@@ -84,8 +92,10 @@ entity AppConfig {
     value String,
  	description String,
     json TextBlob,
-	priority Integer
+	priority Integer,
+    createdBy String maxlength(50),
     createdDate ZonedDateTime,
+    lastModifiedBy String maxlength(50),
     lastModifiedDate ZonedDateTime
 }
 
@@ -94,39 +104,49 @@ entity CurriculumMap {
 	weekNo Integer,
 	topic String,
 	contentStandards String,
-	performanceStandards String
+	performanceStandards String,
+    createdBy String maxlength(50),
     createdDate ZonedDateTime,
+    lastModifiedBy String maxlength(50),
     lastModifiedDate ZonedDateTime
 }
 
 entity LearningCompetency {
 	seqNo Integer,
 	competencyCode String maxlength(50),
-	description String
+	description String,
+    createdBy String maxlength(50),
     createdDate ZonedDateTime,
+    lastModifiedBy String maxlength(50),
     lastModifiedDate ZonedDateTime
 }
 
 entity Strategies {
 	name String,
-	description String
+	description String,
+    createdBy String maxlength(50),
     createdDate ZonedDateTime,
+    lastModifiedBy String maxlength(50),
     lastModifiedDate ZonedDateTime
 }
 
 entity Assessment {
 	name String,
 	instruction String,
-	markScheme TextBlob
+	markScheme TextBlob,
+    createdBy String maxlength(50),
     createdDate ZonedDateTime,
+    lastModifiedBy String maxlength(50),
     lastModifiedDate ZonedDateTime
 }
 
 entity Resources {
 	fileName String maxlength(50),
 	fileNameOnServer String,
-    document AnyBlob
+    document AnyBlob,
+    createdBy String maxlength(50),
     createdDate ZonedDateTime,
+    lastModifiedBy String maxlength(50),
     lastModifiedDate ZonedDateTime
 }
 
@@ -144,29 +164,6 @@ relationship ManyToMany {
     
 	Strategies{resources} to Resources
 	Assessment{resources} to Resources
-}
-
-relationship ManyToOne {
-    Org{createdBy} to User with builtInEntity
-    Org{lastModifiedBy} to User with builtInEntity
-    AppConfig{createdBy} to User with builtInEntity
-    AppConfig{lastModifiedBy} to User with builtInEntity
-    Instructor{createdBy} to User with builtInEntity
-    Instructor{lastModifiedBy} to User with builtInEntity
-    Student{createdBy} to User with builtInEntity
-    Student{lastModifiedBy} to User with builtInEntity
-    Course{createdBy} to User with builtInEntity
-    Course{lastModifiedBy} to User with builtInEntity
-    CurriculumMap{createdBy} to User with builtInEntity
-    CurriculumMap{lastModifiedBy} to User with builtInEntity
-    LearningCompetency{createdBy} to User with builtInEntity
-    LearningCompetency{lastModifiedBy} to User with builtInEntity
-    Strategies{createdBy} to User with builtInEntity
-    Strategies{lastModifiedBy} to User with builtInEntity
-    Assessment{createdBy} to User with builtInEntity
-    Assessment{lastModifiedBy} to User with builtInEntity
-    Resources{createdBy} to User with builtInEntity
-    Resources{lastModifiedBy} to User with builtInEntity
 }
 
 relationship OneToMany {
