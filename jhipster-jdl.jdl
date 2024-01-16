@@ -165,6 +165,8 @@ relationship ManyToOne {
     Strategies{lastModifiedBy} to User with builtInEntity
     Assessment{createdBy} to User with builtInEntity
     Assessment{lastModifiedBy} to User with builtInEntity
+    Resources{createdBy} to User with builtInEntity
+    Resources{lastModifiedBy} to User with builtInEntity
 }
 
 relationship OneToMany {
