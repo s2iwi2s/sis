@@ -65,7 +65,6 @@ entity Student {
 }
 
 entity Course {
-	gradelevel String maxlength(50),
 	subject String maxlength(50),
 	hoursPerQuarter Long,
 	courseDescription TextBlob,
@@ -112,15 +111,19 @@ entity Resources {
 }
 
 relationship OneToOne {
-  Org{currSchYr} to AppConfig,
-  Student{gender} to AppConfig,
-  Instructor{gender} to AppConfig,
-  Course{schYr} to AppConfig,
+  Org{currSchYr} to AppConfig
+  Student{gender} to AppConfig
+  Instructor{gender} to AppConfig
+  //Course{schYr} to AppConfig
+  Course{gradelevel} to AppConfig
 }
 
 relationship ManyToMany {
-    Course{instructor} to Instructor{course}
-    Course{student} to Student{course}
+    Instructor{course} to Course
+    Student{course} to Course
+    
+	Strategies{resources} to Resources
+	Assessment{resources} to Resources
 }
 
 relationship ManyToOne {
@@ -132,8 +135,6 @@ relationship OneToMany {
 	CurriculumMap{learningCompetency} to LearningCompetency
     LearningCompetency{strategies} to Strategies
     LearningCompetency{assessment} to Assessment
-	Strategies{resources} to Resources
-	Assessment{resources} to Resources
 }
 
 // paginate Org, Instructor, Student, Course, AppConfig, CurriculumMap, LearningCompetency, Strategies, Assessment, Resources with pagination
