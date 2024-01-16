@@ -18,7 +18,9 @@ application {
 entity Org{
     name String,
     logo String,
-    address String
+    address String,
+    createdDate ZonedDateTime,
+    lastModifiedDate ZonedDateTime
 }
 
 entity Instructor {
@@ -30,6 +32,8 @@ entity Instructor {
 	hireDate Instant,
 	salary Long,
 	commissionPct Long,
+    createdDate ZonedDateTime,
+    lastModifiedDate ZonedDateTime
 }
 
 entity Student {
@@ -62,6 +66,8 @@ entity Student {
     mothersContacts String maxlength(50),
     guardianFullName String maxlength(50), 
     guardianContacts String maxlength(50)
+    createdDate ZonedDateTime,
+    lastModifiedDate ZonedDateTime
 }
 
 entity Course {
@@ -69,6 +75,8 @@ entity Course {
 	hoursPerQuarter Long,
 	courseDescription TextBlob,
 	courseObjectives TextBlob
+    createdDate ZonedDateTime,
+    lastModifiedDate ZonedDateTime
 }
 
 entity AppConfig {
@@ -77,6 +85,8 @@ entity AppConfig {
  	description String,
     json TextBlob,
 	priority Integer
+    createdDate ZonedDateTime,
+    lastModifiedDate ZonedDateTime
 }
 
 entity CurriculumMap {
@@ -85,29 +95,39 @@ entity CurriculumMap {
 	topic String,
 	contentStandards String,
 	performanceStandards String
+    createdDate ZonedDateTime,
+    lastModifiedDate ZonedDateTime
 }
 
 entity LearningCompetency {
 	seqNo Integer,
 	competencyCode String maxlength(50),
 	description String
+    createdDate ZonedDateTime,
+    lastModifiedDate ZonedDateTime
 }
 
 entity Strategies {
 	name String,
 	description String
+    createdDate ZonedDateTime,
+    lastModifiedDate ZonedDateTime
 }
 
 entity Assessment {
 	name String,
 	instruction String,
 	markScheme TextBlob
+    createdDate ZonedDateTime,
+    lastModifiedDate ZonedDateTime
 }
 
 entity Resources {
 	fileName String maxlength(50),
 	fileNameOnServer String,
     document AnyBlob
+    createdDate ZonedDateTime,
+    lastModifiedDate ZonedDateTime
 }
 
 relationship OneToOne {
@@ -127,7 +147,24 @@ relationship ManyToMany {
 }
 
 relationship ManyToOne {
-    AppConfig{user} to User with builtInEntity
+    Org{createdBy} to User with builtInEntity
+    Org{lastModifiedBy} to User with builtInEntity
+    AppConfig{createdBy} to User with builtInEntity
+    AppConfig{lastModifiedBy} to User with builtInEntity
+    Instructor{createdBy} to User with builtInEntity
+    Instructor{lastModifiedBy} to User with builtInEntity
+    Student{createdBy} to User with builtInEntity
+    Student{lastModifiedBy} to User with builtInEntity
+    Course{createdBy} to User with builtInEntity
+    Course{lastModifiedBy} to User with builtInEntity
+    CurriculumMap{createdBy} to User with builtInEntity
+    CurriculumMap{lastModifiedBy} to User with builtInEntity
+    LearningCompetency{createdBy} to User with builtInEntity
+    LearningCompetency{lastModifiedBy} to User with builtInEntity
+    Strategies{createdBy} to User with builtInEntity
+    Strategies{lastModifiedBy} to User with builtInEntity
+    Assessment{createdBy} to User with builtInEntity
+    Assessment{lastModifiedBy} to User with builtInEntity
 }
 
 relationship OneToMany {
