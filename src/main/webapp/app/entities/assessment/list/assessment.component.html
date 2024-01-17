@@ -42,23 +42,15 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
+            <th scope="col" jhiSortBy="learningCompetency.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.assessment.learningCompetency">Learning Competency</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
             <th scope="col" jhiSortBy="name">
               <div class="d-flex">
                 <span jhiTranslate="schInfoSysApp.assessment.name">Name</span>
-
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="instruction">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.assessment.instruction">Instruction</span>
-
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="markScheme">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.assessment.markScheme">Mark Scheme</span>
 
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
@@ -91,12 +83,6 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="learningCompetency.id">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.assessment.learningCompetency">Learning Competency</span>
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -106,22 +92,20 @@
               <td>
                 <a [routerLink]="['/assessment', assessment.id, 'view']">{{ assessment.id }}</a>
               </td>
-              <td>{{ assessment.name }}</td>
-              <td>{{ assessment.instruction }}</td>
-              <td>{{ assessment.markScheme }}</td>
-              <td>{{ assessment.createdBy }}</td>
-              <td>{{ assessment.createdDate | formatMediumDatetime }}</td>
-              <td>{{ assessment.lastModifiedBy }}</td>
-              <td>{{ assessment.lastModifiedDate | formatMediumDatetime }}</td>
               <td>
                 @if (assessment.learningCompetency) {
                   <div>
                     <a [routerLink]="['/learning-competency', assessment.learningCompetency.id, 'view']">{{
-                      assessment.learningCompetency.id
-                    }}</a>
+                        assessment.learningCompetency.seqNo + ' - ' + assessment.learningCompetency.competencyCode
+                      }}</a>
                   </div>
                 }
               </td>
+              <td>{{ assessment.name }}</td>
+              <td>{{ assessment.createdBy }}</td>
+              <td>{{ assessment.createdDate | formatMediumDatetime }}</td>
+              <td>{{ assessment.lastModifiedBy }}</td>
+              <td>{{ assessment.lastModifiedDate | formatMediumDatetime }}</td>
               <td class="text-end">
                 <div class="btn-group">
                   <a [routerLink]="['/assessment', assessment.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">

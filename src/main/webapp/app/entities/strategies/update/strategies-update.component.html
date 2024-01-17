@@ -45,12 +45,22 @@
 
         <div class="mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.strategies.description" for="field_description">Description</label>
-          <editor
+          <!--
+          <textarea
             class="form-control"
+            name="description"
             id="field_description"
             data-cy="description"
             formControlName="description"
-            [init]="tineMCEOptions">
+          ></textarea>
+          -->
+          <editor
+            class="form-control"
+            name="description"
+            id="field_description"
+            data-cy="description"
+            formControlName="description"
+            [init]="tinyMCEOptions">
           </editor>
         </div>
 
@@ -141,13 +151,17 @@
             }
           </select>
           <div class="row mb-3">
-          @for (r of resourcesSharedCollection; track $index) {
-            <div class="col-sm-12" placement="left" ngbPopover="Copied!">
-              <a href="/api/resources/doc/{{ r.id }}">{{ r.fileName }}</a>
-              <a [cdkCopyToClipboard]="baseUrl('/api/resources/doc/'+r.id)"
-                 (cdkCopyToClipboardCopied)="onClipboardCopy($event)">
-                    <fa-icon icon="clipboard"></fa-icon>
-              </a>
+          @for (resource of editForm.get('resources')?.value; track $index) {
+            <div class="row col-sm-12" placement="left" ngbPopover="Copied!">
+              <div class="col-sm-3">
+                <a href="/api/resources/doc/{{ resource.id }}">{{ resource.fileName }}</a> ({{ resource.documentContentType }})
+              </div>
+              <div class="col-sm-1">
+                <a [cdkCopyToClipboard]="baseUrl('/api/resources/doc/'+resource.id)"
+                   (cdkCopyToClipboardCopied)="onClipboardCopy($event)">
+                      <fa-icon icon="clipboard"></fa-icon>
+                </a>
+              </div>
             </div>
 
           }

@@ -20,24 +20,43 @@
         }
 
         <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.assessment.learningCompetency" for="field_learningCompetency"
+          >Learning Competency</label
+          >
+          <select
+            class="form-control"
+            id="field_learningCompetency"
+            data-cy="learningCompetency"
+            name="learningCompetency"
+            formControlName="learningCompetency"
+            [compareWith]="compareLearningCompetency"
+          >
+            <option [ngValue]="null"></option>
+            @for (learningCompetencyOption of learningCompetenciesSharedCollection; track $index) {
+              <option [ngValue]="learningCompetencyOption">{{ learningCompetencyOption.seqNo + ' - ' + learningCompetencyOption.competencyCode }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.assessment.name" for="field_name">Name</label>
           <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
         </div>
 
         <div class="mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.assessment.instruction" for="field_instruction">Instruction</label>
-          <input
-            type="text"
+          <textarea
             class="form-control"
             name="instruction"
             id="field_instruction"
             data-cy="instruction"
             formControlName="instruction"
-          />
+          ></textarea>
         </div>
 
         <div class="mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.assessment.markScheme" for="field_markScheme">Mark Scheme</label>
+          <!--
           <textarea
             class="form-control"
             name="markScheme"
@@ -45,6 +64,15 @@
             data-cy="markScheme"
             formControlName="markScheme"
           ></textarea>
+          -->
+          <editor
+            class="form-control"
+            name="markScheme"
+            id="field_markScheme"
+            data-cy="markScheme"
+            formControlName="markScheme"
+            [init]="tinyMCEOptions">
+          </editor>
         </div>
 
         <div class="mb-3">
@@ -134,24 +162,21 @@
             }
           </select>
         </div>
+        <div class="row mb-3">
+          @for (resource of editForm.get('resources')?.value; track $index) {
+            <div class="row col-sm-12" placement="left" ngbPopover="Copied!">
+              <div class="col-sm-3">
+                <a href="/api/resources/doc/{{ resource.id }}">{{ resource.fileName }}</a> ({{ resource.documentContentType }})
+              </div>
+              <div class="col-sm-1">
+                <a [cdkCopyToClipboard]="baseUrl('/api/resources/doc/'+resource.id)"
+                   (cdkCopyToClipboardCopied)="onClipboardCopy($event)">
+                  <fa-icon icon="clipboard"></fa-icon>
+                </a>
+              </div>
+            </div>
 
-        <div class="mb-3">
-          <label class="form-label" jhiTranslate="schInfoSysApp.assessment.learningCompetency" for="field_learningCompetency"
-            >Learning Competency</label
-          >
-          <select
-            class="form-control"
-            id="field_learningCompetency"
-            data-cy="learningCompetency"
-            name="learningCompetency"
-            formControlName="learningCompetency"
-            [compareWith]="compareLearningCompetency"
-          >
-            <option [ngValue]="null"></option>
-            @for (learningCompetencyOption of learningCompetenciesSharedCollection; track $index) {
-              <option [ngValue]="learningCompetencyOption">{{ learningCompetencyOption.id }}</option>
-            }
-          </select>
+          }
         </div>
       </div>
 

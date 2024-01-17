@@ -17,6 +17,7 @@ import { LearningCompetencyService } from 'app/entities/learning-competency/serv
 import { AssessmentService } from '../service/assessment.service';
 import { IAssessment } from '../assessment.model';
 import { AssessmentFormService, AssessmentFormGroup } from './assessment-form.service';
+import { OPT_TINY_MCE } from "../../../app.constants";
 
 @Component({
   standalone: true,
@@ -27,6 +28,8 @@ import { AssessmentFormService, AssessmentFormGroup } from './assessment-form.se
 export class AssessmentUpdateComponent implements OnInit {
   isSaving = false;
   assessment: IAssessment | null = null;
+
+  tinyMCEOptions = OPT_TINY_MCE;
 
   resourcesSharedCollection: IResources[] = [];
   learningCompetenciesSharedCollection: ILearningCompetency[] = [];
@@ -93,6 +96,15 @@ export class AssessmentUpdateComponent implements OnInit {
       next: () => this.onSaveSuccess(),
       error: () => this.onSaveError(),
     });
+  }
+
+  baseUrl(api: string): string {
+    const url = window.location.href;
+    return url.split('/assessment')[0] + api;
+  }
+
+  public onClipboardCopy(successful: boolean): void {
+    console.log(successful);
   }
 
   protected onSaveSuccess(): void {

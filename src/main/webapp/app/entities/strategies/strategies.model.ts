@@ -10,7 +10,7 @@ export interface IStrategies {
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
-  resources?: Pick<IResources, 'id'>[] | null;
+  resources?: Pick<IResources, 'id'|'fileName'|'documentContentType'>[] | null;
   learningCompetency?: Pick<ILearningCompetency, 'id'|'seqNo'|'competencyCode'> | null;
 }
 

@@ -25,6 +25,8 @@ public interface AssessmentMapper extends EntityMapper<AssessmentDTO, Assessment
     @Named("resourcesId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "fileName", source = "fileName")
+    @Mapping(target = "documentContentType", source = "documentContentType")
     ResourcesDTO toDtoResourcesId(Resources resources);
 
     @Named("resourcesIdSet")
@@ -35,7 +37,7 @@ public interface AssessmentMapper extends EntityMapper<AssessmentDTO, Assessment
     @Named("learningCompetencyId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "seqNo", source = "seqNo")
     @Mapping(target = "competencyCode", source = "competencyCode")
-    @Mapping(target = "description", source = "description")
     LearningCompetencyDTO toDtoLearningCompetencyId(LearningCompetency learningCompetency);
 }

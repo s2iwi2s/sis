@@ -28,7 +28,7 @@ export class StrategiesUpdateComponent implements OnInit {
   isSaving = false;
   strategies: IStrategies | null = null;
 
-  tineMCEOptions = OPT_TINY_MCE;
+  tinyMCEOptions = OPT_TINY_MCE;
 
   resourcesSharedCollection: IResources[] = [];
   learningCompetenciesSharedCollection: ILearningCompetency[] = [];
@@ -73,13 +73,16 @@ export class StrategiesUpdateComponent implements OnInit {
       this.subscribeToSaveResponse(this.strategiesService.create(strategies));
     }
   }
+
   baseUrl(api: string): string {
     const url = window.location.href;
     return url.split('/strategies')[0] + api;
   }
+
   public onClipboardCopy(successful: boolean): void {
     console.log(successful);
   }
+
   protected subscribeToSaveResponse(result: Observable<HttpResponse<IStrategies>>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
       next: () => this.onSaveSuccess(),

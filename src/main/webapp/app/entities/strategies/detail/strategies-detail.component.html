@@ -31,7 +31,13 @@
           </dd>
           <dt><span jhiTranslate="schInfoSysApp.strategies.description">Description</span></dt>
           <dd>
-            <span>{{ strategies.description }}</span>
+            <span>
+              <editor
+                class="form-control"
+                [disabled]="true"
+                [(ngModel)]="strategies.description"
+                [init]="tinyMCEDisabledOptions"></editor>
+            </span>
           </dd>
           <dt><span jhiTranslate="schInfoSysApp.strategies.createdBy">Created By</span></dt>
           <dd>
@@ -50,12 +56,11 @@
             <span>{{ strategies.lastModifiedDate | formatMediumDatetime }}</span>
           </dd>
           <dt><span jhiTranslate="schInfoSysApp.strategies.resources">Resources</span></dt>
-          <dd>
+          <dd class="row">
             @for (resources of strategies.resources; track $index; let last = $last) {
-              <span>
-                <a [routerLink]="['/resources', resources.id, 'view']">{{ resources.id }}</a
-                >{{ last ? '' : ', ' }}resources.document, resources.documentContentType
-              </span>
+              <div class="col-sm-12">
+                <a [routerLink]="['/resources', resources.id, 'view']">{{ resources.fileName }} ({{ resources.documentContentType }})</a>
+              </div>
             }
           </dd>
         </dl>

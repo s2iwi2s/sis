@@ -2,6 +2,7 @@ import { Buffer } from 'buffer';
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable, Observer } from 'rxjs';
+import {ResourcesFormGroup} from "../../entities/resources/update/resources-form.service";
 
 export type FileLoadErrorType = 'not.image' | 'could.not.extract';
 
@@ -63,6 +64,7 @@ export class DataUtils {
       const eventTarget: HTMLInputElement | null = event.target as HTMLInputElement | null;
       if (eventTarget?.files?.[0]) {
         const file: File = eventTarget.files[0];
+        editForm.patchValue({fileName: file.name});
         if (isImage && !file.type.startsWith('image/')) {
           const error: FileLoadError = {
             message: `File was expected to be an image but was found to be '${file.type}'`,

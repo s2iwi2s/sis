@@ -25,6 +25,8 @@ public interface StrategiesMapper extends EntityMapper<StrategiesDTO, Strategies
     @Named("resourcesId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "fileName", source = "fileName")
+    @Mapping(target = "documentContentType", source = "documentContentType")
     ResourcesDTO toDtoResourcesId(Resources resources);
 
     @Named("resourcesIdSet")
