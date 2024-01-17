@@ -10,66 +10,59 @@
 
         <jhi-alert></jhi-alert>
 
-        <dl class="row jh-entity-details">
-          <dt class="col-sm-2"><span jhiTranslate="global.field.id">ID</span></dt>
-          <dd class="col-sm-10">
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
             <span>{{ course.id }}</span>
           </dd>
-          <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.course.gradelevel">Gradelevel</span></dt>
-          <dd class="col-sm-4">
+          <dt><span jhiTranslate="schInfoSysApp.course.subject">Subject</span></dt>
+          <dd>
+            <span>{{ course.subject }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.gradelevel">Gradelevel</span></dt>
+          <dd>
             @if (course.gradelevel) {
               <div>
-                <a [routerLink]="['/app-config', course.gradelevel.id, 'view']">{{ course.gradelevel.description}} </a>
+                <a [routerLink]="['/app-config', course.gradelevel.id, 'view']">{{ course.gradelevel.description }}</a>
               </div>
             }
           </dd>
-
-          <dt class="col-sm-1 px-0"><span jhiTranslate="schInfoSysApp.course.schYr">Sch Yr</span></dt>
-          <dd class="col-sm-3">
+          <dt><span jhiTranslate="schInfoSysApp.course.schYr">schYr</span></dt>
+          <dd>
             @if (course.schYr) {
               <div>
                 <a [routerLink]="['/app-config', course.schYr.id, 'view']">{{ course.schYr.description }}</a>
               </div>
             }
           </dd>
-
-          <dt class="col-sm-1 px-0"><span jhiTranslate="schInfoSysApp.course.hoursPerQuarter">Hrs Per Quarter</span></dt>
-          <dd class="col-sm-1">
+          <dt><span jhiTranslate="schInfoSysApp.course.hoursPerQuarter">Hours Per Quarter</span></dt>
+          <dd>
             <span>{{ course.hoursPerQuarter }}</span>
           </dd>
-
-          <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.course.subject">Subject</span></dt>
-          <dd class="col-sm-10">
-            <span>{{ course.subject }}</span>
-          </dd>
-          <dt class="col-sm-12"><span jhiTranslate="schInfoSysApp.course.courseDescription">Course Description</span></dt>
-          <dd class="col-sm-12">
+          <dt><span jhiTranslate="schInfoSysApp.course.courseDescription">Course Description</span></dt>
+          <dd>
             <span>{{ course.courseDescription }}</span>
           </dd>
-          <dt class="col-sm-12"><span jhiTranslate="schInfoSysApp.course.courseObjectives">Course Objectives</span></dt>
-          <dd class="col-sm-12">
+          <dt><span jhiTranslate="schInfoSysApp.course.courseObjectives">Course Objectives</span></dt>
+          <dd>
             <span>{{ course.courseObjectives }}</span>
           </dd>
-          <!--
-          <dt><span jhiTranslate="schInfoSysApp.course.instructor">Instructor</span></dt>
+          <dt><span jhiTranslate="schInfoSysApp.course.createdBy">Created By</span></dt>
           <dd>
-            @for (instructor of course.instructors; track $index; let last = $last) {
-              <span>
-                <a [routerLink]="['/instructor', instructor.id, 'view']">{{ instructor.id }}</a
-                >{{ last ? '' : ', ' }}
-              </span>
-            }
+            <span>{{ course.createdBy }}</span>
           </dd>
-          <dt><span jhiTranslate="schInfoSysApp.course.student">Student</span></dt>
+          <dt><span jhiTranslate="schInfoSysApp.course.createdDate">Created Date</span></dt>
           <dd>
-            @for (student of course.students; track $index; let last = $last) {
-              <span>
-                <a [routerLink]="['/student', student.id, 'view']">{{ student.id }}</a
-                >{{ last ? '' : ', ' }}
-              </span>
-            }
+            <span>{{ course.createdDate | formatMediumDatetime }}</span>
           </dd>
-          -->
+          <dt><span jhiTranslate="schInfoSysApp.course.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ course.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ course.lastModifiedDate | formatMediumDatetime }}</span>
+          </dd>
         </dl>
 
         <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

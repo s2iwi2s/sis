@@ -37,7 +37,7 @@
           </dd>
           <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.instructor.hireDate">Hire Date</span></dt>
           <dd class="col-sm-2">
-            <span>{{ instructor.hireDate | formatMediumDate }}</span>
+            <span>{{ instructor.hireDate | formatMediumDatetime }}</span>
           </dd>
           <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.instructor.salary">Salary</span></dt>
           <dd class="col-sm-2">
@@ -55,6 +55,39 @@
               </div>
             }
           </dd>
+
+          <dt class="col-sm-12"><span jhiTranslate="schInfoSysApp.instructor.courses"></span></dt>
+          <dd class="col-sm-12">
+            @for (course of instructor.courses; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/course', course.id, 'view']">{{ course.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+            @if(instructor.courses!){
+              <span class="badge text-bg-danger">No courses enrolled</span>
+            }
+          </dd>
+
+          <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.instructor.createdBy">Created By</span></dt>
+          <dd class="col-sm-2">
+            <span>{{ instructor.createdBy }}</span>
+          </dd>
+          <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.instructor.createdDate">Created Date</span></dt>
+          <dd class="col-sm-2">
+            <span>{{ instructor.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <div class="w-100"></div>
+          <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.instructor.lastModifiedBy">Last Modified By</span></dt>
+          <dd class="col-sm-2">
+            <span>{{ instructor.lastModifiedBy }}</span>
+          </dd>
+          <dt class="col-sm-2"><span jhiTranslate="schInfoSysApp.instructor.lastModifiedDate">Last Modified Date</span></dt>
+
+          <dd class="col-sm-2">
+            <span>{{ instructor.lastModifiedDate | formatMediumDatetime }}</span>
+          </dd>
+
         </dl>
 
         <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

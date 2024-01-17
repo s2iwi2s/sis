@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { IResources } from '../resources.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../resources.test-samples';
 
-import { ResourcesService } from './resources.service';
+import { ResourcesService, RestResources } from './resources.service';
 
-const requireRestSample: IResources = {
+const requireRestSample: RestResources = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('Resources Service', () => {

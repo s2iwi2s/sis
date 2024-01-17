@@ -20,9 +20,9 @@ entity Org{
     logo String,
     address String,
     createdBy String maxlength(50),
-    createdDate ZonedDateTime,
+    createdDate Instant,
     lastModifiedBy String maxlength(50),
-    lastModifiedDate ZonedDateTime
+    lastModifiedDate Instant
 }
 
 entity Instructor {
@@ -35,9 +35,9 @@ entity Instructor {
 	salary Long,
 	commissionPct Long,
     createdBy String maxlength(50),
-    createdDate ZonedDateTime,
+    createdDate Instant,
     lastModifiedBy String maxlength(50),
-    lastModifiedDate ZonedDateTime
+    lastModifiedDate Instant
 }
 
 entity Student {
@@ -71,9 +71,9 @@ entity Student {
     guardianFullName String maxlength(50), 
     guardianContacts String maxlength(50),
     createdBy String maxlength(50),
-    createdDate ZonedDateTime,
+    createdDate Instant,
     lastModifiedBy String maxlength(50),
-    lastModifiedDate ZonedDateTime
+    lastModifiedDate Instant
 }
 
 entity Course {
@@ -82,9 +82,9 @@ entity Course {
 	courseDescription TextBlob,
 	courseObjectives TextBlob,
     createdBy String maxlength(50),
-    createdDate ZonedDateTime,
+    createdDate Instant,
     lastModifiedBy String maxlength(50),
-    lastModifiedDate ZonedDateTime
+    lastModifiedDate Instant
 }
 
 entity AppConfig {
@@ -94,9 +94,9 @@ entity AppConfig {
     json TextBlob,
 	priority Integer,
     createdBy String maxlength(50),
-    createdDate ZonedDateTime,
+    createdDate Instant,
     lastModifiedBy String maxlength(50),
-    lastModifiedDate ZonedDateTime
+    lastModifiedDate Instant
 }
 
 entity CurriculumMap {
@@ -104,11 +104,11 @@ entity CurriculumMap {
 	weekNo Integer,
 	topic String,
 	contentStandards String,
-	performanceStandards String,
+	performanceStandards String
     createdBy String maxlength(50),
-    createdDate ZonedDateTime,
+    createdDate Instant,
     lastModifiedBy String maxlength(50),
-    lastModifiedDate ZonedDateTime
+    lastModifiedDate Instant
 }
 
 entity LearningCompetency {
@@ -116,18 +116,18 @@ entity LearningCompetency {
 	competencyCode String maxlength(50),
 	description String,
     createdBy String maxlength(50),
-    createdDate ZonedDateTime,
+    createdDate Instant,
     lastModifiedBy String maxlength(50),
-    lastModifiedDate ZonedDateTime
+    lastModifiedDate Instant
 }
 
 entity Strategies {
 	name String,
-	description String,
+	description String
     createdBy String maxlength(50),
-    createdDate ZonedDateTime,
+    createdDate Instant,
     lastModifiedBy String maxlength(50),
-    lastModifiedDate ZonedDateTime
+    lastModifiedDate Instant
 }
 
 entity Assessment {
@@ -135,9 +135,9 @@ entity Assessment {
 	instruction String,
 	markScheme TextBlob,
     createdBy String maxlength(50),
-    createdDate ZonedDateTime,
+    createdDate Instant,
     lastModifiedBy String maxlength(50),
-    lastModifiedDate ZonedDateTime
+    lastModifiedDate Instant
 }
 
 entity Resources {
@@ -145,9 +145,9 @@ entity Resources {
 	fileNameOnServer String,
     document AnyBlob,
     createdBy String maxlength(50),
-    createdDate ZonedDateTime,
+    createdDate Instant,
     lastModifiedBy String maxlength(50),
-    lastModifiedDate ZonedDateTime
+    lastModifiedDate Instant
 }
 
 relationship OneToOne {

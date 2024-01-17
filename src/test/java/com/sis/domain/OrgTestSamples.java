@@ -10,11 +10,11 @@ public class OrgTestSamples {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
 
     public static Org getOrgSample1() {
-        return new Org().id(1L).name("name1").logo("logo1").address("address1");
+        return new Org().id(1L).name("name1").logo("logo1").address("address1").createdBy("createdBy1").lastModifiedBy("lastModifiedBy1");
     }
 
     public static Org getOrgSample2() {
-        return new Org().id(2L).name("name2").logo("logo2").address("address2");
+        return new Org().id(2L).name("name2").logo("logo2").address("address2").createdBy("createdBy2").lastModifiedBy("lastModifiedBy2");
     }
 
     public static Org getOrgRandomSampleGenerator() {
@@ -22,6 +22,8 @@ public class OrgTestSamples {
             .id(longCount.incrementAndGet())
             .name(UUID.randomUUID().toString())
             .logo(UUID.randomUUID().toString())
-            .address(UUID.randomUUID().toString());
+            .address(UUID.randomUUID().toString())
+            .createdBy(UUID.randomUUID().toString())
+            .lastModifiedBy(UUID.randomUUID().toString());
     }
 }

@@ -2,7 +2,9 @@ package com.sis.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import org.hibernate.annotations.Cache;
@@ -15,7 +17,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "curriculum_map")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class CurriculumMap implements Serializable {
+public class CurriculumMap extends AbstractAuditingEntity<Long> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -45,7 +47,7 @@ public class CurriculumMap implements Serializable {
     private Set<LearningCompetency> learningCompetencies = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "schYr", "curriculumMaps", "instructors", "students" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "gradelevel", "curriculumMaps", "instructors", "students" }, allowSetters = true)
     private Course course;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -128,6 +130,26 @@ public class CurriculumMap implements Serializable {
         this.performanceStandards = performanceStandards;
     }
 
+    public CurriculumMap createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    public CurriculumMap createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
+        return this;
+    }
+
+    public CurriculumMap lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
+        return this;
+    }
+
+    public CurriculumMap lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
     public Set<LearningCompetency> getLearningCompetencies() {
         return this.learningCompetencies;
     }
@@ -201,6 +223,10 @@ public class CurriculumMap implements Serializable {
             ", topic='" + getTopic() + "'" +
             ", contentStandards='" + getContentStandards() + "'" +
             ", performanceStandards='" + getPerformanceStandards() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

@@ -2,12 +2,27 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { map } from 'rxjs/operators';
+
+import dayjs from 'dayjs/esm';
+
 import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IResources, NewResources } from '../resources.model';
 
 export type PartialUpdateResources = Partial<IResources> & Pick<IResources, 'id'>;
+
+type RestOf<T extends IResources | NewResources> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
+};
+
+export type RestResources = RestOf<IResources>;
+
+export type NewRestResources = RestOf<NewResources>;
+
+export type PartialUpdateRestResources = RestOf<PartialUpdateResources>;
 
 export type EntityResponseType = HttpResponse<IResources>;
 export type EntityArrayResponseType = HttpResponse<IResources[]>;
@@ -22,24 +37,37 @@ export class ResourcesService {
   ) {}
 
   create(resources: NewResources): Observable<EntityResponseType> {
-    return this.http.post<IResources>(this.resourceUrl, resources, { observe: 'response' });
+    const copy = this.convertDateFromClient(resources);
+    return this.http
+      .post<RestResources>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   update(resources: IResources): Observable<EntityResponseType> {
-    return this.http.put<IResources>(`${this.resourceUrl}/${this.getResourcesIdentifier(resources)}`, resources, { observe: 'response' });
+    const copy = this.convertDateFromClient(resources);
+    return this.http
+      .put<RestResources>(`${this.resourceUrl}/${this.getResourcesIdentifier(resources)}`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   partialUpdate(resources: PartialUpdateResources): Observable<EntityResponseType> {
-    return this.http.patch<IResources>(`${this.resourceUrl}/${this.getResourcesIdentifier(resources)}`, resources, { observe: 'response' });
+    const copy = this.convertDateFromClient(resources);
+    return this.http
+      .patch<RestResources>(`${this.resourceUrl}/${this.getResourcesIdentifier(resources)}`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   find(id: number): Observable<EntityResponseType> {
-    return this.http.get<IResources>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    return this.http
+      .get<RestResources>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<IResources[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http
+      .get<RestResources[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map(res => this.convertResponseArrayFromServer(res)));
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {
@@ -72,5 +100,33 @@ export class ResourcesService {
       return [...resourcesToAdd, ...resourcesCollection];
     }
     return resourcesCollection;
+  }
+
+  protected convertDateFromClient<T extends IResources | NewResources | PartialUpdateResources>(resources: T): RestOf<T> {
+    return {
+      ...resources,
+      createdDate: resources.createdDate?.toJSON() ?? null,
+      lastModifiedDate: resources.lastModifiedDate?.toJSON() ?? null,
+    };
+  }
+
+  protected convertDateFromServer(restResources: RestResources): IResources {
+    return {
+      ...restResources,
+      createdDate: restResources.createdDate ? dayjs(restResources.createdDate) : undefined,
+      lastModifiedDate: restResources.lastModifiedDate ? dayjs(restResources.lastModifiedDate) : undefined,
+    };
+  }
+
+  protected convertResponseFromServer(res: HttpResponse<RestResources>): HttpResponse<IResources> {
+    return res.clone({
+      body: res.body ? this.convertDateFromServer(res.body) : null,
+    });
+  }
+
+  protected convertResponseArrayFromServer(res: HttpResponse<RestResources[]>): HttpResponse<IResources[]> {
+    return res.clone({
+      body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
+    });
   }
 }

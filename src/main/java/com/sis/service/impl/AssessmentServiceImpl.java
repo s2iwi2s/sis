@@ -69,11 +69,15 @@ public class AssessmentServiceImpl implements AssessmentService {
         return assessmentRepository.findAll(pageable).map(assessmentMapper::toDto);
     }
 
+    public Page<AssessmentDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return assessmentRepository.findAllWithEagerRelationships(pageable).map(assessmentMapper::toDto);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public Optional<AssessmentDTO> findOne(Long id) {
         log.debug("Request to get Assessment : {}", id);
-        return assessmentRepository.findById(id).map(assessmentMapper::toDto);
+        return assessmentRepository.findOneWithEagerRelationships(id).map(assessmentMapper::toDto);
     }
 
     @Override

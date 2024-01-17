@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { IAppConfig } from '../app-config.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../app-config.test-samples';
 
-import { AppConfigService } from './app-config.service';
+import { AppConfigService, RestAppConfig } from './app-config.service';
 
-const requireRestSample: IAppConfig = {
+const requireRestSample: RestAppConfig = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('AppConfig Service', () => {

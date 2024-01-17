@@ -45,18 +45,14 @@ class StudentTest {
 
         student.addCourse(courseBack);
         assertThat(student.getCourses()).containsOnly(courseBack);
-        assertThat(courseBack.getStudents()).containsOnly(student);
 
         student.removeCourse(courseBack);
         assertThat(student.getCourses()).doesNotContain(courseBack);
-        assertThat(courseBack.getStudents()).doesNotContain(student);
 
         student.courses(new HashSet<>(Set.of(courseBack)));
         assertThat(student.getCourses()).containsOnly(courseBack);
-        assertThat(courseBack.getStudents()).containsOnly(student);
 
         student.setCourses(new HashSet<>());
         assertThat(student.getCourses()).doesNotContain(courseBack);
-        assertThat(courseBack.getStudents()).doesNotContain(student);
     }
 }

@@ -69,15 +69,11 @@ public class CourseServiceImpl implements CourseService {
         return courseRepository.findAll(pageable).map(courseMapper::toDto);
     }
 
-    public Page<CourseDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return courseRepository.findAllWithEagerRelationships(pageable).map(courseMapper::toDto);
-    }
-
     @Override
     @Transactional(readOnly = true)
     public Optional<CourseDTO> findOne(Long id) {
         log.debug("Request to get Course : {}", id);
-        return courseRepository.findOneWithEagerRelationships(id).map(courseMapper::toDto);
+        return courseRepository.findById(id).map(courseMapper::toDto);
     }
 
     @Override

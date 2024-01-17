@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
-import { DATE_FORMAT } from 'app/config/input.constants';
+import {DATE_FORMAT, DATE_TIME_FORMAT} from 'app/config/input.constants';
 import { IStudent, NewStudent } from '../student.model';
 
 /**
@@ -19,15 +19,17 @@ type StudentFormGroupInput = IStudent | PartialWithRequiredKeyOf<NewStudent>;
 /**
  * Type that converts some properties for forms.
  */
-type FormValueOf<T extends IStudent | NewStudent> = Omit<T, 'birthDate'> & {
+type FormValueOf<T extends IStudent | NewStudent> = Omit<T, 'birthDate' | 'createdDate' | 'lastModifiedDate'> & {
   birthDate?: string | null;
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
 };
 
 type StudentFormRawValue = FormValueOf<IStudent>;
 
 type NewStudentFormRawValue = FormValueOf<NewStudent>;
 
-type StudentFormDefaults = Pick<NewStudent, 'id' | 'birthDate'>;
+type StudentFormDefaults = Pick<NewStudent, 'id' | 'birthDate' | 'createdDate' | 'lastModifiedDate' | 'courses'>;
 
 type StudentFormGroupContent = {
   id: FormControl<StudentFormRawValue['id'] | NewStudent['id']>;
@@ -60,7 +62,12 @@ type StudentFormGroupContent = {
   mothersContacts: FormControl<StudentFormRawValue['mothersContacts']>;
   guardianFullName: FormControl<StudentFormRawValue['guardianFullName']>;
   guardianContacts: FormControl<StudentFormRawValue['guardianContacts']>;
+  createdBy: FormControl<StudentFormRawValue['createdBy']>;
+  createdDate: FormControl<StudentFormRawValue['createdDate']>;
+  lastModifiedBy: FormControl<StudentFormRawValue['lastModifiedBy']>;
+  lastModifiedDate: FormControl<StudentFormRawValue['lastModifiedDate']>;
   gender: FormControl<StudentFormRawValue['gender']>;
+  courses: FormControl<StudentFormRawValue['courses']>;
 };
 
 export type StudentFormGroup = FormGroup<StudentFormGroupContent>;
@@ -163,7 +170,16 @@ export class StudentFormService {
       guardianContacts: new FormControl(studentRawValue.guardianContacts, {
         validators: [Validators.maxLength(50)],
       }),
+      createdBy: new FormControl(studentRawValue.createdBy, {
+        validators: [Validators.maxLength(50)],
+      }),
+      createdDate: new FormControl(studentRawValue.createdDate),
+      lastModifiedBy: new FormControl(studentRawValue.lastModifiedBy, {
+        validators: [Validators.maxLength(50)],
+      }),
+      lastModifiedDate: new FormControl(studentRawValue.lastModifiedDate),
       gender: new FormControl(studentRawValue.gender),
+      courses: new FormControl(studentRawValue.courses ?? []),
     });
   }
 
@@ -187,6 +203,9 @@ export class StudentFormService {
     return {
       id: null,
       birthDate: currentTime,
+      createdDate: currentTime,
+      lastModifiedDate: currentTime,
+      courses: [],
     };
   }
 
@@ -194,6 +213,8 @@ export class StudentFormService {
     return {
       ...rawStudent,
       birthDate: dayjs(rawStudent.birthDate, DATE_FORMAT),
+      createdDate: dayjs(rawStudent.createdDate, DATE_TIME_FORMAT),
+      lastModifiedDate: dayjs(rawStudent.lastModifiedDate, DATE_TIME_FORMAT),
     };
   }
 
@@ -203,6 +224,9 @@ export class StudentFormService {
     return {
       ...student,
       birthDate: student.birthDate ? student.birthDate.format(DATE_FORMAT) : undefined,
+      createdDate: student.createdDate ? student.createdDate.format(DATE_TIME_FORMAT) : undefined,
+      lastModifiedDate: student.lastModifiedDate ? student.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
+      courses: student.courses ?? [],
     };
   }
 }

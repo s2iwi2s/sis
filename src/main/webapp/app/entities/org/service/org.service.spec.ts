@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { IOrg } from '../org.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../org.test-samples';
 
-import { OrgService } from './org.service';
+import { OrgService, RestOrg } from './org.service';
 
-const requireRestSample: IOrg = {
+const requireRestSample: RestOrg = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('Org Service', () => {

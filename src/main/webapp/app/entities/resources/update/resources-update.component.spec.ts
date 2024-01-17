@@ -6,12 +6,8 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of, Subject, from } from 'rxjs';
 
-import { IStrategies } from 'app/entities/strategies/strategies.model';
-import { StrategiesService } from 'app/entities/strategies/service/strategies.service';
-import { IAssessment } from 'app/entities/assessment/assessment.model';
-import { AssessmentService } from 'app/entities/assessment/service/assessment.service';
-import { IResources } from '../resources.model';
 import { ResourcesService } from '../service/resources.service';
+import { IResources } from '../resources.model';
 import { ResourcesFormService } from './resources-form.service';
 
 import { ResourcesUpdateComponent } from './resources-update.component';
@@ -22,8 +18,6 @@ describe('Resources Management Update Component', () => {
   let activatedRoute: ActivatedRoute;
   let resourcesFormService: ResourcesFormService;
   let resourcesService: ResourcesService;
-  let strategiesService: StrategiesService;
-  let assessmentService: AssessmentService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -45,69 +39,17 @@ describe('Resources Management Update Component', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
     resourcesFormService = TestBed.inject(ResourcesFormService);
     resourcesService = TestBed.inject(ResourcesService);
-    strategiesService = TestBed.inject(StrategiesService);
-    assessmentService = TestBed.inject(AssessmentService);
 
     comp = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
-    it('Should call Strategies query and add missing value', () => {
-      const resources: IResources = { id: 456 };
-      const strategies: IStrategies = { id: 31647 };
-      resources.strategies = strategies;
-
-      const strategiesCollection: IStrategies[] = [{ id: 14164 }];
-      jest.spyOn(strategiesService, 'query').mockReturnValue(of(new HttpResponse({ body: strategiesCollection })));
-      const additionalStrategies = [strategies];
-      const expectedCollection: IStrategies[] = [...additionalStrategies, ...strategiesCollection];
-      jest.spyOn(strategiesService, 'addStrategiesToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ resources });
-      comp.ngOnInit();
-
-      expect(strategiesService.query).toHaveBeenCalled();
-      expect(strategiesService.addStrategiesToCollectionIfMissing).toHaveBeenCalledWith(
-        strategiesCollection,
-        ...additionalStrategies.map(expect.objectContaining),
-      );
-      expect(comp.strategiesSharedCollection).toEqual(expectedCollection);
-    });
-
-    it('Should call Assessment query and add missing value', () => {
-      const resources: IResources = { id: 456 };
-      const assessment: IAssessment = { id: 28641 };
-      resources.assessment = assessment;
-
-      const assessmentCollection: IAssessment[] = [{ id: 16070 }];
-      jest.spyOn(assessmentService, 'query').mockReturnValue(of(new HttpResponse({ body: assessmentCollection })));
-      const additionalAssessments = [assessment];
-      const expectedCollection: IAssessment[] = [...additionalAssessments, ...assessmentCollection];
-      jest.spyOn(assessmentService, 'addAssessmentToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ resources });
-      comp.ngOnInit();
-
-      expect(assessmentService.query).toHaveBeenCalled();
-      expect(assessmentService.addAssessmentToCollectionIfMissing).toHaveBeenCalledWith(
-        assessmentCollection,
-        ...additionalAssessments.map(expect.objectContaining),
-      );
-      expect(comp.assessmentsSharedCollection).toEqual(expectedCollection);
-    });
-
     it('Should update editForm', () => {
       const resources: IResources = { id: 456 };
-      const strategies: IStrategies = { id: 2717 };
-      resources.strategies = strategies;
-      const assessment: IAssessment = { id: 21073 };
-      resources.assessment = assessment;
 
       activatedRoute.data = of({ resources });
       comp.ngOnInit();
 
-      expect(comp.strategiesSharedCollection).toContain(strategies);
-      expect(comp.assessmentsSharedCollection).toContain(assessment);
       expect(comp.resources).toEqual(resources);
     });
   });
@@ -177,28 +119,6 @@ describe('Resources Management Update Component', () => {
       expect(resourcesService.update).toHaveBeenCalled();
       expect(comp.isSaving).toEqual(false);
       expect(comp.previousState).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('Compare relationships', () => {
-    describe('compareStrategies', () => {
-      it('Should forward to strategiesService', () => {
-        const entity = { id: 123 };
-        const entity2 = { id: 456 };
-        jest.spyOn(strategiesService, 'compareStrategies');
-        comp.compareStrategies(entity, entity2);
-        expect(strategiesService.compareStrategies).toHaveBeenCalledWith(entity, entity2);
-      });
-    });
-
-    describe('compareAssessment', () => {
-      it('Should forward to assessmentService', () => {
-        const entity = { id: 123 };
-        const entity2 = { id: 456 };
-        jest.spyOn(assessmentService, 'compareAssessment');
-        comp.compareAssessment(entity, entity2);
-        expect(assessmentService.compareAssessment).toHaveBeenCalledWith(entity, entity2);
-      });
     });
   });
 });

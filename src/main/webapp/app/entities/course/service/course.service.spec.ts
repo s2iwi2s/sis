@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { ICourse } from '../course.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../course.test-samples';
 
-import { CourseService } from './course.service';
+import { CourseService, RestCourse } from './course.service';
 
-const requireRestSample: ICourse = {
+const requireRestSample: RestCourse = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('Course Service', () => {

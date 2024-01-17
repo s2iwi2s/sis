@@ -69,11 +69,15 @@ public class StrategiesServiceImpl implements StrategiesService {
         return strategiesRepository.findAll(pageable).map(strategiesMapper::toDto);
     }
 
+    public Page<StrategiesDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return strategiesRepository.findAllWithEagerRelationships(pageable).map(strategiesMapper::toDto);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public Optional<StrategiesDTO> findOne(Long id) {
         log.debug("Request to get Strategies : {}", id);
-        return strategiesRepository.findById(id).map(strategiesMapper::toDto);
+        return strategiesRepository.findOneWithEagerRelationships(id).map(strategiesMapper::toDto);
     }
 
     @Override

@@ -42,6 +42,14 @@ public interface StudentService {
     Page<StudentDTO> findAll(Pageable pageable);
 
     /**
+     * Get all the students with eager load of many-to-many relationships.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    Page<StudentDTO> findAllWithEagerRelationships(Pageable pageable);
+
+    /**
      * Get the "id" student.
      *
      * @param id the id of the entity.

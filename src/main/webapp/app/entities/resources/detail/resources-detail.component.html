@@ -32,21 +32,21 @@
               </div>
             }
           </dd>
-          <dt><span jhiTranslate="schInfoSysApp.resources.strategies">Strategies</span></dt>
+          <dt><span jhiTranslate="schInfoSysApp.resources.createdBy">Created By</span></dt>
           <dd>
-            @if (resources.strategies) {
-              <div>
-                <a [routerLink]="['/strategies', resources.strategies.id, 'view']">{{ resources.strategies.id }}</a>
-              </div>
-            }
+            <span>{{ resources.createdBy }}</span>
           </dd>
-          <dt><span jhiTranslate="schInfoSysApp.resources.assessment">Assessment</span></dt>
+          <dt><span jhiTranslate="schInfoSysApp.resources.createdDate">Created Date</span></dt>
           <dd>
-            @if (resources.assessment) {
-              <div>
-                <a [routerLink]="['/assessment', resources.assessment.id, 'view']">{{ resources.assessment.id }}</a>
-              </div>
-            }
+            <span>{{ resources.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.resources.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ resources.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.resources.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ resources.lastModifiedDate | formatMediumDatetime }}</span>
           </dd>
         </dl>
 

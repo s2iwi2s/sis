@@ -49,6 +49,12 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
+            <th scope="col" jhiSortBy="curriculumMap.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.learningCompetency.curriculumMap">Curriculum Map</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
             <th scope="col" jhiSortBy="competencyCode">
               <div class="d-flex">
                 <span jhiTranslate="schInfoSysApp.learningCompetency.competencyCode">Competency Code</span>
@@ -63,9 +69,31 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="curriculumMap.id">
+            <th scope="col" jhiSortBy="createdBy">
               <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.learningCompetency.curriculumMap">Curriculum Map</span>
+                <span jhiTranslate="schInfoSysApp.learningCompetency.createdBy">Created By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.learningCompetency.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.learningCompetency.lastModifiedBy">Last Modified By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.learningCompetency.lastModifiedDate">Last Modified Date</span>
+
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
@@ -79,17 +107,21 @@
                 <a [routerLink]="['/learning-competency', learningCompetency.id, 'view']">{{ learningCompetency.id }}</a>
               </td>
               <td>{{ learningCompetency.seqNo }}</td>
-              <td>{{ learningCompetency.competencyCode }}</td>
-              <td>{{ learningCompetency.description }}</td>
               <td>
                 @if (learningCompetency.curriculumMap) {
                   <div>
                     <a [routerLink]="['/curriculum-map', learningCompetency.curriculumMap.id, 'view']">{{
-                        '[' + learningCompetency.curriculumMap.quarterNo + '-' + learningCompetency.curriculumMap.weekNo +'] ' + learningCompetency.curriculumMap.topic
-                    }}</a>
+                        '[' + learningCompetency.curriculumMap.quarterNo + '-' + learningCompetency.curriculumMap.weekNo + '] '+ learningCompetency.curriculumMap.topic
+                      }}</a>
                   </div>
                 }
               </td>
+              <td>{{ learningCompetency.competencyCode }}</td>
+              <td>{{ learningCompetency.description }}</td>
+              <td>{{ learningCompetency.createdBy }}</td>
+              <td>{{ learningCompetency.createdDate | formatMediumDatetime }}</td>
+              <td>{{ learningCompetency.lastModifiedBy }}</td>
+              <td>{{ learningCompetency.lastModifiedDate | formatMediumDatetime }}</td>
               <td class="text-end">
                 <div class="btn-group">
                   <a

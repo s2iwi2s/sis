@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
-import { DATE_FORMAT } from 'app/config/input.constants';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IInstructor, NewInstructor } from '../instructor.model';
 
 /**
@@ -19,15 +19,17 @@ type InstructorFormGroupInput = IInstructor | PartialWithRequiredKeyOf<NewInstru
 /**
  * Type that converts some properties for forms.
  */
-type FormValueOf<T extends IInstructor | NewInstructor> = Omit<T, 'hireDate'> & {
+type FormValueOf<T extends IInstructor | NewInstructor> = Omit<T, 'hireDate' | 'createdDate' | 'lastModifiedDate'> & {
   hireDate?: string | null;
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
 };
 
 type InstructorFormRawValue = FormValueOf<IInstructor>;
 
 type NewInstructorFormRawValue = FormValueOf<NewInstructor>;
 
-type InstructorFormDefaults = Pick<NewInstructor, 'id' | 'hireDate'>;
+type InstructorFormDefaults = Pick<NewInstructor, 'id' | 'hireDate' | 'createdDate' | 'lastModifiedDate' | 'courses'>;
 
 type InstructorFormGroupContent = {
   id: FormControl<InstructorFormRawValue['id'] | NewInstructor['id']>;
@@ -39,7 +41,12 @@ type InstructorFormGroupContent = {
   hireDate: FormControl<InstructorFormRawValue['hireDate']>;
   salary: FormControl<InstructorFormRawValue['salary']>;
   commissionPct: FormControl<InstructorFormRawValue['commissionPct']>;
+  createdBy: FormControl<InstructorFormRawValue['createdBy']>;
+  createdDate: FormControl<InstructorFormRawValue['createdDate']>;
+  lastModifiedBy: FormControl<InstructorFormRawValue['lastModifiedBy']>;
+  lastModifiedDate: FormControl<InstructorFormRawValue['lastModifiedDate']>;
   gender: FormControl<InstructorFormRawValue['gender']>;
+  courses: FormControl<InstructorFormRawValue['courses']>;
 };
 
 export type InstructorFormGroup = FormGroup<InstructorFormGroupContent>;
@@ -67,7 +74,16 @@ export class InstructorFormService {
       hireDate: new FormControl(instructorRawValue.hireDate),
       salary: new FormControl(instructorRawValue.salary),
       commissionPct: new FormControl(instructorRawValue.commissionPct),
+      createdBy: new FormControl(instructorRawValue.createdBy, {
+        validators: [Validators.maxLength(50)],
+      }),
+      createdDate: new FormControl(instructorRawValue.createdDate),
+      lastModifiedBy: new FormControl(instructorRawValue.lastModifiedBy, {
+        validators: [Validators.maxLength(50)],
+      }),
+      lastModifiedDate: new FormControl(instructorRawValue.lastModifiedDate),
       gender: new FormControl(instructorRawValue.gender),
+      courses: new FormControl(instructorRawValue.courses ?? []),
     });
   }
 
@@ -91,6 +107,9 @@ export class InstructorFormService {
     return {
       id: null,
       hireDate: currentTime,
+      createdDate: currentTime,
+      lastModifiedDate: currentTime,
+      courses: [],
     };
   }
 
@@ -99,7 +118,9 @@ export class InstructorFormService {
   ): IInstructor | NewInstructor {
     return {
       ...rawInstructor,
-      hireDate: dayjs(rawInstructor.hireDate, DATE_FORMAT),
+      hireDate: dayjs(rawInstructor.hireDate, DATE_TIME_FORMAT),
+      createdDate: dayjs(rawInstructor.createdDate, DATE_TIME_FORMAT),
+      lastModifiedDate: dayjs(rawInstructor.lastModifiedDate, DATE_TIME_FORMAT),
     };
   }
 
@@ -108,7 +129,10 @@ export class InstructorFormService {
   ): InstructorFormRawValue | PartialWithRequiredKeyOf<NewInstructorFormRawValue> {
     return {
       ...instructor,
-      hireDate: instructor.hireDate ? instructor.hireDate.format(DATE_FORMAT) : undefined,
+      hireDate: instructor.hireDate ? instructor.hireDate.format(DATE_TIME_FORMAT) : undefined,
+      createdDate: instructor.createdDate ? instructor.createdDate.format(DATE_TIME_FORMAT) : undefined,
+      lastModifiedDate: instructor.lastModifiedDate ? instructor.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
+      courses: instructor.courses ?? [],
     };
   }
 }

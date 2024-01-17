@@ -85,37 +85,74 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" jhiTranslate="schInfoSysApp.resources.strategies" for="field_strategies">Strategies</label>
-          <select
-            class="form-control"
-            id="field_strategies"
-            data-cy="strategies"
-            name="strategies"
-            formControlName="strategies"
-            [compareWith]="compareStrategies"
-          >
-            <option [ngValue]="null"></option>
-            @for (strategiesOption of strategiesSharedCollection; track $index) {
-              <option [ngValue]="strategiesOption">{{ strategiesOption.id }}</option>
-            }
-          </select>
+          <label class="form-label" jhiTranslate="schInfoSysApp.resources.createdBy" for="field_createdBy">Created By</label>
+          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" />
+          @if (editForm.get('createdBy')!.invalid && (editForm.get('createdBy')!.dirty || editForm.get('createdBy')!.touched)) {
+            <div>
+              @if (editForm.get('createdBy')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 50 }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
         </div>
 
         <div class="mb-3">
-          <label class="form-label" jhiTranslate="schInfoSysApp.resources.assessment" for="field_assessment">Assessment</label>
-          <select
-            class="form-control"
-            id="field_assessment"
-            data-cy="assessment"
-            name="assessment"
-            formControlName="assessment"
-            [compareWith]="compareAssessment"
+          <label class="form-label" jhiTranslate="schInfoSysApp.resources.createdDate" for="field_createdDate">Created Date</label>
+          <div class="d-flex">
+            <input
+              id="field_createdDate"
+              data-cy="createdDate"
+              type="datetime-local"
+              class="form-control"
+              name="createdDate"
+              formControlName="createdDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.resources.lastModifiedBy" for="field_lastModifiedBy"
+            >Last Modified By</label
           >
-            <option [ngValue]="null"></option>
-            @for (assessmentOption of assessmentsSharedCollection; track $index) {
-              <option [ngValue]="assessmentOption">{{ assessmentOption.id }}</option>
-            }
-          </select>
+          <input
+            type="text"
+            class="form-control"
+            name="lastModifiedBy"
+            id="field_lastModifiedBy"
+            data-cy="lastModifiedBy"
+            formControlName="lastModifiedBy"
+          />
+          @if (
+            editForm.get('lastModifiedBy')!.invalid && (editForm.get('lastModifiedBy')!.dirty || editForm.get('lastModifiedBy')!.touched)
+          ) {
+            <div>
+              @if (editForm.get('lastModifiedBy')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 50 }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.resources.lastModifiedDate" for="field_lastModifiedDate"
+            >Last Modified Date</label
+          >
+          <div class="d-flex">
+            <input
+              id="field_lastModifiedDate"
+              data-cy="lastModifiedDate"
+              type="datetime-local"
+              class="form-control"
+              name="lastModifiedDate"
+              formControlName="lastModifiedDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
         </div>
       </div>
 

@@ -11,6 +11,8 @@ import com.sis.repository.LearningCompetencyRepository;
 import com.sis.service.dto.LearningCompetencyDTO;
 import com.sis.service.mapper.LearningCompetencyMapper;
 import jakarta.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -39,6 +41,18 @@ class LearningCompetencyResourceIT {
 
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
+
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_LAST_MODIFIED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_MODIFIED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_LAST_MODIFIED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_LAST_MODIFIED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final String ENTITY_API_URL = "/api/learning-competencies";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
@@ -70,7 +84,11 @@ class LearningCompetencyResourceIT {
         LearningCompetency learningCompetency = new LearningCompetency()
             .seqNo(DEFAULT_SEQ_NO)
             .competencyCode(DEFAULT_COMPETENCY_CODE)
-            .description(DEFAULT_DESCRIPTION);
+            .description(DEFAULT_DESCRIPTION)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
+            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
         return learningCompetency;
     }
 
@@ -84,7 +102,11 @@ class LearningCompetencyResourceIT {
         LearningCompetency learningCompetency = new LearningCompetency()
             .seqNo(UPDATED_SEQ_NO)
             .competencyCode(UPDATED_COMPETENCY_CODE)
-            .description(UPDATED_DESCRIPTION);
+            .description(UPDATED_DESCRIPTION)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         return learningCompetency;
     }
 
@@ -114,6 +136,10 @@ class LearningCompetencyResourceIT {
         assertThat(testLearningCompetency.getSeqNo()).isEqualTo(DEFAULT_SEQ_NO);
         assertThat(testLearningCompetency.getCompetencyCode()).isEqualTo(DEFAULT_COMPETENCY_CODE);
         assertThat(testLearningCompetency.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testLearningCompetency.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testLearningCompetency.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testLearningCompetency.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testLearningCompetency.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -153,7 +179,11 @@ class LearningCompetencyResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(learningCompetency.getId().intValue())))
             .andExpect(jsonPath("$.[*].seqNo").value(hasItem(DEFAULT_SEQ_NO)))
             .andExpect(jsonPath("$.[*].competencyCode").value(hasItem(DEFAULT_COMPETENCY_CODE)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
     }
 
     @Test
@@ -170,7 +200,11 @@ class LearningCompetencyResourceIT {
             .andExpect(jsonPath("$.id").value(learningCompetency.getId().intValue()))
             .andExpect(jsonPath("$.seqNo").value(DEFAULT_SEQ_NO))
             .andExpect(jsonPath("$.competencyCode").value(DEFAULT_COMPETENCY_CODE))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))
+            .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
     }
 
     @Test
@@ -192,7 +226,14 @@ class LearningCompetencyResourceIT {
         LearningCompetency updatedLearningCompetency = learningCompetencyRepository.findById(learningCompetency.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedLearningCompetency are not directly saved in db
         em.detach(updatedLearningCompetency);
-        updatedLearningCompetency.seqNo(UPDATED_SEQ_NO).competencyCode(UPDATED_COMPETENCY_CODE).description(UPDATED_DESCRIPTION);
+        updatedLearningCompetency
+            .seqNo(UPDATED_SEQ_NO)
+            .competencyCode(UPDATED_COMPETENCY_CODE)
+            .description(UPDATED_DESCRIPTION)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         LearningCompetencyDTO learningCompetencyDTO = learningCompetencyMapper.toDto(updatedLearningCompetency);
 
         restLearningCompetencyMockMvc
@@ -210,6 +251,10 @@ class LearningCompetencyResourceIT {
         assertThat(testLearningCompetency.getSeqNo()).isEqualTo(UPDATED_SEQ_NO);
         assertThat(testLearningCompetency.getCompetencyCode()).isEqualTo(UPDATED_COMPETENCY_CODE);
         assertThat(testLearningCompetency.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testLearningCompetency.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testLearningCompetency.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testLearningCompetency.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testLearningCompetency.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -293,7 +338,11 @@ class LearningCompetencyResourceIT {
         LearningCompetency partialUpdatedLearningCompetency = new LearningCompetency();
         partialUpdatedLearningCompetency.setId(learningCompetency.getId());
 
-        partialUpdatedLearningCompetency.seqNo(UPDATED_SEQ_NO);
+        partialUpdatedLearningCompetency
+            .seqNo(UPDATED_SEQ_NO)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restLearningCompetencyMockMvc
             .perform(
@@ -310,6 +359,10 @@ class LearningCompetencyResourceIT {
         assertThat(testLearningCompetency.getSeqNo()).isEqualTo(UPDATED_SEQ_NO);
         assertThat(testLearningCompetency.getCompetencyCode()).isEqualTo(DEFAULT_COMPETENCY_CODE);
         assertThat(testLearningCompetency.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testLearningCompetency.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testLearningCompetency.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testLearningCompetency.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testLearningCompetency.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -324,7 +377,14 @@ class LearningCompetencyResourceIT {
         LearningCompetency partialUpdatedLearningCompetency = new LearningCompetency();
         partialUpdatedLearningCompetency.setId(learningCompetency.getId());
 
-        partialUpdatedLearningCompetency.seqNo(UPDATED_SEQ_NO).competencyCode(UPDATED_COMPETENCY_CODE).description(UPDATED_DESCRIPTION);
+        partialUpdatedLearningCompetency
+            .seqNo(UPDATED_SEQ_NO)
+            .competencyCode(UPDATED_COMPETENCY_CODE)
+            .description(UPDATED_DESCRIPTION)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restLearningCompetencyMockMvc
             .perform(
@@ -341,6 +401,10 @@ class LearningCompetencyResourceIT {
         assertThat(testLearningCompetency.getSeqNo()).isEqualTo(UPDATED_SEQ_NO);
         assertThat(testLearningCompetency.getCompetencyCode()).isEqualTo(UPDATED_COMPETENCY_CODE);
         assertThat(testLearningCompetency.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testLearningCompetency.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testLearningCompetency.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testLearningCompetency.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testLearningCompetency.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test

@@ -12,10 +12,6 @@ import { EventManager, EventWithContent } from 'app/core/util/event-manager.serv
 import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
 import { IAppConfig } from 'app/entities/app-config/app-config.model';
 import { AppConfigService } from 'app/entities/app-config/service/app-config.service';
-import { IInstructor } from 'app/entities/instructor/instructor.model';
-import { InstructorService } from 'app/entities/instructor/service/instructor.service';
-import { IStudent } from 'app/entities/student/student.model';
-import { StudentService } from 'app/entities/student/service/student.service';
 import { CourseService } from '../service/course.service';
 import { ICourse } from '../course.model';
 import { CourseFormService, CourseFormGroup } from './course-form.service';
@@ -33,8 +29,6 @@ export class CourseUpdateComponent implements OnInit {
 
   gradelevelsCollection: IAppConfig[] = [];
   schYrsCollection: IAppConfig[] = [];
-  instructorsSharedCollection: IInstructor[] = [];
-  studentsSharedCollection: IStudent[] = [];
 
   editForm: CourseFormGroup = this.courseFormService.createCourseFormGroup();
 
@@ -44,16 +38,10 @@ export class CourseUpdateComponent implements OnInit {
     protected courseService: CourseService,
     protected courseFormService: CourseFormService,
     protected appConfigService: AppConfigService,
-    protected instructorService: InstructorService,
-    protected studentService: StudentService,
     protected activatedRoute: ActivatedRoute,
   ) {}
 
   compareAppConfig = (o1: IAppConfig | null, o2: IAppConfig | null): boolean => this.appConfigService.compareAppConfig(o1, o2);
-
-  compareInstructor = (o1: IInstructor | null, o2: IInstructor | null): boolean => this.instructorService.compareInstructor(o1, o2);
-
-  compareStudent = (o1: IStudent | null, o2: IStudent | null): boolean => this.studentService.compareStudent(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ course }) => {
@@ -117,22 +105,28 @@ export class CourseUpdateComponent implements OnInit {
   protected updateForm(course: ICourse): void {
     this.course = course;
     this.courseFormService.resetForm(this.editForm, course);
-    this.gradelevelsCollection = this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(this.gradelevelsCollection, course.gradelevel);
-    this.schYrsCollection = this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(this.schYrsCollection, course.schYr);
-    this.instructorsSharedCollection = this.instructorService.addInstructorToCollectionIfMissing<IInstructor>(
-      this.instructorsSharedCollection,
-      ...(course.instructors ?? []),
+
+    this.gradelevelsCollection = this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(
+      this.gradelevelsCollection,
+      course.gradelevel,
     );
-    this.studentsSharedCollection = this.studentService.addStudentToCollectionIfMissing<IStudent>(
-      this.studentsSharedCollection,
-      ...(course.students ?? []),
+
+    this.schYrsCollection = this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(
+      this.schYrsCollection,
+      course.schYr,
     );
   }
 
   protected loadRelationshipsOptions(): void {
-
-
-
+    this.appConfigService
+      .query(OPT_SY)
+      .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
+      .pipe(
+        map((appConfigs: IAppConfig[]) =>
+          this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.course?.gradelevel),
+        ),
+      )
+      .subscribe((appConfigs: IAppConfig[]) => (this.schYrsCollection = appConfigs));
     this.appConfigService
       .query(OPT_GRADE_LEVEL)
       .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
@@ -142,35 +136,5 @@ export class CourseUpdateComponent implements OnInit {
         ),
       )
       .subscribe((appConfigs: IAppConfig[]) => (this.gradelevelsCollection = appConfigs));
-
-    this.appConfigService
-      .query(OPT_SY)
-      .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
-      .pipe(
-        map((appConfigs: IAppConfig[]) =>
-          this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.course?.schYr),
-        ),
-      )
-      .subscribe((appConfigs: IAppConfig[]) => (this.schYrsCollection = appConfigs));
-
-    this.instructorService
-      .query()
-      .pipe(map((res: HttpResponse<IInstructor[]>) => res.body ?? []))
-      .pipe(
-        map((instructors: IInstructor[]) =>
-          this.instructorService.addInstructorToCollectionIfMissing<IInstructor>(instructors, ...(this.course?.instructors ?? [])),
-        ),
-      )
-      .subscribe((instructors: IInstructor[]) => (this.instructorsSharedCollection = instructors));
-
-    this.studentService
-      .query()
-      .pipe(map((res: HttpResponse<IStudent[]>) => res.body ?? []))
-      .pipe(
-        map((students: IStudent[]) =>
-          this.studentService.addStudentToCollectionIfMissing<IStudent>(students, ...(this.course?.students ?? [])),
-        ),
-      )
-      .subscribe((students: IStudent[]) => (this.studentsSharedCollection = students));
   }
 }

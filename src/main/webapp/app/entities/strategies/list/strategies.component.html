@@ -42,6 +42,12 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
+            <th scope="col" jhiSortBy="learningCompetency.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.strategies.learningCompetency">Learning Competency</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
             <th scope="col" jhiSortBy="name">
               <div class="d-flex">
                 <span jhiTranslate="schInfoSysApp.strategies.name">Name</span>
@@ -49,16 +55,31 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="description">
+            <th scope="col" jhiSortBy="createdBy">
               <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.strategies.description">Description</span>
+                <span jhiTranslate="schInfoSysApp.strategies.createdBy">Created By</span>
 
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="learningCompetency.id">
+            <th scope="col" jhiSortBy="createdDate">
               <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.strategies.learningCompetency">Learning Competency</span>
+                <span jhiTranslate="schInfoSysApp.strategies.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.strategies.lastModifiedBy">Last Modified By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.strategies.lastModifiedDate">Last Modified Date</span>
+
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
@@ -70,18 +91,21 @@
             <tr data-cy="entityTable">
               <td>
                 <a [routerLink]="['/strategies', strategies.id, 'view']">{{ strategies.id }}</a>
-              </td>
-              <td>{{ strategies.name }}</td>
-              <td>{{ strategies.description }}</td>
-              <td>
-                @if (strategies.learningCompetency) {
-                  <div>
-                    <a [routerLink]="['/learning-competency', strategies.learningCompetency.id, 'view']">{{
-                        '[' + strategies.learningCompetency.competencyCode + '] ' + strategies.learningCompetency.description
+              </td><td>
+              @if (strategies.learningCompetency) {
+                <div>
+                  <a [routerLink]="['/learning-competency', strategies.learningCompetency.id, 'view']">{{
+                      strategies.learningCompetency.seqNo + ' - ' + strategies.learningCompetency.competencyCode
                     }}</a>
-                  </div>
-                }
-              </td>
+                </div>
+              }
+            </td>
+              <td>{{ strategies.name }}</td>
+              <td>{{ strategies.createdBy }}</td>
+              <td>{{ strategies.createdDate | formatMediumDatetime }}</td>
+              <td>{{ strategies.lastModifiedBy }}</td>
+              <td>{{ strategies.lastModifiedDate | formatMediumDatetime }}</td>
+
               <td class="text-end">
                 <div class="btn-group">
                   <a [routerLink]="['/strategies', strategies.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">

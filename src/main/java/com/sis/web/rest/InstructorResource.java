@@ -4,6 +4,8 @@ import com.sis.repository.InstructorRepository;
 import com.sis.service.InstructorService;
 import com.sis.service.dto.InstructorDTO;
 import com.sis.web.rest.errors.BadRequestAlertException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -53,7 +55,7 @@ public class InstructorResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<InstructorDTO> createInstructor(@RequestBody InstructorDTO instructorDTO) throws URISyntaxException {
+    public ResponseEntity<InstructorDTO> createInstructor(@Valid @RequestBody InstructorDTO instructorDTO) throws URISyntaxException {
         log.debug("REST request to save Instructor : {}", instructorDTO);
         if (instructorDTO.getId() != null) {
             throw new BadRequestAlertException("A new instructor cannot already have an ID", ENTITY_NAME, "idexists");
@@ -78,7 +80,7 @@ public class InstructorResource {
     @PutMapping("/{id}")
     public ResponseEntity<InstructorDTO> updateInstructor(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody InstructorDTO instructorDTO
+        @Valid @RequestBody InstructorDTO instructorDTO
     ) throws URISyntaxException {
         log.debug("REST request to update Instructor : {}, {}", id, instructorDTO);
         if (instructorDTO.getId() == null) {
@@ -113,7 +115,7 @@ public class InstructorResource {
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<InstructorDTO> partialUpdateInstructor(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody InstructorDTO instructorDTO
+        @NotNull @RequestBody InstructorDTO instructorDTO
     ) throws URISyntaxException {
         log.debug("REST request to partial update Instructor partially : {}, {}", id, instructorDTO);
         if (instructorDTO.getId() == null) {
@@ -139,12 +141,21 @@ public class InstructorResource {
      * {@code GET  /instructors} : get all the instructors.
      *
      * @param pageable the pagination information.
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of instructors in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<InstructorDTO>> getAllInstructors(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
+    public ResponseEntity<List<InstructorDTO>> getAllInstructors(
+        @org.springdoc.core.annotations.ParameterObject Pageable pageable,
+        @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
+    ) {
         log.debug("REST request to get a page of Instructors");
-        Page<InstructorDTO> page = instructorService.findAll(pageable);
+        Page<InstructorDTO> page;
+        if (eagerload) {
+            page = instructorService.findAllWithEagerRelationships(pageable);
+        } else {
+            page = instructorService.findAll(pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

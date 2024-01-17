@@ -77,9 +77,31 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="user.id">
+            <th scope="col" jhiSortBy="createdBy">
               <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.appConfig.user">User</span>
+                <span jhiTranslate="schInfoSysApp.appConfig.createdBy">Created By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.appConfig.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.appConfig.lastModifiedBy">Last Modified By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.appConfig.lastModifiedDate">Last Modified Date</span>
+
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
@@ -97,9 +119,10 @@
               <td>{{ appConfig.description }}</td>
               <td>{{ appConfig.json }}</td>
               <td>{{ appConfig.priority }}</td>
-              <td>
-                {{ appConfig.user?.id }}
-              </td>
+              <td>{{ appConfig.createdBy }}</td>
+              <td>{{ appConfig.createdDate | formatMediumDatetime }}</td>
+              <td>{{ appConfig.lastModifiedBy }}</td>
+              <td>{{ appConfig.lastModifiedDate | formatMediumDatetime }}</td>
               <td class="text-end">
                 <div class="btn-group">
                   <a [routerLink]="['/app-config', appConfig.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">

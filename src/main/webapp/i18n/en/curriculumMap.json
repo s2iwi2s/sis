@@ -23,6 +23,10 @@
       "topic": "Topic",
       "contentStandards": "Content Standards",
       "performanceStandards": "Performance Standards",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
       "learningCompetency": "Learning Competency",
       "course": "Course"
     }

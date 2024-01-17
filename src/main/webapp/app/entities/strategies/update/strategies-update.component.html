@@ -20,25 +20,8 @@
         }
 
         <div class="mb-3">
-          <label class="form-label" jhiTranslate="schInfoSysApp.strategies.name" for="field_name">Name</label>
-          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" jhiTranslate="schInfoSysApp.strategies.description" for="field_description">Description</label>
-          <input
-            type="text"
-            class="form-control"
-            name="description"
-            id="field_description"
-            data-cy="description"
-            formControlName="description"
-          />
-        </div>
-
-        <div class="mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.strategies.learningCompetency" for="field_learningCompetency"
-            >Learning Competency</label
+          >Learning Competency</label
           >
           <select
             class="form-control"
@@ -50,9 +33,125 @@
           >
             <option [ngValue]="null"></option>
             @for (learningCompetencyOption of learningCompetenciesSharedCollection; track $index) {
-              <option [ngValue]="learningCompetencyOption">{{ '[' + learningCompetencyOption.competencyCode + '] ' + learningCompetencyOption.description }}</option>
+              <option [ngValue]="learningCompetencyOption">{{ learningCompetencyOption.seqNo + ' - ' + learningCompetencyOption.competencyCode }}</option>
             }
           </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.strategies.name" for="field_name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.strategies.description" for="field_description">Description</label>
+          <editor
+            class="form-control"
+            id="field_description"
+            data-cy="description"
+            formControlName="description"
+            [init]="tineMCEOptions">
+          </editor>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.strategies.createdBy" for="field_createdBy">Created By</label>
+          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" />
+          @if (editForm.get('createdBy')!.invalid && (editForm.get('createdBy')!.dirty || editForm.get('createdBy')!.touched)) {
+            <div>
+              @if (editForm.get('createdBy')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 50 }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.strategies.createdDate" for="field_createdDate">Created Date</label>
+          <div class="d-flex">
+            <input
+              id="field_createdDate"
+              data-cy="createdDate"
+              type="datetime-local"
+              class="form-control"
+              name="createdDate"
+              formControlName="createdDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.strategies.lastModifiedBy" for="field_lastModifiedBy"
+            >Last Modified By</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="lastModifiedBy"
+            id="field_lastModifiedBy"
+            data-cy="lastModifiedBy"
+            formControlName="lastModifiedBy"
+          />
+          @if (
+            editForm.get('lastModifiedBy')!.invalid && (editForm.get('lastModifiedBy')!.dirty || editForm.get('lastModifiedBy')!.touched)
+          ) {
+            <div>
+              @if (editForm.get('lastModifiedBy')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 50 }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.strategies.lastModifiedDate" for="field_lastModifiedDate"
+            >Last Modified Date</label
+          >
+          <div class="d-flex">
+            <input
+              id="field_lastModifiedDate"
+              data-cy="lastModifiedDate"
+              type="datetime-local"
+              class="form-control"
+              name="lastModifiedDate"
+              formControlName="lastModifiedDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label jhiTranslate="schInfoSysApp.strategies.resources" for="field_resources">Resources</label>
+          <select
+            class="form-control visually-hidden"
+            id="field_resources"
+            data-cy="resources"
+            multiple
+            name="resources"
+            formControlName="resources"
+            [compareWith]="compareResources"
+          >
+            @for (resourcesOption of resourcesSharedCollection; track $index) {
+              <option [ngValue]="resourcesOption">{{ resourcesOption.id }}</option>
+            }
+          </select>
+          <div class="row mb-3">
+          @for (r of resourcesSharedCollection; track $index) {
+            <div class="col-sm-12" placement="left" ngbPopover="Copied!">
+              <a href="/api/resources/doc/{{ r.id }}">{{ r.fileName }}</a>
+              <a [cdkCopyToClipboard]="baseUrl('/api/resources/doc/'+r.id)"
+                 (cdkCopyToClipboardCopied)="onClipboardCopy($event)">
+                    <fa-icon icon="clipboard"></fa-icon>
+              </a>
+            </div>
+
+          }
+          </div>
         </div>
       </div>
 
@@ -74,3 +173,4 @@
     </form>
   </div>
 </div>
+<ng-template #popContent>Copied!</ng-template>

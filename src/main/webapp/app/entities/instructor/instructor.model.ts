@@ -12,6 +12,10 @@ export interface IInstructor {
   hireDate?: dayjs.Dayjs | null;
   salary?: number | null;
   commissionPct?: number | null;
+  createdBy?: string | null;
+  createdDate?: dayjs.Dayjs | null;
+  lastModifiedBy?: string | null;
+  lastModifiedDate?: dayjs.Dayjs | null;
   gender?: Pick<IAppConfig, 'id'|'description'> | null;
   courses?: Pick<ICourse, 'id'>[] | null;
 }

@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { IStrategies } from '../strategies.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../strategies.test-samples';
 
-import { StrategiesService } from './strategies.service';
+import { StrategiesService, RestStrategies } from './strategies.service';
 
-const requireRestSample: IStrategies = {
+const requireRestSample: RestStrategies = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('Strategies Service', () => {

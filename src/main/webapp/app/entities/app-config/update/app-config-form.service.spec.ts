@@ -25,7 +25,10 @@ describe('AppConfig Form Service', () => {
             description: expect.any(Object),
             json: expect.any(Object),
             priority: expect.any(Object),
-            user: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
           }),
         );
       });
@@ -41,7 +44,10 @@ describe('AppConfig Form Service', () => {
             description: expect.any(Object),
             json: expect.any(Object),
             priority: expect.any(Object),
-            user: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
           }),
         );
       });

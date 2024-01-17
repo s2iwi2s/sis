@@ -4,6 +4,8 @@ import com.sis.repository.AppConfigRepository;
 import com.sis.service.AppConfigService;
 import com.sis.service.dto.AppConfigDTO;
 import com.sis.web.rest.errors.BadRequestAlertException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -54,7 +56,7 @@ public class AppConfigResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<AppConfigDTO> createAppConfig(@RequestBody AppConfigDTO appConfigDTO) throws URISyntaxException {
+    public ResponseEntity<AppConfigDTO> createAppConfig(@Valid @RequestBody AppConfigDTO appConfigDTO) throws URISyntaxException {
         log.debug("REST request to save AppConfig : {}", appConfigDTO);
         if (appConfigDTO.getId() != null) {
             throw new BadRequestAlertException("A new appConfig cannot already have an ID", ENTITY_NAME, "idexists");
@@ -79,7 +81,7 @@ public class AppConfigResource {
     @PutMapping("/{id}")
     public ResponseEntity<AppConfigDTO> updateAppConfig(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody AppConfigDTO appConfigDTO
+        @Valid @RequestBody AppConfigDTO appConfigDTO
     ) throws URISyntaxException {
         log.debug("REST request to update AppConfig : {}, {}", id, appConfigDTO);
         if (appConfigDTO.getId() == null) {
@@ -114,7 +116,7 @@ public class AppConfigResource {
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<AppConfigDTO> partialUpdateAppConfig(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody AppConfigDTO appConfigDTO
+        @NotNull @RequestBody AppConfigDTO appConfigDTO
     ) throws URISyntaxException {
         log.debug("REST request to partial update AppConfig partially : {}, {}", id, appConfigDTO);
         if (appConfigDTO.getId() == null) {
@@ -149,7 +151,6 @@ public class AppConfigResource {
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
         log.debug("REST request to get a page of AppConfigs");
-        log.debug("REST filter of AppConfigs, {}", filter);
         Page<AppConfigDTO> page = appConfigService.findAll(filter, pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());

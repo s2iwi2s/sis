@@ -2,22 +2,32 @@ package com.sis.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.sis.IntegrationTest;
 import com.sis.domain.Strategies;
 import com.sis.repository.StrategiesRepository;
+import com.sis.service.StrategiesService;
 import com.sis.service.dto.StrategiesDTO;
 import com.sis.service.mapper.StrategiesMapper;
 import jakarta.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link StrategiesResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class StrategiesResourceIT {
@@ -37,6 +48,18 @@ class StrategiesResourceIT {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_LAST_MODIFIED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_MODIFIED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_LAST_MODIFIED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_LAST_MODIFIED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
     private static final String ENTITY_API_URL = "/api/strategies";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -46,8 +69,14 @@ class StrategiesResourceIT {
     @Autowired
     private StrategiesRepository strategiesRepository;
 
+    @Mock
+    private StrategiesRepository strategiesRepositoryMock;
+
     @Autowired
     private StrategiesMapper strategiesMapper;
+
+    @Mock
+    private StrategiesService strategiesServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -64,7 +93,13 @@ class StrategiesResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Strategies createEntity(EntityManager em) {
-        Strategies strategies = new Strategies().name(DEFAULT_NAME).description(DEFAULT_DESCRIPTION);
+        Strategies strategies = new Strategies()
+            .name(DEFAULT_NAME)
+            .description(DEFAULT_DESCRIPTION)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
+            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
         return strategies;
     }
 
@@ -75,7 +110,13 @@ class StrategiesResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Strategies createUpdatedEntity(EntityManager em) {
-        Strategies strategies = new Strategies().name(UPDATED_NAME).description(UPDATED_DESCRIPTION);
+        Strategies strategies = new Strategies()
+            .name(UPDATED_NAME)
+            .description(UPDATED_DESCRIPTION)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         return strategies;
     }
 
@@ -100,6 +141,10 @@ class StrategiesResourceIT {
         Strategies testStrategies = strategiesList.get(strategiesList.size() - 1);
         assertThat(testStrategies.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testStrategies.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testStrategies.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testStrategies.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testStrategies.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testStrategies.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -134,7 +179,28 @@ class StrategiesResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(strategies.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllStrategiesWithEagerRelationshipsIsEnabled() throws Exception {
+        when(strategiesServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restStrategiesMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(strategiesServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllStrategiesWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(strategiesServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restStrategiesMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
+        verify(strategiesRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -150,7 +216,11 @@ class StrategiesResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(strategies.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))
+            .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
     }
 
     @Test
@@ -172,7 +242,13 @@ class StrategiesResourceIT {
         Strategies updatedStrategies = strategiesRepository.findById(strategies.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedStrategies are not directly saved in db
         em.detach(updatedStrategies);
-        updatedStrategies.name(UPDATED_NAME).description(UPDATED_DESCRIPTION);
+        updatedStrategies
+            .name(UPDATED_NAME)
+            .description(UPDATED_DESCRIPTION)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         StrategiesDTO strategiesDTO = strategiesMapper.toDto(updatedStrategies);
 
         restStrategiesMockMvc
@@ -189,6 +265,10 @@ class StrategiesResourceIT {
         Strategies testStrategies = strategiesList.get(strategiesList.size() - 1);
         assertThat(testStrategies.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testStrategies.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testStrategies.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testStrategies.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testStrategies.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testStrategies.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -268,7 +348,7 @@ class StrategiesResourceIT {
         Strategies partialUpdatedStrategies = new Strategies();
         partialUpdatedStrategies.setId(strategies.getId());
 
-        partialUpdatedStrategies.description(UPDATED_DESCRIPTION);
+        partialUpdatedStrategies.description(UPDATED_DESCRIPTION).createdBy(UPDATED_CREATED_BY).createdDate(UPDATED_CREATED_DATE);
 
         restStrategiesMockMvc
             .perform(
@@ -284,6 +364,10 @@ class StrategiesResourceIT {
         Strategies testStrategies = strategiesList.get(strategiesList.size() - 1);
         assertThat(testStrategies.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testStrategies.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testStrategies.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testStrategies.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testStrategies.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testStrategies.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -298,7 +382,13 @@ class StrategiesResourceIT {
         Strategies partialUpdatedStrategies = new Strategies();
         partialUpdatedStrategies.setId(strategies.getId());
 
-        partialUpdatedStrategies.name(UPDATED_NAME).description(UPDATED_DESCRIPTION);
+        partialUpdatedStrategies
+            .name(UPDATED_NAME)
+            .description(UPDATED_DESCRIPTION)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restStrategiesMockMvc
             .perform(
@@ -314,6 +404,10 @@ class StrategiesResourceIT {
         Strategies testStrategies = strategiesList.get(strategiesList.size() - 1);
         assertThat(testStrategies.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testStrategies.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testStrategies.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testStrategies.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testStrategies.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testStrategies.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test

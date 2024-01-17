@@ -9,8 +9,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IAppConfig } from 'app/entities/app-config/app-config.model';
 import { AppConfigService } from 'app/entities/app-config/service/app-config.service';
-import { IInstructor } from '../instructor.model';
+import { ICourse } from 'app/entities/course/course.model';
+import { CourseService } from 'app/entities/course/service/course.service';
 import { InstructorService } from '../service/instructor.service';
+import { IInstructor } from '../instructor.model';
 import { InstructorFormService, InstructorFormGroup } from './instructor-form.service';
 import { OPT_GENDER } from "../../../app.constants";
 
@@ -25,6 +27,7 @@ export class InstructorUpdateComponent implements OnInit {
   instructor: IInstructor | null = null;
 
   gendersCollection: IAppConfig[] = [];
+  coursesSharedCollection: ICourse[] = [];
 
   editForm: InstructorFormGroup = this.instructorFormService.createInstructorFormGroup();
 
@@ -32,10 +35,13 @@ export class InstructorUpdateComponent implements OnInit {
     protected instructorService: InstructorService,
     protected instructorFormService: InstructorFormService,
     protected appConfigService: AppConfigService,
+    protected courseService: CourseService,
     protected activatedRoute: ActivatedRoute,
   ) {}
 
   compareAppConfig = (o1: IAppConfig | null, o2: IAppConfig | null): boolean => this.appConfigService.compareAppConfig(o1, o2);
+
+  compareCourse = (o1: ICourse | null, o2: ICourse | null): boolean => this.courseService.compareCourse(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ instructor }) => {
@@ -86,6 +92,10 @@ export class InstructorUpdateComponent implements OnInit {
     this.instructorFormService.resetForm(this.editForm, instructor);
 
     this.gendersCollection = this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(this.gendersCollection, instructor.gender);
+    this.coursesSharedCollection = this.courseService.addCourseToCollectionIfMissing<ICourse>(
+      this.coursesSharedCollection,
+      ...(instructor.courses ?? []),
+    );
   }
 
   protected loadRelationshipsOptions(): void {
@@ -98,5 +108,15 @@ export class InstructorUpdateComponent implements OnInit {
         ),
       )
       .subscribe((appConfigs: IAppConfig[]) => (this.gendersCollection = appConfigs));
+
+    this.courseService
+      .query()
+      .pipe(map((res: HttpResponse<ICourse[]>) => res.body ?? []))
+      .pipe(
+        map((courses: ICourse[]) =>
+          this.courseService.addCourseToCollectionIfMissing<ICourse>(courses, ...(this.instructor?.courses ?? [])),
+        ),
+      )
+      .subscribe((courses: ICourse[]) => (this.coursesSharedCollection = courses));
   }
 }

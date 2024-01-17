@@ -2,10 +2,11 @@ package com.sis.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.time.Instant;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.annotation.CreatedBy;
 
 /**
  * A AppConfig.
@@ -14,7 +15,7 @@ import org.springframework.data.annotation.CreatedBy;
 @Table(name = "app_config")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class AppConfig implements Serializable {
+public class AppConfig extends AbstractAuditingEntity<Long> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,9 +40,21 @@ public class AppConfig implements Serializable {
     @Column(name = "priority")
     private Integer priority;
 
-    @CreatedBy
-    @OneToOne(fetch = FetchType.LAZY)
-    private User createdBy;
+    @JsonIgnoreProperties(value = { "currSchYr" }, allowSetters = true)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "currSchYr")
+    private Org org;
+
+    @JsonIgnoreProperties(value = { "gender", "courses" }, allowSetters = true)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "gender")
+    private Instructor instructor;
+
+    @JsonIgnoreProperties(value = { "gender", "courses" }, allowSetters = true)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "gender")
+    private Student student;
+
+    @JsonIgnoreProperties(value = { "gradelevel", "curriculumMaps", "instructors", "students" }, allowSetters = true)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "gradelevel")
+    private Course course;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -123,17 +136,100 @@ public class AppConfig implements Serializable {
         this.priority = priority;
     }
 
-    public User getCreatedBy() {
-        return createdBy;
-    }
-
-    public AppConfig createdBy(User createdBy) {
+    public AppConfig createdBy(String createdBy) {
         this.setCreatedBy(createdBy);
         return this;
     }
 
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
+    public AppConfig createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
+        return this;
+    }
+
+    public AppConfig lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
+        return this;
+    }
+
+    public AppConfig lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
+    public Org getOrg() {
+        return this.org;
+    }
+
+    public void setOrg(Org org) {
+        if (this.org != null) {
+            this.org.setCurrSchYr(null);
+        }
+        if (org != null) {
+            org.setCurrSchYr(this);
+        }
+        this.org = org;
+    }
+
+    public AppConfig org(Org org) {
+        this.setOrg(org);
+        return this;
+    }
+
+    public Instructor getInstructor() {
+        return this.instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        if (this.instructor != null) {
+            this.instructor.setGender(null);
+        }
+        if (instructor != null) {
+            instructor.setGender(this);
+        }
+        this.instructor = instructor;
+    }
+
+    public AppConfig instructor(Instructor instructor) {
+        this.setInstructor(instructor);
+        return this;
+    }
+
+    public Student getStudent() {
+        return this.student;
+    }
+
+    public void setStudent(Student student) {
+        if (this.student != null) {
+            this.student.setGender(null);
+        }
+        if (student != null) {
+            student.setGender(this);
+        }
+        this.student = student;
+    }
+
+    public AppConfig student(Student student) {
+        this.setStudent(student);
+        return this;
+    }
+
+    public Course getCourse() {
+        return this.course;
+    }
+
+    public void setCourse(Course course) {
+        if (this.course != null) {
+            this.course.setGradelevel(null);
+        }
+        if (course != null) {
+            course.setGradelevel(this);
+        }
+        this.course = course;
+    }
+
+    public AppConfig course(Course course) {
+        this.setCourse(course);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -165,6 +261,10 @@ public class AppConfig implements Serializable {
             ", description='" + getDescription() + "'" +
             ", json='" + getJson() + "'" +
             ", priority=" + getPriority() +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

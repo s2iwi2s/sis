@@ -90,6 +90,48 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
+            <th scope="col" jhiSortBy="salary">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.instructor.salary">Salary</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="commissionPct">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.instructor.commissionPct">Commission Pct</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.instructor.createdBy">Created By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.instructor.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.instructor.lastModifiedBy">Last Modified By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.instructor.lastModifiedDate">Last Modified Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -104,7 +146,7 @@
               <td>{{ instructor.lastName }}</td>
               <td>{{ instructor.email }}</td>
               <td>{{ instructor.phoneNumber }}</td>
-              <td>{{ instructor.hireDate | formatMediumDate }}</td>
+              <td>{{ instructor.hireDate | formatMediumDatetime }}</td>
               <td>
                 @if (instructor.gender) {
                   <div>
@@ -112,6 +154,13 @@
                   </div>
                 }
               </td>
+              <td>{{ instructor.salary }}</td>
+              <td>{{ instructor.commissionPct }}</td>
+              <td>{{ instructor.createdBy }}</td>
+              <td>{{ instructor.createdDate | formatMediumDatetime }}</td>
+              <td>{{ instructor.lastModifiedBy }}</td>
+              <td>{{ instructor.lastModifiedDate | formatMediumDatetime }}</td>
+
               <td class="text-end">
                 <div class="btn-group">
                   <a [routerLink]="['/instructor', instructor.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">

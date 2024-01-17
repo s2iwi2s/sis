@@ -4,6 +4,8 @@ import com.sis.repository.StrategiesRepository;
 import com.sis.service.StrategiesService;
 import com.sis.service.dto.StrategiesDTO;
 import com.sis.web.rest.errors.BadRequestAlertException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -53,7 +55,7 @@ public class StrategiesResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<StrategiesDTO> createStrategies(@RequestBody StrategiesDTO strategiesDTO) throws URISyntaxException {
+    public ResponseEntity<StrategiesDTO> createStrategies(@Valid @RequestBody StrategiesDTO strategiesDTO) throws URISyntaxException {
         log.debug("REST request to save Strategies : {}", strategiesDTO);
         if (strategiesDTO.getId() != null) {
             throw new BadRequestAlertException("A new strategies cannot already have an ID", ENTITY_NAME, "idexists");
@@ -78,7 +80,7 @@ public class StrategiesResource {
     @PutMapping("/{id}")
     public ResponseEntity<StrategiesDTO> updateStrategies(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody StrategiesDTO strategiesDTO
+        @Valid @RequestBody StrategiesDTO strategiesDTO
     ) throws URISyntaxException {
         log.debug("REST request to update Strategies : {}, {}", id, strategiesDTO);
         if (strategiesDTO.getId() == null) {
@@ -113,7 +115,7 @@ public class StrategiesResource {
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<StrategiesDTO> partialUpdateStrategies(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody StrategiesDTO strategiesDTO
+        @NotNull @RequestBody StrategiesDTO strategiesDTO
     ) throws URISyntaxException {
         log.debug("REST request to partial update Strategies partially : {}, {}", id, strategiesDTO);
         if (strategiesDTO.getId() == null) {
@@ -139,12 +141,21 @@ public class StrategiesResource {
      * {@code GET  /strategies} : get all the strategies.
      *
      * @param pageable the pagination information.
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of strategies in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<StrategiesDTO>> getAllStrategies(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
+    public ResponseEntity<List<StrategiesDTO>> getAllStrategies(
+        @org.springdoc.core.annotations.ParameterObject Pageable pageable,
+        @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
+    ) {
         log.debug("REST request to get a page of Strategies");
-        Page<StrategiesDTO> page = strategiesService.findAll(pageable);
+        Page<StrategiesDTO> page;
+        if (eagerload) {
+            page = strategiesService.findAllWithEagerRelationships(pageable);
+        } else {
+            page = strategiesService.findAll(pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

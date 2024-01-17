@@ -49,6 +49,12 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
+            <th scope="col" jhiSortBy="currSchYr.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.org.currSchYr">Curr Sch Yr</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
             <th scope="col" jhiSortBy="logo">
               <div class="d-flex">
                 <span jhiTranslate="schInfoSysApp.org.logo">Logo</span>
@@ -63,9 +69,31 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="currSchYr.id">
+            <th scope="col" jhiSortBy="createdBy">
               <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.org.currSchYr">Curr Sch Yr</span>
+                <span jhiTranslate="schInfoSysApp.org.createdBy">Created By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.org.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.org.lastModifiedBy">Last Modified By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.org.lastModifiedDate">Last Modified Date</span>
+
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
@@ -79,8 +107,6 @@
                 <a [routerLink]="['/org', org.id, 'view']">{{ org.id }}</a>
               </td>
               <td>{{ org.name }}</td>
-              <td>{{ org.logo }}</td>
-              <td>{{ org.address }}</td>
               <td>
                 @if (org.currSchYr) {
                   <div>
@@ -88,6 +114,12 @@
                   </div>
                 }
               </td>
+              <td>{{ org.logo }}</td>
+              <td>{{ org.address }}</td>
+              <td>{{ org.createdBy }}</td>
+              <td>{{ org.createdDate | formatMediumDatetime }}</td>
+              <td>{{ org.lastModifiedBy }}</td>
+              <td>{{ org.lastModifiedDate | formatMediumDatetime }}</td>
               <td class="text-end">
                 <div class="btn-group">
                   <a [routerLink]="['/org', org.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">

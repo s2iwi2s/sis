@@ -18,7 +18,9 @@ public class CurriculumMapTestSamples {
             .weekNo(1)
             .topic("topic1")
             .contentStandards("contentStandards1")
-            .performanceStandards("performanceStandards1");
+            .performanceStandards("performanceStandards1")
+            .createdBy("createdBy1")
+            .lastModifiedBy("lastModifiedBy1");
     }
 
     public static CurriculumMap getCurriculumMapSample2() {
@@ -28,7 +30,9 @@ public class CurriculumMapTestSamples {
             .weekNo(2)
             .topic("topic2")
             .contentStandards("contentStandards2")
-            .performanceStandards("performanceStandards2");
+            .performanceStandards("performanceStandards2")
+            .createdBy("createdBy2")
+            .lastModifiedBy("lastModifiedBy2");
     }
 
     public static CurriculumMap getCurriculumMapRandomSampleGenerator() {
@@ -38,6 +42,8 @@ public class CurriculumMapTestSamples {
             .weekNo(intCount.incrementAndGet())
             .topic(UUID.randomUUID().toString())
             .contentStandards(UUID.randomUUID().toString())
-            .performanceStandards(UUID.randomUUID().toString());
+            .performanceStandards(UUID.randomUUID().toString())
+            .createdBy(UUID.randomUUID().toString())
+            .lastModifiedBy(UUID.randomUUID().toString());
     }
 }

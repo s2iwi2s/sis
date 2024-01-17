@@ -20,6 +20,10 @@
       "id": "ID",
       "name": "Name",
       "description": "Description",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
       "resources": "Resources",
       "learningCompetency": "Learning Competency"
     }

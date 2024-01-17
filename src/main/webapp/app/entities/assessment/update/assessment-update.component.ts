@@ -10,6 +10,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AlertError } from 'app/shared/alert/alert-error.model';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
+import { IResources } from 'app/entities/resources/resources.model';
+import { ResourcesService } from 'app/entities/resources/service/resources.service';
 import { ILearningCompetency } from 'app/entities/learning-competency/learning-competency.model';
 import { LearningCompetencyService } from 'app/entities/learning-competency/service/learning-competency.service';
 import { AssessmentService } from '../service/assessment.service';
@@ -26,6 +28,7 @@ export class AssessmentUpdateComponent implements OnInit {
   isSaving = false;
   assessment: IAssessment | null = null;
 
+  resourcesSharedCollection: IResources[] = [];
   learningCompetenciesSharedCollection: ILearningCompetency[] = [];
 
   editForm: AssessmentFormGroup = this.assessmentFormService.createAssessmentFormGroup();
@@ -35,9 +38,12 @@ export class AssessmentUpdateComponent implements OnInit {
     protected eventManager: EventManager,
     protected assessmentService: AssessmentService,
     protected assessmentFormService: AssessmentFormService,
+    protected resourcesService: ResourcesService,
     protected learningCompetencyService: LearningCompetencyService,
     protected activatedRoute: ActivatedRoute,
   ) {}
+
+  compareResources = (o1: IResources | null, o2: IResources | null): boolean => this.resourcesService.compareResources(o1, o2);
 
   compareLearningCompetency = (o1: ILearningCompetency | null, o2: ILearningCompetency | null): boolean =>
     this.learningCompetencyService.compareLearningCompetency(o1, o2);
@@ -105,6 +111,10 @@ export class AssessmentUpdateComponent implements OnInit {
     this.assessment = assessment;
     this.assessmentFormService.resetForm(this.editForm, assessment);
 
+    this.resourcesSharedCollection = this.resourcesService.addResourcesToCollectionIfMissing<IResources>(
+      this.resourcesSharedCollection,
+      ...(assessment.resources ?? []),
+    );
     this.learningCompetenciesSharedCollection =
       this.learningCompetencyService.addLearningCompetencyToCollectionIfMissing<ILearningCompetency>(
         this.learningCompetenciesSharedCollection,
@@ -113,6 +123,16 @@ export class AssessmentUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
+    this.resourcesService
+      .query()
+      .pipe(map((res: HttpResponse<IResources[]>) => res.body ?? []))
+      .pipe(
+        map((resources: IResources[]) =>
+          this.resourcesService.addResourcesToCollectionIfMissing<IResources>(resources, ...(this.assessment?.resources ?? [])),
+        ),
+      )
+      .subscribe((resources: IResources[]) => (this.resourcesSharedCollection = resources));
+
     this.learningCompetencyService
       .query()
       .pipe(map((res: HttpResponse<ILearningCompetency[]>) => res.body ?? []))

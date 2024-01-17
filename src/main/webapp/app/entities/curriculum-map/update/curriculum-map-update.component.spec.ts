@@ -50,10 +50,10 @@ describe('CurriculumMap Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call Course query and add missing value', () => {
       const curriculumMap: ICurriculumMap = { id: 456 };
-      const course: ICourse = { id: 21134 };
+      const course: ICourse = { id: 308 };
       curriculumMap.course = course;
 
-      const courseCollection: ICourse[] = [{ id: 17275 }];
+      const courseCollection: ICourse[] = [{ id: 18902 }];
       jest.spyOn(courseService, 'query').mockReturnValue(of(new HttpResponse({ body: courseCollection })));
       const additionalCourses = [course];
       const expectedCollection: ICourse[] = [...additionalCourses, ...courseCollection];
@@ -72,7 +72,7 @@ describe('CurriculumMap Management Update Component', () => {
 
     it('Should update editForm', () => {
       const curriculumMap: ICurriculumMap = { id: 456 };
-      const course: ICourse = { id: 25361 };
+      const course: ICourse = { id: 10412 };
       curriculumMap.course = course;
 
       activatedRoute.data = of({ curriculumMap });

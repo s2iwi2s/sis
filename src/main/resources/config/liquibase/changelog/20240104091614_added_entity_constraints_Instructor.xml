@@ -14,5 +14,19 @@
                                  referencedColumnNames="id"
                                  referencedTableName="app_config"
                                  />
+
+        <addForeignKeyConstraint baseColumnNames="instructor_id"
+                                 baseTableName="rel_instructor__course"
+                                 constraintName="fk_rel_instructor__course__instructor_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="instructor"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="course_id"
+                                 baseTableName="rel_instructor__course"
+                                 constraintName="fk_rel_instructor__course__course_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="course"
+                                 />
     </changeSet>
 </databaseChangeLog>

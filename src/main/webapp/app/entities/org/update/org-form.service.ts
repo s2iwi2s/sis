@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IOrg, NewOrg } from '../org.model';
 
 /**
@@ -14,14 +16,30 @@ type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>
  */
 type OrgFormGroupInput = IOrg | PartialWithRequiredKeyOf<NewOrg>;
 
-type OrgFormDefaults = Pick<NewOrg, 'id'>;
+/**
+ * Type that converts some properties for forms.
+ */
+type FormValueOf<T extends IOrg | NewOrg> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
+};
+
+type OrgFormRawValue = FormValueOf<IOrg>;
+
+type NewOrgFormRawValue = FormValueOf<NewOrg>;
+
+type OrgFormDefaults = Pick<NewOrg, 'id' | 'createdDate' | 'lastModifiedDate'>;
 
 type OrgFormGroupContent = {
-  id: FormControl<IOrg['id'] | NewOrg['id']>;
-  name: FormControl<IOrg['name']>;
-  logo: FormControl<IOrg['logo']>;
-  address: FormControl<IOrg['address']>;
-  currSchYr: FormControl<IOrg['currSchYr']>;
+  id: FormControl<OrgFormRawValue['id'] | NewOrg['id']>;
+  name: FormControl<OrgFormRawValue['name']>;
+  logo: FormControl<OrgFormRawValue['logo']>;
+  address: FormControl<OrgFormRawValue['address']>;
+  createdBy: FormControl<OrgFormRawValue['createdBy']>;
+  createdDate: FormControl<OrgFormRawValue['createdDate']>;
+  lastModifiedBy: FormControl<OrgFormRawValue['lastModifiedBy']>;
+  lastModifiedDate: FormControl<OrgFormRawValue['lastModifiedDate']>;
+  currSchYr: FormControl<OrgFormRawValue['currSchYr']>;
 };
 
 export type OrgFormGroup = FormGroup<OrgFormGroupContent>;
@@ -29,10 +47,10 @@ export type OrgFormGroup = FormGroup<OrgFormGroupContent>;
 @Injectable({ providedIn: 'root' })
 export class OrgFormService {
   createOrgFormGroup(org: OrgFormGroupInput = { id: null }): OrgFormGroup {
-    const orgRawValue = {
+    const orgRawValue = this.convertOrgToOrgRawValue({
       ...this.getFormDefaults(),
       ...org,
-    };
+    });
     return new FormGroup<OrgFormGroupContent>({
       id: new FormControl(
         { value: orgRawValue.id, disabled: true },
@@ -44,16 +62,24 @@ export class OrgFormService {
       name: new FormControl(orgRawValue.name),
       logo: new FormControl(orgRawValue.logo),
       address: new FormControl(orgRawValue.address),
+      createdBy: new FormControl(orgRawValue.createdBy, {
+        validators: [Validators.maxLength(50)],
+      }),
+      createdDate: new FormControl(orgRawValue.createdDate),
+      lastModifiedBy: new FormControl(orgRawValue.lastModifiedBy, {
+        validators: [Validators.maxLength(50)],
+      }),
+      lastModifiedDate: new FormControl(orgRawValue.lastModifiedDate),
       currSchYr: new FormControl(orgRawValue.currSchYr),
     });
   }
 
   getOrg(form: OrgFormGroup): IOrg | NewOrg {
-    return form.getRawValue() as IOrg | NewOrg;
+    return this.convertOrgRawValueToOrg(form.getRawValue() as OrgFormRawValue | NewOrgFormRawValue);
   }
 
   resetForm(form: OrgFormGroup, org: OrgFormGroupInput): void {
-    const orgRawValue = { ...this.getFormDefaults(), ...org };
+    const orgRawValue = this.convertOrgToOrgRawValue({ ...this.getFormDefaults(), ...org });
     form.reset(
       {
         ...orgRawValue,
@@ -63,8 +89,30 @@ export class OrgFormService {
   }
 
   private getFormDefaults(): OrgFormDefaults {
+    const currentTime = dayjs();
+
     return {
       id: null,
+      createdDate: currentTime,
+      lastModifiedDate: currentTime,
+    };
+  }
+
+  private convertOrgRawValueToOrg(rawOrg: OrgFormRawValue | NewOrgFormRawValue): IOrg | NewOrg {
+    return {
+      ...rawOrg,
+      createdDate: dayjs(rawOrg.createdDate, DATE_TIME_FORMAT),
+      lastModifiedDate: dayjs(rawOrg.lastModifiedDate, DATE_TIME_FORMAT),
+    };
+  }
+
+  private convertOrgToOrgRawValue(
+    org: IOrg | (Partial<NewOrg> & OrgFormDefaults),
+  ): OrgFormRawValue | PartialWithRequiredKeyOf<NewOrgFormRawValue> {
+    return {
+      ...org,
+      createdDate: org.createdDate ? org.createdDate.format(DATE_TIME_FORMAT) : undefined,
+      lastModifiedDate: org.lastModifiedDate ? org.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
     };
   }
 }

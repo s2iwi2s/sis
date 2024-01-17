@@ -2,6 +2,7 @@ package com.sis.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -16,7 +17,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "instructor")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Instructor implements Serializable {
+public class Instructor extends AbstractAuditingEntity<Long> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -49,14 +50,19 @@ public class Instructor implements Serializable {
     @Column(name = "commission_pct")
     private Long commissionPct;
 
-    @JsonIgnoreProperties(value = { "user", "org", "instructor", "student", "course" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "org", "instructor", "student", "course" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private AppConfig gender;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "instructors")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "rel_instructor__course",
+        joinColumns = @JoinColumn(name = "instructor_id"),
+        inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "schYr", "curriculumMaps", "instructors", "students" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "gradelevel", "curriculumMaps", "instructors", "students" }, allowSetters = true)
     private Set<Course> courses = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -178,6 +184,26 @@ public class Instructor implements Serializable {
         this.commissionPct = commissionPct;
     }
 
+    public Instructor createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    public Instructor createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
+        return this;
+    }
+
+    public Instructor lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
+        return this;
+    }
+
+    public Instructor lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
     public AppConfig getGender() {
         return this.gender;
     }
@@ -196,12 +222,6 @@ public class Instructor implements Serializable {
     }
 
     public void setCourses(Set<Course> courses) {
-        if (this.courses != null) {
-            this.courses.forEach(i -> i.removeInstructor(this));
-        }
-        if (courses != null) {
-            courses.forEach(i -> i.addInstructor(this));
-        }
         this.courses = courses;
     }
 
@@ -212,13 +232,11 @@ public class Instructor implements Serializable {
 
     public Instructor addCourse(Course course) {
         this.courses.add(course);
-        course.getInstructors().add(this);
         return this;
     }
 
     public Instructor removeCourse(Course course) {
         this.courses.remove(course);
-        course.getInstructors().remove(this);
         return this;
     }
 
@@ -254,6 +272,10 @@ public class Instructor implements Serializable {
             ", hireDate='" + getHireDate() + "'" +
             ", salary=" + getSalary() +
             ", commissionPct=" + getCommissionPct() +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

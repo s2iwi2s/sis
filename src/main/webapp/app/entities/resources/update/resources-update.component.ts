@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
 import SharedModule from 'app/shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -10,10 +10,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AlertError } from 'app/shared/alert/alert-error.model';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
-import { IStrategies } from 'app/entities/strategies/strategies.model';
-import { StrategiesService } from 'app/entities/strategies/service/strategies.service';
-import { IAssessment } from 'app/entities/assessment/assessment.model';
-import { AssessmentService } from 'app/entities/assessment/service/assessment.service';
 import { ResourcesService } from '../service/resources.service';
 import { IResources } from '../resources.model';
 import { ResourcesFormService, ResourcesFormGroup } from './resources-form.service';
@@ -28,9 +24,6 @@ export class ResourcesUpdateComponent implements OnInit {
   isSaving = false;
   resources: IResources | null = null;
 
-  strategiesSharedCollection: IStrategies[] = [];
-  assessmentsSharedCollection: IAssessment[] = [];
-
   editForm: ResourcesFormGroup = this.resourcesFormService.createResourcesFormGroup();
 
   constructor(
@@ -38,14 +31,8 @@ export class ResourcesUpdateComponent implements OnInit {
     protected eventManager: EventManager,
     protected resourcesService: ResourcesService,
     protected resourcesFormService: ResourcesFormService,
-    protected strategiesService: StrategiesService,
-    protected assessmentService: AssessmentService,
     protected activatedRoute: ActivatedRoute,
   ) {}
-
-  compareStrategies = (o1: IStrategies | null, o2: IStrategies | null): boolean => this.strategiesService.compareStrategies(o1, o2);
-
-  compareAssessment = (o1: IAssessment | null, o2: IAssessment | null): boolean => this.assessmentService.compareAssessment(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ resources }) => {
@@ -53,8 +40,6 @@ export class ResourcesUpdateComponent implements OnInit {
       if (resources) {
         this.updateForm(resources);
       }
-
-      this.loadRelationshipsOptions();
     });
   }
 
@@ -109,36 +94,5 @@ export class ResourcesUpdateComponent implements OnInit {
   protected updateForm(resources: IResources): void {
     this.resources = resources;
     this.resourcesFormService.resetForm(this.editForm, resources);
-
-    this.strategiesSharedCollection = this.strategiesService.addStrategiesToCollectionIfMissing<IStrategies>(
-      this.strategiesSharedCollection,
-      resources.strategies,
-    );
-    this.assessmentsSharedCollection = this.assessmentService.addAssessmentToCollectionIfMissing<IAssessment>(
-      this.assessmentsSharedCollection,
-      resources.assessment,
-    );
-  }
-
-  protected loadRelationshipsOptions(): void {
-    this.strategiesService
-      .query()
-      .pipe(map((res: HttpResponse<IStrategies[]>) => res.body ?? []))
-      .pipe(
-        map((strategies: IStrategies[]) =>
-          this.strategiesService.addStrategiesToCollectionIfMissing<IStrategies>(strategies, this.resources?.strategies),
-        ),
-      )
-      .subscribe((strategies: IStrategies[]) => (this.strategiesSharedCollection = strategies));
-
-    this.assessmentService
-      .query()
-      .pipe(map((res: HttpResponse<IAssessment[]>) => res.body ?? []))
-      .pipe(
-        map((assessments: IAssessment[]) =>
-          this.assessmentService.addAssessmentToCollectionIfMissing<IAssessment>(assessments, this.resources?.assessment),
-        ),
-      )
-      .subscribe((assessments: IAssessment[]) => (this.assessmentsSharedCollection = assessments));
   }
 }

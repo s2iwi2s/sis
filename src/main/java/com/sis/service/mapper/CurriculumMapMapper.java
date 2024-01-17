@@ -17,6 +17,7 @@ public interface CurriculumMapMapper extends EntityMapper<CurriculumMapDTO, Curr
     @Named("courseId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "subject", source = "subject")
     @Mapping(target = "courseDescription", source = "courseDescription")
     CourseDTO toDtoCourseId(Course course);
 }

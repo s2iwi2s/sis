@@ -20,14 +20,15 @@ describe('Course Form Service', () => {
         expect(formGroup.controls).toEqual(
           expect.objectContaining({
             id: expect.any(Object),
-            gradelevel: expect.any(Object),
             subject: expect.any(Object),
             hoursPerQuarter: expect.any(Object),
             courseDescription: expect.any(Object),
             courseObjectives: expect.any(Object),
-            schYr: expect.any(Object),
-            instructors: expect.any(Object),
-            students: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
+            gradelevel: expect.any(Object),
           }),
         );
       });
@@ -38,14 +39,15 @@ describe('Course Form Service', () => {
         expect(formGroup.controls).toEqual(
           expect.objectContaining({
             id: expect.any(Object),
-            gradelevel: expect.any(Object),
             subject: expect.any(Object),
             hoursPerQuarter: expect.any(Object),
             courseDescription: expect.any(Object),
             courseObjectives: expect.any(Object),
-            schYr: expect.any(Object),
-            instructors: expect.any(Object),
-            students: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
+            gradelevel: expect.any(Object),
           }),
         );
       });

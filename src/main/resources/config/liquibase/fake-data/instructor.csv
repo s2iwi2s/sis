@@ -1,11 +1,11 @@
-id;first_name;middle_name;last_name;email;phone_number;hire_date;salary;commission_pct
-1;Bud;than agreeable potentially;Leannon;Pinkie30@hotmail.com;scared merge anti;2024-01-03T19:08:43;6718;7531
-2;Marietta;respectful finally brr;Franecki;Jamie_Franecki@yahoo.com;frighten between;2024-01-03T09:34:22;16021;6049
-3;Rico;leading;Bogisich;Jevon.West98@gmail.com;cruelly although;2024-01-03T14:05:27;11804;24346
-4;Mariah;aside yelp mellow;Schiller;Alexandra.Klein64@yahoo.com;fairly whenever;2024-01-03T22:40:10;3008;12131
-5;Emilia;notarise er psst;Wiegand;Kaden25@yahoo.com;shakily recollection;2024-01-03T19:13:28;121;30573
-6;Alexandre;towards forage who;Wisozk;Lucio.Reichel72@hotmail.com;until how;2024-01-03T13:43:33;27441;21573
-7;Russel;off;Schneider;Ofelia_Haley50@yahoo.com;knottily helpless;2024-01-03T17:08:26;25682;1929
-8;Chet;bruised mechanically merrily;Koch;Luisa8@yahoo.com;gadzooks duh;2024-01-03T23:19:37;19316;17856
-9;Pietro;what qua knowledgeable;Shanahan;Murphy.Olson8@gmail.com;meet judgementally ashamed;2024-01-03T17:34:51;5655;31984
-10;Jovany;what gadzooks following;Cruickshank;Eugene_Breitenberg@gmail.com;collard boldly;2024-01-03T11:24:55;30972;13026
+id;first_name;middle_name;last_name;email;phone_number;hire_date;salary;commission_pct;created_by;created_date;last_modified_by;last_modified_date
+1;Bud;than agreeable potentially;Leannon;Pinkie30@hotmail.com;scared merge anti;2024-01-03T19:08:43;6718;7531;without wisely and;2024-01-04T01:11:19;psst as intrepid;2024-01-04T01:28:45
+2;Xavier;aha to;Franecki;Woodrow_Wunsch@yahoo.com;boohoo qua pish;2024-01-04T04:28:29;6981;24407;dismal ack;2024-01-04T08:32:03;inborn;2024-01-03T16:30:23
+3;Buck;finally evening;Mann;Elisabeth_Bruen35@yahoo.com;considering ick kindheartedly;2024-01-04T01:50:25;16359;24258;whereas apostrophize terminology;2024-01-03T12:31:20;chief;2024-01-03T20:38:44
+4;Esta;mid meh;Hermann;Hester_Kuvalis96@hotmail.com;thunderous;2024-01-04T05:58:55;29290;25694;phew pleased;2024-01-03T20:53:22;grimy sparkling;2024-01-04T07:51:25
+5;Chet;bruised mechanically merrily;Koch;Luisa8@yahoo.com;gadzooks duh;2024-01-03T23:19:37;19316;17856;who incidentally spine;2024-01-03T21:58:49;fooey;2024-01-04T07:06:48
+6;Morris;near usefully phenomenon;Wolf;Jovany.Russel43@gmail.com;pfft;2024-01-03T17:10:14;17142;11213;brr bank absent;2024-01-03T15:52:33;aha boring;2024-01-03T22:15:24
+7;Danny;pro to;Zulauf;Golda.Rolfson@yahoo.com;ha punctually;2024-01-03T19:52:56;16843;6306;superficial waiting than;2024-01-04T04:42:09;denounce;2024-01-03T18:46:19
+8;Wilburn;phooey;Treutel;Hailee.Lowe88@hotmail.com;unexpectedly gadzooks uneven;2024-01-03T17:14:14;16725;28559;nestmate brisk;2024-01-03T19:35:38;anorak up cotton;2024-01-03T17:56:12
+9;Maci;inasmuch;Boyle;Jonathon17@hotmail.com;out oily;2024-01-03T15:27:57;8175;13140;brake;2024-01-04T07:30:10;who quizzically;2024-01-03T20:54:37
+10;Ali;before totter;Wunsch;Madalyn_Lebsack15@gmail.com;dispense;2024-01-03T20:33:54;23223;22799;following;2024-01-03T14:23:53;yet ketch;2024-01-04T06:33:56

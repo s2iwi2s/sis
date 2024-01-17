@@ -1,8 +1,11 @@
 package com.sis.service.dto;
 
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A DTO for the {@link com.sis.domain.Instructor} entity.
@@ -28,7 +31,19 @@ public class InstructorDTO implements Serializable {
 
     private Long commissionPct;
 
+    @Size(max = 50)
+    private String createdBy;
+
+    private Instant createdDate;
+
+    @Size(max = 50)
+    private String lastModifiedBy;
+
+    private Instant lastModifiedDate;
+
     private AppConfigDTO gender;
+
+    private Set<CourseDTO> courses = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -102,12 +117,52 @@ public class InstructorDTO implements Serializable {
         this.commissionPct = commissionPct;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
     public AppConfigDTO getGender() {
         return gender;
     }
 
     public void setGender(AppConfigDTO gender) {
         this.gender = gender;
+    }
+
+    public Set<CourseDTO> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(Set<CourseDTO> courses) {
+        this.courses = courses;
     }
 
     @Override
@@ -144,7 +199,12 @@ public class InstructorDTO implements Serializable {
             ", hireDate='" + getHireDate() + "'" +
             ", salary=" + getSalary() +
             ", commissionPct=" + getCommissionPct() +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", gender=" + getGender() +
+            ", courses=" + getCourses() +
             "}";
     }
 }

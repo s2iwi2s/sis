@@ -18,12 +18,16 @@
         "title": "Course"
       },
       "id": "ID",
-      "gradelevel": "Grade Level",
       "subject": "Subject",
       "hoursPerQuarter": "Hrs/Qtr",
       "courseDescription": "Course Description",
       "courseObjectives": "Course Objectives",
-      "schYr": "Sch Yr",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
+      "gradelevel": "Gradelevel",
+      "schYr": "School Yr",
       "curriculumMap": "Curriculum Map",
       "instructor": "Instructor",
       "student": "Student"

@@ -1,11 +1,11 @@
-id;file_name;file_name_on_server;document;document_content_type
-1;where um;vanquish;../fake-data/blob/hipster.png;image/png
-2;wiry;far although lest;../fake-data/blob/hipster.png;image/png
-3;robust;until including estimate;../fake-data/blob/hipster.png;image/png
-4;eyeliner amongst reference;reconsideration bah psst;../fake-data/blob/hipster.png;image/png
-5;now afraid daily;rightfully er;../fake-data/blob/hipster.png;image/png
-6;solidly;meh actually;../fake-data/blob/hipster.png;image/png
-7;mystery;coddle officially unaccountably;../fake-data/blob/hipster.png;image/png
-8;campanile furthermore warmly;usefully which;../fake-data/blob/hipster.png;image/png
-9;ironclad landmine automatic;ischemia;../fake-data/blob/hipster.png;image/png
-10;anenst;nor;../fake-data/blob/hipster.png;image/png
+id;file_name;file_name_on_server;document;document_content_type;created_by;created_date;last_modified_by;last_modified_date
+1;where um;vanquish;../fake-data/blob/hipster.png;image/png;wiry;2024-01-03T12:37:04;unburden whereas phooey;2024-01-03T12:05:21
+2;unripe until concentrate;slim;../fake-data/blob/hipster.png;image/png;junket;2024-01-04T01:06:30;after bleakly;2024-01-03T09:36:56
+3;since while easily;key;../fake-data/blob/hipster.png;image/png;geez with when;2024-01-03T23:17:37;frenetically gadzooks trim;2024-01-04T06:36:49
+4;whoa;lecture boo;../fake-data/blob/hipster.png;image/png;unaccountably drat;2024-01-04T06:26:22;yippee incidentally;2024-01-03T18:57:33
+5;exactly intelligent as;fooey;../fake-data/blob/hipster.png;image/png;following demand;2024-01-04T03:32:20;or;2024-01-03T18:28:05
+6;yippee;trinket;../fake-data/blob/hipster.png;image/png;meter;2024-01-03T13:53:35;relive;2024-01-03T13:30:04
+7;yowza;plant;../fake-data/blob/hipster.png;image/png;gee yuck;2024-01-03T09:25:42;happily;2024-01-03T10:45:49
+8;duh straight;at target card;../fake-data/blob/hipster.png;image/png;millstone tricky;2024-01-04T01:12:09;upside-down pish;2024-01-03T21:51:38
+9;but until;mincemeat hence;../fake-data/blob/hipster.png;image/png;commuter earthworm;2024-01-04T04:34:07;commune gah education;2024-01-03T21:10:53
+10;puma only;within an;../fake-data/blob/hipster.png;image/png;within;2024-01-03T21:22:53;punctual where woot;2024-01-04T00:21:36

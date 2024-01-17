@@ -56,6 +56,12 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
+            <th scope="col" jhiSortBy="course.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.curriculumMap.course">Course</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
             <th scope="col" jhiSortBy="topic">
               <div class="d-flex">
                 <span jhiTranslate="schInfoSysApp.curriculumMap.topic">Topic</span>
@@ -77,9 +83,31 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="course.id">
+            <th scope="col" jhiSortBy="createdBy">
               <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.curriculumMap.course">Course</span>
+                <span jhiTranslate="schInfoSysApp.curriculumMap.createdBy">Created By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.curriculumMap.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.curriculumMap.lastModifiedBy">Last Modified By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.curriculumMap.lastModifiedDate">Last Modified Date</span>
+
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
@@ -94,16 +122,18 @@
               </td>
               <td>{{ curriculumMap.quarterNo }}</td>
               <td>{{ curriculumMap.weekNo }}</td>
-              <td>{{ curriculumMap.topic }}</td>
-              <td>{{ curriculumMap.contentStandards }}</td>
-              <td>{{ curriculumMap.performanceStandards }}</td>
               <td>
                 @if (curriculumMap.course) {
                   <div>
-                    <a [routerLink]="['/course', curriculumMap.course.id, 'view']">{{ curriculumMap.course.courseDescription }}</a>
+                    <a [routerLink]="['/course', curriculumMap.course.id, 'view']">{{ curriculumMap.course.subject }}</a>
                   </div>
                 }
               </td>
+              <td>{{ curriculumMap.topic }}</td>
+              <td>{{ curriculumMap.createdBy }}</td>
+              <td>{{ curriculumMap.createdDate | formatMediumDatetime }}</td>
+              <td>{{ curriculumMap.lastModifiedBy }}</td>
+              <td>{{ curriculumMap.lastModifiedDate | formatMediumDatetime }}</td>
               <td class="text-end">
                 <div class="btn-group">
                   <a [routerLink]="['/curriculum-map', curriculumMap.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">

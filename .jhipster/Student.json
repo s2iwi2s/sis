@@ -175,6 +175,26 @@
       "fieldType": "String",
       "fieldValidateRules": ["maxlength"],
       "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
     }
   ],
   "name": "Student",
@@ -188,9 +208,8 @@
     },
     {
       "otherEntityName": "course",
-      "otherEntityRelationshipName": "student",
       "relationshipName": "course",
-      "relationshipSide": "right",
+      "relationshipSide": "left",
       "relationshipType": "many-to-many"
     }
   ],

@@ -53,6 +53,7 @@ export class AlertService {
    * @returns  Added alert
    */
   addAlert(alert: Alert, extAlerts?: Alert[]): Alert {
+    console.log('alert', alert);
     alert.id = this.alertId++;
 
     if (alert.translationKey) {

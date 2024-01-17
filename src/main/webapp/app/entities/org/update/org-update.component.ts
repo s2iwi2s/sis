@@ -12,7 +12,7 @@ import { AppConfigService } from 'app/entities/app-config/service/app-config.ser
 import { IOrg } from '../org.model';
 import { OrgService } from '../service/org.service';
 import { OrgFormService, OrgFormGroup } from './org-form.service';
-import {OPT_SY} from "../../../app.constants";
+import { OPT_SY } from "../../../app.constants";
 
 @Component({
   standalone: true,

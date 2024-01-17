@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import org.hibernate.annotations.Cache;
@@ -16,7 +17,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "course")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Course implements Serializable {
+public class Course extends AbstractAuditingEntity<Long> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -24,10 +25,6 @@ public class Course implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @JsonIgnoreProperties(value = { "user", "org", "instructor", "student", "course" }, allowSetters = true)
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(unique = true)
-    private AppConfig gradelevel;
 
     @Size(max = 50)
     @Column(name = "subject", length = 50)
@@ -44,35 +41,31 @@ public class Course implements Serializable {
     @Column(name = "course_objectives")
     private String courseObjectives;
 
+
     @JsonIgnoreProperties(value = { "user", "org", "instructor", "student", "course" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private AppConfig schYr;
+
+    @JsonIgnoreProperties(value = { "org", "instructor", "student", "course" }, allowSetters = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(unique = true)
+    private AppConfig gradelevel;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "learningCompetencies", "course" }, allowSetters = true)
     private Set<CurriculumMap> curriculumMaps = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "rel_course__instructor",
-        joinColumns = @JoinColumn(name = "course_id"),
-        inverseJoinColumns = @JoinColumn(name = "instructor_id")
-    )
+    /*@ManyToMany(fetch = FetchType.LAZY, mappedBy = "courses")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "gender", "courses" }, allowSetters = true)
     private Set<Instructor> instructors = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "rel_course__student",
-        joinColumns = @JoinColumn(name = "course_id"),
-        inverseJoinColumns = @JoinColumn(name = "student_id")
-    )
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "courses")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "gender", "courses" }, allowSetters = true)
-    private Set<Student> students = new HashSet<>();
+    private Set<Student> students = new HashSet<>();*/
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -87,19 +80,6 @@ public class Course implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public AppConfig getGradelevel() {
-        return this.gradelevel;
-    }
-
-    public Course gradelevel(AppConfig gradelevel) {
-        this.setGradelevel(gradelevel);
-        return this;
-    }
-
-    public void setGradelevel(AppConfig gradelevel) {
-        this.gradelevel = gradelevel;
     }
 
     public String getSubject() {
@@ -167,6 +147,39 @@ public class Course implements Serializable {
         return this;
     }
 
+    public Course createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    public Course createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
+        return this;
+    }
+
+    public Course lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
+        return this;
+    }
+
+    public Course lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
+    public AppConfig getGradelevel() {
+        return this.gradelevel;
+    }
+
+    public void setGradelevel(AppConfig appConfig) {
+        this.gradelevel = appConfig;
+    }
+
+    public Course gradelevel(AppConfig appConfig) {
+        this.setGradelevel(appConfig);
+        return this;
+    }
+
     public Set<CurriculumMap> getCurriculumMaps() {
         return this.curriculumMaps;
     }
@@ -198,11 +211,17 @@ public class Course implements Serializable {
         return this;
     }
 
-    public Set<Instructor> getInstructors() {
+    /*public Set<Instructor> getInstructors() {
         return this.instructors;
     }
 
     public void setInstructors(Set<Instructor> instructors) {
+        if (this.instructors != null) {
+            this.instructors.forEach(i -> i.removeCourse(this));
+        }
+        if (instructors != null) {
+            instructors.forEach(i -> i.addCourse(this));
+        }
         this.instructors = instructors;
     }
 
@@ -213,11 +232,13 @@ public class Course implements Serializable {
 
     public Course addInstructor(Instructor instructor) {
         this.instructors.add(instructor);
+        instructor.getCourses().add(this);
         return this;
     }
 
     public Course removeInstructor(Instructor instructor) {
         this.instructors.remove(instructor);
+        instructor.getCourses().remove(this);
         return this;
     }
 
@@ -226,6 +247,12 @@ public class Course implements Serializable {
     }
 
     public void setStudents(Set<Student> students) {
+        if (this.students != null) {
+            this.students.forEach(i -> i.removeCourse(this));
+        }
+        if (students != null) {
+            students.forEach(i -> i.addCourse(this));
+        }
         this.students = students;
     }
 
@@ -236,13 +263,15 @@ public class Course implements Serializable {
 
     public Course addStudent(Student student) {
         this.students.add(student);
+        student.getCourses().add(this);
         return this;
     }
 
     public Course removeStudent(Student student) {
         this.students.remove(student);
+        student.getCourses().remove(this);
         return this;
-    }
+    }*/
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 
@@ -268,11 +297,14 @@ public class Course implements Serializable {
     public String toString() {
         return "Course{" +
             "id=" + getId() +
-            ", gradelevel='" + getGradelevel() + "'" +
             ", subject='" + getSubject() + "'" +
             ", hoursPerQuarter=" + getHoursPerQuarter() +
             ", courseDescription='" + getCourseDescription() + "'" +
             ", courseObjectives='" + getCourseObjectives() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

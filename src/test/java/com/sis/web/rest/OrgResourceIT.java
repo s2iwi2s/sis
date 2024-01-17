@@ -11,6 +11,8 @@ import com.sis.repository.OrgRepository;
 import com.sis.service.dto.OrgDTO;
 import com.sis.service.mapper.OrgMapper;
 import jakarta.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -40,6 +42,18 @@ class OrgResourceIT {
     private static final String DEFAULT_ADDRESS = "AAAAAAAAAA";
     private static final String UPDATED_ADDRESS = "BBBBBBBBBB";
 
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_LAST_MODIFIED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_MODIFIED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_LAST_MODIFIED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_LAST_MODIFIED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
     private static final String ENTITY_API_URL = "/api/orgs";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -67,7 +81,14 @@ class OrgResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Org createEntity(EntityManager em) {
-        Org org = new Org().name(DEFAULT_NAME).logo(DEFAULT_LOGO).address(DEFAULT_ADDRESS);
+        Org org = new Org()
+            .name(DEFAULT_NAME)
+            .logo(DEFAULT_LOGO)
+            .address(DEFAULT_ADDRESS)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
+            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
         return org;
     }
 
@@ -78,7 +99,14 @@ class OrgResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Org createUpdatedEntity(EntityManager em) {
-        Org org = new Org().name(UPDATED_NAME).logo(UPDATED_LOGO).address(UPDATED_ADDRESS);
+        Org org = new Org()
+            .name(UPDATED_NAME)
+            .logo(UPDATED_LOGO)
+            .address(UPDATED_ADDRESS)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         return org;
     }
 
@@ -104,6 +132,10 @@ class OrgResourceIT {
         assertThat(testOrg.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testOrg.getLogo()).isEqualTo(DEFAULT_LOGO);
         assertThat(testOrg.getAddress()).isEqualTo(DEFAULT_ADDRESS);
+        assertThat(testOrg.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testOrg.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testOrg.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testOrg.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -139,7 +171,11 @@ class OrgResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(org.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].logo").value(hasItem(DEFAULT_LOGO)))
-            .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS)));
+            .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS)))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
     }
 
     @Test
@@ -156,7 +192,11 @@ class OrgResourceIT {
             .andExpect(jsonPath("$.id").value(org.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.logo").value(DEFAULT_LOGO))
-            .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS));
+            .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))
+            .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
     }
 
     @Test
@@ -178,7 +218,14 @@ class OrgResourceIT {
         Org updatedOrg = orgRepository.findById(org.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedOrg are not directly saved in db
         em.detach(updatedOrg);
-        updatedOrg.name(UPDATED_NAME).logo(UPDATED_LOGO).address(UPDATED_ADDRESS);
+        updatedOrg
+            .name(UPDATED_NAME)
+            .logo(UPDATED_LOGO)
+            .address(UPDATED_ADDRESS)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         OrgDTO orgDTO = orgMapper.toDto(updatedOrg);
 
         restOrgMockMvc
@@ -196,6 +243,10 @@ class OrgResourceIT {
         assertThat(testOrg.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testOrg.getLogo()).isEqualTo(UPDATED_LOGO);
         assertThat(testOrg.getAddress()).isEqualTo(UPDATED_ADDRESS);
+        assertThat(testOrg.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testOrg.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testOrg.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testOrg.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -275,7 +326,7 @@ class OrgResourceIT {
         Org partialUpdatedOrg = new Org();
         partialUpdatedOrg.setId(org.getId());
 
-        partialUpdatedOrg.logo(UPDATED_LOGO).address(UPDATED_ADDRESS);
+        partialUpdatedOrg.logo(UPDATED_LOGO).address(UPDATED_ADDRESS).lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restOrgMockMvc
             .perform(
@@ -292,6 +343,10 @@ class OrgResourceIT {
         assertThat(testOrg.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testOrg.getLogo()).isEqualTo(UPDATED_LOGO);
         assertThat(testOrg.getAddress()).isEqualTo(UPDATED_ADDRESS);
+        assertThat(testOrg.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testOrg.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testOrg.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testOrg.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -306,7 +361,14 @@ class OrgResourceIT {
         Org partialUpdatedOrg = new Org();
         partialUpdatedOrg.setId(org.getId());
 
-        partialUpdatedOrg.name(UPDATED_NAME).logo(UPDATED_LOGO).address(UPDATED_ADDRESS);
+        partialUpdatedOrg
+            .name(UPDATED_NAME)
+            .logo(UPDATED_LOGO)
+            .address(UPDATED_ADDRESS)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restOrgMockMvc
             .perform(
@@ -323,6 +385,10 @@ class OrgResourceIT {
         assertThat(testOrg.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testOrg.getLogo()).isEqualTo(UPDATED_LOGO);
         assertThat(testOrg.getAddress()).isEqualTo(UPDATED_ADDRESS);
+        assertThat(testOrg.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testOrg.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testOrg.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testOrg.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test

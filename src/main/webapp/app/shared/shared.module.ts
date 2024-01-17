@@ -8,14 +8,16 @@ import FindLanguageFromKeyPipe from './language/find-language-from-key.pipe';
 import TranslateDirective from './language/translate.directive';
 import { AlertComponent } from './alert/alert.component';
 import { AlertErrorComponent } from './alert/alert-error.component';
-import { NgxEditorModule } from 'ngx-editor';
+import { EditorModule, TINYMCE_SCRIPT_SRC  } from '@tinymce/tinymce-angular';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import {ClipboardModule} from "@angular/cdk/clipboard";
 
 
 /**
  * Application wide Module
  */
 @NgModule({
-  imports: [AlertComponent, AlertErrorComponent, FindLanguageFromKeyPipe, TranslateDirective, NgxEditorModule],
+  imports: [AlertComponent, AlertErrorComponent, FindLanguageFromKeyPipe, TranslateDirective,EditorModule,NgbPopoverModule,ClipboardModule,],
   exports: [
     CommonModule,
     NgbModule,
@@ -25,7 +27,12 @@ import { NgxEditorModule } from 'ngx-editor';
     TranslateModule,
     FindLanguageFromKeyPipe,
     TranslateDirective,
-    NgxEditorModule,
+    EditorModule,
+    NgbPopoverModule,
+    ClipboardModule,
   ],
+  providers: [
+    { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' }
+  ]
 })
 export default class SharedModule {}

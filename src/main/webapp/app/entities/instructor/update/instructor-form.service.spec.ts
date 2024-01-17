@@ -28,7 +28,12 @@ describe('Instructor Form Service', () => {
             hireDate: expect.any(Object),
             salary: expect.any(Object),
             commissionPct: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
             gender: expect.any(Object),
+            courses: expect.any(Object),
           }),
         );
       });
@@ -47,7 +52,12 @@ describe('Instructor Form Service', () => {
             hireDate: expect.any(Object),
             salary: expect.any(Object),
             commissionPct: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
             gender: expect.any(Object),
+            courses: expect.any(Object),
           }),
         );
       });

@@ -23,8 +23,10 @@ describe('Resources Form Service', () => {
             fileName: expect.any(Object),
             fileNameOnServer: expect.any(Object),
             document: expect.any(Object),
-            strategies: expect.any(Object),
-            assessment: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
           }),
         );
       });
@@ -38,8 +40,10 @@ describe('Resources Form Service', () => {
             fileName: expect.any(Object),
             fileNameOnServer: expect.any(Object),
             document: expect.any(Object),
-            strategies: expect.any(Object),
-            assessment: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
           }),
         );
       });

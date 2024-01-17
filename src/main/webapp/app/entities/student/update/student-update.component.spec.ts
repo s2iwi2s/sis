@@ -8,8 +8,10 @@ import { of, Subject, from } from 'rxjs';
 
 import { IAppConfig } from 'app/entities/app-config/app-config.model';
 import { AppConfigService } from 'app/entities/app-config/service/app-config.service';
-import { StudentService } from '../service/student.service';
+import { ICourse } from 'app/entities/course/course.model';
+import { CourseService } from 'app/entities/course/service/course.service';
 import { IStudent } from '../student.model';
+import { StudentService } from '../service/student.service';
 import { StudentFormService } from './student-form.service';
 
 import { StudentUpdateComponent } from './student-update.component';
@@ -21,6 +23,7 @@ describe('Student Management Update Component', () => {
   let studentFormService: StudentFormService;
   let studentService: StudentService;
   let appConfigService: AppConfigService;
+  let courseService: CourseService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -43,6 +46,7 @@ describe('Student Management Update Component', () => {
     studentFormService = TestBed.inject(StudentFormService);
     studentService = TestBed.inject(StudentService);
     appConfigService = TestBed.inject(AppConfigService);
+    courseService = TestBed.inject(CourseService);
 
     comp = fixture.componentInstance;
   });
@@ -50,10 +54,10 @@ describe('Student Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call gender query and add missing value', () => {
       const student: IStudent = { id: 456 };
-      const gender: IAppConfig = { id: 10613 };
+      const gender: IAppConfig = { id: 12793 };
       student.gender = gender;
 
-      const genderCollection: IAppConfig[] = [{ id: 17719 }];
+      const genderCollection: IAppConfig[] = [{ id: 25204 }];
       jest.spyOn(appConfigService, 'query').mockReturnValue(of(new HttpResponse({ body: genderCollection })));
       const expectedCollection: IAppConfig[] = [gender, ...genderCollection];
       jest.spyOn(appConfigService, 'addAppConfigToCollectionIfMissing').mockReturnValue(expectedCollection);
@@ -66,15 +70,40 @@ describe('Student Management Update Component', () => {
       expect(comp.gendersCollection).toEqual(expectedCollection);
     });
 
+    it('Should call Course query and add missing value', () => {
+      const student: IStudent = { id: 456 };
+      const courses: ICourse[] = [{ id: 7607 }];
+      student.courses = courses;
+
+      const courseCollection: ICourse[] = [{ id: 28114 }];
+      jest.spyOn(courseService, 'query').mockReturnValue(of(new HttpResponse({ body: courseCollection })));
+      const additionalCourses = [...courses];
+      const expectedCollection: ICourse[] = [...additionalCourses, ...courseCollection];
+      jest.spyOn(courseService, 'addCourseToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+      activatedRoute.data = of({ student });
+      comp.ngOnInit();
+
+      expect(courseService.query).toHaveBeenCalled();
+      expect(courseService.addCourseToCollectionIfMissing).toHaveBeenCalledWith(
+        courseCollection,
+        ...additionalCourses.map(expect.objectContaining),
+      );
+      expect(comp.coursesSharedCollection).toEqual(expectedCollection);
+    });
+
     it('Should update editForm', () => {
       const student: IStudent = { id: 456 };
-      const gender: IAppConfig = { id: 29879 };
+      const gender: IAppConfig = { id: 26043 };
       student.gender = gender;
+      const course: ICourse = { id: 28078 };
+      student.courses = [course];
 
       activatedRoute.data = of({ student });
       comp.ngOnInit();
 
       expect(comp.gendersCollection).toContain(gender);
+      expect(comp.coursesSharedCollection).toContain(course);
       expect(comp.student).toEqual(student);
     });
   });
@@ -155,6 +184,16 @@ describe('Student Management Update Component', () => {
         jest.spyOn(appConfigService, 'compareAppConfig');
         comp.compareAppConfig(entity, entity2);
         expect(appConfigService.compareAppConfig).toHaveBeenCalledWith(entity, entity2);
+      });
+    });
+
+    describe('compareCourse', () => {
+      it('Should forward to courseService', () => {
+        const entity = { id: 123 };
+        const entity2 = { id: 456 };
+        jest.spyOn(courseService, 'compareCourse');
+        comp.compareCourse(entity, entity2);
+        expect(courseService.compareCourse).toHaveBeenCalledWith(entity, entity2);
       });
     });
   });
