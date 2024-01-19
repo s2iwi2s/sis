@@ -11,11 +11,11 @@
     <property name="datetimeType" value="datetime" dbms="postgresql"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20240104091914_added_entity_AppConfig.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20240104091514_added_entity_Org.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20240104091614_added_entity_Instructor.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20240104091714_added_entity_Student.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20240104091814_added_entity_Course.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20240104091914_added_entity_AppConfig.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20240104092014_added_entity_CurriculumMap.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20240104092114_added_entity_LearningCompetency.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20240104092214_added_entity_Strategies.xml" relativeToChangelogFile="false"/>

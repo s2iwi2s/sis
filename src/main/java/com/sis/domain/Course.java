@@ -33,11 +33,9 @@ public class Course extends AbstractAuditingEntity<Long> implements Serializable
     @Column(name = "hours_per_quarter")
     private Long hoursPerQuarter;
 
-    @Lob
     @Column(name = "course_description")
     private String courseDescription;
 
-    @Lob
     @Column(name = "course_objectives")
     private String courseObjectives;
 
