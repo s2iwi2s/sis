@@ -30,9 +30,6 @@ public class Resources extends AbstractAuditingEntity<Long> implements Serializa
     @Column(name = "file_name", length = 50)
     private String fileName;
 
-    @Column(name = "file_name_on_server")
-    private String fileNameOnServer;
-
     @Lob
     @Column(name = "document")
     private byte[] document;
@@ -76,19 +73,6 @@ public class Resources extends AbstractAuditingEntity<Long> implements Serializa
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
-    }
-
-    public String getFileNameOnServer() {
-        return this.fileNameOnServer;
-    }
-
-    public Resources fileNameOnServer(String fileNameOnServer) {
-        this.setFileNameOnServer(fileNameOnServer);
-        return this;
-    }
-
-    public void setFileNameOnServer(String fileNameOnServer) {
-        this.fileNameOnServer = fileNameOnServer;
     }
 
     public byte[] getDocument() {
@@ -224,8 +208,6 @@ public class Resources extends AbstractAuditingEntity<Long> implements Serializa
         return "Resources{" +
             "id=" + getId() +
             ", fileName='" + getFileName() + "'" +
-            ", fileNameOnServer='" + getFileNameOnServer() + "'" +
-            ", document='" + getDocument() + "'" +
             ", documentContentType='" + getDocumentContentType() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +

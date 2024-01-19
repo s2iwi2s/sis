@@ -188,4 +188,12 @@ public class AssessmentResource {
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }
+    @DeleteMapping("/{id}/{resourcesId}")
+    public ResponseEntity<Void> deleteAssessment(@PathVariable("id") Long id, @PathVariable("resourcesId") Long resourcesId) {
+        assessmentService.delete(id, resourcesId);
+        return ResponseEntity
+            .noContent()
+            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
+            .build();
+    }
 }

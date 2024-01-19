@@ -1,23 +1,27 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import {Component, OnInit} from '@angular/core';
+import {HttpResponse} from '@angular/common/http';
+import {ActivatedRoute} from '@angular/router';
+import {filter, Observable, switchMap} from 'rxjs';
+import {finalize, map} from 'rxjs/operators';
 
 import SharedModule from 'app/shared/shared.module';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import { AlertError } from 'app/shared/alert/alert-error.model';
-import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
-import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
-import { IResources } from 'app/entities/resources/resources.model';
-import { ResourcesService } from 'app/entities/resources/service/resources.service';
-import { ILearningCompetency } from 'app/entities/learning-competency/learning-competency.model';
-import { LearningCompetencyService } from 'app/entities/learning-competency/service/learning-competency.service';
-import { AssessmentService } from '../service/assessment.service';
-import { IAssessment } from '../assessment.model';
-import { AssessmentFormService, AssessmentFormGroup } from './assessment-form.service';
-import { OPT_TINY_MCE } from "../../../app.constants";
+import {AlertError} from 'app/shared/alert/alert-error.model';
+import {EventManager, EventWithContent} from 'app/core/util/event-manager.service';
+import {DataUtils, FileLoadError} from 'app/core/util/data-util.service';
+import {IResources} from 'app/entities/resources/resources.model';
+import {ResourcesService} from 'app/entities/resources/service/resources.service';
+import {ILearningCompetency} from 'app/entities/learning-competency/learning-competency.model';
+import {LearningCompetencyService} from 'app/entities/learning-competency/service/learning-competency.service';
+import {AssessmentService} from '../service/assessment.service';
+import {IAssessment} from '../assessment.model';
+import {AssessmentFormGroup, AssessmentFormService} from './assessment-form.service';
+import {OPT_TINY_MCE} from "../../../app.constants";
+import {ResourcesDeleteDialogComponent} from "../../resources/delete/resources-delete-dialog.component";
+import {ITEM_DELETED_EVENT, ITEM_UPLOAD_EVENT} from "../../../config/navigation.constants";
+import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {ResourcesUploadDialogComponent} from "../../resources/upload-dialog/resources-upload-dialog.component";
 
 @Component({
   standalone: true,
@@ -44,6 +48,8 @@ export class AssessmentUpdateComponent implements OnInit {
     protected resourcesService: ResourcesService,
     protected learningCompetencyService: LearningCompetencyService,
     protected activatedRoute: ActivatedRoute,
+    protected resourcesDeleteDialogModalService: NgbModal,
+    protected resourcesUploadDialogModalService: NgbModal,
   ) {}
 
   compareResources = (o1: IResources | null, o2: IResources | null): boolean => this.resourcesService.compareResources(o1, o2);
@@ -135,15 +141,25 @@ export class AssessmentUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
-    this.resourcesService
-      .query()
+    console.log('loadRelationshipsOptions--->');
+    this.resourcesService.queryByAssessmentId(this.assessment?.id??0)
       .pipe(map((res: HttpResponse<IResources[]>) => res.body ?? []))
       .pipe(
-        map((resources: IResources[]) =>
-          this.resourcesService.addResourcesToCollectionIfMissing<IResources>(resources, ...(this.assessment?.resources ?? [])),
-        ),
+        map((resources: IResources[]) => {
+          return this.resourcesService.addResourcesToCollectionIfMissing<IResources>(resources, ...(this.assessment?.resources ?? []))
+        }),
       )
       .subscribe((resources: IResources[]) => (this.resourcesSharedCollection = resources));
+
+    // this.resourcesService
+    //   .query()
+    //   .pipe(map((res: HttpResponse<IResources[]>) => res.body ?? []))
+    //   .pipe(
+    //     map((resources: IResources[]) =>
+    //       this.resourcesService.addResourcesToCollectionIfMissing<IResources>(resources, ...(this.assessment?.resources ?? [])),
+    //     ),
+    //   )
+    //   .subscribe((resources: IResources[]) => (this.resourcesSharedCollection = resources));
 
     this.learningCompetencyService
       .query()
@@ -157,5 +173,44 @@ export class AssessmentUpdateComponent implements OnInit {
         ),
       )
       .subscribe((learningCompetencies: ILearningCompetency[]) => (this.learningCompetenciesSharedCollection = learningCompetencies));
+  }
+
+  deleteResource(resources: IResources) {
+    const modalRef = this.resourcesDeleteDialogModalService.open(ResourcesDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    modalRef.componentInstance.resources = resources;
+    // unsubscribe not needed because closed completes on modal close
+    modalRef.closed
+      .pipe(
+        filter(reason => reason === ITEM_DELETED_EVENT),
+        switchMap(async () => {
+          this.deleteResourceFromForm(resources);
+          this.loadRelationshipsOptions();
+        }),
+      )
+      .subscribe();
+  }
+
+  private deleteResourceFromForm(resourceToRemove: IResources) {
+    if(this.assessment) {
+      if(!this.assessment.resources) {
+        this.assessment.resources = [];
+      }
+      this.assessment.resources = this.assessment.resources.filter(r => r.id !== resourceToRemove.id);
+      this.editForm.patchValue({
+        resources: this.assessment.resources
+      })
+    }
+  }
+
+  showAddImagesForm() {
+    const modalRef = this.resourcesUploadDialogModalService.open(ResourcesUploadDialogComponent, { size: 'lg', backdrop: 'static' });
+    modalRef.componentInstance.assessmentId = this.assessment?.id;
+    // unsubscribe not needed because closed completes on modal close
+    modalRef.closed
+      .pipe(
+        filter(reason => reason === ITEM_UPLOAD_EVENT),
+        switchMap(async () => this.loadRelationshipsOptions()),
+      )
+      .subscribe();
   }
 }

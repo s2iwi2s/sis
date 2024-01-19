@@ -63,4 +63,6 @@ public interface AssessmentService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    void delete(Long id, Long resourcesId);
 }

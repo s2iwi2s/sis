@@ -85,4 +85,16 @@ public class AssessmentServiceImpl implements AssessmentService {
         log.debug("Request to delete Assessment : {}", id);
         assessmentRepository.deleteById(id);
     }
+
+    @Override
+    public void delete(Long id, Long resourcesId) {
+        assessmentRepository
+            .findById(id)
+            .ifPresent(a -> this.deleteResource(a, resourcesId));
+    }
+
+    private void deleteResource(Assessment a, Long resourcesId) {
+        Assessment assessment = a.removeResources(resourcesId);
+        this.assessmentRepository.save(assessment);
+    }
 }

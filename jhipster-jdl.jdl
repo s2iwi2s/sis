@@ -64,11 +64,11 @@ entity Student {
     fathersOccupation String maxlength(50),
     fathersContacts String maxlength(50),
     mothersLastName String maxlength(50),
-    mothersMiddleName String maxlength(50),   
+    mothersMiddleName String maxlength(50),
     mothersFirstName String maxlength(50),
     mothersOccupation String maxlength(50),
     mothersContacts String maxlength(50),
-    guardianFullName String maxlength(50), 
+    guardianFullName String maxlength(50),
     guardianContacts String maxlength(50),
     createdBy String maxlength(50),
     createdDate Instant,
@@ -123,7 +123,7 @@ entity LearningCompetency {
 
 entity Strategies {
 	name String,
-	description String
+	description TextBlob
     createdBy String maxlength(50),
     createdDate Instant,
     lastModifiedBy String maxlength(50),
@@ -142,7 +142,6 @@ entity Assessment {
 
 entity Resources {
 	fileName String maxlength(50),
-	fileNameOnServer String,
     document AnyBlob,
     createdBy String maxlength(50),
     createdDate Instant,
@@ -161,7 +160,7 @@ relationship OneToOne {
 relationship ManyToMany {
     Instructor{course} to Course
     Student{course} to Course
-    
+
 	Strategies{resources} to Resources
 	Assessment{resources} to Resources
 }

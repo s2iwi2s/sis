@@ -68,20 +68,7 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="courseDescription">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.course.courseDescription">Course Description</span>
 
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="courseObjectives">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.course.courseObjectives">Course Objectives</span>
-
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
             <th scope="col" jhiSortBy="createdBy">
               <div class="d-flex">
                 <span jhiTranslate="schInfoSysApp.course.createdBy">Created By</span>
@@ -135,8 +122,6 @@
                 }
               </td>
               <td>{{ course.hoursPerQuarter }}</td>
-              <td>{{ course.courseDescription }}</td>
-              <td>{{ course.courseObjectives }}</td>
               <td>{{ course.createdBy }}</td>
               <td>{{ course.createdDate | formatMediumDatetime }}</td>
               <td>{{ course.lastModifiedBy }}</td>

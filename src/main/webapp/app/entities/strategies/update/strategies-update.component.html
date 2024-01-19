@@ -66,7 +66,7 @@
 
         <div class="mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.strategies.createdBy" for="field_createdBy">Created By</label>
-          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" />
+          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" [readonly]="true"/>
           @if (editForm.get('createdBy')!.invalid && (editForm.get('createdBy')!.dirty || editForm.get('createdBy')!.touched)) {
             <div>
               @if (editForm.get('createdBy')?.errors?.maxlength) {
@@ -89,6 +89,7 @@
               name="createdDate"
               formControlName="createdDate"
               placeholder="YYYY-MM-DD HH:mm"
+              [readonly]="true"
             />
           </div>
         </div>
@@ -104,6 +105,7 @@
             id="field_lastModifiedBy"
             data-cy="lastModifiedBy"
             formControlName="lastModifiedBy"
+            [readonly]="true"
           />
           @if (
             editForm.get('lastModifiedBy')!.invalid && (editForm.get('lastModifiedBy')!.dirty || editForm.get('lastModifiedBy')!.touched)
@@ -131,6 +133,7 @@
               name="lastModifiedDate"
               formControlName="lastModifiedDate"
               placeholder="YYYY-MM-DD HH:mm"
+              [readonly]="true"
             />
           </div>
         </div>
@@ -138,7 +141,7 @@
         <div class="mb-3">
           <label jhiTranslate="schInfoSysApp.strategies.resources" for="field_resources">Resources</label>
           <select
-            class="form-control visually-hidden"
+            class="form-control visually-hiddenx"
             id="field_resources"
             data-cy="resources"
             multiple
@@ -147,12 +150,12 @@
             [compareWith]="compareResources"
           >
             @for (resourcesOption of resourcesSharedCollection; track $index) {
-              <option [ngValue]="resourcesOption">{{ resourcesOption.id }}</option>
+              <option [ngValue]="resourcesOption">{{ resourcesOption.fileName }}</option>
             }
           </select>
-          <div class="row mb-3">
+          <div class="row">
           @for (resource of editForm.get('resources')?.value; track $index) {
-            <div class="row col-sm-12" placement="left" ngbPopover="Copied!">
+            <div class="row col-sm-12" placement="left" ngbPopover="URL copied to clipboard!">
               <div class="col-sm-3">
                 <a href="/api/resources/doc/{{ resource.id }}">{{ resource.fileName }}</a> ({{ resource.documentContentType }})
               </div>

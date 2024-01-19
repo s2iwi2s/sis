@@ -35,7 +35,7 @@ public class Org extends AbstractAuditingEntity<Long> implements Serializable {
 
     @JsonIgnoreProperties(value = { "org", "instructor", "student", "course" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(unique = true)
+    @JoinColumn(unique = false)
     private AppConfig currSchYr;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

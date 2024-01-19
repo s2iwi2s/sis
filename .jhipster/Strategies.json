@@ -12,7 +12,7 @@
     },
     {
       "fieldName": "description",
-      "fieldType": "String"
+      "fieldType": "byte[]"
     },
     {
       "fieldName": "createdBy",

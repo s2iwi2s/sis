@@ -1,5 +1,6 @@
 package com.sis.repository;
 
+import com.sis.domain.Resources;
 import com.sis.domain.Strategies;
 import java.util.List;
 import java.util.Optional;
@@ -27,4 +28,6 @@ public interface StrategiesRepository extends StrategiesRepositoryWithBagRelatio
     default Page<Strategies> findAllWithEagerRelationships(Pageable pageable) {
         return this.fetchBagRelationships(this.findAll(pageable));
     }
+
+    Optional<Strategies> findByResources(Resources resources);
 }

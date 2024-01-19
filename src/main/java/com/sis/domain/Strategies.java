@@ -2,13 +2,13 @@ package com.sis.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Strategies.
@@ -29,6 +29,7 @@ public class Strategies extends AbstractAuditingEntity<Long> implements Serializ
     @Column(name = "name")
     private String name;
 
+    @Lob
     @Column(name = "description")
     private String description;
 
@@ -127,6 +128,13 @@ public class Strategies extends AbstractAuditingEntity<Long> implements Serializ
 
     public Strategies removeResources(Resources resources) {
         this.resources.remove(resources);
+        return this;
+    }
+    public Strategies removeResources(Long resourceId) {
+        this.resources
+            .stream()
+            .filter(r -> r.getId().longValue() == resourceId.longValue())
+            .findFirst().map(r -> this.resources.remove(r));
         return this;
     }
 

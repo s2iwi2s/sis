@@ -17,8 +17,6 @@ public class ResourcesDTO implements Serializable {
     @Size(max = 50)
     private String fileName;
 
-    private String fileNameOnServer;
-
     @Lob
     private byte[] document;
 
@@ -48,14 +46,6 @@ public class ResourcesDTO implements Serializable {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
-    }
-
-    public String getFileNameOnServer() {
-        return fileNameOnServer;
-    }
-
-    public void setFileNameOnServer(String fileNameOnServer) {
-        this.fileNameOnServer = fileNameOnServer;
     }
 
     public byte[] getDocument() {
@@ -133,7 +123,6 @@ public class ResourcesDTO implements Serializable {
         return "ResourcesDTO{" +
             "id=" + getId() +
             ", fileName='" + getFileName() + "'" +
-            ", fileNameOnServer='" + getFileNameOnServer() + "'" +
             ", document='" + getDocument() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +

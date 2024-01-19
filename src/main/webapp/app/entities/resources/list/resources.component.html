@@ -49,13 +49,6 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="fileNameOnServer">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.resources.fileNameOnServer">File Name On Server</span>
-
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
             <th scope="col" jhiSortBy="document">
               <div class="d-flex">
                 <span jhiTranslate="schInfoSysApp.resources.document">Document</span>
@@ -101,7 +94,6 @@
                 <a [routerLink]="['/resources', resources.id, 'view']">{{ resources.id }}</a>
               </td>
               <td>{{ resources.fileName }}</td>
-              <td>{{ resources.fileNameOnServer }}</td>
               <td>
                 @if (resources.document) {
                   <a (click)="openFile(resources.document, resources.documentContentType)" jhiTranslate="entity.action.open">Open</a>

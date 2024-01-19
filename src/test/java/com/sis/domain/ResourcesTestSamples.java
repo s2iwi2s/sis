@@ -13,7 +13,6 @@ public class ResourcesTestSamples {
         return new Resources()
             .id(1L)
             .fileName("fileName1")
-            .fileNameOnServer("fileNameOnServer1")
             .createdBy("createdBy1")
             .lastModifiedBy("lastModifiedBy1");
     }
@@ -22,7 +21,6 @@ public class ResourcesTestSamples {
         return new Resources()
             .id(2L)
             .fileName("fileName2")
-            .fileNameOnServer("fileNameOnServer2")
             .createdBy("createdBy2")
             .lastModifiedBy("lastModifiedBy2");
     }
@@ -31,7 +29,6 @@ public class ResourcesTestSamples {
         return new Resources()
             .id(longCount.incrementAndGet())
             .fileName(UUID.randomUUID().toString())
-            .fileNameOnServer(UUID.randomUUID().toString())
             .createdBy(UUID.randomUUID().toString())
             .lastModifiedBy(UUID.randomUUID().toString());
     }

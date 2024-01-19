@@ -69,6 +69,11 @@ export class ResourcesService {
       .get<RestResources[]>(this.resourceUrl, { params: options, observe: 'response' })
       .pipe(map(res => this.convertResponseArrayFromServer(res)));
   }
+  queryByAssessmentId(assessmentId: number): Observable<EntityArrayResponseType> {
+    return this.http
+      .get<RestResources[]>(`${this.resourceUrl}/${assessmentId}/assessment`, { observe: 'response' })
+      .pipe(map(res => this.convertResponseArrayFromServer(res)));
+  }
 
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });

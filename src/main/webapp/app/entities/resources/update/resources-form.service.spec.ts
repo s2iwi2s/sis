@@ -21,7 +21,6 @@ describe('Resources Form Service', () => {
           expect.objectContaining({
             id: expect.any(Object),
             fileName: expect.any(Object),
-            fileNameOnServer: expect.any(Object),
             document: expect.any(Object),
             createdBy: expect.any(Object),
             createdDate: expect.any(Object),
@@ -38,7 +37,6 @@ describe('Resources Form Service', () => {
           expect.objectContaining({
             id: expect.any(Object),
             fileName: expect.any(Object),
-            fileNameOnServer: expect.any(Object),
             document: expect.any(Object),
             createdBy: expect.any(Object),
             createdDate: expect.any(Object),

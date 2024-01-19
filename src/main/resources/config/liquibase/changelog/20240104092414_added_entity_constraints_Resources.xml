@@ -21,5 +21,12 @@
                                  referencedColumnNames="id"
                                  referencedTableName="assessment"
                                  />
+
+        <addForeignKeyConstraint baseColumnNames="tag_id"
+                                 baseTableName="rel_resources__tag"
+                                 constraintName="fk_rel_resources__tag__tag_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tag"
+        />
     </changeSet>
 </databaseChangeLog>

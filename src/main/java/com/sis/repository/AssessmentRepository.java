@@ -3,6 +3,8 @@ package com.sis.repository;
 import com.sis.domain.Assessment;
 import java.util.List;
 import java.util.Optional;
+
+import com.sis.domain.Resources;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.*;
@@ -27,4 +29,5 @@ public interface AssessmentRepository extends AssessmentRepositoryWithBagRelatio
     default Page<Assessment> findAllWithEagerRelationships(Pageable pageable) {
         return this.fetchBagRelationships(this.findAll(pageable));
     }
+    Optional<Assessment> findByResources(Resources resources);
 }

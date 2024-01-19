@@ -8,6 +8,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -49,6 +51,15 @@ public class Assessment extends AbstractAuditingEntity<Long> implements Serializ
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnoreProperties(value = {"strategies", "assessments", "curriculumMap"}, allowSetters = true)
     private LearningCompetency learningCompetency;
+
+    public Assessment() {
+        super();
+    }
+
+    public Assessment(Long id) {
+        super();
+        setId(id);
+    }
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -144,6 +155,14 @@ public class Assessment extends AbstractAuditingEntity<Long> implements Serializ
 
     public Assessment removeResources(Resources resources) {
         this.resources.remove(resources);
+        return this;
+    }
+
+    public Assessment removeResources(Long resourceId) {
+        this.resources
+            .stream()
+            .filter(r -> r.getId().longValue() == resourceId.longValue())
+            .findFirst().map(r -> this.resources.remove(r));
         return this;
     }
 

@@ -36,8 +36,6 @@ class ResourcesResourceIT {
 
     private static final String DEFAULT_FILE_NAME = "AAAAAAAAAA";
     private static final String UPDATED_FILE_NAME = "BBBBBBBBBB";
-
-    private static final String DEFAULT_FILE_NAME_ON_SERVER = "AAAAAAAAAA";
     private static final String UPDATED_FILE_NAME_ON_SERVER = "BBBBBBBBBB";
 
     private static final byte[] DEFAULT_DOCUMENT = TestUtil.createByteArray(1, "0");
@@ -86,7 +84,6 @@ class ResourcesResourceIT {
     public static Resources createEntity(EntityManager em) {
         Resources resources = new Resources()
             .fileName(DEFAULT_FILE_NAME)
-            .fileNameOnServer(DEFAULT_FILE_NAME_ON_SERVER)
             .document(DEFAULT_DOCUMENT)
             .documentContentType(DEFAULT_DOCUMENT_CONTENT_TYPE)
             .createdBy(DEFAULT_CREATED_BY)
@@ -105,7 +102,6 @@ class ResourcesResourceIT {
     public static Resources createUpdatedEntity(EntityManager em) {
         Resources resources = new Resources()
             .fileName(UPDATED_FILE_NAME)
-            .fileNameOnServer(UPDATED_FILE_NAME_ON_SERVER)
             .document(UPDATED_DOCUMENT)
             .documentContentType(UPDATED_DOCUMENT_CONTENT_TYPE)
             .createdBy(UPDATED_CREATED_BY)
@@ -135,7 +131,6 @@ class ResourcesResourceIT {
         assertThat(resourcesList).hasSize(databaseSizeBeforeCreate + 1);
         Resources testResources = resourcesList.get(resourcesList.size() - 1);
         assertThat(testResources.getFileName()).isEqualTo(DEFAULT_FILE_NAME);
-        assertThat(testResources.getFileNameOnServer()).isEqualTo(DEFAULT_FILE_NAME_ON_SERVER);
         assertThat(testResources.getDocument()).isEqualTo(DEFAULT_DOCUMENT);
         assertThat(testResources.getDocumentContentType()).isEqualTo(DEFAULT_DOCUMENT_CONTENT_TYPE);
         assertThat(testResources.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
@@ -176,7 +171,6 @@ class ResourcesResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(resources.getId().intValue())))
             .andExpect(jsonPath("$.[*].fileName").value(hasItem(DEFAULT_FILE_NAME)))
-            .andExpect(jsonPath("$.[*].fileNameOnServer").value(hasItem(DEFAULT_FILE_NAME_ON_SERVER)))
             .andExpect(jsonPath("$.[*].documentContentType").value(hasItem(DEFAULT_DOCUMENT_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].document").value(hasItem(Base64.getEncoder().encodeToString(DEFAULT_DOCUMENT))))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
@@ -198,7 +192,6 @@ class ResourcesResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(resources.getId().intValue()))
             .andExpect(jsonPath("$.fileName").value(DEFAULT_FILE_NAME))
-            .andExpect(jsonPath("$.fileNameOnServer").value(DEFAULT_FILE_NAME_ON_SERVER))
             .andExpect(jsonPath("$.documentContentType").value(DEFAULT_DOCUMENT_CONTENT_TYPE))
             .andExpect(jsonPath("$.document").value(Base64.getEncoder().encodeToString(DEFAULT_DOCUMENT)))
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
@@ -228,7 +221,6 @@ class ResourcesResourceIT {
         em.detach(updatedResources);
         updatedResources
             .fileName(UPDATED_FILE_NAME)
-            .fileNameOnServer(UPDATED_FILE_NAME_ON_SERVER)
             .document(UPDATED_DOCUMENT)
             .documentContentType(UPDATED_DOCUMENT_CONTENT_TYPE)
             .createdBy(UPDATED_CREATED_BY)
@@ -250,7 +242,6 @@ class ResourcesResourceIT {
         assertThat(resourcesList).hasSize(databaseSizeBeforeUpdate);
         Resources testResources = resourcesList.get(resourcesList.size() - 1);
         assertThat(testResources.getFileName()).isEqualTo(UPDATED_FILE_NAME);
-        assertThat(testResources.getFileNameOnServer()).isEqualTo(UPDATED_FILE_NAME_ON_SERVER);
         assertThat(testResources.getDocument()).isEqualTo(UPDATED_DOCUMENT);
         assertThat(testResources.getDocumentContentType()).isEqualTo(UPDATED_DOCUMENT_CONTENT_TYPE);
         assertThat(testResources.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
@@ -351,7 +342,6 @@ class ResourcesResourceIT {
         assertThat(resourcesList).hasSize(databaseSizeBeforeUpdate);
         Resources testResources = resourcesList.get(resourcesList.size() - 1);
         assertThat(testResources.getFileName()).isEqualTo(DEFAULT_FILE_NAME);
-        assertThat(testResources.getFileNameOnServer()).isEqualTo(DEFAULT_FILE_NAME_ON_SERVER);
         assertThat(testResources.getDocument()).isEqualTo(DEFAULT_DOCUMENT);
         assertThat(testResources.getDocumentContentType()).isEqualTo(DEFAULT_DOCUMENT_CONTENT_TYPE);
         assertThat(testResources.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
@@ -374,7 +364,6 @@ class ResourcesResourceIT {
 
         partialUpdatedResources
             .fileName(UPDATED_FILE_NAME)
-            .fileNameOnServer(UPDATED_FILE_NAME_ON_SERVER)
             .document(UPDATED_DOCUMENT)
             .documentContentType(UPDATED_DOCUMENT_CONTENT_TYPE)
             .createdBy(UPDATED_CREATED_BY)
@@ -395,7 +384,6 @@ class ResourcesResourceIT {
         assertThat(resourcesList).hasSize(databaseSizeBeforeUpdate);
         Resources testResources = resourcesList.get(resourcesList.size() - 1);
         assertThat(testResources.getFileName()).isEqualTo(UPDATED_FILE_NAME);
-        assertThat(testResources.getFileNameOnServer()).isEqualTo(UPDATED_FILE_NAME_ON_SERVER);
         assertThat(testResources.getDocument()).isEqualTo(UPDATED_DOCUMENT);
         assertThat(testResources.getDocumentContentType()).isEqualTo(UPDATED_DOCUMENT_CONTENT_TYPE);
         assertThat(testResources.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);

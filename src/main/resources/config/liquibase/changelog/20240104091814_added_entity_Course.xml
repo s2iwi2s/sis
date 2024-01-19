@@ -15,10 +15,10 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="gradelevel_id" type="bigint">
-                <constraints nullable="true" unique="true" uniqueConstraintName="ux_course__gradelevel_id" />
+                <constraints nullable="true" uniqueConstraintName="ux_course__gradelevel_id" />
             </column>
             <column name="sch_yr_id" type="bigint">
-                <constraints nullable="true" unique="true" uniqueConstraintName="ux_course__sch_yr_id" />
+                <constraints nullable="true" uniqueConstraintName="ux_course__sch_yr_id" />
             </column>
             <column name="subject" type="varchar(50)">
                 <constraints nullable="true" />

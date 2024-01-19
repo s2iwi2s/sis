@@ -44,12 +44,10 @@ public class Course extends AbstractAuditingEntity<Long> implements Serializable
 
     @JsonIgnoreProperties(value = { "user", "org", "instructor", "student", "course" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(unique = true)
     private AppConfig schYr;
 
     @JsonIgnoreProperties(value = { "org", "instructor", "student", "course" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(unique = true)
     private AppConfig gradelevel;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "course")

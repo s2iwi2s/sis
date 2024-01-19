@@ -26,7 +26,10 @@
       "lastModifiedBy": "Last Modified By",
       "lastModifiedDate": "Last Modified Date",
       "strategies": "Strategies",
-      "assessment": "Assessment"
+      "assessment": "Assessment",
+      "upload-dialog": {
+        "title": "Upload Resources Dialog"
+      }
     }
   }
 }

@@ -123,7 +123,7 @@ export class CourseUpdateComponent implements OnInit {
       .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
       .pipe(
         map((appConfigs: IAppConfig[]) =>
-          this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.course?.gradelevel),
+          this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.course?.schYr),
         ),
       )
       .subscribe((appConfigs: IAppConfig[]) => (this.schYrsCollection = appConfigs));

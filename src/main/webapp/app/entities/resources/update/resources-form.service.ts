@@ -33,7 +33,6 @@ type ResourcesFormDefaults = Pick<NewResources, 'id' | 'createdDate' | 'lastModi
 type ResourcesFormGroupContent = {
   id: FormControl<ResourcesFormRawValue['id'] | NewResources['id']>;
   fileName: FormControl<ResourcesFormRawValue['fileName']>;
-  fileNameOnServer: FormControl<ResourcesFormRawValue['fileNameOnServer']>;
   document: FormControl<ResourcesFormRawValue['document']>;
   documentContentType: FormControl<ResourcesFormRawValue['documentContentType']>;
   createdBy: FormControl<ResourcesFormRawValue['createdBy']>;
@@ -62,7 +61,6 @@ export class ResourcesFormService {
       fileName: new FormControl(resourcesRawValue.fileName, {
         validators: [Validators.maxLength(50)],
       }),
-      fileNameOnServer: new FormControl(resourcesRawValue.fileNameOnServer),
       document: new FormControl(resourcesRawValue.document),
       documentContentType: new FormControl(resourcesRawValue.documentContentType),
       createdBy: new FormControl(resourcesRawValue.createdBy, {

@@ -18,7 +18,6 @@ export const sampleWithPartialData: IResources = {
 export const sampleWithFullData: IResources = {
   id: 14009,
   fileName: 'irritably tergiversate',
-  fileNameOnServer: 'onto',
   document: '../fake-data/blob/hipster.png',
   documentContentType: 'unknown',
   createdBy: 'lone apprise',

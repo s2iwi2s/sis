@@ -17,6 +17,9 @@
             <column name="name" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
+            <column name="curr_sch_yr_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
             <column name="logo" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
@@ -35,13 +38,27 @@
             <column name="last_modified_date" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
-            <column name="curr_sch_yr_id" type="bigint">
-                <constraints nullable="true" unique="true" uniqueConstraintName="ux_org__curr_sch_yr_id" />
-            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
         <dropDefaultValue tableName="org" columnName="created_date" columnDataType="${datetimeType}"/>
         <dropDefaultValue tableName="org" columnName="last_modified_date" columnDataType="${datetimeType}"/>
+
+        <loadData
+            file="config/liquibase/data/org.csv"
+            separator=";"
+            tableName="org"
+            usePreparedStatements="true">
+            <column name="id" type="numeric"/>
+            <column name="name" type="string"/>
+            <column name="curr_sch_yr_id" type="numeric"/>
+            <column name="logo" type="string"/>
+            <column name="address" type="string"/>
+            <column name="created_by" type="string"/>
+            <column name="created_date" type="date"/>
+            <column name="last_modified_by" type="string"/>
+            <column name="last_modified_date" type="date"/>
+            <!-- jhipster-needle-liquibase-add-loadcolumn - JHipster (and/or extensions) can add load columns here -->
+        </loadData>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
@@ -56,12 +73,13 @@
     -->
     <changeSet id="20240104091514-1-data" author="jhipster" context="faker">
         <loadData
-                  file="config/liquibase/fake-data/org.csv"
+                  file="config/liquibase/data/org.csv"
                   separator=";"
                   tableName="org"
                   usePreparedStatements="true">
             <column name="id" type="numeric"/>
             <column name="name" type="string"/>
+            <column name="name" type="curr_sch_yr_id"/>
             <column name="logo" type="string"/>
             <column name="address" type="string"/>
             <column name="created_by" type="string"/>

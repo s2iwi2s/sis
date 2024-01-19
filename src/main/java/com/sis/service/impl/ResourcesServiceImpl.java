@@ -1,13 +1,23 @@
 package com.sis.service.impl;
 
+import com.sis.domain.Assessment;
 import com.sis.domain.Resources;
+import com.sis.repository.AssessmentRepository;
 import com.sis.repository.ResourcesRepository;
+import com.sis.repository.StrategiesRepository;
 import com.sis.service.ResourcesService;
 import com.sis.service.dto.ResourcesDTO;
 import com.sis.service.mapper.ResourcesMapper;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,9 +36,17 @@ public class ResourcesServiceImpl implements ResourcesService {
 
     private final ResourcesMapper resourcesMapper;
 
-    public ResourcesServiceImpl(ResourcesRepository resourcesRepository, ResourcesMapper resourcesMapper) {
+    private final StrategiesRepository strategiesRepository;
+
+    private final AssessmentRepository assessmentRepository;
+
+    public ResourcesServiceImpl(ResourcesRepository resourcesRepository, ResourcesMapper resourcesMapper,
+                                StrategiesRepository strategiesRepository,
+                                AssessmentRepository assessmentRepository) {
         this.resourcesRepository = resourcesRepository;
         this.resourcesMapper = resourcesMapper;
+        this.strategiesRepository = strategiesRepository;
+        this.assessmentRepository = assessmentRepository;
     }
 
     @Override
@@ -79,6 +97,30 @@ public class ResourcesServiceImpl implements ResourcesService {
     @Override
     public void delete(Long id) {
         log.debug("Request to delete Resources : {}", id);
-        resourcesRepository.deleteById(id);
+
+        resourcesRepository.findById(id)
+            .ifPresent(r -> {
+                strategiesRepository.findByResources(r)
+                    .ifPresent(s -> {
+                        s.removeResources(r);
+                        strategiesRepository.save(s);
+                        resourcesRepository.deleteById(id);
+                    });
+                assessmentRepository.findByResources(r)
+                    .ifPresent(a -> {
+                        a.removeResources(r);
+                        assessmentRepository.save(a);
+                        resourcesRepository.deleteById(id);
+                    });
+            });
     }
+
+    @Override
+    public Set<ResourcesDTO> findResourcesByAssessments(Long assessmentId) {
+        Resources resources = new Resources().assessments(Set.of(new Assessment(assessmentId)));
+        Example<Resources> example = Example.of(resources, ExampleMatcher.matchingAll().withIgnoreCase());
+        return resourcesRepository.findAll(example).stream().map(resourcesMapper::toDto).collect(Collectors.toSet());
+    }
+
+
 }

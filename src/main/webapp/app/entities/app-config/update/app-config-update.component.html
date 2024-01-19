@@ -49,7 +49,7 @@
 
         <div class="mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.appConfig.createdBy" for="field_createdBy">Created By</label>
-          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" />
+          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" [readonly]="true" />
           @if (editForm.get('createdBy')!.invalid && (editForm.get('createdBy')!.dirty || editForm.get('createdBy')!.touched)) {
             <div>
               @if (editForm.get('createdBy')?.errors?.maxlength) {
@@ -72,6 +72,7 @@
               name="createdDate"
               formControlName="createdDate"
               placeholder="YYYY-MM-DD HH:mm"
+              [readonly]="true"
             />
           </div>
         </div>
@@ -87,6 +88,7 @@
             id="field_lastModifiedBy"
             data-cy="lastModifiedBy"
             formControlName="lastModifiedBy"
+            [readonly]="true"
           />
           @if (
             editForm.get('lastModifiedBy')!.invalid && (editForm.get('lastModifiedBy')!.dirty || editForm.get('lastModifiedBy')!.touched)
@@ -114,6 +116,7 @@
               name="lastModifiedDate"
               formControlName="lastModifiedDate"
               placeholder="YYYY-MM-DD HH:mm"
+              [readonly]="true"
             />
           </div>
         </div>

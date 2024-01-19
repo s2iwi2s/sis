@@ -76,8 +76,43 @@
         </div>
 
         <div class="mb-3">
+          <label jhiTranslate="schInfoSysApp.assessment.resources" for="field_resources">Resources</label>
+          <a (click)="showAddImagesForm()"><fa-icon icon="plus"></fa-icon></a>
+          <select
+            class="form-control visually-hidden"
+            id="field_resources"
+            data-cy="resources"
+            multiple
+            name="resources"
+            formControlName="resources"
+            [compareWith]="compareResources"
+          >
+            @for (resourcesOption of resourcesSharedCollection; track $index) {
+              <option [ngValue]="resourcesOption">{{ resourcesOption.fileName }} ({{resourcesOption.documentContentType}})</option>
+            }
+          </select>
+        </div>
+        <div class="row mb-3">
+          @for (resource of editForm.get('resources')?.value; track $index) {
+            <div class="row col-sm-12">
+              <div class="col-sm-3">
+                <a href="/api/resources/doc/{{ resource.id }}">{{ resource.fileName }}</a>
+                <a (click)="deleteResource(resource)"><fa-icon icon="times"></fa-icon></a>
+                ({{ resource.documentContentType }})
+              </div>
+              <div class="col-sm-1">
+                <a class="btn btn-sm" [cdkCopyToClipboard]="baseUrl('/api/resources/doc/'+resource.id)"
+                   (cdkCopyToClipboardCopied)="onClipboardCopy($event)">
+                  <fa-icon icon="clipboard"></fa-icon>
+                </a>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.assessment.createdBy" for="field_createdBy">Created By</label>
-          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" />
+          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" [readonly]="true"/>
           @if (editForm.get('createdBy')!.invalid && (editForm.get('createdBy')!.dirty || editForm.get('createdBy')!.touched)) {
             <div>
               @if (editForm.get('createdBy')?.errors?.maxlength) {
@@ -100,6 +135,7 @@
               name="createdDate"
               formControlName="createdDate"
               placeholder="YYYY-MM-DD HH:mm"
+              [readonly]="true"
             />
           </div>
         </div>
@@ -115,6 +151,7 @@
             id="field_lastModifiedBy"
             data-cy="lastModifiedBy"
             formControlName="lastModifiedBy"
+            [readonly]="true"
           />
           @if (
             editForm.get('lastModifiedBy')!.invalid && (editForm.get('lastModifiedBy')!.dirty || editForm.get('lastModifiedBy')!.touched)
@@ -142,41 +179,9 @@
               name="lastModifiedDate"
               formControlName="lastModifiedDate"
               placeholder="YYYY-MM-DD HH:mm"
+              [readonly]="true"
             />
           </div>
-        </div>
-
-        <div class="mb-3">
-          <label jhiTranslate="schInfoSysApp.assessment.resources" for="field_resources">Resources</label>
-          <select
-            class="form-control"
-            id="field_resources"
-            data-cy="resources"
-            multiple
-            name="resources"
-            formControlName="resources"
-            [compareWith]="compareResources"
-          >
-            @for (resourcesOption of resourcesSharedCollection; track $index) {
-              <option [ngValue]="resourcesOption">{{ resourcesOption.id }}</option>
-            }
-          </select>
-        </div>
-        <div class="row mb-3">
-          @for (resource of editForm.get('resources')?.value; track $index) {
-            <div class="row col-sm-12" placement="left" ngbPopover="Copied!">
-              <div class="col-sm-3">
-                <a href="/api/resources/doc/{{ resource.id }}">{{ resource.fileName }}</a> ({{ resource.documentContentType }})
-              </div>
-              <div class="col-sm-1">
-                <a [cdkCopyToClipboard]="baseUrl('/api/resources/doc/'+resource.id)"
-                   (cdkCopyToClipboardCopied)="onClipboardCopy($event)">
-                  <fa-icon icon="clipboard"></fa-icon>
-                </a>
-              </div>
-            </div>
-
-          }
         </div>
       </div>
 
