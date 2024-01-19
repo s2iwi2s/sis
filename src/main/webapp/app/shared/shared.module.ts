@@ -1,23 +1,36 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TranslateModule } from '@ngx-translate/core';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {NgbModule, NgbPopoverModule} from '@ng-bootstrap/ng-bootstrap';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {TranslateModule} from '@ngx-translate/core';
 
 import FindLanguageFromKeyPipe from './language/find-language-from-key.pipe';
 import TranslateDirective from './language/translate.directive';
-import { AlertComponent } from './alert/alert.component';
-import { AlertErrorComponent } from './alert/alert-error.component';
-import { EditorModule, TINYMCE_SCRIPT_SRC  } from '@tinymce/tinymce-angular';
-import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import {AlertComponent} from './alert/alert.component';
+import {AlertErrorComponent} from './alert/alert-error.component';
+import {EditorModule, TINYMCE_SCRIPT_SRC} from '@tinymce/tinymce-angular';
 import {ClipboardModule} from "@angular/cdk/clipboard";
+import {UploadFileComponent} from "./file-drag-drop/upload-file.component";
+import {DragDropDirective} from "./drag-drop/drag-drop.directive";
 
 
 /**
  * Application wide Module
  */
 @NgModule({
-  imports: [AlertComponent, AlertErrorComponent, FindLanguageFromKeyPipe, TranslateDirective,EditorModule,NgbPopoverModule,ClipboardModule,],
+  imports: [
+    AlertComponent,
+    AlertErrorComponent,
+    FindLanguageFromKeyPipe,
+    TranslateDirective,
+    EditorModule,
+    NgbPopoverModule,
+    ClipboardModule,
+  ],
+  declarations: [
+    UploadFileComponent,
+    DragDropDirective
+  ],
   exports: [
     CommonModule,
     NgbModule,
@@ -30,9 +43,12 @@ import {ClipboardModule} from "@angular/cdk/clipboard";
     EditorModule,
     NgbPopoverModule,
     ClipboardModule,
+    UploadFileComponent,
+    DragDropDirective
   ],
   providers: [
-    { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' }
+    {provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js'}
   ]
 })
-export default class SharedModule {}
+export default class SharedModule {
+}

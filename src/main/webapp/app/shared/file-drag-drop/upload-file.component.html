@@ -1,0 +1,17 @@
+
+@if(files.length !== maxFiles){
+<div class="upload-file-container"
+  (click)="fileInput.click()"
+  jhi-drag-drop
+  (onDrop)="uploadFile($event)"
+>
+  Click or Drop File to attach...
+  <input hidden type="file" #fileInput (change)="fileChangeEvent($event)" />
+</div>
+}
+@for (file of files; track $index) {
+  <div class="files-list" >
+    <p>{{ file.name }}</p>
+    <button class="delete-file" (click)="deleteAttachment($index)">Remove</button>
+  </div>
+}
