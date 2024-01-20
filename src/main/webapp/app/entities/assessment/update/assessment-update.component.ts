@@ -18,9 +18,9 @@ import {AssessmentService} from '../service/assessment.service';
 import {IAssessment} from '../assessment.model';
 import {AssessmentFormGroup, AssessmentFormService} from './assessment-form.service';
 import {OPT_TINY_MCE} from "../../../app.constants";
+import {ITEM_DELETED_EVENT, ITEM_SAVED_EVENT, ITEM_UPLOADED_EVENT} from "../../../config/navigation.constants";
+import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ResourcesDeleteDialogComponent} from "../../resources/delete/resources-delete-dialog.component";
-import {ITEM_DELETED_EVENT, ITEM_UPLOAD_EVENT} from "../../../config/navigation.constants";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ResourcesUploadDialogComponent} from "../../resources/upload-dialog/resources-upload-dialog.component";
 
 @Component({
@@ -204,14 +204,20 @@ export class AssessmentUpdateComponent implements OnInit {
 
   showAddImagesForm() {
     const modalRef = this.resourcesUploadDialogModalService.open(ResourcesUploadDialogComponent, { size: 'lg', backdrop: 'static' });
-    modalRef.componentInstance.assessment = this.assessment;
     // unsubscribe not needed because closed completes on modal close
     modalRef.closed
       .pipe(
-        filter(reason => reason === ITEM_UPLOAD_EVENT),
+        filter(reason => reason === ITEM_UPLOADED_EVENT),
         switchMap(async () => {
-          this.updateForm(this.assessment? this.assessment : {id: 0});
-          this.loadRelationshipsOptions()
+          modalRef.componentInstance.save((resourcesAry: Pick<IResources, "id" | "fileName" | "documentContentType">[], activeModal: NgbActiveModal) => {
+            if(this.assessment){
+              this.assessment.resources = [...(this.assessment?.resources ? this.assessment.resources : []), ...resourcesAry];
+              this.assessmentService.update(this.assessment).subscribe(ret => {
+                this.updateForm(this.assessment? this.assessment : {id: 0});
+                this.loadRelationshipsOptions()
+              });
+            }
+          });
         }),
       )
       .subscribe();
