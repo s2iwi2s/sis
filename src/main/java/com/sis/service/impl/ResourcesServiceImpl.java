@@ -2,6 +2,7 @@ package com.sis.service.impl;
 
 import com.sis.domain.Assessment;
 import com.sis.domain.Resources;
+import com.sis.domain.Strategies;
 import com.sis.repository.AssessmentRepository;
 import com.sis.repository.ResourcesRepository;
 import com.sis.repository.StrategiesRepository;
@@ -117,6 +118,13 @@ public class ResourcesServiceImpl implements ResourcesService {
     @Override
     public Set<ResourcesDTO> findResourcesByAssessments(Long assessmentId) {
         Resources resources = new Resources().assessments(Set.of(new Assessment(assessmentId)));
+        Example<Resources> example = Example.of(resources, ExampleMatcher.matchingAll().withIgnoreCase());
+        return resourcesRepository.findAll(example).stream().map(resourcesMapper::toDto).collect(Collectors.toSet());
+    }
+
+    @Override
+    public Set<ResourcesDTO> findResourcesByStrategies(Long strategiesId) {
+        Resources resources = new Resources().strategies(Set.of(new Strategies(strategiesId)));
         Example<Resources> example = Example.of(resources, ExampleMatcher.matchingAll().withIgnoreCase());
         return resourcesRepository.findAll(example).stream().map(resourcesMapper::toDto).collect(Collectors.toSet());
     }

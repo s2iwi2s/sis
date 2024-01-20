@@ -49,10 +49,18 @@ public class Strategies extends AbstractAuditingEntity<Long> implements Serializ
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
+    public Strategies() {
+        super();
+    }
+
+    public Strategies(Long id) {
+        super();
+        this.setId(id);
+    }
+
     public Long getId() {
         return this.id;
     }
-
     public Strategies id(Long id) {
         this.setId(id);
         return this;

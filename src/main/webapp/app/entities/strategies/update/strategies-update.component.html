@@ -64,6 +64,47 @@
           </editor>
         </div>
 
+
+        <div class="mb-3">
+          <label jhiTranslate="schInfoSysApp.strategies.resources" for="field_resources">Resources</label>
+
+          @if (editForm.controls.id.value !== null) {
+            <a (click)="showAddImagesForm()"><fa-icon icon="plus"></fa-icon></a>
+          }
+
+          <select
+            class="form-control visually-hiddenx"
+            id="field_resources"
+            data-cy="resources"
+            multiple
+            name="resources"
+            formControlName="resources"
+            [compareWith]="compareResources"
+          >
+            @for (resourcesOption of resourcesSharedCollection; track $index) {
+              <option [ngValue]="resourcesOption">{{ resourcesOption.fileName }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          @for (resource of editForm.get('resources')?.value; track $index) {
+            <div class="row col-sm-12">
+              <div class="col-sm-3">
+                <a class="btn btn-sm" [cdkCopyToClipboard]="baseUrl('/api/resources/doc/'+resource.id)"
+                   (cdkCopyToClipboardCopied)="onClipboardCopy($event)">
+                  <fa-icon icon="clipboard"></fa-icon>
+                </a>
+                <a href="/api/resources/doc/{{ resource.id }}">{{ resource.fileName }}</a>
+              </div>
+              <div class="col-sm-9">
+                ({{ resource.documentContentType }})
+                <a (click)="deleteResource(resource)"><fa-icon icon="times"></fa-icon></a>
+
+              </div>
+            </div>
+          }
+        </div>
         <div class="mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.strategies.createdBy" for="field_createdBy">Created By</label>
           <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" [readonly]="true"/>
@@ -135,39 +176,6 @@
               placeholder="YYYY-MM-DD HH:mm"
               [readonly]="true"
             />
-          </div>
-        </div>
-
-        <div class="mb-3">
-          <label jhiTranslate="schInfoSysApp.strategies.resources" for="field_resources">Resources</label>
-          <select
-            class="form-control visually-hiddenx"
-            id="field_resources"
-            data-cy="resources"
-            multiple
-            name="resources"
-            formControlName="resources"
-            [compareWith]="compareResources"
-          >
-            @for (resourcesOption of resourcesSharedCollection; track $index) {
-              <option [ngValue]="resourcesOption">{{ resourcesOption.fileName }}</option>
-            }
-          </select>
-          <div class="row">
-          @for (resource of editForm.get('resources')?.value; track $index) {
-            <div class="row col-sm-12" placement="left" ngbPopover="URL copied to clipboard!">
-              <div class="col-sm-3">
-                <a href="/api/resources/doc/{{ resource.id }}">{{ resource.fileName }}</a> ({{ resource.documentContentType }})
-              </div>
-              <div class="col-sm-1">
-                <a [cdkCopyToClipboard]="baseUrl('/api/resources/doc/'+resource.id)"
-                   (cdkCopyToClipboardCopied)="onClipboardCopy($event)">
-                      <fa-icon icon="clipboard"></fa-icon>
-                </a>
-              </div>
-            </div>
-
-          }
           </div>
         </div>
       </div>

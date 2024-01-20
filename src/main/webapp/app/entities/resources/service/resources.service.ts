@@ -69,9 +69,14 @@ export class ResourcesService {
       .get<RestResources[]>(this.resourceUrl, { params: options, observe: 'response' })
       .pipe(map(res => this.convertResponseArrayFromServer(res)));
   }
-  queryByAssessmentId(assessmentId: number): Observable<EntityArrayResponseType> {
+  queryResourcesByAssessmentId(assessmentId: number): Observable<EntityArrayResponseType> {
     return this.http
       .get<RestResources[]>(`${this.resourceUrl}/${assessmentId}/assessment`, { observe: 'response' })
+      .pipe(map(res => this.convertResponseArrayFromServer(res)));
+  }
+  queryResourcesByStrategiestId(assessmentId: number): Observable<EntityArrayResponseType> {
+    return this.http
+      .get<RestResources[]>(`${this.resourceUrl}/${assessmentId}/strategies`, { observe: 'response' })
       .pipe(map(res => this.convertResponseArrayFromServer(res)));
   }
 

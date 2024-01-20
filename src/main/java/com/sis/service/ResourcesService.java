@@ -61,4 +61,6 @@ public interface ResourcesService {
     void delete(Long id);
 
     Set<ResourcesDTO> findResourcesByAssessments(Long assessmentId);
+
+    Set<ResourcesDTO> findResourcesByStrategies(Long strategiesId);
 }

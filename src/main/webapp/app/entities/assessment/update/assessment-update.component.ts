@@ -142,7 +142,7 @@ export class AssessmentUpdateComponent implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     console.log('loadRelationshipsOptions--->');
-    this.resourcesService.queryByAssessmentId(this.assessment?.id??0)
+    this.resourcesService.queryResourcesByAssessmentId(this.assessment?.id??0)
       .pipe(map((res: HttpResponse<IResources[]>) => res.body ?? []))
       .pipe(
         map((resources: IResources[]) => {

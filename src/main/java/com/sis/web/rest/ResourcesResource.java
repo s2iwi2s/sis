@@ -201,4 +201,11 @@ public class ResourcesResource {
         Set<ResourcesDTO> resourcesDTOs = resourcesService.findResourcesByAssessments(assessmentId);
         return ResponseEntity.ok(resourcesDTOs);
     }
+
+    @GetMapping("/{id}/strategies")
+    public ResponseEntity<Set<ResourcesDTO>> findAllByStrategies(@PathVariable("id") Long strategiesId) {
+        log.debug("REST request to get selected Resources by strategies id : {}", strategiesId);
+        Set<ResourcesDTO> resourcesDTOs = resourcesService.findResourcesByStrategies(strategiesId);
+        return ResponseEntity.ok(resourcesDTOs);
+    }
 }
