@@ -11,8 +11,6 @@ export interface IResources {
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
-  strategies?: Pick<IStrategies, 'id'>[] | null;
-  assessments?: Pick<IAssessment, 'id'>[] | null;
 }
 
 export type NewResources = Omit<IResources, 'id'> & { id: null };

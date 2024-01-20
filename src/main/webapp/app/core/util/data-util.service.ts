@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Observable, Observer } from 'rxjs';
 import {ResourcesFormGroup} from "../../entities/resources/update/resources-form.service";
+import {IResources} from "../../entities/resources/resources.model";
 
 export type FileLoadErrorType = 'not.image' | 'could.not.extract';
 
@@ -97,7 +98,7 @@ export class DataUtils {
   /**
    * Method to convert the file to base64
    */
-  private toBase64(file: File, callback: (base64Data: string) => void): void {
+  toBase64(file: File, callback: (base64Data: string) => void): void {
     const fileReader: FileReader = new FileReader();
     fileReader.onload = (e: ProgressEvent<FileReader>) => {
       if (typeof e.target?.result === 'string') {
@@ -106,6 +107,22 @@ export class DataUtils {
       }
     };
     fileReader.readAsDataURL(file);
+  }
+  
+  fileToResource(file: File): Observable<IResources> {
+    return new Observable((observer: Observer<IResources>) =>{
+      let resource: IResources = {id: 0};
+      this.toBase64(file, (base64Data: string) => {
+        resource = {
+          ...resource,
+          fileName: file.name,
+          document: base64Data,
+          documentContentType: file.type
+        };
+        observer.next(resource);
+        observer.complete();
+      });
+    });
   }
 
   private endsWith(suffix: string, str: string): boolean {

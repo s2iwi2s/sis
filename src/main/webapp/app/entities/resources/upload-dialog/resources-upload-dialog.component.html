@@ -1,5 +1,5 @@
 
-    <form name="uploadForm" role="form" novalidate (ngSubmit)="submitForm()">
+    <form novalidate (ngSubmit)="submitForm()">
       <div class="modal-header">
         <h4 class="modal-title" data-cy="resourcesDeleteDialogHeading"
             jhiTranslate="schInfoSysApp.resources.upload-dialog.title">Upload Resources Dialog</h4>
@@ -21,6 +21,6 @@
           <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
         </button>
 
-        <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save" (click)="submitForm()">Save</span>
       </div>
     </form>

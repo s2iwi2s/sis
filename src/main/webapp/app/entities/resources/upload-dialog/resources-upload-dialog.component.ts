@@ -1,14 +1,16 @@
 import {Component} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import SharedModule from 'app/shared/shared.module';
+import {forkJoin, Observable} from "rxjs";
 import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
 
-import {ResourcesFormGroup, ResourcesFormService} from "../update/resources-form.service";
-import {ITEM_DELETED_EVENT, ITEM_UPLOAD_EVENT} from "../../../config/navigation.constants";
-import {ResourcesService} from "../service/resources.service";
-import {DataUtils, FileLoadError} from "../../../core/util/data-util.service";
-import {EventManager, EventWithContent} from "../../../core/util/event-manager.service";
-import {AlertError} from "../../../shared/alert/alert-error.model";
+import SharedModule from 'app/shared/shared.module';
+
+import {EntityResponseType, ResourcesService} from "../service/resources.service";
+import {DataUtils} from "../../../core/util/data-util.service";
+import {IResources} from "../resources.model";
+import {IAssessment} from "../../assessment/assessment.model";
+import {ITEM_UPLOAD_EVENT} from "../../../config/navigation.constants";
+import {AssessmentService} from "../../assessment/service/assessment.service";
 
 @Component({
   selector: 'jhi-resources-upload-dialog',
@@ -20,30 +22,63 @@ import {AlertError} from "../../../shared/alert/alert-error.model";
   styleUrl: './resources-upload-dialog.component.scss'
 })
 export class ResourcesUploadDialogComponent {
-  assessmentId: number = -1;
+  assessment: IAssessment = {id: 0};
   files: File[] = [];
-
-  uploadForm: ResourcesFormGroup = this.resourcesFormService.createResourcesFormGroup();
 
   constructor(
     protected resourcesService: ResourcesService,
-    protected resourcesFormService: ResourcesFormService,
+    protected assessmentService: AssessmentService,
     protected activeModal: NgbActiveModal,
-    protected dataUtils: DataUtils,
-    protected eventManager: EventManager,) {
+    protected dataUtils: DataUtils,) {
   }
 
   submitForm() {
-    // this.resourcesService.create().subscribe(() => {
-    //   this.activeModal.close(ITEM_UPLOAD_EVENT);
-    // });
+    console.log("assessment =>",this.assessment);
+    const oResourcesAry = forkJoin(this.files
+      .map(file => this.dataUtils.fileToResource(file)));
+
+    oResourcesAry.subscribe(
+      resourcesAry => {
+        this.createResources(resourcesAry)
+          .subscribe(entityResponseTypeAry => {
+            const resourcesAry = entityResponseTypeAry.map(this.convertEntityResponseTypeToIResources2);
+            this.assessment.resources = [...(this.assessment.resources?this.assessment.resources: []), ...resourcesAry];
+            this.assessmentService.update(this.assessment).subscribe(ret => {
+              this.activeModal.close(ITEM_UPLOAD_EVENT);
+            });
+          });
+      }
+    );
   }
-  setFileData(event: Event, field: string, isImage: boolean): void {
-    this.dataUtils.loadFileToForm(event, this.uploadForm, field, isImage).subscribe({
-      error: (err: FileLoadError) =>
-        this.eventManager.broadcast(new EventWithContent<AlertError>('schInfoSysApp.error', { ...err, key: 'error.file.' + err.key })),
-    });
+
+  createResources(resourceAry: IResources[]): Observable<EntityResponseType[]> {
+    return forkJoin(resourceAry.map(
+      resource => this.resourcesService.create({...resource, id: null}))
+    );
   }
+
+  convertEntityResponseTypeToIResources(r: IResources| null): Pick<IResources, 'id' | 'fileName' | 'documentContentType'>{
+    const temp: Pick<IResources, 'id' | 'fileName' | 'documentContentType'> = {
+      id: r?.id || 0,
+      fileName: null,
+      documentContentType: null,
+      ...r
+    }
+    return temp
+  }
+
+
+  convertEntityResponseTypeToIResources2(entityResponseType: EntityResponseType): Pick<IResources, 'id' | 'fileName' | 'documentContentType'>{
+    const r = entityResponseType.body;
+    const temp: Pick<IResources, 'id' | 'fileName' | 'documentContentType'> = {
+      id: r?.id || 0,
+      fileName: null,
+      documentContentType: null,
+      ...r
+    }
+    return temp
+  }
+
   cancel() {
     this.activeModal.dismiss();
   }

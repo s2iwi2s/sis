@@ -204,12 +204,15 @@ export class AssessmentUpdateComponent implements OnInit {
 
   showAddImagesForm() {
     const modalRef = this.resourcesUploadDialogModalService.open(ResourcesUploadDialogComponent, { size: 'lg', backdrop: 'static' });
-    modalRef.componentInstance.assessmentId = this.assessment?.id;
+    modalRef.componentInstance.assessment = this.assessment;
     // unsubscribe not needed because closed completes on modal close
     modalRef.closed
       .pipe(
         filter(reason => reason === ITEM_UPLOAD_EVENT),
-        switchMap(async () => this.loadRelationshipsOptions()),
+        switchMap(async () => {
+          this.updateForm(this.assessment? this.assessment : {id: 0});
+          this.loadRelationshipsOptions()
+        }),
       )
       .subscribe();
   }
