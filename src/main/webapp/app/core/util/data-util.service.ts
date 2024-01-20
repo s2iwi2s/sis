@@ -108,7 +108,7 @@ export class DataUtils {
     };
     fileReader.readAsDataURL(file);
   }
-  
+
   fileToResource(file: File): Observable<IResources> {
     return new Observable((observer: Observer<IResources>) =>{
       let resource: IResources = {id: 0};

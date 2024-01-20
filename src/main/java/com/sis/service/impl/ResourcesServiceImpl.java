@@ -104,14 +104,13 @@ public class ResourcesServiceImpl implements ResourcesService {
                     .ifPresent(s -> {
                         s.removeResources(r);
                         strategiesRepository.save(s);
-                        resourcesRepository.deleteById(id);
                     });
                 assessmentRepository.findByResources(r)
                     .ifPresent(a -> {
                         a.removeResources(r);
                         assessmentRepository.save(a);
-                        resourcesRepository.deleteById(id);
                     });
+                resourcesRepository.deleteById(id);
             });
     }
 
