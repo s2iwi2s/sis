@@ -40,7 +40,15 @@
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="org_id"
+                                 baseTableName="jhi_user"
+                                 constraintName="fk_org_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="org"/>
+
         <dropDefaultValue tableName="org" columnName="created_date" columnDataType="${datetimeType}"/>
+
         <dropDefaultValue tableName="org" columnName="last_modified_date" columnDataType="${datetimeType}"/>
 
         <loadData

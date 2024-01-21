@@ -14,7 +14,7 @@ export interface ICurriculumMap {
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
   learningCompetencies?: Pick<ILearningCompetency, 'id'>[] | null;
-  course?: Pick<ICourse, 'id'|'subject'> | null;
+  course?: Pick<ICourse, 'id'|'subject'|'gradelevel'|'schYr'> | null;
 }
 
 export type NewCurriculumMap = Omit<ICurriculumMap, 'id'> & { id: null };

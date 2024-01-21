@@ -27,7 +27,7 @@
           <dd>
             @if (curriculumMap.course) {
               <div>
-                <a [routerLink]="['/course', curriculumMap.course.id, 'view']">{{ curriculumMap.course.subject }}</a>
+                <a [routerLink]="['/course', curriculumMap.course.id, 'view']">{{ curriculumMap.course.gradelevel?.description + ': ' +curriculumMap.course.subject + ' - ' + curriculumMap.course.schYr?.description }}</a>
               </div>
             }
           </dd>

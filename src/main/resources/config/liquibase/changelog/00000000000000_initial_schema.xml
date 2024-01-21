@@ -30,6 +30,9 @@
             </column>
             <column name="lang_key" type="varchar(10)"/>
             <column name="activation_key" type="varchar(20)"/>
+            <column name="org_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
             <column name="reset_key" type="varchar(20)"/>
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="false"/>

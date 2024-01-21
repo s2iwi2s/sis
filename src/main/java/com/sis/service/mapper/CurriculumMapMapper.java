@@ -1,7 +1,9 @@
 package com.sis.service.mapper;
 
+import com.sis.domain.AppConfig;
 import com.sis.domain.Course;
 import com.sis.domain.CurriculumMap;
+import com.sis.service.dto.AppConfigDTO;
 import com.sis.service.dto.CourseDTO;
 import com.sis.service.dto.CurriculumMapDTO;
 import org.mapstruct.*;
@@ -19,5 +21,13 @@ public interface CurriculumMapMapper extends EntityMapper<CurriculumMapDTO, Curr
     @Mapping(target = "id", source = "id")
     @Mapping(target = "subject", source = "subject")
     @Mapping(target = "courseDescription", source = "courseDescription")
+    @Mapping(target = "gradelevel", source = "gradelevel", qualifiedByName = "appConfigId")
+    @Mapping(target = "schYr", source = "schYr", qualifiedByName = "appConfigId")
     CourseDTO toDtoCourseId(Course course);
+
+    @Named("appConfigId")
+    @BeanMapping(ignoreByDefault = true)
+    @Mapping(target = "id", source = "id")
+    @Mapping(target = "description", source = "description")
+    AppConfigDTO toDtoAppConfigId(AppConfig appConfig);
 }
