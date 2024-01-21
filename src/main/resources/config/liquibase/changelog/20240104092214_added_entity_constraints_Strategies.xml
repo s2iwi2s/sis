@@ -13,6 +13,7 @@
                                  constraintName="fk_rel_strategies__resources__strategies_id"
                                  referencedColumnNames="id"
                                  referencedTableName="strategies"
+                                 onDelete="CASCADE"
                                  />
 
         <addForeignKeyConstraint baseColumnNames="resources_id"
@@ -20,6 +21,7 @@
                                  constraintName="fk_rel_strategies__resources__resources_id"
                                  referencedColumnNames="id"
                                  referencedTableName="resources"
+                                 onDelete="CASCADE"
                                  />
 
         <addForeignKeyConstraint baseColumnNames="learning_competency_id"
