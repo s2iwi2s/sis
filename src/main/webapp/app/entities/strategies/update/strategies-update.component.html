@@ -93,7 +93,7 @@
               <div class="col-sm-3">
                 <a class="btn btn-sm" [cdkCopyToClipboard]="baseUrl('/api/resources/doc/'+resource.id)"
                    (cdkCopyToClipboardCopied)="onClipboardCopy($event)">
-                  <fa-icon icon="clipboard"></fa-icon>
+                  <fa-icon icon="paperclip"></fa-icon>
                 </a>
                 <a href="/api/resources/doc/{{ resource.id }}">{{ resource.fileName }}</a>
               </div>
