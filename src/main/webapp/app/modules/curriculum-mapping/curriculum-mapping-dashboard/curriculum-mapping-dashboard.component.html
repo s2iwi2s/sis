@@ -1,1 +1,41 @@
-<p>curriculum-mapping-dashboard works!</p>
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div>
+      <h2 data-cy="curriculumMappingDashboardHeading"><span jhiTranslate="schInfoSysApp.curriculumMappingDashboard.home.title">Curriculum Mapping Dashboard</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <div class="card">
+        <div class="card-header">
+          <label class="form-label" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.course" for="field_course">Course</label>
+          <div class="input-group">
+            <input type="text" class="form-control" name="course" id="field_course" data-cy="course"
+                   [(ngModel)]="selectedCourse"
+                   [ngbTypeahead]="search"
+                   [inputFormatter]="formatter"
+                   [resultFormatter]="formatter"
+                   [editable]="false"
+                   (ngModelChange)="loadCurriculumMappings(selectedCourse)"
+            />
+            <span class="input-group-text" id="basic-addon1"><fa-icon icon="search"></fa-icon></span>
+          </div>
+        </div>
+        <div class="card-body row">
+          <div class="col-sm-12 mb-sm-1"><span class="fw-bold" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.courseDescription">COURSE DESCRIPTION :</span></div>
+          <div class="col-sm-12 mb-sm-2">{{selectedCourse.courseDescription}}</div>
+          <div class="col-sm-12 mb-sm-1"><span class="fw-bold" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.courseObjectives">GENERAL OBJECTIVES:</span></div>
+          <div class="col-sm-12 mb-sm-2">{{selectedCourse.courseObjectives}}</div>
+        </div>
+
+        <div class="card-footer mb-3">
+          <pre>selectedCourse: {{ selectedCourse | json }}</pre>
+          <pre>curriculumMaps: {{ curriculumMaps | json }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
