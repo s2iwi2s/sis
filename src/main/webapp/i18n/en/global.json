@@ -5,6 +5,10 @@
     "menu": {
       "home": "Home",
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
+      "modules": {
+        "main": "SiS+",
+        "curriculumMappingDashboard": "Curriculum Mapping Dashboard"
+      },
       "entities": {
         "main": "Entities",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)",
