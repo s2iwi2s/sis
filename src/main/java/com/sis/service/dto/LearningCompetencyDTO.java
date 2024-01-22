@@ -109,11 +109,10 @@ public class LearningCompetencyDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof LearningCompetencyDTO)) {
+        if (!(o instanceof LearningCompetencyDTO learningCompetencyDTO)) {
             return false;
         }
 
-        LearningCompetencyDTO learningCompetencyDTO = (LearningCompetencyDTO) o;
         if (this.id == null) {
             return false;
         }

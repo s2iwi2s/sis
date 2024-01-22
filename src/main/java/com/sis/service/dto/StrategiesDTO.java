@@ -110,11 +110,10 @@ public class StrategiesDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof StrategiesDTO)) {
+        if (!(o instanceof StrategiesDTO strategiesDTO)) {
             return false;
         }
 
-        StrategiesDTO strategiesDTO = (StrategiesDTO) o;
         if (this.id == null) {
             return false;
         }

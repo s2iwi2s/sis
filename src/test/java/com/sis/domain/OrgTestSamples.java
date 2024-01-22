@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class OrgTestSamples {
 
     private static final Random random = new Random();
-    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     public static Org getOrgSample1() {
         return new Org().id(1L).name("name1").logo("logo1").address("address1").createdBy("createdBy1").lastModifiedBy("lastModifiedBy1");

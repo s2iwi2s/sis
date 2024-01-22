@@ -108,11 +108,10 @@ public class OrgDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof OrgDTO)) {
+        if (!(o instanceof OrgDTO orgDTO)) {
             return false;
         }
 
-        OrgDTO orgDTO = (OrgDTO) o;
         if (this.id == null) {
             return false;
         }

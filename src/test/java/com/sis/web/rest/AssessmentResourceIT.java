@@ -66,8 +66,8 @@ class AssessmentResourceIT {
     private static final String ENTITY_API_URL = "/api/assessments";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
-    private static Random random = new Random();
-    private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static final Random random = new Random();
+    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
     private AssessmentRepository assessmentRepository;
@@ -186,7 +186,7 @@ class AssessmentResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(assessment.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].instruction").value(hasItem(DEFAULT_INSTRUCTION)))
-            .andExpect(jsonPath("$.[*].markScheme").value(hasItem(DEFAULT_MARK_SCHEME.toString())))
+            .andExpect(jsonPath("$.[*].markScheme").value(hasItem(DEFAULT_MARK_SCHEME)))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
             .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
@@ -224,7 +224,7 @@ class AssessmentResourceIT {
             .andExpect(jsonPath("$.id").value(assessment.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.instruction").value(DEFAULT_INSTRUCTION))
-            .andExpect(jsonPath("$.markScheme").value(DEFAULT_MARK_SCHEME.toString()))
+            .andExpect(jsonPath("$.markScheme").value(DEFAULT_MARK_SCHEME))
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
             .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
             .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))

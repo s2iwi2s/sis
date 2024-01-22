@@ -122,11 +122,10 @@ public class AssessmentDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof AssessmentDTO)) {
+        if (!(o instanceof AssessmentDTO assessmentDTO)) {
             return false;
         }
 
-        AssessmentDTO assessmentDTO = (AssessmentDTO) o;
         if (this.id == null) {
             return false;
         }

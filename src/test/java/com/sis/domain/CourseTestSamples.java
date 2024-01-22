@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class CourseTestSamples {
 
     private static final Random random = new Random();
-    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     public static Course getCourseSample1() {
         return new Course().id(1L).subject("subject1").hoursPerQuarter(1L).createdBy("createdBy1").lastModifiedBy("lastModifiedBy1");

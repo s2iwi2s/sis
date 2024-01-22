@@ -120,11 +120,10 @@ public class AppConfigDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof AppConfigDTO)) {
+        if (!(o instanceof AppConfigDTO appConfigDTO)) {
             return false;
         }
 
-        AppConfigDTO appConfigDTO = (AppConfigDTO) o;
         if (this.id == null) {
             return false;
         }

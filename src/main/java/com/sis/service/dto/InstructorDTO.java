@@ -170,11 +170,10 @@ public class InstructorDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof InstructorDTO)) {
+        if (!(o instanceof InstructorDTO instructorDTO)) {
             return false;
         }
 
-        InstructorDTO instructorDTO = (InstructorDTO) o;
         if (this.id == null) {
             return false;
         }

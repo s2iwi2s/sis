@@ -128,11 +128,10 @@ public class CurriculumMapDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CurriculumMapDTO)) {
+        if (!(o instanceof CurriculumMapDTO curriculumMapDTO)) {
             return false;
         }
 
-        CurriculumMapDTO curriculumMapDTO = (CurriculumMapDTO) o;
         if (this.id == null) {
             return false;
         }

@@ -132,11 +132,10 @@ public class CourseDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CourseDTO)) {
+        if (!(o instanceof CourseDTO courseDTO)) {
             return false;
         }
 
-        CourseDTO courseDTO = (CourseDTO) o;
         if (this.id == null) {
             return false;
         }

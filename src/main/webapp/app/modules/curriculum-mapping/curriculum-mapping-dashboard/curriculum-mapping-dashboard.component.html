@@ -1,70 +1,78 @@
 <div class="d-flex justify-content-center">
   <div class="col-8">
-    <div>
-      <h2 data-cy="curriculumMappingDashboardHeading"><span
-        jhiTranslate="schInfoSysApp.curriculumMappingDashboard.home.title">Curriculum Mapping Dashboard</span></h2>
+    <h2 data-cy="curriculumMappingDashboardHeading"><span
+      jhiTranslate="schInfoSysApp.curriculumMappingDashboard.home.title">Curriculum Mapping Dashboard</span></h2>
 
-      <hr/>
+    <hr/>
 
-      <jhi-alert-error></jhi-alert-error>
-      <jhi-alert></jhi-alert>
+    <jhi-alert-error></jhi-alert-error>
+    <jhi-alert></jhi-alert>
 
-      <div class="row ">
-        <div class="row shadow-sm p-2 mb-sm-3 bg-body-tertiary rounded col-sm-6">
-          <label class="form-label col-sm-12" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.course"
-                 for="field_course">Course</label>
-          <div class="input-group">
-            <input type="text" class="form-control" name="course" id="field_course" data-cy="course"
-                   [(ngModel)]="selectedCourse"
-                   [ngbTypeahead]="search"
-                   [inputFormatter]="formatter"
-                   [resultFormatter]="formatter"
-                   [editable]="false"
-                   (ngModelChange)="loadCurriculumMappings(selectedCourse)"
-            />
-            <span class="input-group-text"><fa-icon icon="search"></fa-icon></span>
-          </div>
+    <div class="row shadow-sm py-2 pb-3 mb-sm-3 bg-body-tertiary rounded-4 col-sm-6">
+      <label class="form-label col-sm-12" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.searchCourse"
+             for="field_course">searchCourse</label>
+      <div class="input-group">
+        <input type="text" class="form-control rounded-4" name="course" id="field_course" data-cy="course"
+               [(ngModel)]="selectedCourse"
+               [ngbTypeahead]="search"
+               [inputFormatter]="formatter"
+               [resultFormatter]="formatter"
+               [editable]="false"
+               (ngModelChange)="loadCurriculumMappings(selectedCourse)"
+        />
+        <span class="input-group-text"><fa-icon icon="search"></fa-icon></span>
+      </div>
+    </div>
+
+    @if (selectedCourse) {
+      <div class="row py-2 mb-sm-3 bg-body-tertiary">
+        <div class="col-sm-6 mb-sm-1">
+          <span class="fw-bold" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.gradelevel">gradelevel</span>:
+          {{ selectedCourse.gradelevel?.description }}
         </div>
-        <div class="row">
-          <div class="col-sm-6 mb-sm-1">
-            <span class="fw-bold" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.gradelevel">gradelevel</span>:
-            {{ selectedCourse?.gradelevel?.description }}
-          </div>
-          <div class="col-sm-6 mb-sm-1 text-end">
+        <div class="col-sm-6 mb-sm-1 text-end">
           <span class="fw-bold"
                 jhiTranslate="schInfoSysApp.curriculumMappingDashboard.hoursPerQuarter">hoursPerQuarter</span>:
-            {{ selectedCourse?.hoursPerQuarter }}
-          </div>
-          <div class="col-sm-12 mb-sm-3">
-            <span class="fw-bold" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.subject">subject</span>:
-            {{ selectedCourse?.subject }}
-          </div>
-          <div class="col-sm-12 mb-sm-1"><span class="fw-bold"
-                                               jhiTranslate="schInfoSysApp.curriculumMappingDashboard.courseDescription">courseDescription</span>
-          </div>
-          <div class="col-sm-12 mb-sm-2">{{ selectedCourse?.courseDescription }}</div>
-          <div class="col-sm-12 mb-sm-2"><span class="fw-bold"
-                                               jhiTranslate="schInfoSysApp.curriculumMappingDashboard.courseObjectives">courseObjectives</span>
-          </div>
-          <div class="col-sm-12 mb-sm-3" [innerHtml]="toHtml(selectedCourse?.courseObjectives || '')"></div>
+          {{ selectedCourse.hoursPerQuarter }}
+        </div>
+        <div class="col-sm-12 mb-sm-3">
+          <span class="fw-bold" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.subject">subject</span>:
+          {{ selectedCourse.subject }}
+        </div>
+        <div class="col-sm-12 mb-sm-1"><span class="fw-bold"
+                                             jhiTranslate="schInfoSysApp.curriculumMappingDashboard.courseDescription">courseDescription</span>
+        </div>
+        <div class="col-sm-12 mb-sm-2">{{ selectedCourse.courseDescription }}</div>
+        <div class="col-sm-12 mb-sm-2">
+        <span class="fw-bold"
+              jhiTranslate="schInfoSysApp.curriculumMappingDashboard.courseObjectives">courseObjectives</span>
+        </div>
+        <div class="col-sm-12 mb-sm-3" [innerHtml]="toHtml(selectedCourse.courseObjectives || '')"></div>
+      </div>
 
-          <div class="col-sm-12 mb-sm-2 fw-bold text-center">{{ selectedCourse?.subject }}</div>
-          <div class="col-sm-12 mb-sm-2 fw-bold text-center" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.scopeAndSequence">SCOPE AND SEQUENCE</div>
+      <div class="row py-2 bg-body-tertiary mb-sm-3">
+        <div class="col-sm-12 mb-sm-2 fw-bold text-center">{{ selectedCourse.subject }}</div>
+        <div class="col-sm-12 mb-sm-2 fw-bold text-center"
+             jhiTranslate="schInfoSysApp.curriculumMappingDashboard.scopeAndSequence">SCOPE AND SEQUENCE
+        </div>
 
-          <div *ngFor="let item of groupedByQuarter | keyvalue" class="row col-sm-3 mb-sm-2">
-            <div class="col-sm-12 mb-sm-2 fw-bold justify-content-center">Quarter {{ item.key }}</div>
+        <div class="row">
+          <div *ngFor="let item of groupedByQuarter | keyvalue" class="col-sm-3 mb-sm-2 fw-bold text-center">
+            Quarter {{ item.key }}
           </div>
 
-          <div class="w-100">
+          <div class="w-10"></div>
 
-          </div>
-          <div *ngFor="let item of groupedByQuarter | keyvalue" class="row col-sm-3 mb-sm-2">
-            @for(c of item.value; track $index) {
-              <div class="col-sm-12 mb-sm-2 justify-content-center">
-                <span jhiTranslate="schInfoSysApp.curriculumMappingDashboard.weekNo">Week No</span> {{c.weekNo}}: {{ c.topic }}
+          <div *ngFor="let item of groupedByQuarter | keyvalue" class="col-sm-3 mb-sm-2 px-2">
+            @for (c of item.value; track $index) {
+              <div class="col-sm-12 mb-sm-2 mx-0 px-0">
+                <span jhiTranslate="schInfoSysApp.curriculumMappingDashboard.weekNo">Week No</span> {{ c.weekNo }}
+                : {{ c.topic }}
               </div>
             }
           </div>
         </div>
       </div>
-    </div>
+    }
+  </div>
+</div>

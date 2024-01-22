@@ -407,11 +407,10 @@ public class StudentDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof StudentDTO)) {
+        if (!(o instanceof StudentDTO studentDTO)) {
             return false;
         }
 
-        StudentDTO studentDTO = (StudentDTO) o;
         if (this.id == null) {
             return false;
         }

@@ -101,11 +101,10 @@ public class ResourcesDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ResourcesDTO)) {
+        if (!(o instanceof ResourcesDTO resourcesDTO)) {
             return false;
         }
 
-        ResourcesDTO resourcesDTO = (ResourcesDTO) o;
         if (this.id == null) {
             return false;
         }

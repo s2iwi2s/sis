@@ -60,8 +60,8 @@ class CourseResourceIT {
     private static final String ENTITY_API_URL = "/api/courses";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
-    private static Random random = new Random();
-    private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static final Random random = new Random();
+    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
     private CourseRepository courseRepository;
@@ -177,8 +177,8 @@ class CourseResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(course.getId().intValue())))
             .andExpect(jsonPath("$.[*].subject").value(hasItem(DEFAULT_SUBJECT)))
             .andExpect(jsonPath("$.[*].hoursPerQuarter").value(hasItem(DEFAULT_HOURS_PER_QUARTER.intValue())))
-            .andExpect(jsonPath("$.[*].courseDescription").value(hasItem(DEFAULT_COURSE_DESCRIPTION.toString())))
-            .andExpect(jsonPath("$.[*].courseObjectives").value(hasItem(DEFAULT_COURSE_OBJECTIVES.toString())))
+            .andExpect(jsonPath("$.[*].courseDescription").value(hasItem(DEFAULT_COURSE_DESCRIPTION)))
+            .andExpect(jsonPath("$.[*].courseObjectives").value(hasItem(DEFAULT_COURSE_OBJECTIVES)))
             .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
             .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
@@ -199,8 +199,8 @@ class CourseResourceIT {
             .andExpect(jsonPath("$.id").value(course.getId().intValue()))
             .andExpect(jsonPath("$.subject").value(DEFAULT_SUBJECT))
             .andExpect(jsonPath("$.hoursPerQuarter").value(DEFAULT_HOURS_PER_QUARTER.intValue()))
-            .andExpect(jsonPath("$.courseDescription").value(DEFAULT_COURSE_DESCRIPTION.toString()))
-            .andExpect(jsonPath("$.courseObjectives").value(DEFAULT_COURSE_OBJECTIVES.toString()))
+            .andExpect(jsonPath("$.courseDescription").value(DEFAULT_COURSE_DESCRIPTION))
+            .andExpect(jsonPath("$.courseObjectives").value(DEFAULT_COURSE_OBJECTIVES))
             .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
             .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
             .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))

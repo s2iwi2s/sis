@@ -7,8 +7,8 @@
         "createOrEditLabel": "Create or edit a Curriculum Map",
         "notFound": "No Curriculum Maps found"
       },
-      "course": "Course",
-      "gradelevel": "Gradelevel",
+      "searchCourse": "Search Course",
+      "gradelevel": "Grade Level",
       "hoursPerQuarter": "No of Hours per Quarter",
       "subject": "Course Subject Title",
       "courseDescription": "COURSE DESCRIPTION",
