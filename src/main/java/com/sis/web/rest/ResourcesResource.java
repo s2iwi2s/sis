@@ -6,6 +6,8 @@ import com.sis.service.dto.ResourcesDTO;
 import com.sis.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -54,7 +56,7 @@ public class ResourcesResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<ResourcesDTO> createResources(@Valid @RequestBody ResourcesDTO resourcesDTO) throws URISyntaxException {
+    public ResponseEntity<ResourcesDTO> createResources(@Valid @RequestBody ResourcesDTO resourcesDTO) throws URISyntaxException, IOException {
         log.debug("REST request to save Resources : {}", resourcesDTO);
         if (resourcesDTO.getId() != null) {
             throw new BadRequestAlertException("A new resources cannot already have an ID", ENTITY_NAME, "idexists");

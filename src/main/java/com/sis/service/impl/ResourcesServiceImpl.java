@@ -1,20 +1,17 @@
 package com.sis.service.impl;
 
+import com.sis.domain.AppConfig;
 import com.sis.domain.Assessment;
 import com.sis.domain.Resources;
 import com.sis.domain.Strategies;
+import com.sis.repository.AppConfigRepository;
 import com.sis.repository.AssessmentRepository;
 import com.sis.repository.ResourcesRepository;
 import com.sis.repository.StrategiesRepository;
 import com.sis.service.ResourcesService;
 import com.sis.service.dto.ResourcesDTO;
 import com.sis.service.mapper.ResourcesMapper;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import com.sis.service.util.ImageUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
@@ -24,6 +21,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 /**
  * Service Implementation for managing {@link com.sis.domain.Resources}.
  */
@@ -31,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class ResourcesServiceImpl implements ResourcesService {
 
-    private final Logger log = LoggerFactory.getLogger(ResourcesServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ResourcesServiceImpl.class);
 
     private final ResourcesRepository resourcesRepository;
 
@@ -41,21 +44,56 @@ public class ResourcesServiceImpl implements ResourcesService {
 
     private final AssessmentRepository assessmentRepository;
 
+    private final AppConfigRepository appConfigRepository;
+
     public ResourcesServiceImpl(ResourcesRepository resourcesRepository, ResourcesMapper resourcesMapper,
                                 StrategiesRepository strategiesRepository,
-                                AssessmentRepository assessmentRepository) {
+                                AssessmentRepository assessmentRepository,
+                                AppConfigRepository appConfigRepository) {
         this.resourcesRepository = resourcesRepository;
         this.resourcesMapper = resourcesMapper;
         this.strategiesRepository = strategiesRepository;
         this.assessmentRepository = assessmentRepository;
+        this.appConfigRepository = appConfigRepository;
     }
 
     @Override
-    public ResourcesDTO save(ResourcesDTO resourcesDTO) {
+    public ResourcesDTO save(ResourcesDTO resourcesDTO) throws IOException {
         log.debug("Request to save Resources : {}", resourcesDTO);
         Resources resources = resourcesMapper.toEntity(resourcesDTO);
+
+        String type = resourcesDTO.getDocumentContentType();
+        if(type.toLowerCase().contains("image")) {
+            toThumbnail(resourcesDTO, resources);
+        }
+
         resources = resourcesRepository.save(resources);
         return resourcesMapper.toDto(resources);
+    }
+
+    private void toThumbnail(ResourcesDTO resourcesDTO, Resources resources) throws IOException {
+        byte[] document = resources.getDocument();
+        String[] fileName = resourcesDTO.getFileName().split("\\.");
+        String formatName = fileName[fileName.length - 1];
+        int height = getHeight();
+
+        byte[] result = ImageUtil.toThumbnail(document, formatName, height);
+        resources.setDocument(result);
+    }
+
+    private int getHeight() {
+        int height = 100;
+        try {
+            Example<AppConfig> example = Example.of(new AppConfig().code("IMG_HEIGHT").createdDate(null).lastModifiedDate(null), ExampleMatcher.matchingAll().withIgnoreCase());
+
+            List<AppConfig> appConfigs = appConfigRepository.findAll(example);
+            if(!appConfigs.isEmpty()) {
+                height = Integer.parseInt(appConfigs.get(0).getValue());
+            }
+        } catch (NumberFormatException e) {
+            log.error("Unable to find IMG_HEIGHT in appconfig" +  e.getMessage(), e);
+        }
+        return height;
     }
 
     @Override
