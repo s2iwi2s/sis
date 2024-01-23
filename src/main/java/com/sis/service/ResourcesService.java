@@ -2,6 +2,7 @@ package com.sis.service;
 
 import com.sis.service.dto.ResourcesDTO;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -19,7 +20,7 @@ public interface ResourcesService {
      * @param resourcesDTO the entity to save.
      * @return the persisted entity.
      */
-    ResourcesDTO save(ResourcesDTO resourcesDTO);
+    ResourcesDTO save(ResourcesDTO resourcesDTO) throws IOException;
 
     /**
      * Updates a resources.
