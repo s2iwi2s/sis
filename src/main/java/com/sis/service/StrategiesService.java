@@ -1,6 +1,8 @@
 package com.sis.service;
 
 import com.sis.service.dto.StrategiesDTO;
+
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -63,4 +65,6 @@ public interface StrategiesService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    List<StrategiesDTO> findAllByCourse(Long courseId);
 }

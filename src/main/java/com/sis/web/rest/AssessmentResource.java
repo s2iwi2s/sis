@@ -3,6 +3,7 @@ package com.sis.web.rest;
 import com.sis.repository.AssessmentRepository;
 import com.sis.service.AssessmentService;
 import com.sis.service.dto.AssessmentDTO;
+import com.sis.service.dto.StrategiesDTO;
 import com.sis.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -195,5 +196,12 @@ public class AssessmentResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @GetMapping("/{id}/course")
+    public ResponseEntity<List<AssessmentDTO>> getAllAssessmentByCourse(@PathVariable("id") Long courseId) {
+        log.debug("REST request to get a page of Assessment by Course {}", courseId);
+        List<AssessmentDTO> list = assessmentService.findAllByCourse(courseId);
+        return ResponseEntity.ok(list);
     }
 }

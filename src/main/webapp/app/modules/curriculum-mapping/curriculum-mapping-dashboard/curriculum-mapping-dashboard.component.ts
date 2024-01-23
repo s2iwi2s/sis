@@ -19,6 +19,14 @@ import {
   LearningCompetencyService
 } from "../../../entities/learning-competency/service/learning-competency.service";
 import {ILearningCompetency} from "../../../entities/learning-competency/learning-competency.model";
+import {
+  StrategiesService,
+  EntityArrayResponseType as StrategiesEntityArrayResponseType} from "../../../entities/strategies/service/strategies.service";
+import {IStrategies} from "../../../entities/strategies/strategies.model";
+import {HtmlUtilService} from "../../../core/util/html-util.service";
+import {IAssessment} from "../../../entities/assessment/assessment.model";
+import {AssessmentService,
+  EntityArrayResponseType as AssessmentEntityArrayResponseType} from "../../../entities/assessment/service/assessment.service";
 
 @Component({
   selector: 'jhi-curriculum-mapping-dashboard',
@@ -30,7 +38,10 @@ import {ILearningCompetency} from "../../../entities/learning-competency/learnin
 export class CurriculumMappingDashboardComponent implements OnInit {
   constructor(protected courseService: CourseService,
               protected curriculumMapService: CurriculumMapService,
-              protected learningCompetencyService: LearningCompetencyService) {
+              protected learningCompetencyService: LearningCompetencyService,
+              protected strategiesService: StrategiesService,
+              protected assessmentService: AssessmentService,
+              protected htmlUtilService: HtmlUtilService) {
   }
 
   selectedCourse: ICourse | null = null;
@@ -41,8 +52,12 @@ export class CurriculumMappingDashboardComponent implements OnInit {
       (course?.schYr?.description ?? '')) : '';
 
   courses?: ICourse[] | null = [];
+
+  hasCurMap = false;
   curMapByQuarter: Map<number, ICurriculumMap[]> = new Map();
   lcMap: Map<number, ILearningCompetency[]> = new Map();
+  sMap: Map<number, IStrategies[]> = new Map();
+  aMap: Map<number, IAssessment[]> = new Map();
 
   isLoading = false;
 
@@ -61,28 +76,30 @@ export class CurriculumMappingDashboardComponent implements OnInit {
           (course?.schYr?.description ?? ''))).slice(0, 10)),
     );
 
-  toHtml(str: string): string {
-    str = str.split('\n').join("<br/>");
-    str = str.replace(/\s\s\s/g, '&emsp;');
-    return str;
-  }
-
   loadCurriculumMappings(course: ICourse | null) {
     if (course) {
       forkJoin([this.curriculumMapService.queryByCourse(course.id),
-        this.learningCompetencyService.queryByCourse(course.id)]).subscribe(res => this.loadCurriculumMappingsResponse(res));
+          this.learningCompetencyService.queryByCourse(course.id),
+          this.strategiesService.queryByCourse(course.id),
+          this.assessmentService.queryByCourse(course.id)])
+        .subscribe(res => this.loadCurriculumMappingsResponse(res));
     }
   }
 
-  loadCurriculumMappingsResponse(res: [CurriculumMapEntityArrayResponseType, LearningCompetencyEntityArrayResponseType]) {
-    const [currRes, lcRes] = res;
+  loadCurriculumMappingsResponse(res: [CurriculumMapEntityArrayResponseType, LearningCompetencyEntityArrayResponseType,
+    StrategiesEntityArrayResponseType, AssessmentEntityArrayResponseType]) {
+    const [currRes, lcRes, sRes, aRes] = res;
     if (res && res.length > 1) {
-      this.lcMap = this.toLearningCompetencyGroupMapping(lcRes.body ?? []);
-      this.curMapByQuarter = this.toQuarterGroupMapping(currRes.body ?? []);
+      this.lcMap = this.mapLearningCompetenceyByCurriculum(lcRes.body ?? []);
+      this.sMap = this.mapStrategiesByLearningCompetency(sRes.body ?? []);
+      this.aMap = this.mapAssessmentByLearningCompetency(aRes.body ?? [])
+      this.curMapByQuarter = this.mapCurriculumByQuarter(currRes.body ?? []);
+
     }
   }
 
-  toQuarterGroupMapping(array: ICurriculumMap[]): Map<number, ICurriculumMap[]> {
+  mapCurriculumByQuarter(array: ICurriculumMap[]): Map<number, ICurriculumMap[]> {
+    this.hasCurMap = array.length > 0;
     array?.sort((a, b) => (a?.quarterNo ?? 0) - (b?.quarterNo ?? 0) || (a?.weekNo ?? 0) - (b.weekNo ?? 0));
     const hash = (array ?? []).reduce((map: Map<number, ICurriculumMap[]>, item: ICurriculumMap) => {
       const key = item?.quarterNo ?? 0;
@@ -97,7 +114,7 @@ export class CurriculumMappingDashboardComponent implements OnInit {
     return hash;
   }
 
-  toLearningCompetencyGroupMapping(array: ILearningCompetency[]): Map<number, ICurriculumMap[]> {
+  mapLearningCompetenceyByCurriculum(array: ILearningCompetency[]): Map<number, ICurriculumMap[]> {
     const hash = (array ?? []).reduce((map: Map<number, ILearningCompetency[]>, item: ILearningCompetency) => {
       const key = item?.curriculumMap?.id ?? 0;
       let list = map.get(key);
@@ -110,7 +127,44 @@ export class CurriculumMappingDashboardComponent implements OnInit {
     }, new Map<number, ILearningCompetency[]>());
     return hash;
   }
-  getLearningCompetencies(currMapId: number){
+
+  getLearningCompetenciesFromMapping(currMapId: number){
     return this.lcMap.get(currMapId);
+  }
+
+  mapStrategiesByLearningCompetency(array: IStrategies[]): Map<number, IStrategies[]> {
+    const hash = (array ?? []).reduce((map: Map<number, IStrategies[]>, item: IStrategies) => {
+      const key = item?.learningCompetency?.id ?? 0;
+      let list = map.get(key);
+      if (!list) {
+        list = [];
+        map.set(key, list);
+      }
+      list.push(item);
+      return map;
+    }, new Map<number, IStrategies[]>());
+    return hash;
+  }
+
+  getStrategiesFromMapping(learningCompetencyId: number) {
+    return this.sMap.get(learningCompetencyId) ;
+  }
+
+  mapAssessmentByLearningCompetency(array: IAssessment[]): Map<number, IAssessment[]> {
+    const hash = (array ?? []).reduce((map: Map<number, IAssessment[]>, item: IAssessment) => {
+      const key = item?.learningCompetency?.id ?? 0;
+      let list = map.get(key);
+      if (!list) {
+        list = [];
+        map.set(key, list);
+      }
+      list.push(item);
+      return map;
+    }, new Map<number, IAssessment[]>());
+    return hash;
+  }
+
+  getAssessmentFromMapping(learningCompetencyId: number) {
+    return this.aMap.get(learningCompetencyId) ;
   }
 }
