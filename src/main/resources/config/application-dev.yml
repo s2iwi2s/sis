@@ -40,10 +40,13 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://ubuntu.vm:5432/SchInfoSys
-    #url: jdbc:postgresql://localhost:5432/postgres
-    username: SchInfoSys
-    password: sis
+    url: jdbc:postgresql://pg-db-s2iwi2s-a12a.a.aivencloud.com:14536/sis-dev-db
+    username: avnadmin
+    password: AVNS_5JL8YJgoJM5sytBHXSW
+#    url: jdbc:postgresql://ubuntu.vm:5432/SchInfoSys
+#    url: jdbc:postgresql://localhost:5432/postgres
+#    username: SchInfoSys
+#    password: sis
     hikari:
       poolName: Hikari
       auto-commit: false
