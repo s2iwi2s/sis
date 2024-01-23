@@ -50,10 +50,10 @@ describe('Org Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call currSchYr query and add missing value', () => {
       const org: IOrg = { id: 456 };
-      const currSchYr: IAppConfig = { id: 9301 };
+      const currSchYr: IAppConfig = { id: 28299 };
       org.currSchYr = currSchYr;
 
-      const currSchYrCollection: IAppConfig[] = [{ id: 11628 }];
+      const currSchYrCollection: IAppConfig[] = [{ id: 898 }];
       jest.spyOn(appConfigService, 'query').mockReturnValue(of(new HttpResponse({ body: currSchYrCollection })));
       const expectedCollection: IAppConfig[] = [currSchYr, ...currSchYrCollection];
       jest.spyOn(appConfigService, 'addAppConfigToCollectionIfMissing').mockReturnValue(expectedCollection);
@@ -68,7 +68,7 @@ describe('Org Management Update Component', () => {
 
     it('Should update editForm', () => {
       const org: IOrg = { id: 456 };
-      const currSchYr: IAppConfig = { id: 16306 };
+      const currSchYr: IAppConfig = { id: 10613 };
       org.currSchYr = currSchYr;
 
       activatedRoute.data = of({ org });

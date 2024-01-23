@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { ILearningCompetency } from '../learning-competency.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../learning-competency.test-samples';
 
-import { LearningCompetencyService } from './learning-competency.service';
+import { LearningCompetencyService, RestLearningCompetency } from './learning-competency.service';
 
-const requireRestSample: ILearningCompetency = {
+const requireRestSample: RestLearningCompetency = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('LearningCompetency Service', () => {

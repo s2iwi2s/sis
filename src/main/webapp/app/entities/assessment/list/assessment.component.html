@@ -42,6 +42,12 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
+            <th scope="col" jhiSortBy="learningCompetency.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.assessment.learningCompetency">Learning Competency</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
             <th scope="col" jhiSortBy="name">
               <div class="d-flex">
                 <span jhiTranslate="schInfoSysApp.assessment.name">Name</span>
@@ -49,23 +55,31 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="instruction">
+            <th scope="col" jhiSortBy="createdBy">
               <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.assessment.instruction">Instruction</span>
+                <span jhiTranslate="schInfoSysApp.assessment.createdBy">Created By</span>
 
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="markScheme">
+            <th scope="col" jhiSortBy="createdDate">
               <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.assessment.markScheme">Mark Scheme</span>
+                <span jhiTranslate="schInfoSysApp.assessment.createdDate">Created Date</span>
 
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="learningCompetency.id">
+            <th scope="col" jhiSortBy="lastModifiedBy">
               <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.assessment.learningCompetency">Learning Competency</span>
+                <span jhiTranslate="schInfoSysApp.assessment.lastModifiedBy">Last Modified By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.assessment.lastModifiedDate">Last Modified Date</span>
+
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
@@ -78,18 +92,20 @@
               <td>
                 <a [routerLink]="['/assessment', assessment.id, 'view']">{{ assessment.id }}</a>
               </td>
-              <td>{{ assessment.name }}</td>
-              <td>{{ assessment.instruction }}</td>
-              <td>{{ assessment.markScheme }}</td>
               <td>
                 @if (assessment.learningCompetency) {
                   <div>
                     <a [routerLink]="['/learning-competency', assessment.learningCompetency.id, 'view']">{{
-                      '[' + assessment.learningCompetency.competencyCode + '] ' + assessment.learningCompetency.description
-                    }}</a>
+                        assessment.learningCompetency.seqNo + ' - ' + assessment.learningCompetency.competencyCode
+                      }}</a>
                   </div>
                 }
               </td>
+              <td>{{ assessment.name }}</td>
+              <td>{{ assessment.createdBy }}</td>
+              <td>{{ assessment.createdDate | formatMediumDatetime }}</td>
+              <td>{{ assessment.lastModifiedBy }}</td>
+              <td>{{ assessment.lastModifiedDate | formatMediumDatetime }}</td>
               <td class="text-end">
                 <div class="btn-group">
                   <a [routerLink]="['/assessment', assessment.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">

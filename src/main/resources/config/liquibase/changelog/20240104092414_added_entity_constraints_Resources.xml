@@ -13,6 +13,7 @@
                                  constraintName="fk_resources__strategies_id"
                                  referencedColumnNames="id"
                                  referencedTableName="strategies"
+                                 onDelete="CASCADE"
                                  />
 
         <addForeignKeyConstraint baseColumnNames="assessment_id"
@@ -20,6 +21,15 @@
                                  constraintName="fk_resources__assessment_id"
                                  referencedColumnNames="id"
                                  referencedTableName="assessment"
+                                 onDelete="CASCADE"
                                  />
+
+        <addForeignKeyConstraint baseColumnNames="tag_id"
+                                 baseTableName="rel_resources__tag"
+                                 constraintName="fk_rel_resources__tag__tag_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tag"
+                                 onDelete="CASCADE"
+        />
     </changeSet>
 </databaseChangeLog>

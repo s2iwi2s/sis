@@ -1,0 +1,141 @@
+<div class="d-flex justify-content-center">
+  <div class="col">
+    <h2 data-cy="curriculumMappingDashboardHeading"><span
+      jhiTranslate="schInfoSysApp.curriculumMappingDashboard.home.title">Curriculum Mapping Dashboard</span></h2>
+
+    <hr/>
+
+    <jhi-alert-error></jhi-alert-error>
+    <jhi-alert></jhi-alert>
+
+    <div class="shadow-sm py-2 pb-3 mb-sm-3 bg-body-tertiary rounded-4 row col-sm-6">
+      <label class="form-label col-sm-12" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.searchCourse"
+             for="field_course">searchCourse</label>
+      <div class="input-group">
+        <input type="text" class="form-control rounded-4" name="course" id="field_course" data-cy="course"
+               [(ngModel)]="selectedCourse"
+               [ngbTypeahead]="search"
+               [inputFormatter]="formatter"
+               [resultFormatter]="formatter"
+               [editable]="false"
+               (ngModelChange)="loadCurriculumMappings(selectedCourse)"
+        />
+        <span class="input-group-text border-0"><fa-icon icon="search"></fa-icon></span>
+      </div>
+    </div>
+
+    @if (selectedCourse) {
+      <div class="row py-2 mb-sm-3 bg-body-tertiary">
+        <div class="col-sm-6 mb-sm-1">
+          <span class="fw-bold" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.gradelevel">gradelevel</span>:
+          {{ selectedCourse.gradelevel?.description }}
+        </div>
+        <div class="col-sm-6 mb-sm-1 text-end">
+          <span class="fw-bold"
+                jhiTranslate="schInfoSysApp.curriculumMappingDashboard.hoursPerQuarter">hoursPerQuarter</span>:
+          {{ selectedCourse.hoursPerQuarter }}
+        </div>
+        <div class="col-sm-12 mb-sm-3">
+          <span class="fw-bold" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.subject">subject</span>:
+          {{ selectedCourse.subject }}
+        </div>
+        <div class="col-sm-12 mb-sm-1"><span class="fw-bold"
+                                             jhiTranslate="schInfoSysApp.curriculumMappingDashboard.courseDescription">courseDescription</span>
+        </div>
+        <div class="col-sm-12 mb-sm-2">{{ selectedCourse.courseDescription }}</div>
+        <div class="col-sm-12 mb-sm-2">
+        <span class="fw-bold"
+              jhiTranslate="schInfoSysApp.curriculumMappingDashboard.courseObjectives">courseObjectives</span>
+        </div>
+        <div class="col-sm-12 mb-sm-3" [innerHtml]="htmlUtilService.toHtml(selectedCourse.courseObjectives || '')"></div>
+      </div>
+
+      <div class="row py-2 bg-body-tertiary mb-sm-3">
+        <div class="row col-sm-12 mb-sm-2 fw-bold text-center bg-body-secondary">
+          <div class="col-sm-12 mb-sm-2 fw-bold text-center">{{ selectedCourse.subject }}</div>
+          <div class="col-sm-12 mb-sm-2 fw-bold text-center"
+               jhiTranslate="schInfoSysApp.curriculumMappingDashboard.scopeAndSequence">SCOPE AND SEQUENCE
+          </div>
+        </div>
+
+        <div class="row">
+          @if(!hasCurMap) {
+            <div class="col-sm-12 p-1 fw-bold text-center text-bg-danger">
+              No Curriculum
+            </div>
+          }
+          <div *ngFor="let item of curMapByQuarter | keyvalue" class="col-sm-3 mb-sm-2 fw-bold text-center">
+            Quarter {{ item.key }}
+          </div>
+
+          <div class="w-10"></div>
+
+          <div *ngFor="let item of curMapByQuarter | keyvalue" class="col-sm-3 mb-sm-2 px-2">
+            @for (c of item.value; track $index) {
+              <div class="col-sm-12 mb-sm-2 mx-0 px-0">
+                <span jhiTranslate="schInfoSysApp.curriculumMappingDashboard.weekNo">Week No</span> {{ c.weekNo }}
+                : {{ c.topic }}
+              </div>
+            }
+          </div>
+          <div *ngFor="let item of curMapByQuarter | keyvalue" class="col-sm-12 mb-sm-3 px-2">
+
+            <div class="row bg-body-secondary border">
+              <div class="row">
+                <div class="col mb-sm-2 fw-bold text-center">{{ selectedCourse.subject }} - {{ selectedCourse.gradelevel?.description }} - Quarter {{ item.key }}</div>
+              </div>
+              <div class="row">
+                <div class="col mb-sm-2 mx-0 px-0 fw-bold text-center">
+                  <span><span jhiTranslate="schInfoSysApp.curriculumMappingDashboard.curriculumMap">curriculumMap</span></span>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-2 mt-2 mb-sm-2 mx-0 fw-bold text-center border-bottom border-top" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.timeFrame">timeFrame</div>
+              <div class="col-sm-2 mt-2 mb-sm-2 mx-0 fw-bold text-center border-bottom border-top" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.contentStandards">contentStandards</div>
+              <div class="col-sm-2 mt-2 mb-sm-2 mx-0 fw-bold text-center border-bottom border-top" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.performanceStandards">performanceStandards</div>
+              <div class="col-sm-2 mt-2 mb-sm-2 mx-0 fw-bold text-center border-bottom border-top" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.learningCompetencies">learningCompetencies</div>
+              <div class="col-sm-2 mt-2 mb-sm-2 mx-0 fw-bold text-center border-bottom border-top" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.strategies">strategies</div>
+              <div class="col-sm-2 mt-2 mb-sm-2 mx-0 fw-bold text-center border-bottom border-top" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.assessment">assessment</div>
+            </div>
+
+            @for (c of item.value; track $index) {
+              <div class="row">
+                <div class="col-sm-2 mb-sm-2 mx-0 px-0">
+                  <span>Week {{ c.weekNo }}</span>
+                </div>
+                <div class="col-sm-2 mb-sm-2 mx-0 px-0">
+                  <span>{{ c.contentStandards }}</span>
+                </div>
+                <div class="col-sm-2 mb-sm-2 mx-0 px-0">
+                  <span>{{ c.performanceStandards }}</span>
+                </div>
+                <div class="row col-sm-6 mb-sm-2 mx-0 px-0">
+                  @for(l of getLearningCompetenciesFromMapping(c.id); track $index) {
+                    <div class="row mb-sm-0 mx-0 px-1">
+                      <div class="col-sm-4 mb-sm-0 mx-0 px-1">
+                        <em>{{l.competencyCode }}</em> - {{l.description }}
+                      </div>
+                      <div class="col-sm-4 mb-sm-0 mx-0 px-1">
+                        @for(s of getStrategiesFromMapping(c.id); track $index) {
+                          <span [innerHtml]="s.description"></span>
+                        }
+                      </div>
+                      <div class="row col-sm-4 mb-sm-0 mx-0 px-0">
+                        @for(a of getAssessmentFromMapping(c.id); track $index) {
+                          <div class="col-12" [innerHtml]="a.instruction"></div>
+                          <div class="col-12" [innerHtml]="a.markScheme"></div>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

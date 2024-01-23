@@ -23,6 +23,14 @@
           <dd>
             <span>{{ curriculumMap.weekNo }}</span>
           </dd>
+          <dt><span jhiTranslate="schInfoSysApp.curriculumMap.course">Course</span></dt>
+          <dd>
+            @if (curriculumMap.course) {
+              <div>
+                <a [routerLink]="['/course', curriculumMap.course.id, 'view']">{{ curriculumMap.course.gradelevel?.description + ': ' +curriculumMap.course.subject + ' - ' + curriculumMap.course.schYr?.description }}</a>
+              </div>
+            }
+          </dd>
           <dt><span jhiTranslate="schInfoSysApp.curriculumMap.topic">Topic</span></dt>
           <dd>
             <span>{{ curriculumMap.topic }}</span>
@@ -35,13 +43,21 @@
           <dd>
             <span>{{ curriculumMap.performanceStandards }}</span>
           </dd>
-          <dt><span jhiTranslate="schInfoSysApp.curriculumMap.course">Course</span></dt>
+          <dt><span jhiTranslate="schInfoSysApp.curriculumMap.createdBy">Created By</span></dt>
           <dd>
-            @if (curriculumMap.course) {
-              <div>
-                <a [routerLink]="['/course', curriculumMap.course.id, 'view']">{{ curriculumMap.course.courseDescription }}</a>
-              </div>
-            }
+            <span>{{ curriculumMap.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.curriculumMap.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ curriculumMap.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.curriculumMap.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ curriculumMap.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.curriculumMap.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ curriculumMap.lastModifiedDate | formatMediumDatetime }}</span>
           </dd>
         </dl>
 

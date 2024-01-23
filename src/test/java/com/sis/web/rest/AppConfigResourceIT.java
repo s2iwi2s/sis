@@ -11,6 +11,8 @@ import com.sis.repository.AppConfigRepository;
 import com.sis.service.dto.AppConfigDTO;
 import com.sis.service.mapper.AppConfigMapper;
 import jakarta.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -46,11 +48,23 @@ class AppConfigResourceIT {
     private static final Integer DEFAULT_PRIORITY = 1;
     private static final Integer UPDATED_PRIORITY = 2;
 
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_LAST_MODIFIED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_MODIFIED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_LAST_MODIFIED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_LAST_MODIFIED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
     private static final String ENTITY_API_URL = "/api/app-configs";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
-    private static Random random = new Random();
-    private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static final Random random = new Random();
+    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
     private AppConfigRepository appConfigRepository;
@@ -78,7 +92,11 @@ class AppConfigResourceIT {
             .value(DEFAULT_VALUE)
             .description(DEFAULT_DESCRIPTION)
             .json(DEFAULT_JSON)
-            .priority(DEFAULT_PRIORITY);
+            .priority(DEFAULT_PRIORITY)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
+            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
         return appConfig;
     }
 
@@ -94,7 +112,11 @@ class AppConfigResourceIT {
             .value(UPDATED_VALUE)
             .description(UPDATED_DESCRIPTION)
             .json(UPDATED_JSON)
-            .priority(UPDATED_PRIORITY);
+            .priority(UPDATED_PRIORITY)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         return appConfig;
     }
 
@@ -122,6 +144,10 @@ class AppConfigResourceIT {
         assertThat(testAppConfig.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testAppConfig.getJson()).isEqualTo(DEFAULT_JSON);
         assertThat(testAppConfig.getPriority()).isEqualTo(DEFAULT_PRIORITY);
+        assertThat(testAppConfig.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testAppConfig.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testAppConfig.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testAppConfig.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -158,8 +184,12 @@ class AppConfigResourceIT {
             .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE)))
             .andExpect(jsonPath("$.[*].value").value(hasItem(DEFAULT_VALUE)))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION)))
-            .andExpect(jsonPath("$.[*].json").value(hasItem(DEFAULT_JSON.toString())))
-            .andExpect(jsonPath("$.[*].priority").value(hasItem(DEFAULT_PRIORITY)));
+            .andExpect(jsonPath("$.[*].json").value(hasItem(DEFAULT_JSON)))
+            .andExpect(jsonPath("$.[*].priority").value(hasItem(DEFAULT_PRIORITY)))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
     }
 
     @Test
@@ -177,8 +207,12 @@ class AppConfigResourceIT {
             .andExpect(jsonPath("$.code").value(DEFAULT_CODE))
             .andExpect(jsonPath("$.value").value(DEFAULT_VALUE))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION))
-            .andExpect(jsonPath("$.json").value(DEFAULT_JSON.toString()))
-            .andExpect(jsonPath("$.priority").value(DEFAULT_PRIORITY));
+            .andExpect(jsonPath("$.json").value(DEFAULT_JSON))
+            .andExpect(jsonPath("$.priority").value(DEFAULT_PRIORITY))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))
+            .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
     }
 
     @Test
@@ -205,7 +239,11 @@ class AppConfigResourceIT {
             .value(UPDATED_VALUE)
             .description(UPDATED_DESCRIPTION)
             .json(UPDATED_JSON)
-            .priority(UPDATED_PRIORITY);
+            .priority(UPDATED_PRIORITY)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         AppConfigDTO appConfigDTO = appConfigMapper.toDto(updatedAppConfig);
 
         restAppConfigMockMvc
@@ -225,6 +263,10 @@ class AppConfigResourceIT {
         assertThat(testAppConfig.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testAppConfig.getJson()).isEqualTo(UPDATED_JSON);
         assertThat(testAppConfig.getPriority()).isEqualTo(UPDATED_PRIORITY);
+        assertThat(testAppConfig.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testAppConfig.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testAppConfig.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testAppConfig.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -304,7 +346,11 @@ class AppConfigResourceIT {
         AppConfig partialUpdatedAppConfig = new AppConfig();
         partialUpdatedAppConfig.setId(appConfig.getId());
 
-        partialUpdatedAppConfig.description(UPDATED_DESCRIPTION);
+        partialUpdatedAppConfig
+            .description(UPDATED_DESCRIPTION)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY);
 
         restAppConfigMockMvc
             .perform(
@@ -323,6 +369,10 @@ class AppConfigResourceIT {
         assertThat(testAppConfig.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testAppConfig.getJson()).isEqualTo(DEFAULT_JSON);
         assertThat(testAppConfig.getPriority()).isEqualTo(DEFAULT_PRIORITY);
+        assertThat(testAppConfig.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testAppConfig.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testAppConfig.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testAppConfig.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -342,7 +392,11 @@ class AppConfigResourceIT {
             .value(UPDATED_VALUE)
             .description(UPDATED_DESCRIPTION)
             .json(UPDATED_JSON)
-            .priority(UPDATED_PRIORITY);
+            .priority(UPDATED_PRIORITY)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restAppConfigMockMvc
             .perform(
@@ -361,6 +415,10 @@ class AppConfigResourceIT {
         assertThat(testAppConfig.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testAppConfig.getJson()).isEqualTo(UPDATED_JSON);
         assertThat(testAppConfig.getPriority()).isEqualTo(UPDATED_PRIORITY);
+        assertThat(testAppConfig.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testAppConfig.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testAppConfig.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testAppConfig.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test

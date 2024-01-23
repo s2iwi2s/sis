@@ -18,7 +18,7 @@
         "title": "Student"
       },
       "id": "ID",
-      "lrn": "Lrn",
+      "lrn": "LRN",
       "firstName": "First Name",
       "middleName": "Middle Name",
       "lastName": "Last Name",
@@ -47,8 +47,13 @@
       "mothersContacts": "Mothers Contacts",
       "guardianFullName": "Guardian Full Name",
       "guardianContacts": "Guardian Contacts",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
       "gender": "Gender",
-      "course": "Course"
+      "course": "Course",
+      "courses": "Courses"
     }
   }
 }

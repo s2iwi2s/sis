@@ -42,14 +42,6 @@ public interface CourseService {
     Page<CourseDTO> findAll(Pageable pageable);
 
     /**
-     * Get all the courses with eager load of many-to-many relationships.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    Page<CourseDTO> findAllWithEagerRelationships(Pageable pageable);
-
-    /**
      * Get the "id" course.
      *
      * @param id the id of the entity.

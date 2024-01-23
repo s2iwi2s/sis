@@ -23,6 +23,11 @@ describe('Assessment Form Service', () => {
             name: expect.any(Object),
             instruction: expect.any(Object),
             markScheme: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
+            resources: expect.any(Object),
             learningCompetency: expect.any(Object),
           }),
         );
@@ -37,6 +42,11 @@ describe('Assessment Form Service', () => {
             name: expect.any(Object),
             instruction: expect.any(Object),
             markScheme: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
+            resources: expect.any(Object),
             learningCompetency: expect.any(Object),
           }),
         );

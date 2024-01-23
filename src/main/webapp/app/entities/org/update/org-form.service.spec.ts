@@ -23,6 +23,10 @@ describe('Org Form Service', () => {
             name: expect.any(Object),
             logo: expect.any(Object),
             address: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
             currSchYr: expect.any(Object),
           }),
         );
@@ -37,6 +41,10 @@ describe('Org Form Service', () => {
             name: expect.any(Object),
             logo: expect.any(Object),
             address: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
             currSchYr: expect.any(Object),
           }),
         );

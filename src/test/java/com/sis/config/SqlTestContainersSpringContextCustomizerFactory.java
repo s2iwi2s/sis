@@ -12,7 +12,7 @@ import org.springframework.test.context.ContextCustomizerFactory;
 
 public class SqlTestContainersSpringContextCustomizerFactory implements ContextCustomizerFactory {
 
-    private Logger log = LoggerFactory.getLogger(SqlTestContainersSpringContextCustomizerFactory.class);
+    private final Logger log = LoggerFactory.getLogger(SqlTestContainersSpringContextCustomizerFactory.class);
 
     private static SqlTestContainer prodTestContainer;
 
@@ -37,7 +37,7 @@ public class SqlTestContainersSpringContextCustomizerFactory implements ContextC
                         throw new RuntimeException(e);
                     }
                 }
-                testValues = testValues.and("spring.datasource.url=" + prodTestContainer.getTestContainer().getJdbcUrl() + "");
+                testValues = testValues.and("spring.datasource.url=" + prodTestContainer.getTestContainer().getJdbcUrl());
                 testValues = testValues.and("spring.datasource.username=" + prodTestContainer.getTestContainer().getUsername());
                 testValues = testValues.and("spring.datasource.password=" + prodTestContainer.getTestContainer().getPassword());
             }

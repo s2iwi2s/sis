@@ -4,6 +4,8 @@ import com.sis.repository.OrgRepository;
 import com.sis.service.OrgService;
 import com.sis.service.dto.OrgDTO;
 import com.sis.web.rest.errors.BadRequestAlertException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -53,7 +55,7 @@ public class OrgResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<OrgDTO> createOrg(@RequestBody OrgDTO orgDTO) throws URISyntaxException {
+    public ResponseEntity<OrgDTO> createOrg(@Valid @RequestBody OrgDTO orgDTO) throws URISyntaxException {
         log.debug("REST request to save Org : {}", orgDTO);
         if (orgDTO.getId() != null) {
             throw new BadRequestAlertException("A new org cannot already have an ID", ENTITY_NAME, "idexists");
@@ -76,7 +78,7 @@ public class OrgResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<OrgDTO> updateOrg(@PathVariable(value = "id", required = false) final Long id, @RequestBody OrgDTO orgDTO)
+    public ResponseEntity<OrgDTO> updateOrg(@PathVariable(value = "id", required = false) final Long id, @Valid @RequestBody OrgDTO orgDTO)
         throws URISyntaxException {
         log.debug("REST request to update Org : {}, {}", id, orgDTO);
         if (orgDTO.getId() == null) {
@@ -109,8 +111,10 @@ public class OrgResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
-    public ResponseEntity<OrgDTO> partialUpdateOrg(@PathVariable(value = "id", required = false) final Long id, @RequestBody OrgDTO orgDTO)
-        throws URISyntaxException {
+    public ResponseEntity<OrgDTO> partialUpdateOrg(
+        @PathVariable(value = "id", required = false) final Long id,
+        @NotNull @RequestBody OrgDTO orgDTO
+    ) throws URISyntaxException {
         log.debug("REST request to partial update Org partially : {}, {}", id, orgDTO);
         if (orgDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");

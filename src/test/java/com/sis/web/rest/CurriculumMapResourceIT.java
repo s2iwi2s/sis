@@ -11,6 +11,8 @@ import com.sis.repository.CurriculumMapRepository;
 import com.sis.service.dto.CurriculumMapDTO;
 import com.sis.service.mapper.CurriculumMapMapper;
 import jakarta.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
@@ -46,11 +48,23 @@ class CurriculumMapResourceIT {
     private static final String DEFAULT_PERFORMANCE_STANDARDS = "AAAAAAAAAA";
     private static final String UPDATED_PERFORMANCE_STANDARDS = "BBBBBBBBBB";
 
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_LAST_MODIFIED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_MODIFIED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_LAST_MODIFIED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_LAST_MODIFIED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
     private static final String ENTITY_API_URL = "/api/curriculum-maps";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
-    private static Random random = new Random();
-    private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static final Random random = new Random();
+    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
     private CurriculumMapRepository curriculumMapRepository;
@@ -78,7 +92,11 @@ class CurriculumMapResourceIT {
             .weekNo(DEFAULT_WEEK_NO)
             .topic(DEFAULT_TOPIC)
             .contentStandards(DEFAULT_CONTENT_STANDARDS)
-            .performanceStandards(DEFAULT_PERFORMANCE_STANDARDS);
+            .performanceStandards(DEFAULT_PERFORMANCE_STANDARDS)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
+            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
         return curriculumMap;
     }
 
@@ -94,7 +112,11 @@ class CurriculumMapResourceIT {
             .weekNo(UPDATED_WEEK_NO)
             .topic(UPDATED_TOPIC)
             .contentStandards(UPDATED_CONTENT_STANDARDS)
-            .performanceStandards(UPDATED_PERFORMANCE_STANDARDS);
+            .performanceStandards(UPDATED_PERFORMANCE_STANDARDS)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         return curriculumMap;
     }
 
@@ -124,6 +146,10 @@ class CurriculumMapResourceIT {
         assertThat(testCurriculumMap.getTopic()).isEqualTo(DEFAULT_TOPIC);
         assertThat(testCurriculumMap.getContentStandards()).isEqualTo(DEFAULT_CONTENT_STANDARDS);
         assertThat(testCurriculumMap.getPerformanceStandards()).isEqualTo(DEFAULT_PERFORMANCE_STANDARDS);
+        assertThat(testCurriculumMap.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testCurriculumMap.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testCurriculumMap.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testCurriculumMap.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -163,7 +189,11 @@ class CurriculumMapResourceIT {
             .andExpect(jsonPath("$.[*].weekNo").value(hasItem(DEFAULT_WEEK_NO)))
             .andExpect(jsonPath("$.[*].topic").value(hasItem(DEFAULT_TOPIC)))
             .andExpect(jsonPath("$.[*].contentStandards").value(hasItem(DEFAULT_CONTENT_STANDARDS)))
-            .andExpect(jsonPath("$.[*].performanceStandards").value(hasItem(DEFAULT_PERFORMANCE_STANDARDS)));
+            .andExpect(jsonPath("$.[*].performanceStandards").value(hasItem(DEFAULT_PERFORMANCE_STANDARDS)))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
     }
 
     @Test
@@ -182,7 +212,11 @@ class CurriculumMapResourceIT {
             .andExpect(jsonPath("$.weekNo").value(DEFAULT_WEEK_NO))
             .andExpect(jsonPath("$.topic").value(DEFAULT_TOPIC))
             .andExpect(jsonPath("$.contentStandards").value(DEFAULT_CONTENT_STANDARDS))
-            .andExpect(jsonPath("$.performanceStandards").value(DEFAULT_PERFORMANCE_STANDARDS));
+            .andExpect(jsonPath("$.performanceStandards").value(DEFAULT_PERFORMANCE_STANDARDS))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))
+            .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
     }
 
     @Test
@@ -209,7 +243,11 @@ class CurriculumMapResourceIT {
             .weekNo(UPDATED_WEEK_NO)
             .topic(UPDATED_TOPIC)
             .contentStandards(UPDATED_CONTENT_STANDARDS)
-            .performanceStandards(UPDATED_PERFORMANCE_STANDARDS);
+            .performanceStandards(UPDATED_PERFORMANCE_STANDARDS)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         CurriculumMapDTO curriculumMapDTO = curriculumMapMapper.toDto(updatedCurriculumMap);
 
         restCurriculumMapMockMvc
@@ -229,6 +267,10 @@ class CurriculumMapResourceIT {
         assertThat(testCurriculumMap.getTopic()).isEqualTo(UPDATED_TOPIC);
         assertThat(testCurriculumMap.getContentStandards()).isEqualTo(UPDATED_CONTENT_STANDARDS);
         assertThat(testCurriculumMap.getPerformanceStandards()).isEqualTo(UPDATED_PERFORMANCE_STANDARDS);
+        assertThat(testCurriculumMap.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testCurriculumMap.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testCurriculumMap.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testCurriculumMap.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -310,7 +352,12 @@ class CurriculumMapResourceIT {
         CurriculumMap partialUpdatedCurriculumMap = new CurriculumMap();
         partialUpdatedCurriculumMap.setId(curriculumMap.getId());
 
-        partialUpdatedCurriculumMap.contentStandards(UPDATED_CONTENT_STANDARDS).performanceStandards(UPDATED_PERFORMANCE_STANDARDS);
+        partialUpdatedCurriculumMap
+            .contentStandards(UPDATED_CONTENT_STANDARDS)
+            .performanceStandards(UPDATED_PERFORMANCE_STANDARDS)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restCurriculumMapMockMvc
             .perform(
@@ -329,6 +376,10 @@ class CurriculumMapResourceIT {
         assertThat(testCurriculumMap.getTopic()).isEqualTo(DEFAULT_TOPIC);
         assertThat(testCurriculumMap.getContentStandards()).isEqualTo(UPDATED_CONTENT_STANDARDS);
         assertThat(testCurriculumMap.getPerformanceStandards()).isEqualTo(UPDATED_PERFORMANCE_STANDARDS);
+        assertThat(testCurriculumMap.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testCurriculumMap.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testCurriculumMap.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testCurriculumMap.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -348,7 +399,11 @@ class CurriculumMapResourceIT {
             .weekNo(UPDATED_WEEK_NO)
             .topic(UPDATED_TOPIC)
             .contentStandards(UPDATED_CONTENT_STANDARDS)
-            .performanceStandards(UPDATED_PERFORMANCE_STANDARDS);
+            .performanceStandards(UPDATED_PERFORMANCE_STANDARDS)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restCurriculumMapMockMvc
             .perform(
@@ -367,6 +422,10 @@ class CurriculumMapResourceIT {
         assertThat(testCurriculumMap.getTopic()).isEqualTo(UPDATED_TOPIC);
         assertThat(testCurriculumMap.getContentStandards()).isEqualTo(UPDATED_CONTENT_STANDARDS);
         assertThat(testCurriculumMap.getPerformanceStandards()).isEqualTo(UPDATED_PERFORMANCE_STANDARDS);
+        assertThat(testCurriculumMap.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testCurriculumMap.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testCurriculumMap.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testCurriculumMap.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test

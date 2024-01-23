@@ -7,20 +7,29 @@ import java.util.concurrent.atomic.AtomicLong;
 public class ResourcesTestSamples {
 
     private static final Random random = new Random();
-    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     public static Resources getResourcesSample1() {
-        return new Resources().id(1L).fileName("fileName1").fileNameOnServer("fileNameOnServer1");
+        return new Resources()
+            .id(1L)
+            .fileName("fileName1")
+            .createdBy("createdBy1")
+            .lastModifiedBy("lastModifiedBy1");
     }
 
     public static Resources getResourcesSample2() {
-        return new Resources().id(2L).fileName("fileName2").fileNameOnServer("fileNameOnServer2");
+        return new Resources()
+            .id(2L)
+            .fileName("fileName2")
+            .createdBy("createdBy2")
+            .lastModifiedBy("lastModifiedBy2");
     }
 
     public static Resources getResourcesRandomSampleGenerator() {
         return new Resources()
             .id(longCount.incrementAndGet())
             .fileName(UUID.randomUUID().toString())
-            .fileNameOnServer(UUID.randomUUID().toString());
+            .createdBy(UUID.randomUUID().toString())
+            .lastModifiedBy(UUID.randomUUID().toString());
     }
 }

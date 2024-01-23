@@ -13,8 +13,10 @@ import { IInstructor, NewInstructor } from '../instructor.model';
 
 export type PartialUpdateInstructor = Partial<IInstructor> & Pick<IInstructor, 'id'>;
 
-type RestOf<T extends IInstructor | NewInstructor> = Omit<T, 'hireDate'> & {
+type RestOf<T extends IInstructor | NewInstructor> = Omit<T, 'hireDate' | 'createdDate' | 'lastModifiedDate'> & {
   hireDate?: string | null;
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
 };
 
 export type RestInstructor = RestOf<IInstructor>;
@@ -105,6 +107,8 @@ export class InstructorService {
     return {
       ...instructor,
       hireDate: instructor.hireDate?.toJSON() ?? null,
+      createdDate: instructor.createdDate?.toJSON() ?? null,
+      lastModifiedDate: instructor.lastModifiedDate?.toJSON() ?? null,
     };
   }
 
@@ -112,6 +116,8 @@ export class InstructorService {
     return {
       ...restInstructor,
       hireDate: restInstructor.hireDate ? dayjs(restInstructor.hireDate) : undefined,
+      createdDate: restInstructor.createdDate ? dayjs(restInstructor.createdDate) : undefined,
+      lastModifiedDate: restInstructor.lastModifiedDate ? dayjs(restInstructor.lastModifiedDate) : undefined,
     };
   }
 

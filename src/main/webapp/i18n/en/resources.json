@@ -21,8 +21,15 @@
       "fileName": "File Name",
       "fileNameOnServer": "File Name On Server",
       "document": "Document",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
       "strategies": "Strategies",
-      "assessment": "Assessment"
+      "assessment": "Assessment",
+      "upload-dialog": {
+        "title": "Upload Resources Dialog"
+      }
     }
   }
 }

@@ -20,36 +20,8 @@
         }
 
         <div class="mb-3">
-          <label class="form-label" jhiTranslate="schInfoSysApp.assessment.name" for="field_name">Name</label>
-          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" jhiTranslate="schInfoSysApp.assessment.instruction" for="field_instruction">Instruction</label>
-          <input
-            type="text"
-            class="form-control"
-            name="instruction"
-            id="field_instruction"
-            data-cy="instruction"
-            formControlName="instruction"
-          />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" jhiTranslate="schInfoSysApp.assessment.markScheme" for="field_markScheme">Mark Scheme</label>
-          <textarea
-            class="form-control"
-            name="markScheme"
-            id="field_markScheme"
-            data-cy="markScheme"
-            formControlName="markScheme"
-          ></textarea>
-        </div>
-
-        <div class="mb-3">
           <label class="form-label" jhiTranslate="schInfoSysApp.assessment.learningCompetency" for="field_learningCompetency"
-            >Learning Competency</label
+          >Learning Competency</label
           >
           <select
             class="form-control"
@@ -61,9 +33,160 @@
           >
             <option [ngValue]="null"></option>
             @for (learningCompetencyOption of learningCompetenciesSharedCollection; track $index) {
-              <option [ngValue]="learningCompetencyOption">{{ '[' + learningCompetencyOption.competencyCode + '] ' + learningCompetencyOption.description }}</option>
+              <option [ngValue]="learningCompetencyOption">{{ learningCompetencyOption.seqNo + ' - ' + learningCompetencyOption.competencyCode }}</option>
             }
           </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.assessment.name" for="field_name">Name</label>
+          <input type="text" class="form-control" name="name" id="field_name" data-cy="name" formControlName="name" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.assessment.instruction" for="field_instruction">Instruction</label>
+          <textarea
+            class="form-control"
+            name="instruction"
+            id="field_instruction"
+            data-cy="instruction"
+            formControlName="instruction"
+          ></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.assessment.markScheme" for="field_markScheme">Mark Scheme</label>
+          <!--
+          <textarea
+            class="form-control"
+            name="markScheme"
+            id="field_markScheme"
+            data-cy="markScheme"
+            formControlName="markScheme"
+          ></textarea>
+          -->
+          <editor
+            class="form-control"
+            name="markScheme"
+            id="field_markScheme"
+            data-cy="markScheme"
+            formControlName="markScheme"
+            [init]="tinyMCEOptions">
+          </editor>
+        </div>
+
+        <div class="mb-3">
+          <label jhiTranslate="schInfoSysApp.assessment.resources" for="field_resources">Resources</label>
+
+          @if (editForm.controls.id.value !== null) {
+          <a (click)="showAddImagesForm()"><fa-icon icon="paperclip"></fa-icon></a>
+          }
+
+          <select
+            class="form-control visually-hidden"
+            id="field_resources"
+            data-cy="resources"
+            multiple
+            name="resources"
+            formControlName="resources"
+            [compareWith]="compareResources"
+          >
+            @for (resourcesOption of resourcesSharedCollection; track $index) {
+              <option [ngValue]="resourcesOption">{{ resourcesOption.fileName }} ({{resourcesOption.documentContentType}})</option>
+            }
+          </select>
+        </div>
+        <div class="row mb-3">
+          @for (resource of editForm.get('resources')?.value; track $index) {
+            <div class="row col-sm-12">
+              <div class="col-sm-3">
+                <a class="btn btn-sm" [cdkCopyToClipboard]="baseUrl('/api/resources/doc/'+resource.id)"
+                   (cdkCopyToClipboardCopied)="onClipboardCopy($event)">
+                  <fa-icon icon="clipboard"></fa-icon>
+                </a>
+                <a href="/api/resources/doc/{{ resource.id }}">{{ resource.fileName }}</a>
+              </div>
+              <div class="col-sm-9">
+                ({{ resource.documentContentType }})
+                <a (click)="deleteResource(resource)"><fa-icon icon="times"></fa-icon></a>
+
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.assessment.createdBy" for="field_createdBy">Created By</label>
+          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" [readonly]="true"/>
+          @if (editForm.get('createdBy')!.invalid && (editForm.get('createdBy')!.dirty || editForm.get('createdBy')!.touched)) {
+            <div>
+              @if (editForm.get('createdBy')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 50 }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.assessment.createdDate" for="field_createdDate">Created Date</label>
+          <div class="d-flex">
+            <input
+              id="field_createdDate"
+              data-cy="createdDate"
+              type="datetime-local"
+              class="form-control"
+              name="createdDate"
+              formControlName="createdDate"
+              placeholder="YYYY-MM-DD HH:mm"
+              [readonly]="true"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.assessment.lastModifiedBy" for="field_lastModifiedBy"
+            >Last Modified By</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="lastModifiedBy"
+            id="field_lastModifiedBy"
+            data-cy="lastModifiedBy"
+            formControlName="lastModifiedBy"
+            [readonly]="true"
+          />
+          @if (
+            editForm.get('lastModifiedBy')!.invalid && (editForm.get('lastModifiedBy')!.dirty || editForm.get('lastModifiedBy')!.touched)
+          ) {
+            <div>
+              @if (editForm.get('lastModifiedBy')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 50 }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" jhiTranslate="schInfoSysApp.assessment.lastModifiedDate" for="field_lastModifiedDate"
+            >Last Modified Date</label
+          >
+          <div class="d-flex">
+            <input
+              id="field_lastModifiedDate"
+              data-cy="lastModifiedDate"
+              type="datetime-local"
+              class="form-control"
+              name="lastModifiedDate"
+              formControlName="lastModifiedDate"
+              placeholder="YYYY-MM-DD HH:mm"
+              [readonly]="true"
+            />
+          </div>
         </div>
       </div>
 

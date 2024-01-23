@@ -2,24 +2,32 @@ package com.sis.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.sis.IntegrationTest;
 import com.sis.domain.Student;
 import com.sis.repository.StudentRepository;
+import com.sis.service.StudentService;
 import com.sis.service.dto.StudentDTO;
 import com.sis.service.mapper.StudentMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link StudentResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class StudentResourceIT {
@@ -120,17 +129,35 @@ class StudentResourceIT {
     private static final String DEFAULT_GUARDIAN_CONTACTS = "AAAAAAAAAA";
     private static final String UPDATED_GUARDIAN_CONTACTS = "BBBBBBBBBB";
 
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_LAST_MODIFIED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_MODIFIED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_LAST_MODIFIED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_LAST_MODIFIED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
     private static final String ENTITY_API_URL = "/api/students";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
-    private static Random random = new Random();
-    private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static final Random random = new Random();
+    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
     private StudentRepository studentRepository;
 
+    @Mock
+    private StudentRepository studentRepositoryMock;
+
     @Autowired
     private StudentMapper studentMapper;
+
+    @Mock
+    private StudentService studentServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -176,7 +203,11 @@ class StudentResourceIT {
             .mothersOccupation(DEFAULT_MOTHERS_OCCUPATION)
             .mothersContacts(DEFAULT_MOTHERS_CONTACTS)
             .guardianFullName(DEFAULT_GUARDIAN_FULL_NAME)
-            .guardianContacts(DEFAULT_GUARDIAN_CONTACTS);
+            .guardianContacts(DEFAULT_GUARDIAN_CONTACTS)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
+            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
         return student;
     }
 
@@ -216,7 +247,11 @@ class StudentResourceIT {
             .mothersOccupation(UPDATED_MOTHERS_OCCUPATION)
             .mothersContacts(UPDATED_MOTHERS_CONTACTS)
             .guardianFullName(UPDATED_GUARDIAN_FULL_NAME)
-            .guardianContacts(UPDATED_GUARDIAN_CONTACTS);
+            .guardianContacts(UPDATED_GUARDIAN_CONTACTS)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         return student;
     }
 
@@ -268,6 +303,10 @@ class StudentResourceIT {
         assertThat(testStudent.getMothersContacts()).isEqualTo(DEFAULT_MOTHERS_CONTACTS);
         assertThat(testStudent.getGuardianFullName()).isEqualTo(DEFAULT_GUARDIAN_FULL_NAME);
         assertThat(testStudent.getGuardianContacts()).isEqualTo(DEFAULT_GUARDIAN_CONTACTS);
+        assertThat(testStudent.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testStudent.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testStudent.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testStudent.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -329,7 +368,28 @@ class StudentResourceIT {
             .andExpect(jsonPath("$.[*].mothersOccupation").value(hasItem(DEFAULT_MOTHERS_OCCUPATION)))
             .andExpect(jsonPath("$.[*].mothersContacts").value(hasItem(DEFAULT_MOTHERS_CONTACTS)))
             .andExpect(jsonPath("$.[*].guardianFullName").value(hasItem(DEFAULT_GUARDIAN_FULL_NAME)))
-            .andExpect(jsonPath("$.[*].guardianContacts").value(hasItem(DEFAULT_GUARDIAN_CONTACTS)));
+            .andExpect(jsonPath("$.[*].guardianContacts").value(hasItem(DEFAULT_GUARDIAN_CONTACTS)))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllStudentsWithEagerRelationshipsIsEnabled() throws Exception {
+        when(studentServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restStudentMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(studentServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllStudentsWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(studentServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restStudentMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
+        verify(studentRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -372,7 +432,11 @@ class StudentResourceIT {
             .andExpect(jsonPath("$.mothersOccupation").value(DEFAULT_MOTHERS_OCCUPATION))
             .andExpect(jsonPath("$.mothersContacts").value(DEFAULT_MOTHERS_CONTACTS))
             .andExpect(jsonPath("$.guardianFullName").value(DEFAULT_GUARDIAN_FULL_NAME))
-            .andExpect(jsonPath("$.guardianContacts").value(DEFAULT_GUARDIAN_CONTACTS));
+            .andExpect(jsonPath("$.guardianContacts").value(DEFAULT_GUARDIAN_CONTACTS))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))
+            .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
     }
 
     @Test
@@ -423,7 +487,11 @@ class StudentResourceIT {
             .mothersOccupation(UPDATED_MOTHERS_OCCUPATION)
             .mothersContacts(UPDATED_MOTHERS_CONTACTS)
             .guardianFullName(UPDATED_GUARDIAN_FULL_NAME)
-            .guardianContacts(UPDATED_GUARDIAN_CONTACTS);
+            .guardianContacts(UPDATED_GUARDIAN_CONTACTS)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         StudentDTO studentDTO = studentMapper.toDto(updatedStudent);
 
         restStudentMockMvc
@@ -467,6 +535,10 @@ class StudentResourceIT {
         assertThat(testStudent.getMothersContacts()).isEqualTo(UPDATED_MOTHERS_CONTACTS);
         assertThat(testStudent.getGuardianFullName()).isEqualTo(UPDATED_GUARDIAN_FULL_NAME);
         assertThat(testStudent.getGuardianContacts()).isEqualTo(UPDATED_GUARDIAN_CONTACTS);
+        assertThat(testStudent.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testStudent.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testStudent.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testStudent.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -558,7 +630,11 @@ class StudentResourceIT {
             .mothersLastName(UPDATED_MOTHERS_LAST_NAME)
             .mothersOccupation(UPDATED_MOTHERS_OCCUPATION)
             .mothersContacts(UPDATED_MOTHERS_CONTACTS)
-            .guardianFullName(UPDATED_GUARDIAN_FULL_NAME);
+            .guardianFullName(UPDATED_GUARDIAN_FULL_NAME)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restStudentMockMvc
             .perform(
@@ -601,6 +677,10 @@ class StudentResourceIT {
         assertThat(testStudent.getMothersContacts()).isEqualTo(UPDATED_MOTHERS_CONTACTS);
         assertThat(testStudent.getGuardianFullName()).isEqualTo(UPDATED_GUARDIAN_FULL_NAME);
         assertThat(testStudent.getGuardianContacts()).isEqualTo(DEFAULT_GUARDIAN_CONTACTS);
+        assertThat(testStudent.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testStudent.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testStudent.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testStudent.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -644,7 +724,11 @@ class StudentResourceIT {
             .mothersOccupation(UPDATED_MOTHERS_OCCUPATION)
             .mothersContacts(UPDATED_MOTHERS_CONTACTS)
             .guardianFullName(UPDATED_GUARDIAN_FULL_NAME)
-            .guardianContacts(UPDATED_GUARDIAN_CONTACTS);
+            .guardianContacts(UPDATED_GUARDIAN_CONTACTS)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restStudentMockMvc
             .perform(
@@ -687,6 +771,10 @@ class StudentResourceIT {
         assertThat(testStudent.getMothersContacts()).isEqualTo(UPDATED_MOTHERS_CONTACTS);
         assertThat(testStudent.getGuardianFullName()).isEqualTo(UPDATED_GUARDIAN_FULL_NAME);
         assertThat(testStudent.getGuardianContacts()).isEqualTo(UPDATED_GUARDIAN_CONTACTS);
+        assertThat(testStudent.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testStudent.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testStudent.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testStudent.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test

@@ -13,8 +13,10 @@ import { IStudent, NewStudent } from '../student.model';
 
 export type PartialUpdateStudent = Partial<IStudent> & Pick<IStudent, 'id'>;
 
-type RestOf<T extends IStudent | NewStudent> = Omit<T, 'birthDate'> & {
+type RestOf<T extends IStudent | NewStudent> = Omit<T, 'birthDate' | 'createdDate' | 'lastModifiedDate'> & {
   birthDate?: string | null;
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
 };
 
 export type RestStudent = RestOf<IStudent>;
@@ -105,6 +107,8 @@ export class StudentService {
     return {
       ...student,
       birthDate: student.birthDate?.toJSON() ?? null,
+      createdDate: student.createdDate?.toJSON() ?? null,
+      lastModifiedDate: student.lastModifiedDate?.toJSON() ?? null,
     };
   }
 
@@ -112,6 +116,8 @@ export class StudentService {
     return {
       ...restStudent,
       birthDate: restStudent.birthDate ? dayjs(restStudent.birthDate) : undefined,
+      createdDate: restStudent.createdDate ? dayjs(restStudent.createdDate) : undefined,
+      lastModifiedDate: restStudent.lastModifiedDate ? dayjs(restStudent.lastModifiedDate) : undefined,
     };
   }
 

@@ -3,6 +3,7 @@ package com.sis.service.dto;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -16,15 +17,20 @@ public class ResourcesDTO implements Serializable {
     @Size(max = 50)
     private String fileName;
 
-    private String fileNameOnServer;
-
     @Lob
     private byte[] document;
 
     private String documentContentType;
-    private StrategiesDTO strategies;
 
-    private AssessmentDTO assessment;
+    @Size(max = 50)
+    private String createdBy;
+
+    private Instant createdDate;
+
+    @Size(max = 50)
+    private String lastModifiedBy;
+
+    private Instant lastModifiedDate;
 
     public Long getId() {
         return id;
@@ -40,14 +46,6 @@ public class ResourcesDTO implements Serializable {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
-    }
-
-    public String getFileNameOnServer() {
-        return fileNameOnServer;
-    }
-
-    public void setFileNameOnServer(String fileNameOnServer) {
-        this.fileNameOnServer = fileNameOnServer;
     }
 
     public byte[] getDocument() {
@@ -66,20 +64,36 @@ public class ResourcesDTO implements Serializable {
         this.documentContentType = documentContentType;
     }
 
-    public StrategiesDTO getStrategies() {
-        return strategies;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setStrategies(StrategiesDTO strategies) {
-        this.strategies = strategies;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
-    public AssessmentDTO getAssessment() {
-        return assessment;
+    public Instant getCreatedDate() {
+        return createdDate;
     }
 
-    public void setAssessment(AssessmentDTO assessment) {
-        this.assessment = assessment;
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     @Override
@@ -87,11 +101,10 @@ public class ResourcesDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof ResourcesDTO)) {
+        if (!(o instanceof ResourcesDTO resourcesDTO)) {
             return false;
         }
 
-        ResourcesDTO resourcesDTO = (ResourcesDTO) o;
         if (this.id == null) {
             return false;
         }
@@ -109,10 +122,11 @@ public class ResourcesDTO implements Serializable {
         return "ResourcesDTO{" +
             "id=" + getId() +
             ", fileName='" + getFileName() + "'" +
-            ", fileNameOnServer='" + getFileNameOnServer() + "'" +
             ", document='" + getDocument() + "'" +
-            ", strategies=" + getStrategies() +
-            ", assessment=" + getAssessment() +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { ICurriculumMap } from '../curriculum-map.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../curriculum-map.test-samples';
 
-import { CurriculumMapService } from './curriculum-map.service';
+import { CurriculumMapService, RestCurriculumMap } from './curriculum-map.service';
 
-const requireRestSample: ICurriculumMap = {
+const requireRestSample: RestCurriculumMap = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('CurriculumMap Service', () => {

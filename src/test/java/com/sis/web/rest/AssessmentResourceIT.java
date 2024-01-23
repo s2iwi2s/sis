@@ -2,22 +2,32 @@ package com.sis.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.sis.IntegrationTest;
 import com.sis.domain.Assessment;
 import com.sis.repository.AssessmentRepository;
+import com.sis.service.AssessmentService;
 import com.sis.service.dto.AssessmentDTO;
 import com.sis.service.mapper.AssessmentMapper;
 import jakarta.persistence.EntityManager;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link AssessmentResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class AssessmentResourceIT {
@@ -40,17 +51,35 @@ class AssessmentResourceIT {
     private static final String DEFAULT_MARK_SCHEME = "AAAAAAAAAA";
     private static final String UPDATED_MARK_SCHEME = "BBBBBBBBBB";
 
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_LAST_MODIFIED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_MODIFIED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_LAST_MODIFIED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_LAST_MODIFIED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
     private static final String ENTITY_API_URL = "/api/assessments";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
-    private static Random random = new Random();
-    private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static final Random random = new Random();
+    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
     private AssessmentRepository assessmentRepository;
 
+    @Mock
+    private AssessmentRepository assessmentRepositoryMock;
+
     @Autowired
     private AssessmentMapper assessmentMapper;
+
+    @Mock
+    private AssessmentService assessmentServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -67,7 +96,14 @@ class AssessmentResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Assessment createEntity(EntityManager em) {
-        Assessment assessment = new Assessment().name(DEFAULT_NAME).instruction(DEFAULT_INSTRUCTION).markScheme(DEFAULT_MARK_SCHEME);
+        Assessment assessment = new Assessment()
+            .name(DEFAULT_NAME)
+            .instruction(DEFAULT_INSTRUCTION)
+            .markScheme(DEFAULT_MARK_SCHEME)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
+            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
         return assessment;
     }
 
@@ -78,7 +114,14 @@ class AssessmentResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Assessment createUpdatedEntity(EntityManager em) {
-        Assessment assessment = new Assessment().name(UPDATED_NAME).instruction(UPDATED_INSTRUCTION).markScheme(UPDATED_MARK_SCHEME);
+        Assessment assessment = new Assessment()
+            .name(UPDATED_NAME)
+            .instruction(UPDATED_INSTRUCTION)
+            .markScheme(UPDATED_MARK_SCHEME)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         return assessment;
     }
 
@@ -104,6 +147,10 @@ class AssessmentResourceIT {
         assertThat(testAssessment.getName()).isEqualTo(DEFAULT_NAME);
         assertThat(testAssessment.getInstruction()).isEqualTo(DEFAULT_INSTRUCTION);
         assertThat(testAssessment.getMarkScheme()).isEqualTo(DEFAULT_MARK_SCHEME);
+        assertThat(testAssessment.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testAssessment.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testAssessment.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testAssessment.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -139,7 +186,28 @@ class AssessmentResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(assessment.getId().intValue())))
             .andExpect(jsonPath("$.[*].name").value(hasItem(DEFAULT_NAME)))
             .andExpect(jsonPath("$.[*].instruction").value(hasItem(DEFAULT_INSTRUCTION)))
-            .andExpect(jsonPath("$.[*].markScheme").value(hasItem(DEFAULT_MARK_SCHEME.toString())));
+            .andExpect(jsonPath("$.[*].markScheme").value(hasItem(DEFAULT_MARK_SCHEME)))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllAssessmentsWithEagerRelationshipsIsEnabled() throws Exception {
+        when(assessmentServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restAssessmentMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(assessmentServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllAssessmentsWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(assessmentServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restAssessmentMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
+        verify(assessmentRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -156,7 +224,11 @@ class AssessmentResourceIT {
             .andExpect(jsonPath("$.id").value(assessment.getId().intValue()))
             .andExpect(jsonPath("$.name").value(DEFAULT_NAME))
             .andExpect(jsonPath("$.instruction").value(DEFAULT_INSTRUCTION))
-            .andExpect(jsonPath("$.markScheme").value(DEFAULT_MARK_SCHEME.toString()));
+            .andExpect(jsonPath("$.markScheme").value(DEFAULT_MARK_SCHEME))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))
+            .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
     }
 
     @Test
@@ -178,7 +250,14 @@ class AssessmentResourceIT {
         Assessment updatedAssessment = assessmentRepository.findById(assessment.getId()).orElseThrow();
         // Disconnect from session so that the updates on updatedAssessment are not directly saved in db
         em.detach(updatedAssessment);
-        updatedAssessment.name(UPDATED_NAME).instruction(UPDATED_INSTRUCTION).markScheme(UPDATED_MARK_SCHEME);
+        updatedAssessment
+            .name(UPDATED_NAME)
+            .instruction(UPDATED_INSTRUCTION)
+            .markScheme(UPDATED_MARK_SCHEME)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         AssessmentDTO assessmentDTO = assessmentMapper.toDto(updatedAssessment);
 
         restAssessmentMockMvc
@@ -196,6 +275,10 @@ class AssessmentResourceIT {
         assertThat(testAssessment.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testAssessment.getInstruction()).isEqualTo(UPDATED_INSTRUCTION);
         assertThat(testAssessment.getMarkScheme()).isEqualTo(UPDATED_MARK_SCHEME);
+        assertThat(testAssessment.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testAssessment.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testAssessment.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testAssessment.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -275,7 +358,12 @@ class AssessmentResourceIT {
         Assessment partialUpdatedAssessment = new Assessment();
         partialUpdatedAssessment.setId(assessment.getId());
 
-        partialUpdatedAssessment.name(UPDATED_NAME).instruction(UPDATED_INSTRUCTION).markScheme(UPDATED_MARK_SCHEME);
+        partialUpdatedAssessment
+            .name(UPDATED_NAME)
+            .instruction(UPDATED_INSTRUCTION)
+            .markScheme(UPDATED_MARK_SCHEME)
+            .createdBy(UPDATED_CREATED_BY)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY);
 
         restAssessmentMockMvc
             .perform(
@@ -292,6 +380,10 @@ class AssessmentResourceIT {
         assertThat(testAssessment.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testAssessment.getInstruction()).isEqualTo(UPDATED_INSTRUCTION);
         assertThat(testAssessment.getMarkScheme()).isEqualTo(UPDATED_MARK_SCHEME);
+        assertThat(testAssessment.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testAssessment.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testAssessment.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testAssessment.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -306,7 +398,14 @@ class AssessmentResourceIT {
         Assessment partialUpdatedAssessment = new Assessment();
         partialUpdatedAssessment.setId(assessment.getId());
 
-        partialUpdatedAssessment.name(UPDATED_NAME).instruction(UPDATED_INSTRUCTION).markScheme(UPDATED_MARK_SCHEME);
+        partialUpdatedAssessment
+            .name(UPDATED_NAME)
+            .instruction(UPDATED_INSTRUCTION)
+            .markScheme(UPDATED_MARK_SCHEME)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restAssessmentMockMvc
             .perform(
@@ -323,6 +422,10 @@ class AssessmentResourceIT {
         assertThat(testAssessment.getName()).isEqualTo(UPDATED_NAME);
         assertThat(testAssessment.getInstruction()).isEqualTo(UPDATED_INSTRUCTION);
         assertThat(testAssessment.getMarkScheme()).isEqualTo(UPDATED_MARK_SCHEME);
+        assertThat(testAssessment.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testAssessment.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testAssessment.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testAssessment.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test

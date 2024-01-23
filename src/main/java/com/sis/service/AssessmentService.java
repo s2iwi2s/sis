@@ -1,6 +1,8 @@
 package com.sis.service;
 
 import com.sis.service.dto.AssessmentDTO;
+
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,6 +44,14 @@ public interface AssessmentService {
     Page<AssessmentDTO> findAll(Pageable pageable);
 
     /**
+     * Get all the assessments with eager load of many-to-many relationships.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    Page<AssessmentDTO> findAllWithEagerRelationships(Pageable pageable);
+
+    /**
      * Get the "id" assessment.
      *
      * @param id the id of the entity.
@@ -55,4 +65,8 @@ public interface AssessmentService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    void delete(Long id, Long resourcesId);
+
+    List<AssessmentDTO> findAllByCourse(Long courseId);
 }

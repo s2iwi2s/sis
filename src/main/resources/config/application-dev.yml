@@ -17,8 +17,16 @@ logging:
   level:
     ROOT: DEBUG
     tech.jhipster: DEBUG
-    org.hibernate.SQL: DEBUG
     com.sis: DEBUG
+    org.hibernate: info
+    # SQL statements and parameters
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
+    # Statistics and slow queries
+    org.hibernate.stat: debug
+    org.hibernate.SQL_SLOW: info
+    # 2nd Level Cache
+    org.hibernate.cache: debug
 
 spring:
   devtools:

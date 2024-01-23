@@ -1,21 +1,25 @@
+import dayjs from 'dayjs/esm';
+
 import { ILearningCompetency, NewLearningCompetency } from './learning-competency.model';
 
 export const sampleWithRequiredData: ILearningCompetency = {
-  id: 21702,
+  id: 15527,
 };
 
 export const sampleWithPartialData: ILearningCompetency = {
-  id: 15527,
-  seqNo: 28259,
-  competencyCode: 'fast briskly',
-  description: 'fuel failing',
+  id: 1115,
+  createdDate: dayjs('2024-01-04T03:35'),
 };
 
 export const sampleWithFullData: ILearningCompetency = {
-  id: 18866,
-  seqNo: 23126,
-  competencyCode: 'unto plus circa',
-  description: 'what neat ouch',
+  id: 30946,
+  seqNo: 13563,
+  competencyCode: 'after underline',
+  description: 'soupy',
+  createdBy: 'whirlwind reassign than',
+  createdDate: dayjs('2024-01-03T19:21'),
+  lastModifiedBy: 'shimmer',
+  lastModifiedDate: dayjs('2024-01-03T20:23'),
 };
 
 export const sampleWithNewData: NewLearningCompetency = {

@@ -76,6 +76,8 @@ public class AppConfigServiceImpl implements AppConfigService {
         return appConfigRepository.findAll(example, pageable).map(appConfigMapper::toDto);
     }
 
+
+
     @Override
     @Transactional(readOnly = true)
     public Optional<AppConfigDTO> findOne(Long id) {

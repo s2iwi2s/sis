@@ -1,4 +1,4 @@
-import { IUser } from 'app/entities/user/user.model';
+import dayjs from 'dayjs/esm';
 import { IOrg } from 'app/entities/org/org.model';
 import { IInstructor } from 'app/entities/instructor/instructor.model';
 import { IStudent } from 'app/entities/student/student.model';
@@ -11,7 +11,10 @@ export interface IAppConfig {
   description?: string | null;
   json?: string | null;
   priority?: number | null;
-  user?: Pick<IUser, 'id'> | null;
+  createdBy?: string | null;
+  createdDate?: dayjs.Dayjs | null;
+  lastModifiedBy?: string | null;
+  lastModifiedDate?: dayjs.Dayjs | null;
   org?: Pick<IOrg, 'id'> | null;
   instructor?: Pick<IInstructor, 'id'> | null;
   student?: Pick<IStudent, 'id'> | null;

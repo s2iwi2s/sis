@@ -4,6 +4,8 @@ import com.sis.repository.CurriculumMapRepository;
 import com.sis.service.CurriculumMapService;
 import com.sis.service.dto.CurriculumMapDTO;
 import com.sis.web.rest.errors.BadRequestAlertException;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -53,7 +55,8 @@ public class CurriculumMapResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<CurriculumMapDTO> createCurriculumMap(@RequestBody CurriculumMapDTO curriculumMapDTO) throws URISyntaxException {
+    public ResponseEntity<CurriculumMapDTO> createCurriculumMap(@Valid @RequestBody CurriculumMapDTO curriculumMapDTO)
+        throws URISyntaxException {
         log.debug("REST request to save CurriculumMap : {}", curriculumMapDTO);
         if (curriculumMapDTO.getId() != null) {
             throw new BadRequestAlertException("A new curriculumMap cannot already have an ID", ENTITY_NAME, "idexists");
@@ -78,7 +81,7 @@ public class CurriculumMapResource {
     @PutMapping("/{id}")
     public ResponseEntity<CurriculumMapDTO> updateCurriculumMap(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody CurriculumMapDTO curriculumMapDTO
+        @Valid @RequestBody CurriculumMapDTO curriculumMapDTO
     ) throws URISyntaxException {
         log.debug("REST request to update CurriculumMap : {}, {}", id, curriculumMapDTO);
         if (curriculumMapDTO.getId() == null) {
@@ -113,7 +116,7 @@ public class CurriculumMapResource {
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<CurriculumMapDTO> partialUpdateCurriculumMap(
         @PathVariable(value = "id", required = false) final Long id,
-        @RequestBody CurriculumMapDTO curriculumMapDTO
+        @NotNull @RequestBody CurriculumMapDTO curriculumMapDTO
     ) throws URISyntaxException {
         log.debug("REST request to partial update CurriculumMap partially : {}, {}", id, curriculumMapDTO);
         if (curriculumMapDTO.getId() == null) {
@@ -176,5 +179,11 @@ public class CurriculumMapResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+    @GetMapping("/{id}/course")
+    public ResponseEntity<List<CurriculumMapDTO>> getCurriculumMapByCourse(@PathVariable("id") Long courseId) {
+        log.debug("REST request to get CurriculumMap By Course: {}", courseId);
+        List<CurriculumMapDTO> curriculumMapDTOs = curriculumMapService.findByCourse(courseId);
+        return ResponseEntity.ok(curriculumMapDTOs);
     }
 }

@@ -49,13 +49,6 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="fileNameOnServer">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.resources.fileNameOnServer">File Name On Server</span>
-
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
             <th scope="col" jhiSortBy="document">
               <div class="d-flex">
                 <span jhiTranslate="schInfoSysApp.resources.document">Document</span>
@@ -63,15 +56,31 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="strategies.id">
+            <th scope="col" jhiSortBy="createdBy">
               <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.resources.strategies">Strategies</span>
+                <span jhiTranslate="schInfoSysApp.resources.createdBy">Created By</span>
+
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="assessment.id">
+            <th scope="col" jhiSortBy="createdDate">
               <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.resources.assessment">Assessment</span>
+                <span jhiTranslate="schInfoSysApp.resources.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.resources.lastModifiedBy">Last Modified By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.resources.lastModifiedDate">Last Modified Date</span>
+
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
@@ -85,27 +94,16 @@
                 <a [routerLink]="['/resources', resources.id, 'view']">{{ resources.id }}</a>
               </td>
               <td>{{ resources.fileName }}</td>
-              <td>{{ resources.fileNameOnServer }}</td>
               <td>
                 @if (resources.document) {
                   <a (click)="openFile(resources.document, resources.documentContentType)" jhiTranslate="entity.action.open">Open</a>
                   <span>{{ resources.documentContentType }}, {{ byteSize(resources.document) }}</span>
                 }
               </td>
-              <td>
-                @if (resources.strategies) {
-                  <div>
-                    <a [routerLink]="['/strategies', resources.strategies.id, 'view']">{{ resources.strategies.id }}</a>
-                  </div>
-                }
-              </td>
-              <td>
-                @if (resources.assessment) {
-                  <div>
-                    <a [routerLink]="['/assessment', resources.assessment.id, 'view']">{{ resources.assessment.id }}</a>
-                  </div>
-                }
-              </td>
+              <td>{{ resources.createdBy }}</td>
+              <td>{{ resources.createdDate | formatMediumDatetime }}</td>
+              <td>{{ resources.lastModifiedBy }}</td>
+              <td>{{ resources.lastModifiedDate | formatMediumDatetime }}</td>
               <td class="text-end">
                 <div class="btn-group">
                   <a [routerLink]="['/resources', resources.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">

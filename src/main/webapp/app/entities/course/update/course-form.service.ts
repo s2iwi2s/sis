@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { ICourse, NewCourse } from '../course.model';
 
 /**
@@ -14,18 +16,32 @@ type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>
  */
 type CourseFormGroupInput = ICourse | PartialWithRequiredKeyOf<NewCourse>;
 
-type CourseFormDefaults = Pick<NewCourse, 'id' | 'instructors' | 'students'>;
+/**
+ * Type that converts some properties for forms.
+ */
+type FormValueOf<T extends ICourse | NewCourse> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
+};
+
+type CourseFormRawValue = FormValueOf<ICourse>;
+
+type NewCourseFormRawValue = FormValueOf<NewCourse>;
+
+type CourseFormDefaults = Pick<NewCourse, 'id' | 'createdDate' | 'lastModifiedDate'>;
 
 type CourseFormGroupContent = {
-  id: FormControl<ICourse['id'] | NewCourse['id']>;
-  gradelevel: FormControl<ICourse['gradelevel']>;
-  subject: FormControl<ICourse['subject']>;
-  hoursPerQuarter: FormControl<ICourse['hoursPerQuarter']>;
-  courseDescription: FormControl<ICourse['courseDescription']>;
-  courseObjectives: FormControl<ICourse['courseObjectives']>;
-  schYr: FormControl<ICourse['schYr']>;
-  instructors: FormControl<ICourse['instructors']>;
-  students: FormControl<ICourse['students']>;
+  id: FormControl<CourseFormRawValue['id'] | NewCourse['id']>;
+  subject: FormControl<CourseFormRawValue['subject']>;
+  hoursPerQuarter: FormControl<CourseFormRawValue['hoursPerQuarter']>;
+  courseDescription: FormControl<CourseFormRawValue['courseDescription']>;
+  courseObjectives: FormControl<CourseFormRawValue['courseObjectives']>;
+  createdBy: FormControl<CourseFormRawValue['createdBy']>;
+  createdDate: FormControl<CourseFormRawValue['createdDate']>;
+  lastModifiedBy: FormControl<CourseFormRawValue['lastModifiedBy']>;
+  lastModifiedDate: FormControl<CourseFormRawValue['lastModifiedDate']>;
+  gradelevel: FormControl<CourseFormRawValue['gradelevel']>;
+  schYr: FormControl<CourseFormRawValue['schYr']>;
 };
 
 export type CourseFormGroup = FormGroup<CourseFormGroupContent>;
@@ -33,10 +49,10 @@ export type CourseFormGroup = FormGroup<CourseFormGroupContent>;
 @Injectable({ providedIn: 'root' })
 export class CourseFormService {
   createCourseFormGroup(course: CourseFormGroupInput = { id: null }): CourseFormGroup {
-    const courseRawValue = {
+    const courseRawValue = this.convertCourseToCourseRawValue({
       ...this.getFormDefaults(),
       ...course,
-    };
+    });
     return new FormGroup<CourseFormGroupContent>({
       id: new FormControl(
         { value: courseRawValue.id, disabled: true },
@@ -45,27 +61,31 @@ export class CourseFormService {
           validators: [Validators.required],
         },
       ),
-      gradelevel: new FormControl(courseRawValue.gradelevel, {
-        validators: [Validators.maxLength(50)],
-      }),
       subject: new FormControl(courseRawValue.subject, {
         validators: [Validators.maxLength(50)],
       }),
       hoursPerQuarter: new FormControl(courseRawValue.hoursPerQuarter),
       courseDescription: new FormControl(courseRawValue.courseDescription),
       courseObjectives: new FormControl(courseRawValue.courseObjectives),
+      createdBy: new FormControl(courseRawValue.createdBy, {
+        validators: [Validators.maxLength(50)],
+      }),
+      createdDate: new FormControl(courseRawValue.createdDate),
+      lastModifiedBy: new FormControl(courseRawValue.lastModifiedBy, {
+        validators: [Validators.maxLength(50)],
+      }),
+      lastModifiedDate: new FormControl(courseRawValue.lastModifiedDate),
+      gradelevel: new FormControl(courseRawValue.gradelevel),
       schYr: new FormControl(courseRawValue.schYr),
-      instructors: new FormControl(courseRawValue.instructors ?? []),
-      students: new FormControl(courseRawValue.students ?? []),
     });
   }
 
   getCourse(form: CourseFormGroup): ICourse | NewCourse {
-    return form.getRawValue() as ICourse | NewCourse;
+    return this.convertCourseRawValueToCourse(form.getRawValue() as CourseFormRawValue | NewCourseFormRawValue);
   }
 
   resetForm(form: CourseFormGroup, course: CourseFormGroupInput): void {
-    const courseRawValue = { ...this.getFormDefaults(), ...course };
+    const courseRawValue = this.convertCourseToCourseRawValue({ ...this.getFormDefaults(), ...course });
     form.reset(
       {
         ...courseRawValue,
@@ -75,8 +95,30 @@ export class CourseFormService {
   }
 
   private getFormDefaults(): CourseFormDefaults {
+    const currentTime = dayjs();
+
     return {
-      id: null
+      id: null,
+      createdDate: currentTime,
+      lastModifiedDate: currentTime,
+    };
+  }
+
+  private convertCourseRawValueToCourse(rawCourse: CourseFormRawValue | NewCourseFormRawValue): ICourse | NewCourse {
+    return {
+      ...rawCourse,
+      createdDate: dayjs(rawCourse.createdDate, DATE_TIME_FORMAT),
+      lastModifiedDate: dayjs(rawCourse.lastModifiedDate, DATE_TIME_FORMAT),
+    };
+  }
+
+  private convertCourseToCourseRawValue(
+    course: ICourse | (Partial<NewCourse> & CourseFormDefaults),
+  ): CourseFormRawValue | PartialWithRequiredKeyOf<NewCourseFormRawValue> {
+    return {
+      ...course,
+      createdDate: course.createdDate ? course.createdDate.format(DATE_TIME_FORMAT) : undefined,
+      lastModifiedDate: course.lastModifiedDate ? course.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
     };
   }
 }

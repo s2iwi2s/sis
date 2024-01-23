@@ -2,10 +2,11 @@ package com.sis.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.time.Instant;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.springframework.data.annotation.CreatedBy;
 
 /**
  * A AppConfig.
@@ -14,7 +15,7 @@ import org.springframework.data.annotation.CreatedBy;
 @Table(name = "app_config")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class AppConfig implements Serializable {
+public class AppConfig extends AbstractAuditingEntity<Long> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,9 +40,6 @@ public class AppConfig implements Serializable {
     @Column(name = "priority")
     private Integer priority;
 
-    @CreatedBy
-    @OneToOne(fetch = FetchType.LAZY)
-    private User createdBy;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -123,17 +121,24 @@ public class AppConfig implements Serializable {
         this.priority = priority;
     }
 
-    public User getCreatedBy() {
-        return createdBy;
-    }
-
-    public AppConfig createdBy(User createdBy) {
+    public AppConfig createdBy(String createdBy) {
         this.setCreatedBy(createdBy);
         return this;
     }
 
-    public void setCreatedBy(User createdBy) {
-        this.createdBy = createdBy;
+    public AppConfig createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
+        return this;
+    }
+
+    public AppConfig lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
+        return this;
+    }
+
+    public AppConfig lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
@@ -165,6 +170,10 @@ public class AppConfig implements Serializable {
             ", description='" + getDescription() + "'" +
             ", json='" + getJson() + "'" +
             ", priority=" + getPriority() +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

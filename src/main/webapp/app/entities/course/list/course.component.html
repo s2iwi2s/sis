@@ -42,17 +42,22 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="gradelevel">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.course.gradelevel">Gradelevel</span>
-
-                <fa-icon class="p-1" icon="sort"></fa-icon>
-              </div>
-            </th>
             <th scope="col" jhiSortBy="subject">
               <div class="d-flex">
                 <span jhiTranslate="schInfoSysApp.course.subject">Subject</span>
 
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="gradelevel.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.course.gradelevel">Gradelevel</span>
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="schYr.description">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.course.schYr">schYr</span>
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
@@ -63,9 +68,32 @@
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
-            <th scope="col" jhiSortBy="schYr.id">
+
+            <th scope="col" jhiSortBy="createdBy">
               <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.course.schYr">Sch Yr</span>
+                <span jhiTranslate="schInfoSysApp.course.createdBy">Created By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.course.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.course.lastModifiedBy">Last Modified By</span>
+
+                <fa-icon class="p-1" icon="sort"></fa-icon>
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.course.lastModifiedDate">Last Modified Date</span>
+
                 <fa-icon class="p-1" icon="sort"></fa-icon>
               </div>
             </th>
@@ -78,18 +106,26 @@
               <td>
                 <a [routerLink]="['/course', course.id, 'view']">{{ course.id }}</a>
               </td>
-              <td>
-                <div *ngIf="course.gradelevel">
-                  <a [routerLink]="['/app-config', course.gradelevel.id, 'view']">{{ course.gradelevel.description }}</a>
-                </div>
-              </td>
               <td>{{ course.subject }}</td>
-              <td>{{ course.hoursPerQuarter }}</td>
               <td>
-                  <div *ngIf="course.schYr">
+                @if (course.gradelevel) {
+                  <div>
+                    <a [routerLink]="['/app-config', course.gradelevel.id, 'view']">{{ course.gradelevel.description }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (course.schYr) {
+                  <div>
                     <a [routerLink]="['/app-config', course.schYr.id, 'view']">{{ course.schYr.description }}</a>
                   </div>
+                }
               </td>
+              <td>{{ course.hoursPerQuarter }}</td>
+              <td>{{ course.createdBy }}</td>
+              <td>{{ course.createdDate | formatMediumDatetime }}</td>
+              <td>{{ course.lastModifiedBy }}</td>
+              <td>{{ course.lastModifiedDate | formatMediumDatetime }}</td>
               <td class="text-end">
                 <div class="btn-group">
                   <a [routerLink]="['/course', course.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">

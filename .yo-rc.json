@@ -6,6 +6,7 @@
     "baseName": "SchInfoSys",
     "buildTool": "maven",
     "clientFramework": "angular",
+    "creationTimestamp": 1705417491846,
     "devDatabaseType": "postgresql",
     "devServerPort": 4200,
     "entities": [

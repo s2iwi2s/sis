@@ -4,10 +4,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { IAssessment } from '../assessment.model';
 import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../assessment.test-samples';
 
-import { AssessmentService } from './assessment.service';
+import { AssessmentService, RestAssessment } from './assessment.service';
 
-const requireRestSample: IAssessment = {
+const requireRestSample: RestAssessment = {
   ...sampleWithRequiredData,
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('Assessment Service', () => {

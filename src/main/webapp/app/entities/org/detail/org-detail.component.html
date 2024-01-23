@@ -19,6 +19,14 @@
           <dd>
             <span>{{ org.name }}</span>
           </dd>
+          <dt><span jhiTranslate="schInfoSysApp.org.currSchYr">Curr Sch Yr</span></dt>
+          <dd>
+            @if (org.currSchYr) {
+              <div>
+                <a [routerLink]="['/app-config', org.currSchYr.id, 'view']">{{ org.currSchYr.description }}</a>
+              </div>
+            }
+          </dd>
           <dt><span jhiTranslate="schInfoSysApp.org.logo">Logo</span></dt>
           <dd>
             <span>{{ org.logo }}</span>
@@ -27,13 +35,21 @@
           <dd>
             <span>{{ org.address }}</span>
           </dd>
-          <dt><span jhiTranslate="schInfoSysApp.org.currSchYr">Curr Sch Yr</span></dt>
+          <dt><span jhiTranslate="schInfoSysApp.org.createdBy">Created By</span></dt>
           <dd>
-            @if (org.currSchYr) {
-              <div>
-                <a [routerLink]="['/app-config', org.currSchYr.id, 'view']">{{ org.currSchYr.description }}</a>
-              </div>
-            }
+            <span>{{ org.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.org.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ org.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.org.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ org.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.org.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ org.lastModifiedDate | formatMediumDatetime }}</span>
           </dd>
         </dl>
 

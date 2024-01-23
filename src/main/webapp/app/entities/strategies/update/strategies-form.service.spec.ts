@@ -22,6 +22,11 @@ describe('Strategies Form Service', () => {
             id: expect.any(Object),
             name: expect.any(Object),
             description: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
+            resources: expect.any(Object),
             learningCompetency: expect.any(Object),
           }),
         );
@@ -35,6 +40,11 @@ describe('Strategies Form Service', () => {
             id: expect.any(Object),
             name: expect.any(Object),
             description: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
+            resources: expect.any(Object),
             learningCompetency: expect.any(Object),
           }),
         );

@@ -14,6 +14,7 @@ import { ProfileService } from 'app/layouts/profiles/profile.service';
 import { EntityNavbarItems } from 'app/entities/entity-navbar-items';
 import ActiveMenuDirective from './active-menu.directive';
 import NavbarItem from './navbar-item.model';
+import {ModulesNavbarItems} from "../../modules/modules-navbar-items";
 
 @Component({
   standalone: true,
@@ -30,6 +31,7 @@ export default class NavbarComponent implements OnInit {
   version = '';
   account: Account | null = null;
   entitiesNavbarItems: NavbarItem[] = [];
+  modulesNavbarItems: NavbarItem[] = [];
 
   constructor(
     private loginService: LoginService,
@@ -46,6 +48,7 @@ export default class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.entitiesNavbarItems = EntityNavbarItems;
+    this.modulesNavbarItems = ModulesNavbarItems;
     this.profileService.getProfileInfo().subscribe(profileInfo => {
       this.inProduction = profileInfo.inProduction;
       this.openAPIEnabled = profileInfo.openAPIEnabled;

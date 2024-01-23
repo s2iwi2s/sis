@@ -1,11 +1,11 @@
-id;gradelevel;subject;hours_per_quarter;course_description;course_objectives
-1;yahoo vain who;outside;14372;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt
-2;separately fearful bloat;because satisfied meh;20095;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt
-3;consequently coalesce lovable;lie;13637;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt
-4;bound;brr;8086;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt
-5;syndrome whether courageously;descry beside defensive;30879;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt
-6;warm;prevaricate;20279;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt
-7;huzzah;down plasticize now;18265;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt
-8;joyful;psst;18627;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt
-9;optimal hospitalize who;ouch robe pesky;9227;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt
-10;liquor wonderfully;wound qua;771;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt
+id;subject;hours_per_quarter;course_description;course_objectives;created_by;created_date;last_modified_by;last_modified_date
+1;yahoo vain who;4343;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt;insignificant given yet;2024-01-04T02:41:55;without because;2024-01-03T09:33:19
+2;unethically ouch;3705;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt;cicada;2024-01-04T02:15:17;finance;2024-01-03T09:55:08
+3;unless tortilla continually;7041;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt;aw crowded;2024-01-03T15:50:54;um;2024-01-04T04:11:11
+4;failing;6502;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt;beside;2024-01-04T04:24:09;athwart;2024-01-03T23:15:55
+5;cruelly;31441;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt;hospitalize;2024-01-03T16:26:17;copyright incidentally;2024-01-03T19:08:26
+6;schedule up;17084;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt;vapid whispering;2024-01-04T03:42:33;nourishment stump;2024-01-04T03:43:47
+7;politely;5109;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt;once stable concerning;2024-01-04T02:20:21;helpfully gargantuan;2024-01-03T12:18:28
+8;qua aboard vastly;25496;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt;linseed slander fervently;2024-01-03T19:44:11;certainly;2024-01-03T18:12:42
+9;aboard;16083;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt;overcooked underneath weather;2024-01-03T13:50:18;eek tin;2024-01-04T01:11:18
+10;cube frozen whoever;1534;../fake-data/blob/hipster.txt;../fake-data/blob/hipster.txt;extremely reproachfully for;2024-01-03T18:29:36;void;2024-01-04T06:03:53

@@ -2,12 +2,27 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { map } from 'rxjs/operators';
+
+import dayjs from 'dayjs/esm';
+
 import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { IAppConfig, NewAppConfig } from '../app-config.model';
 
 export type PartialUpdateAppConfig = Partial<IAppConfig> & Pick<IAppConfig, 'id'>;
+
+type RestOf<T extends IAppConfig | NewAppConfig> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
+};
+
+export type RestAppConfig = RestOf<IAppConfig>;
+
+export type NewRestAppConfig = RestOf<NewAppConfig>;
+
+export type PartialUpdateRestAppConfig = RestOf<PartialUpdateAppConfig>;
 
 export type EntityResponseType = HttpResponse<IAppConfig>;
 export type EntityArrayResponseType = HttpResponse<IAppConfig[]>;
@@ -22,24 +37,37 @@ export class AppConfigService {
   ) {}
 
   create(appConfig: NewAppConfig): Observable<EntityResponseType> {
-    return this.http.post<IAppConfig>(this.resourceUrl, appConfig, { observe: 'response' });
+    const copy = this.convertDateFromClient(appConfig);
+    return this.http
+      .post<RestAppConfig>(this.resourceUrl, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   update(appConfig: IAppConfig): Observable<EntityResponseType> {
-    return this.http.put<IAppConfig>(`${this.resourceUrl}/${this.getAppConfigIdentifier(appConfig)}`, appConfig, { observe: 'response' });
+    const copy = this.convertDateFromClient(appConfig);
+    return this.http
+      .put<RestAppConfig>(`${this.resourceUrl}/${this.getAppConfigIdentifier(appConfig)}`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   partialUpdate(appConfig: PartialUpdateAppConfig): Observable<EntityResponseType> {
-    return this.http.patch<IAppConfig>(`${this.resourceUrl}/${this.getAppConfigIdentifier(appConfig)}`, appConfig, { observe: 'response' });
+    const copy = this.convertDateFromClient(appConfig);
+    return this.http
+      .patch<RestAppConfig>(`${this.resourceUrl}/${this.getAppConfigIdentifier(appConfig)}`, copy, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   find(id: number): Observable<EntityResponseType> {
-    return this.http.get<IAppConfig>(`${this.resourceUrl}/${id}`, { observe: 'response' });
+    return this.http
+      .get<RestAppConfig>(`${this.resourceUrl}/${id}`, { observe: 'response' })
+      .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
   query(req?: any): Observable<EntityArrayResponseType> {
     const options = createRequestOption(req);
-    return this.http.get<IAppConfig[]>(this.resourceUrl, { params: options, observe: 'response' });
+    return this.http
+      .get<RestAppConfig[]>(this.resourceUrl, { params: options, observe: 'response' })
+      .pipe(map(res => this.convertResponseArrayFromServer(res)));
   }
 
   delete(id: number): Observable<HttpResponse<{}>> {
@@ -72,5 +100,33 @@ export class AppConfigService {
       return [...appConfigsToAdd, ...appConfigCollection];
     }
     return appConfigCollection;
+  }
+
+  protected convertDateFromClient<T extends IAppConfig | NewAppConfig | PartialUpdateAppConfig>(appConfig: T): RestOf<T> {
+    return {
+      ...appConfig,
+      createdDate: appConfig.createdDate?.toJSON() ?? null,
+      lastModifiedDate: appConfig.lastModifiedDate?.toJSON() ?? null,
+    };
+  }
+
+  protected convertDateFromServer(restAppConfig: RestAppConfig): IAppConfig {
+    return {
+      ...restAppConfig,
+      createdDate: restAppConfig.createdDate ? dayjs(restAppConfig.createdDate) : undefined,
+      lastModifiedDate: restAppConfig.lastModifiedDate ? dayjs(restAppConfig.lastModifiedDate) : undefined,
+    };
+  }
+
+  protected convertResponseFromServer(res: HttpResponse<RestAppConfig>): HttpResponse<IAppConfig> {
+    return res.clone({
+      body: res.body ? this.convertDateFromServer(res.body) : null,
+    });
+  }
+
+  protected convertResponseArrayFromServer(res: HttpResponse<RestAppConfig[]>): HttpResponse<IAppConfig[]> {
+    return res.clone({
+      body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
+    });
   }
 }

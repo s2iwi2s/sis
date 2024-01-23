@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -14,7 +17,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "resources")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Resources implements Serializable {
+public class Resources extends AbstractAuditingEntity<Long> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,9 +30,6 @@ public class Resources implements Serializable {
     @Column(name = "file_name", length = 50)
     private String fileName;
 
-    @Column(name = "file_name_on_server")
-    private String fileNameOnServer;
-
     @Lob
     @Column(name = "document")
     private byte[] document;
@@ -37,13 +37,15 @@ public class Resources implements Serializable {
     @Column(name = "document_content_type")
     private String documentContentType;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "resources")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "resources", "learningCompetency" }, allowSetters = true)
-    private Strategies strategies;
+    private Set<Strategies> strategies = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "resources")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "resources", "learningCompetency" }, allowSetters = true)
-    private Assessment assessment;
+    private Set<Assessment> assessments = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -73,19 +75,6 @@ public class Resources implements Serializable {
         this.fileName = fileName;
     }
 
-    public String getFileNameOnServer() {
-        return this.fileNameOnServer;
-    }
-
-    public Resources fileNameOnServer(String fileNameOnServer) {
-        this.setFileNameOnServer(fileNameOnServer);
-        return this;
-    }
-
-    public void setFileNameOnServer(String fileNameOnServer) {
-        this.fileNameOnServer = fileNameOnServer;
-    }
-
     public byte[] getDocument() {
         return this.document;
     }
@@ -112,29 +101,85 @@ public class Resources implements Serializable {
         this.documentContentType = documentContentType;
     }
 
-    public Strategies getStrategies() {
+    public Resources createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    public Resources createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
+        return this;
+    }
+
+    public Resources lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
+        return this;
+    }
+
+    public Resources lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
+    public Set<Strategies> getStrategies() {
         return this.strategies;
     }
 
-    public void setStrategies(Strategies strategies) {
+    public void setStrategies(Set<Strategies> strategies) {
+        if (this.strategies != null) {
+            this.strategies.forEach(i -> i.removeResources(this));
+        }
+        if (strategies != null) {
+            strategies.forEach(i -> i.addResources(this));
+        }
         this.strategies = strategies;
     }
 
-    public Resources strategies(Strategies strategies) {
+    public Resources strategies(Set<Strategies> strategies) {
         this.setStrategies(strategies);
         return this;
     }
 
-    public Assessment getAssessment() {
-        return this.assessment;
+    public Resources addStrategies(Strategies strategies) {
+        this.strategies.add(strategies);
+        strategies.getResources().add(this);
+        return this;
     }
 
-    public void setAssessment(Assessment assessment) {
-        this.assessment = assessment;
+    public Resources removeStrategies(Strategies strategies) {
+        this.strategies.remove(strategies);
+        strategies.getResources().remove(this);
+        return this;
     }
 
-    public Resources assessment(Assessment assessment) {
-        this.setAssessment(assessment);
+    public Set<Assessment> getAssessments() {
+        return this.assessments;
+    }
+
+    public void setAssessments(Set<Assessment> assessments) {
+        if (this.assessments != null) {
+            this.assessments.forEach(i -> i.removeResources(this));
+        }
+        if (assessments != null) {
+            assessments.forEach(i -> i.addResources(this));
+        }
+        this.assessments = assessments;
+    }
+
+    public Resources assessments(Set<Assessment> assessments) {
+        this.setAssessments(assessments);
+        return this;
+    }
+
+    public Resources addAssessment(Assessment assessment) {
+        this.assessments.add(assessment);
+        assessment.getResources().add(this);
+        return this;
+    }
+
+    public Resources removeAssessment(Assessment assessment) {
+        this.assessments.remove(assessment);
+        assessment.getResources().remove(this);
         return this;
     }
 
@@ -163,9 +208,11 @@ public class Resources implements Serializable {
         return "Resources{" +
             "id=" + getId() +
             ", fileName='" + getFileName() + "'" +
-            ", fileNameOnServer='" + getFileNameOnServer() + "'" +
-            ", document='" + getDocument() + "'" +
             ", documentContentType='" + getDocumentContentType() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

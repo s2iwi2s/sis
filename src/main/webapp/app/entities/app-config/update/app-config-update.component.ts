@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
 import SharedModule from 'app/shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -10,8 +10,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AlertError } from 'app/shared/alert/alert-error.model';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
 import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
-import { IUser } from 'app/entities/user/user.model';
-import { UserService } from 'app/entities/user/user.service';
 import { AppConfigService } from '../service/app-config.service';
 import { IAppConfig } from '../app-config.model';
 import { AppConfigFormService, AppConfigFormGroup } from './app-config-form.service';
@@ -26,8 +24,6 @@ export class AppConfigUpdateComponent implements OnInit {
   isSaving = false;
   appConfig: IAppConfig | null = null;
 
-  usersSharedCollection: IUser[] = [];
-
   editForm: AppConfigFormGroup = this.appConfigFormService.createAppConfigFormGroup();
 
   constructor(
@@ -35,11 +31,8 @@ export class AppConfigUpdateComponent implements OnInit {
     protected eventManager: EventManager,
     protected appConfigService: AppConfigService,
     protected appConfigFormService: AppConfigFormService,
-    protected userService: UserService,
     protected activatedRoute: ActivatedRoute,
   ) {}
-
-  compareUser = (o1: IUser | null, o2: IUser | null): boolean => this.userService.compareUser(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ appConfig }) => {
@@ -47,8 +40,6 @@ export class AppConfigUpdateComponent implements OnInit {
       if (appConfig) {
         this.updateForm(appConfig);
       }
-
-      this.loadRelationshipsOptions();
     });
   }
 
@@ -103,15 +94,5 @@ export class AppConfigUpdateComponent implements OnInit {
   protected updateForm(appConfig: IAppConfig): void {
     this.appConfig = appConfig;
     this.appConfigFormService.resetForm(this.editForm, appConfig);
-
-    this.usersSharedCollection = this.userService.addUserToCollectionIfMissing<IUser>(this.usersSharedCollection, appConfig.user);
-  }
-
-  protected loadRelationshipsOptions(): void {
-    this.userService
-      .query()
-      .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
-      .pipe(map((users: IUser[]) => this.userService.addUserToCollectionIfMissing<IUser>(users, this.appConfig?.user)))
-      .subscribe((users: IUser[]) => (this.usersSharedCollection = users));
   }
 }

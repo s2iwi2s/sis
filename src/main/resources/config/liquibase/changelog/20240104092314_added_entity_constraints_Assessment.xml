@@ -8,6 +8,22 @@
     -->
     <changeSet id="20240104092314-2" author="jhipster">
 
+        <addForeignKeyConstraint baseColumnNames="assessment_id"
+                                 baseTableName="rel_assessment__resources"
+                                 constraintName="fk_rel_assessment__resources__assessment_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="assessment"
+                                 onDelete="CASCADE"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="resources_id"
+                                 baseTableName="rel_assessment__resources"
+                                 constraintName="fk_rel_assessment__resources__resources_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="resources"
+                                 onDelete="CASCADE"
+                                 />
+
         <addForeignKeyConstraint baseColumnNames="learning_competency_id"
                                  baseTableName="assessment"
                                  constraintName="fk_assessment__learning_competency_id"

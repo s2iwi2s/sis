@@ -9,6 +9,8 @@ import { InstructorService, RestInstructor } from './instructor.service';
 const requireRestSample: RestInstructor = {
   ...sampleWithRequiredData,
   hireDate: sampleWithRequiredData.hireDate?.toJSON(),
+  createdDate: sampleWithRequiredData.createdDate?.toJSON(),
+  lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),
 };
 
 describe('Instructor Service', () => {

@@ -1,7 +1,11 @@
 package com.sis.service;
 
 import com.sis.service.dto.ResourcesDTO;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -55,4 +59,8 @@ public interface ResourcesService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    Set<ResourcesDTO> findResourcesByAssessments(Long assessmentId);
+
+    Set<ResourcesDTO> findResourcesByStrategies(Long strategiesId);
 }

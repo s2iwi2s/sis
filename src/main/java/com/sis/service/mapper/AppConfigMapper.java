@@ -1,9 +1,7 @@
 package com.sis.service.mapper;
 
 import com.sis.domain.AppConfig;
-import com.sis.domain.User;
 import com.sis.service.dto.AppConfigDTO;
-import com.sis.service.dto.UserDTO;
 import org.mapstruct.*;
 
 /**

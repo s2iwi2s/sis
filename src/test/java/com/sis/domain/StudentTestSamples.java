@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class StudentTestSamples {
 
     private static final Random random = new Random();
-    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     public static Student getStudentSample1() {
         return new Student()
@@ -39,7 +39,9 @@ public class StudentTestSamples {
             .mothersOccupation("mothersOccupation1")
             .mothersContacts("mothersContacts1")
             .guardianFullName("guardianFullName1")
-            .guardianContacts("guardianContacts1");
+            .guardianContacts("guardianContacts1")
+            .createdBy("createdBy1")
+            .lastModifiedBy("lastModifiedBy1");
     }
 
     public static Student getStudentSample2() {
@@ -72,7 +74,9 @@ public class StudentTestSamples {
             .mothersOccupation("mothersOccupation2")
             .mothersContacts("mothersContacts2")
             .guardianFullName("guardianFullName2")
-            .guardianContacts("guardianContacts2");
+            .guardianContacts("guardianContacts2")
+            .createdBy("createdBy2")
+            .lastModifiedBy("lastModifiedBy2");
     }
 
     public static Student getStudentRandomSampleGenerator() {
@@ -105,6 +109,8 @@ public class StudentTestSamples {
             .mothersOccupation(UUID.randomUUID().toString())
             .mothersContacts(UUID.randomUUID().toString())
             .guardianFullName(UUID.randomUUID().toString())
-            .guardianContacts(UUID.randomUUID().toString());
+            .guardianContacts(UUID.randomUUID().toString())
+            .createdBy(UUID.randomUUID().toString())
+            .lastModifiedBy(UUID.randomUUID().toString());
     }
 }

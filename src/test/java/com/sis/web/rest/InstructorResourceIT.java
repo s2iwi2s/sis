@@ -2,24 +2,32 @@ package com.sis.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.sis.IntegrationTest;
 import com.sis.domain.Instructor;
 import com.sis.repository.InstructorRepository;
+import com.sis.service.InstructorService;
 import com.sis.service.dto.InstructorDTO;
 import com.sis.service.mapper.InstructorMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link InstructorResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class InstructorResourceIT {
@@ -57,17 +66,35 @@ class InstructorResourceIT {
     private static final Long DEFAULT_COMMISSION_PCT = 1L;
     private static final Long UPDATED_COMMISSION_PCT = 2L;
 
+    private static final String DEFAULT_CREATED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_CREATED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_CREATED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_CREATED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
+    private static final String DEFAULT_LAST_MODIFIED_BY = "AAAAAAAAAA";
+    private static final String UPDATED_LAST_MODIFIED_BY = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_LAST_MODIFIED_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_LAST_MODIFIED_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
+
     private static final String ENTITY_API_URL = "/api/instructors";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
-    private static Random random = new Random();
-    private static AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static final Random random = new Random();
+    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
     private InstructorRepository instructorRepository;
 
+    @Mock
+    private InstructorRepository instructorRepositoryMock;
+
     @Autowired
     private InstructorMapper instructorMapper;
+
+    @Mock
+    private InstructorService instructorServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -92,7 +119,11 @@ class InstructorResourceIT {
             .phoneNumber(DEFAULT_PHONE_NUMBER)
             .hireDate(DEFAULT_HIRE_DATE)
             .salary(DEFAULT_SALARY)
-            .commissionPct(DEFAULT_COMMISSION_PCT);
+            .commissionPct(DEFAULT_COMMISSION_PCT)
+            .createdBy(DEFAULT_CREATED_BY)
+            .createdDate(DEFAULT_CREATED_DATE)
+            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
+            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
         return instructor;
     }
 
@@ -111,7 +142,11 @@ class InstructorResourceIT {
             .phoneNumber(UPDATED_PHONE_NUMBER)
             .hireDate(UPDATED_HIRE_DATE)
             .salary(UPDATED_SALARY)
-            .commissionPct(UPDATED_COMMISSION_PCT);
+            .commissionPct(UPDATED_COMMISSION_PCT)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         return instructor;
     }
 
@@ -142,6 +177,10 @@ class InstructorResourceIT {
         assertThat(testInstructor.getHireDate()).isEqualTo(DEFAULT_HIRE_DATE);
         assertThat(testInstructor.getSalary()).isEqualTo(DEFAULT_SALARY);
         assertThat(testInstructor.getCommissionPct()).isEqualTo(DEFAULT_COMMISSION_PCT);
+        assertThat(testInstructor.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
+        assertThat(testInstructor.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testInstructor.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
+        assertThat(testInstructor.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -182,7 +221,28 @@ class InstructorResourceIT {
             .andExpect(jsonPath("$.[*].phoneNumber").value(hasItem(DEFAULT_PHONE_NUMBER)))
             .andExpect(jsonPath("$.[*].hireDate").value(hasItem(DEFAULT_HIRE_DATE.toString())))
             .andExpect(jsonPath("$.[*].salary").value(hasItem(DEFAULT_SALARY.intValue())))
-            .andExpect(jsonPath("$.[*].commissionPct").value(hasItem(DEFAULT_COMMISSION_PCT.intValue())));
+            .andExpect(jsonPath("$.[*].commissionPct").value(hasItem(DEFAULT_COMMISSION_PCT.intValue())))
+            .andExpect(jsonPath("$.[*].createdBy").value(hasItem(DEFAULT_CREATED_BY)))
+            .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
+            .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
+            .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllInstructorsWithEagerRelationshipsIsEnabled() throws Exception {
+        when(instructorServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restInstructorMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(instructorServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllInstructorsWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(instructorServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restInstructorMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
+        verify(instructorRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
@@ -204,7 +264,11 @@ class InstructorResourceIT {
             .andExpect(jsonPath("$.phoneNumber").value(DEFAULT_PHONE_NUMBER))
             .andExpect(jsonPath("$.hireDate").value(DEFAULT_HIRE_DATE.toString()))
             .andExpect(jsonPath("$.salary").value(DEFAULT_SALARY.intValue()))
-            .andExpect(jsonPath("$.commissionPct").value(DEFAULT_COMMISSION_PCT.intValue()));
+            .andExpect(jsonPath("$.commissionPct").value(DEFAULT_COMMISSION_PCT.intValue()))
+            .andExpect(jsonPath("$.createdBy").value(DEFAULT_CREATED_BY))
+            .andExpect(jsonPath("$.createdDate").value(DEFAULT_CREATED_DATE.toString()))
+            .andExpect(jsonPath("$.lastModifiedBy").value(DEFAULT_LAST_MODIFIED_BY))
+            .andExpect(jsonPath("$.lastModifiedDate").value(DEFAULT_LAST_MODIFIED_DATE.toString()));
     }
 
     @Test
@@ -234,7 +298,11 @@ class InstructorResourceIT {
             .phoneNumber(UPDATED_PHONE_NUMBER)
             .hireDate(UPDATED_HIRE_DATE)
             .salary(UPDATED_SALARY)
-            .commissionPct(UPDATED_COMMISSION_PCT);
+            .commissionPct(UPDATED_COMMISSION_PCT)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
         InstructorDTO instructorDTO = instructorMapper.toDto(updatedInstructor);
 
         restInstructorMockMvc
@@ -257,6 +325,10 @@ class InstructorResourceIT {
         assertThat(testInstructor.getHireDate()).isEqualTo(UPDATED_HIRE_DATE);
         assertThat(testInstructor.getSalary()).isEqualTo(UPDATED_SALARY);
         assertThat(testInstructor.getCommissionPct()).isEqualTo(UPDATED_COMMISSION_PCT);
+        assertThat(testInstructor.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testInstructor.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testInstructor.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testInstructor.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -336,7 +408,13 @@ class InstructorResourceIT {
         Instructor partialUpdatedInstructor = new Instructor();
         partialUpdatedInstructor.setId(instructor.getId());
 
-        partialUpdatedInstructor.middleName(UPDATED_MIDDLE_NAME).lastName(UPDATED_LAST_NAME).email(UPDATED_EMAIL).salary(UPDATED_SALARY);
+        partialUpdatedInstructor
+            .middleName(UPDATED_MIDDLE_NAME)
+            .lastName(UPDATED_LAST_NAME)
+            .email(UPDATED_EMAIL)
+            .salary(UPDATED_SALARY)
+            .createdBy(UPDATED_CREATED_BY)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY);
 
         restInstructorMockMvc
             .perform(
@@ -358,6 +436,10 @@ class InstructorResourceIT {
         assertThat(testInstructor.getHireDate()).isEqualTo(DEFAULT_HIRE_DATE);
         assertThat(testInstructor.getSalary()).isEqualTo(UPDATED_SALARY);
         assertThat(testInstructor.getCommissionPct()).isEqualTo(DEFAULT_COMMISSION_PCT);
+        assertThat(testInstructor.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testInstructor.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
+        assertThat(testInstructor.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testInstructor.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
     }
 
     @Test
@@ -380,7 +462,11 @@ class InstructorResourceIT {
             .phoneNumber(UPDATED_PHONE_NUMBER)
             .hireDate(UPDATED_HIRE_DATE)
             .salary(UPDATED_SALARY)
-            .commissionPct(UPDATED_COMMISSION_PCT);
+            .commissionPct(UPDATED_COMMISSION_PCT)
+            .createdBy(UPDATED_CREATED_BY)
+            .createdDate(UPDATED_CREATED_DATE)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restInstructorMockMvc
             .perform(
@@ -402,6 +488,10 @@ class InstructorResourceIT {
         assertThat(testInstructor.getHireDate()).isEqualTo(UPDATED_HIRE_DATE);
         assertThat(testInstructor.getSalary()).isEqualTo(UPDATED_SALARY);
         assertThat(testInstructor.getCommissionPct()).isEqualTo(UPDATED_COMMISSION_PCT);
+        assertThat(testInstructor.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
+        assertThat(testInstructor.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
+        assertThat(testInstructor.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
+        assertThat(testInstructor.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
     }
 
     @Test

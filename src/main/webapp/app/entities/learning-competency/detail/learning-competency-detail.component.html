@@ -17,6 +17,16 @@
           <dd>
             <span>{{ learningCompetency.id }}</span>
           </dd>
+          <dt><span jhiTranslate="schInfoSysApp.learningCompetency.curriculumMap">Curriculum Map</span></dt>
+          <dd>
+            @if (learningCompetency.curriculumMap) {
+              <div>
+                <a [routerLink]="['/curriculum-map', learningCompetency.curriculumMap.id, 'view']">{{
+                    '[' + learningCompetency.curriculumMap.quarterNo + '-' + learningCompetency.curriculumMap.weekNo + '] '+ learningCompetency.curriculumMap.topic
+                  }}</a>
+              </div>
+            }
+          </dd>
           <dt><span jhiTranslate="schInfoSysApp.learningCompetency.seqNo">Seq No</span></dt>
           <dd>
             <span>{{ learningCompetency.seqNo }}</span>
@@ -29,15 +39,21 @@
           <dd>
             <span>{{ learningCompetency.description }}</span>
           </dd>
-          <dt><span jhiTranslate="schInfoSysApp.learningCompetency.curriculumMap">Curriculum Map</span></dt>
+          <dt><span jhiTranslate="schInfoSysApp.learningCompetency.createdBy">Created By</span></dt>
           <dd>
-            @if (learningCompetency.curriculumMap) {
-              <div>
-                <a [routerLink]="['/curriculum-map', learningCompetency.curriculumMap.id, 'view']">{{
-                    '[' + learningCompetency.curriculumMap.quarterNo + '-' + learningCompetency.curriculumMap.weekNo +'] ' + learningCompetency.curriculumMap.topic
-                }}</a>
-              </div>
-            }
+            <span>{{ learningCompetency.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.learningCompetency.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ learningCompetency.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.learningCompetency.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ learningCompetency.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.learningCompetency.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ learningCompetency.lastModifiedDate | formatMediumDatetime }}</span>
           </dd>
         </dl>
 

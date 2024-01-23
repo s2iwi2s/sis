@@ -1,3 +1,4 @@
+import dayjs from 'dayjs/esm';
 import { IStrategies } from 'app/entities/strategies/strategies.model';
 import { IAssessment } from 'app/entities/assessment/assessment.model';
 import { ICurriculumMap } from 'app/entities/curriculum-map/curriculum-map.model';
@@ -7,6 +8,10 @@ export interface ILearningCompetency {
   seqNo?: number | null;
   competencyCode?: string | null;
   description?: string | null;
+  createdBy?: string | null;
+  createdDate?: dayjs.Dayjs | null;
+  lastModifiedBy?: string | null;
+  lastModifiedDate?: dayjs.Dayjs | null;
   strategies?: Pick<IStrategies, 'id'>[] | null;
   assessments?: Pick<IAssessment, 'id'>[] | null;
   curriculumMap?: Pick<ICurriculumMap, 'id'|'quarterNo'|'weekNo'|'topic'> | null;

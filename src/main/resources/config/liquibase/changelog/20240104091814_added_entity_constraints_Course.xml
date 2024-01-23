@@ -8,39 +8,17 @@
     -->
     <changeSet id="20240104091814-2" author="jhipster">
 
+        <addForeignKeyConstraint baseColumnNames="gradelevel_id"
+                                 baseTableName="course"
+                                 constraintName="fk_course__gradelevel_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="app_config"
+                                 />
         <addForeignKeyConstraint baseColumnNames="sch_yr_id"
                                  baseTableName="course"
                                  constraintName="fk_course__sch_yr_id"
                                  referencedColumnNames="id"
                                  referencedTableName="app_config"
-                                 />
-
-        <addForeignKeyConstraint baseColumnNames="course_id"
-                                 baseTableName="rel_course__instructor"
-                                 constraintName="fk_rel_course__instructor__course_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="course"
-                                 />
-
-        <addForeignKeyConstraint baseColumnNames="instructor_id"
-                                 baseTableName="rel_course__instructor"
-                                 constraintName="fk_rel_course__instructor__instructor_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="instructor"
-                                 />
-
-        <addForeignKeyConstraint baseColumnNames="course_id"
-                                 baseTableName="rel_course__student"
-                                 constraintName="fk_rel_course__student__course_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="course"
-                                 />
-
-        <addForeignKeyConstraint baseColumnNames="student_id"
-                                 baseTableName="rel_course__student"
-                                 constraintName="fk_rel_course__student__student_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="student"
-                                 />
+        />
     </changeSet>
 </databaseChangeLog>

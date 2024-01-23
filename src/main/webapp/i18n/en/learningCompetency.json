@@ -21,6 +21,10 @@
       "seqNo": "Seq No",
       "competencyCode": "Competency Code",
       "description": "Description",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
       "strategies": "Strategies",
       "assessment": "Assessment",
       "curriculumMap": "Curriculum Map"

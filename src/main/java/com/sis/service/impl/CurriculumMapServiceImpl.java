@@ -1,10 +1,14 @@
 package com.sis.service.impl;
 
 import com.sis.domain.CurriculumMap;
+import com.sis.repository.CourseRepository;
 import com.sis.repository.CurriculumMapRepository;
+import com.sis.service.CourseService;
 import com.sis.service.CurriculumMapService;
 import com.sis.service.dto.CurriculumMapDTO;
 import com.sis.service.mapper.CurriculumMapMapper;
+
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +30,13 @@ public class CurriculumMapServiceImpl implements CurriculumMapService {
 
     private final CurriculumMapMapper curriculumMapMapper;
 
-    public CurriculumMapServiceImpl(CurriculumMapRepository curriculumMapRepository, CurriculumMapMapper curriculumMapMapper) {
+    private final CourseRepository courseRepository;
+
+    public CurriculumMapServiceImpl(CurriculumMapRepository curriculumMapRepository, CurriculumMapMapper curriculumMapMapper,
+                                    CourseRepository courseRepository) {
         this.curriculumMapRepository = curriculumMapRepository;
         this.curriculumMapMapper = curriculumMapMapper;
+        this.courseRepository = courseRepository;
     }
 
     @Override
@@ -80,5 +88,12 @@ public class CurriculumMapServiceImpl implements CurriculumMapService {
     public void delete(Long id) {
         log.debug("Request to delete CurriculumMap : {}", id);
         curriculumMapRepository.deleteById(id);
+    }
+
+    @Override
+    public List<CurriculumMapDTO> findByCourse(Long courseId) {
+        return courseRepository.findById(courseId)
+            .map(curriculumMapRepository::findByCourse)
+            .map(curriculumMapMapper::toDto).get();
     }
 }

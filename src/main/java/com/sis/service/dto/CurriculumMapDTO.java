@@ -1,6 +1,8 @@
 package com.sis.service.dto;
 
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.time.Instant;
 import java.util.Objects;
 
 /**
@@ -20,6 +22,16 @@ public class CurriculumMapDTO implements Serializable {
     private String contentStandards;
 
     private String performanceStandards;
+
+    @Size(max = 50)
+    private String createdBy;
+
+    private Instant createdDate;
+
+    @Size(max = 50)
+    private String lastModifiedBy;
+
+    private Instant lastModifiedDate;
 
     private CourseDTO course;
 
@@ -71,6 +83,38 @@ public class CurriculumMapDTO implements Serializable {
         this.performanceStandards = performanceStandards;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
     public CourseDTO getCourse() {
         return course;
     }
@@ -84,11 +128,10 @@ public class CurriculumMapDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CurriculumMapDTO)) {
+        if (!(o instanceof CurriculumMapDTO curriculumMapDTO)) {
             return false;
         }
 
-        CurriculumMapDTO curriculumMapDTO = (CurriculumMapDTO) o;
         if (this.id == null) {
             return false;
         }
@@ -110,6 +153,10 @@ public class CurriculumMapDTO implements Serializable {
             ", topic='" + getTopic() + "'" +
             ", contentStandards='" + getContentStandards() + "'" +
             ", performanceStandards='" + getPerformanceStandards() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", course=" + getCourse() +
             "}";
     }

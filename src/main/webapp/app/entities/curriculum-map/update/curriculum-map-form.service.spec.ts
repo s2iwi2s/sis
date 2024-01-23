@@ -25,6 +25,10 @@ describe('CurriculumMap Form Service', () => {
             topic: expect.any(Object),
             contentStandards: expect.any(Object),
             performanceStandards: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
             course: expect.any(Object),
           }),
         );
@@ -41,6 +45,10 @@ describe('CurriculumMap Form Service', () => {
             topic: expect.any(Object),
             contentStandards: expect.any(Object),
             performanceStandards: expect.any(Object),
+            createdBy: expect.any(Object),
+            createdDate: expect.any(Object),
+            lastModifiedBy: expect.any(Object),
+            lastModifiedDate: expect.any(Object),
             course: expect.any(Object),
           }),
         );

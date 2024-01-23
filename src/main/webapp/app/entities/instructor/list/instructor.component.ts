@@ -123,6 +123,7 @@ export class InstructorComponent implements OnInit {
     const queryObject: any = {
       page: pageToLoad - 1,
       size: this.itemsPerPage,
+      eagerload: true,
       sort: this.getSortQueryParam(predicate, ascending),
     };
     return this.instructorService.query(queryObject).pipe(tap(() => (this.isLoading = false)));

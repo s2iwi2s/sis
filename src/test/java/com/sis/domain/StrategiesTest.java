@@ -33,19 +33,15 @@ class StrategiesTest {
 
         strategies.addResources(resourcesBack);
         assertThat(strategies.getResources()).containsOnly(resourcesBack);
-        assertThat(resourcesBack.getStrategies()).isEqualTo(strategies);
 
         strategies.removeResources(resourcesBack);
         assertThat(strategies.getResources()).doesNotContain(resourcesBack);
-        assertThat(resourcesBack.getStrategies()).isNull();
 
         strategies.resources(new HashSet<>(Set.of(resourcesBack)));
         assertThat(strategies.getResources()).containsOnly(resourcesBack);
-        assertThat(resourcesBack.getStrategies()).isEqualTo(strategies);
 
         strategies.setResources(new HashSet<>());
         assertThat(strategies.getResources()).doesNotContain(resourcesBack);
-        assertThat(resourcesBack.getStrategies()).isNull();
     }
 
     @Test

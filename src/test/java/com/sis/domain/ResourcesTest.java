@@ -6,6 +6,8 @@ import static com.sis.domain.StrategiesTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.sis.web.rest.TestUtil;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class ResourcesTest {
@@ -29,11 +31,21 @@ class ResourcesTest {
         Resources resources = getResourcesRandomSampleGenerator();
         Strategies strategiesBack = getStrategiesRandomSampleGenerator();
 
-        resources.setStrategies(strategiesBack);
-        assertThat(resources.getStrategies()).isEqualTo(strategiesBack);
+        resources.addStrategies(strategiesBack);
+        assertThat(resources.getStrategies()).containsOnly(strategiesBack);
+        assertThat(strategiesBack.getResources()).containsOnly(resources);
 
-        resources.strategies(null);
-        assertThat(resources.getStrategies()).isNull();
+        resources.removeStrategies(strategiesBack);
+        assertThat(resources.getStrategies()).doesNotContain(strategiesBack);
+        assertThat(strategiesBack.getResources()).doesNotContain(resources);
+
+        resources.strategies(new HashSet<>(Set.of(strategiesBack)));
+        assertThat(resources.getStrategies()).containsOnly(strategiesBack);
+        assertThat(strategiesBack.getResources()).containsOnly(resources);
+
+        resources.setStrategies(new HashSet<>());
+        assertThat(resources.getStrategies()).doesNotContain(strategiesBack);
+        assertThat(strategiesBack.getResources()).doesNotContain(resources);
     }
 
     @Test
@@ -41,10 +53,20 @@ class ResourcesTest {
         Resources resources = getResourcesRandomSampleGenerator();
         Assessment assessmentBack = getAssessmentRandomSampleGenerator();
 
-        resources.setAssessment(assessmentBack);
-        assertThat(resources.getAssessment()).isEqualTo(assessmentBack);
+        resources.addAssessment(assessmentBack);
+        assertThat(resources.getAssessments()).containsOnly(assessmentBack);
+        assertThat(assessmentBack.getResources()).containsOnly(resources);
 
-        resources.assessment(null);
-        assertThat(resources.getAssessment()).isNull();
+        resources.removeAssessment(assessmentBack);
+        assertThat(resources.getAssessments()).doesNotContain(assessmentBack);
+        assertThat(assessmentBack.getResources()).doesNotContain(resources);
+
+        resources.assessments(new HashSet<>(Set.of(assessmentBack)));
+        assertThat(resources.getAssessments()).containsOnly(assessmentBack);
+        assertThat(assessmentBack.getResources()).containsOnly(resources);
+
+        resources.setAssessments(new HashSet<>());
+        assertThat(resources.getAssessments()).doesNotContain(assessmentBack);
+        assertThat(assessmentBack.getResources()).doesNotContain(resources);
     }
 }

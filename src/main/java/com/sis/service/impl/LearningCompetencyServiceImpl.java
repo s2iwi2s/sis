@@ -5,7 +5,11 @@ import com.sis.repository.LearningCompetencyRepository;
 import com.sis.service.LearningCompetencyService;
 import com.sis.service.dto.LearningCompetencyDTO;
 import com.sis.service.mapper.LearningCompetencyMapper;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -83,5 +87,10 @@ public class LearningCompetencyServiceImpl implements LearningCompetencyService 
     public void delete(Long id) {
         log.debug("Request to delete LearningCompetency : {}", id);
         learningCompetencyRepository.deleteById(id);
+    }
+
+    @Override
+    public List<LearningCompetencyDTO> findAllByCourse(Long courseId) {
+        return learningCompetencyRepository.findLearningCompetenciesByCurriculumMap_Course_Id(courseId).stream().map(learningCompetencyMapper::toDto).collect(Collectors.toList());
     }
 }

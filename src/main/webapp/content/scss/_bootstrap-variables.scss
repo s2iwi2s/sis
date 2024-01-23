@@ -39,7 +39,11 @@ $body-bg: #ffffff;
 // Typography:
 // Font, line-height, and color for body text, headings, and more.
 
-$font-size-base: 1rem;
+$font-size-base: 0.9rem;
 
 $dropdown-link-hover-color: white;
 $dropdown-link-hover-bg: #343a40;
+
+$line-height-base:            1.10 !default;
+$line-height-sm:              1.25 !default;
+$line-height-lg:              2 !default;

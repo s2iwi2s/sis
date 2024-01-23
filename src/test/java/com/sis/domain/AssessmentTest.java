@@ -33,19 +33,15 @@ class AssessmentTest {
 
         assessment.addResources(resourcesBack);
         assertThat(assessment.getResources()).containsOnly(resourcesBack);
-        assertThat(resourcesBack.getAssessment()).isEqualTo(assessment);
 
         assessment.removeResources(resourcesBack);
         assertThat(assessment.getResources()).doesNotContain(resourcesBack);
-        assertThat(resourcesBack.getAssessment()).isNull();
 
         assessment.resources(new HashSet<>(Set.of(resourcesBack)));
         assertThat(assessment.getResources()).containsOnly(resourcesBack);
-        assertThat(resourcesBack.getAssessment()).isEqualTo(assessment);
 
         assessment.setResources(new HashSet<>());
         assertThat(assessment.getResources()).doesNotContain(resourcesBack);
-        assertThat(resourcesBack.getAssessment()).isNull();
     }
 
     @Test

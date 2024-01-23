@@ -1,6 +1,8 @@
 package com.sis.service;
 
 import com.sis.service.dto.StrategiesDTO;
+
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,6 +44,14 @@ public interface StrategiesService {
     Page<StrategiesDTO> findAll(Pageable pageable);
 
     /**
+     * Get all the strategies with eager load of many-to-many relationships.
+     *
+     * @param pageable the pagination information.
+     * @return the list of entities.
+     */
+    Page<StrategiesDTO> findAllWithEagerRelationships(Pageable pageable);
+
+    /**
      * Get the "id" strategies.
      *
      * @param id the id of the entity.
@@ -55,4 +65,6 @@ public interface StrategiesService {
      * @param id the id of the entity.
      */
     void delete(Long id);
+
+    List<StrategiesDTO> findAllByCourse(Long courseId);
 }

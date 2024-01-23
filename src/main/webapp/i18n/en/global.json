@@ -5,6 +5,10 @@
     "menu": {
       "home": "Home",
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
+      "modules": {
+        "main": "SiS+",
+        "curriculumMappingDashboard": "Curriculum Mapping Dashboard"
+      },
       "entities": {
         "main": "Entities",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)",
@@ -153,5 +157,5 @@
       "not.image": "File was expected to be an image but was found to be \"{{ fileType }}\""
     }
   },
-  "footer": "This is your footer"
+  "footer": "In God's Love, We Learn and Grow!"
 }

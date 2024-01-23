@@ -2,11 +2,15 @@ package com.sis.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * A Assessment.
@@ -15,7 +19,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "assessment")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Assessment implements Serializable {
+public class Assessment extends AbstractAuditingEntity<Long> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -34,14 +38,28 @@ public class Assessment implements Serializable {
     @Column(name = "mark_scheme")
     private String markScheme;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "assessment")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "rel_assessment__resources",
+        joinColumns = @JoinColumn(name = "assessment_id"),
+        inverseJoinColumns = @JoinColumn(name = "resources_id")
+    )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "strategies", "assessment" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"strategies", "assessments"}, allowSetters = true)
     private Set<Resources> resources = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "strategies", "assessments", "curriculumMap" }, allowSetters = true)
+    @JsonIgnoreProperties(value = {"strategies", "assessments", "curriculumMap"}, allowSetters = true)
     private LearningCompetency learningCompetency;
+
+    public Assessment() {
+        super();
+    }
+
+    public Assessment(Long id) {
+        super();
+        setId(id);
+    }
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -97,17 +115,31 @@ public class Assessment implements Serializable {
         this.markScheme = markScheme;
     }
 
+    public Assessment createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    public Assessment createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
+        return this;
+    }
+
+    public Assessment lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
+        return this;
+    }
+
+    public Assessment lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
     public Set<Resources> getResources() {
         return this.resources;
     }
 
     public void setResources(Set<Resources> resources) {
-        if (this.resources != null) {
-            this.resources.forEach(i -> i.setAssessment(null));
-        }
-        if (resources != null) {
-            resources.forEach(i -> i.setAssessment(this));
-        }
         this.resources = resources;
     }
 
@@ -118,13 +150,19 @@ public class Assessment implements Serializable {
 
     public Assessment addResources(Resources resources) {
         this.resources.add(resources);
-        resources.setAssessment(this);
         return this;
     }
 
     public Assessment removeResources(Resources resources) {
         this.resources.remove(resources);
-        resources.setAssessment(null);
+        return this;
+    }
+
+    public Assessment removeResources(Long resourceId) {
+        this.resources
+            .stream()
+            .filter(r -> r.getId().longValue() == resourceId.longValue())
+            .findFirst().map(r -> this.resources.remove(r));
         return this;
     }
 
@@ -168,6 +206,10 @@ public class Assessment implements Serializable {
             ", name='" + getName() + "'" +
             ", instruction='" + getInstruction() + "'" +
             ", markScheme='" + getMarkScheme() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

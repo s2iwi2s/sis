@@ -50,10 +50,10 @@ describe('LearningCompetency Management Update Component', () => {
   describe('ngOnInit', () => {
     it('Should call CurriculumMap query and add missing value', () => {
       const learningCompetency: ILearningCompetency = { id: 456 };
-      const curriculumMap: ICurriculumMap = { id: 75 };
+      const curriculumMap: ICurriculumMap = { id: 21426 };
       learningCompetency.curriculumMap = curriculumMap;
 
-      const curriculumMapCollection: ICurriculumMap[] = [{ id: 7857 }];
+      const curriculumMapCollection: ICurriculumMap[] = [{ id: 28282 }];
       jest.spyOn(curriculumMapService, 'query').mockReturnValue(of(new HttpResponse({ body: curriculumMapCollection })));
       const additionalCurriculumMaps = [curriculumMap];
       const expectedCollection: ICurriculumMap[] = [...additionalCurriculumMaps, ...curriculumMapCollection];
@@ -72,7 +72,7 @@ describe('LearningCompetency Management Update Component', () => {
 
     it('Should update editForm', () => {
       const learningCompetency: ILearningCompetency = { id: 456 };
-      const curriculumMap: ICurriculumMap = { id: 31483 };
+      const curriculumMap: ICurriculumMap = { id: 9253 };
       learningCompetency.curriculumMap = curriculumMap;
 
       activatedRoute.data = of({ learningCompetency });

@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class InstructorTestSamples {
 
     private static final Random random = new Random();
-    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2 * Integer.MAX_VALUE));
+    private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     public static Instructor getInstructorSample1() {
         return new Instructor()
@@ -18,7 +18,9 @@ public class InstructorTestSamples {
             .email("email1")
             .phoneNumber("phoneNumber1")
             .salary(1L)
-            .commissionPct(1L);
+            .commissionPct(1L)
+            .createdBy("createdBy1")
+            .lastModifiedBy("lastModifiedBy1");
     }
 
     public static Instructor getInstructorSample2() {
@@ -30,7 +32,9 @@ public class InstructorTestSamples {
             .email("email2")
             .phoneNumber("phoneNumber2")
             .salary(2L)
-            .commissionPct(2L);
+            .commissionPct(2L)
+            .createdBy("createdBy2")
+            .lastModifiedBy("lastModifiedBy2");
     }
 
     public static Instructor getInstructorRandomSampleGenerator() {
@@ -42,6 +46,8 @@ public class InstructorTestSamples {
             .email(UUID.randomUUID().toString())
             .phoneNumber(UUID.randomUUID().toString())
             .salary(longCount.incrementAndGet())
-            .commissionPct(longCount.incrementAndGet());
+            .commissionPct(longCount.incrementAndGet())
+            .createdBy(UUID.randomUUID().toString())
+            .lastModifiedBy(UUID.randomUUID().toString());
     }
 }

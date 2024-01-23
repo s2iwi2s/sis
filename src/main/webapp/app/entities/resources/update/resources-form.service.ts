@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IResources, NewResources } from '../resources.model';
 
 /**
@@ -14,16 +16,29 @@ type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>
  */
 type ResourcesFormGroupInput = IResources | PartialWithRequiredKeyOf<NewResources>;
 
-type ResourcesFormDefaults = Pick<NewResources, 'id'>;
+/**
+ * Type that converts some properties for forms.
+ */
+type FormValueOf<T extends IResources | NewResources> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
+};
+
+type ResourcesFormRawValue = FormValueOf<IResources>;
+
+type NewResourcesFormRawValue = FormValueOf<NewResources>;
+
+type ResourcesFormDefaults = Pick<NewResources, 'id' | 'createdDate' | 'lastModifiedDate'>;
 
 type ResourcesFormGroupContent = {
-  id: FormControl<IResources['id'] | NewResources['id']>;
-  fileName: FormControl<IResources['fileName']>;
-  fileNameOnServer: FormControl<IResources['fileNameOnServer']>;
-  document: FormControl<IResources['document']>;
-  documentContentType: FormControl<IResources['documentContentType']>;
-  strategies: FormControl<IResources['strategies']>;
-  assessment: FormControl<IResources['assessment']>;
+  id: FormControl<ResourcesFormRawValue['id'] | NewResources['id']>;
+  fileName: FormControl<ResourcesFormRawValue['fileName']>;
+  document: FormControl<ResourcesFormRawValue['document']>;
+  documentContentType: FormControl<ResourcesFormRawValue['documentContentType']>;
+  createdBy: FormControl<ResourcesFormRawValue['createdBy']>;
+  createdDate: FormControl<ResourcesFormRawValue['createdDate']>;
+  lastModifiedBy: FormControl<ResourcesFormRawValue['lastModifiedBy']>;
+  lastModifiedDate: FormControl<ResourcesFormRawValue['lastModifiedDate']>;
 };
 
 export type ResourcesFormGroup = FormGroup<ResourcesFormGroupContent>;
@@ -31,10 +46,10 @@ export type ResourcesFormGroup = FormGroup<ResourcesFormGroupContent>;
 @Injectable({ providedIn: 'root' })
 export class ResourcesFormService {
   createResourcesFormGroup(resources: ResourcesFormGroupInput = { id: null }): ResourcesFormGroup {
-    const resourcesRawValue = {
+    const resourcesRawValue = this.convertResourcesToResourcesRawValue({
       ...this.getFormDefaults(),
       ...resources,
-    };
+    });
     return new FormGroup<ResourcesFormGroupContent>({
       id: new FormControl(
         { value: resourcesRawValue.id, disabled: true },
@@ -46,20 +61,25 @@ export class ResourcesFormService {
       fileName: new FormControl(resourcesRawValue.fileName, {
         validators: [Validators.maxLength(50)],
       }),
-      fileNameOnServer: new FormControl(resourcesRawValue.fileNameOnServer),
       document: new FormControl(resourcesRawValue.document),
       documentContentType: new FormControl(resourcesRawValue.documentContentType),
-      strategies: new FormControl(resourcesRawValue.strategies),
-      assessment: new FormControl(resourcesRawValue.assessment),
+      createdBy: new FormControl(resourcesRawValue.createdBy, {
+        validators: [Validators.maxLength(50)],
+      }),
+      createdDate: new FormControl(resourcesRawValue.createdDate),
+      lastModifiedBy: new FormControl(resourcesRawValue.lastModifiedBy, {
+        validators: [Validators.maxLength(50)],
+      }),
+      lastModifiedDate: new FormControl(resourcesRawValue.lastModifiedDate),
     });
   }
 
   getResources(form: ResourcesFormGroup): IResources | NewResources {
-    return form.getRawValue() as IResources | NewResources;
+    return this.convertResourcesRawValueToResources(form.getRawValue() as ResourcesFormRawValue | NewResourcesFormRawValue);
   }
 
   resetForm(form: ResourcesFormGroup, resources: ResourcesFormGroupInput): void {
-    const resourcesRawValue = { ...this.getFormDefaults(), ...resources };
+    const resourcesRawValue = this.convertResourcesToResourcesRawValue({ ...this.getFormDefaults(), ...resources });
     form.reset(
       {
         ...resourcesRawValue,
@@ -69,8 +89,30 @@ export class ResourcesFormService {
   }
 
   private getFormDefaults(): ResourcesFormDefaults {
+    const currentTime = dayjs();
+
     return {
       id: null,
+      createdDate: currentTime,
+      lastModifiedDate: currentTime,
+    };
+  }
+
+  private convertResourcesRawValueToResources(rawResources: ResourcesFormRawValue | NewResourcesFormRawValue): IResources | NewResources {
+    return {
+      ...rawResources,
+      createdDate: dayjs(rawResources.createdDate, DATE_TIME_FORMAT),
+      lastModifiedDate: dayjs(rawResources.lastModifiedDate, DATE_TIME_FORMAT),
+    };
+  }
+
+  private convertResourcesToResourcesRawValue(
+    resources: IResources | (Partial<NewResources> & ResourcesFormDefaults),
+  ): ResourcesFormRawValue | PartialWithRequiredKeyOf<NewResourcesFormRawValue> {
+    return {
+      ...resources,
+      createdDate: resources.createdDate ? resources.createdDate.format(DATE_TIME_FORMAT) : undefined,
+      lastModifiedDate: resources.lastModifiedDate ? resources.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
     };
   }
 }

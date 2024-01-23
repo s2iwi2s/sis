@@ -17,7 +17,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "student")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Student implements Serializable {
+public class Student extends AbstractAuditingEntity<Long> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -140,14 +140,19 @@ public class Student implements Serializable {
     @Column(name = "guardian_contacts", length = 50)
     private String guardianContacts;
 
-    @JsonIgnoreProperties(value = { "user", "org", "instructor", "student", "course" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "org", "instructor", "student", "course" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private AppConfig gender;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "students")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "rel_student__course",
+        joinColumns = @JoinColumn(name = "student_id"),
+        inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "schYr", "curriculumMaps", "instructors", "students" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "gradelevel", "curriculumMaps", "instructors", "students" }, allowSetters = true)
     private Set<Course> courses = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -542,6 +547,26 @@ public class Student implements Serializable {
         this.guardianContacts = guardianContacts;
     }
 
+    public Student createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    public Student createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
+        return this;
+    }
+
+    public Student lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
+        return this;
+    }
+
+    public Student lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
     public AppConfig getGender() {
         return this.gender;
     }
@@ -560,12 +585,6 @@ public class Student implements Serializable {
     }
 
     public void setCourses(Set<Course> courses) {
-        if (this.courses != null) {
-            this.courses.forEach(i -> i.removeStudent(this));
-        }
-        if (courses != null) {
-            courses.forEach(i -> i.addStudent(this));
-        }
         this.courses = courses;
     }
 
@@ -576,13 +595,11 @@ public class Student implements Serializable {
 
     public Student addCourse(Course course) {
         this.courses.add(course);
-        course.getStudents().add(this);
         return this;
     }
 
     public Student removeCourse(Course course) {
         this.courses.remove(course);
-        course.getStudents().remove(this);
         return this;
     }
 
@@ -639,6 +656,10 @@ public class Student implements Serializable {
             ", mothersContacts='" + getMothersContacts() + "'" +
             ", guardianFullName='" + getGuardianFullName() + "'" +
             ", guardianContacts='" + getGuardianContacts() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

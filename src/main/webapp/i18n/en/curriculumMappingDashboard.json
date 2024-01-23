@@ -1,0 +1,48 @@
+{
+  "schInfoSysApp": {
+    "curriculumMappingDashboard": {
+      "home": {
+        "title": "Curriculum Mapping Dashboard",
+        "createLabel": "Create a new Curriculum Map",
+        "createOrEditLabel": "Create or edit a Curriculum Map",
+        "notFound": "No Curriculum Maps found"
+      },
+      "searchCourse": "Search Course",
+      "gradelevel": "Grade Level",
+      "hoursPerQuarter": "No of Hours per Quarter",
+      "subject": "Course Subject Title",
+      "courseDescription": "COURSE DESCRIPTION",
+      "courseObjectives": "GENERAL OBJECTIVES",
+      "scopeAndSequence": "SCOPE AND SEQUENCE",
+      "curriculumMap": "Curriculum Map",
+      "weekNo": "Week No",
+      "timeFrame": "Time Frame",
+      "contentStandards": "Content Standards",
+      "performanceStandards": "Performance Standards",
+      "learningCompetencies": "Learning Competencies",
+      "strategies": "Strategies",
+      "assessment": "Assessment",
+      "created": "A new Curriculum Map is created with identifier {{ param }}",
+      "updated": "A Curriculum Map is updated with identifier {{ param }}",
+      "deleted": "A Curriculum Map is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Curriculum Map {{ id }}?"
+      },
+      "detail": {
+        "title": "Curriculum Map"
+      },
+      "id": "ID",
+      "quarterNo": "Quarter No",
+      "weekNo": "Week No",
+      "topic": "Topic",
+      "contentStandards": "Content Standards",
+      "performanceStandards": "Performance Standards",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
+      "learningCompetency": "Learning Competency",
+      "course": "Course"
+    }
+  }
+}

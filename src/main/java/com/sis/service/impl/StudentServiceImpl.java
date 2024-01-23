@@ -69,11 +69,15 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findAll(pageable).map(studentMapper::toDto);
     }
 
+    public Page<StudentDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return studentRepository.findAllWithEagerRelationships(pageable).map(studentMapper::toDto);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public Optional<StudentDTO> findOne(Long id) {
         log.debug("Request to get Student : {}", id);
-        return studentRepository.findById(id).map(studentMapper::toDto);
+        return studentRepository.findOneWithEagerRelationships(id).map(studentMapper::toDto);
     }
 
     @Override

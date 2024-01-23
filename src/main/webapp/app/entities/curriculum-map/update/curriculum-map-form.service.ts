@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
+import dayjs from 'dayjs/esm';
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { ICurriculumMap, NewCurriculumMap } from '../curriculum-map.model';
 
 /**
@@ -14,16 +16,32 @@ type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>
  */
 type CurriculumMapFormGroupInput = ICurriculumMap | PartialWithRequiredKeyOf<NewCurriculumMap>;
 
-type CurriculumMapFormDefaults = Pick<NewCurriculumMap, 'id'>;
+/**
+ * Type that converts some properties for forms.
+ */
+type FormValueOf<T extends ICurriculumMap | NewCurriculumMap> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
+  createdDate?: string | null;
+  lastModifiedDate?: string | null;
+};
+
+type CurriculumMapFormRawValue = FormValueOf<ICurriculumMap>;
+
+type NewCurriculumMapFormRawValue = FormValueOf<NewCurriculumMap>;
+
+type CurriculumMapFormDefaults = Pick<NewCurriculumMap, 'id' | 'createdDate' | 'lastModifiedDate'>;
 
 type CurriculumMapFormGroupContent = {
-  id: FormControl<ICurriculumMap['id'] | NewCurriculumMap['id']>;
-  quarterNo: FormControl<ICurriculumMap['quarterNo']>;
-  weekNo: FormControl<ICurriculumMap['weekNo']>;
-  topic: FormControl<ICurriculumMap['topic']>;
-  contentStandards: FormControl<ICurriculumMap['contentStandards']>;
-  performanceStandards: FormControl<ICurriculumMap['performanceStandards']>;
-  course: FormControl<ICurriculumMap['course']>;
+  id: FormControl<CurriculumMapFormRawValue['id'] | NewCurriculumMap['id']>;
+  quarterNo: FormControl<CurriculumMapFormRawValue['quarterNo']>;
+  weekNo: FormControl<CurriculumMapFormRawValue['weekNo']>;
+  topic: FormControl<CurriculumMapFormRawValue['topic']>;
+  contentStandards: FormControl<CurriculumMapFormRawValue['contentStandards']>;
+  performanceStandards: FormControl<CurriculumMapFormRawValue['performanceStandards']>;
+  createdBy: FormControl<CurriculumMapFormRawValue['createdBy']>;
+  createdDate: FormControl<CurriculumMapFormRawValue['createdDate']>;
+  lastModifiedBy: FormControl<CurriculumMapFormRawValue['lastModifiedBy']>;
+  lastModifiedDate: FormControl<CurriculumMapFormRawValue['lastModifiedDate']>;
+  course: FormControl<CurriculumMapFormRawValue['course']>;
 };
 
 export type CurriculumMapFormGroup = FormGroup<CurriculumMapFormGroupContent>;
@@ -31,10 +49,10 @@ export type CurriculumMapFormGroup = FormGroup<CurriculumMapFormGroupContent>;
 @Injectable({ providedIn: 'root' })
 export class CurriculumMapFormService {
   createCurriculumMapFormGroup(curriculumMap: CurriculumMapFormGroupInput = { id: null }): CurriculumMapFormGroup {
-    const curriculumMapRawValue = {
+    const curriculumMapRawValue = this.convertCurriculumMapToCurriculumMapRawValue({
       ...this.getFormDefaults(),
       ...curriculumMap,
-    };
+    });
     return new FormGroup<CurriculumMapFormGroupContent>({
       id: new FormControl(
         { value: curriculumMapRawValue.id, disabled: true },
@@ -48,16 +66,24 @@ export class CurriculumMapFormService {
       topic: new FormControl(curriculumMapRawValue.topic),
       contentStandards: new FormControl(curriculumMapRawValue.contentStandards),
       performanceStandards: new FormControl(curriculumMapRawValue.performanceStandards),
+      createdBy: new FormControl(curriculumMapRawValue.createdBy, {
+        validators: [Validators.maxLength(50)],
+      }),
+      createdDate: new FormControl(curriculumMapRawValue.createdDate),
+      lastModifiedBy: new FormControl(curriculumMapRawValue.lastModifiedBy, {
+        validators: [Validators.maxLength(50)],
+      }),
+      lastModifiedDate: new FormControl(curriculumMapRawValue.lastModifiedDate),
       course: new FormControl(curriculumMapRawValue.course),
     });
   }
 
   getCurriculumMap(form: CurriculumMapFormGroup): ICurriculumMap | NewCurriculumMap {
-    return form.getRawValue() as ICurriculumMap | NewCurriculumMap;
+    return this.convertCurriculumMapRawValueToCurriculumMap(form.getRawValue() as CurriculumMapFormRawValue | NewCurriculumMapFormRawValue);
   }
 
   resetForm(form: CurriculumMapFormGroup, curriculumMap: CurriculumMapFormGroupInput): void {
-    const curriculumMapRawValue = { ...this.getFormDefaults(), ...curriculumMap };
+    const curriculumMapRawValue = this.convertCurriculumMapToCurriculumMapRawValue({ ...this.getFormDefaults(), ...curriculumMap });
     form.reset(
       {
         ...curriculumMapRawValue,
@@ -67,8 +93,32 @@ export class CurriculumMapFormService {
   }
 
   private getFormDefaults(): CurriculumMapFormDefaults {
+    const currentTime = dayjs();
+
     return {
       id: null,
+      createdDate: currentTime,
+      lastModifiedDate: currentTime,
+    };
+  }
+
+  private convertCurriculumMapRawValueToCurriculumMap(
+    rawCurriculumMap: CurriculumMapFormRawValue | NewCurriculumMapFormRawValue,
+  ): ICurriculumMap | NewCurriculumMap {
+    return {
+      ...rawCurriculumMap,
+      createdDate: dayjs(rawCurriculumMap.createdDate, DATE_TIME_FORMAT),
+      lastModifiedDate: dayjs(rawCurriculumMap.lastModifiedDate, DATE_TIME_FORMAT),
+    };
+  }
+
+  private convertCurriculumMapToCurriculumMapRawValue(
+    curriculumMap: ICurriculumMap | (Partial<NewCurriculumMap> & CurriculumMapFormDefaults),
+  ): CurriculumMapFormRawValue | PartialWithRequiredKeyOf<NewCurriculumMapFormRawValue> {
+    return {
+      ...curriculumMap,
+      createdDate: curriculumMap.createdDate ? curriculumMap.createdDate.format(DATE_TIME_FORMAT) : undefined,
+      lastModifiedDate: curriculumMap.lastModifiedDate ? curriculumMap.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
     };
   }
 }

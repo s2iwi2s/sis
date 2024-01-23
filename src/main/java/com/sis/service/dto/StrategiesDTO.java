@@ -1,7 +1,11 @@
 package com.sis.service.dto;
 
+import jakarta.validation.constraints.*;
 import java.io.Serializable;
+import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A DTO for the {@link com.sis.domain.Strategies} entity.
@@ -14,6 +18,18 @@ public class StrategiesDTO implements Serializable {
     private String name;
 
     private String description;
+
+    @Size(max = 50)
+    private String createdBy;
+
+    private Instant createdDate;
+
+    @Size(max = 50)
+    private String lastModifiedBy;
+
+    private Instant lastModifiedDate;
+
+    private Set<ResourcesDTO> resources = new HashSet<>();
 
     private LearningCompetencyDTO learningCompetency;
 
@@ -41,6 +57,46 @@ public class StrategiesDTO implements Serializable {
         this.description = description;
     }
 
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public Set<ResourcesDTO> getResources() {
+        return resources;
+    }
+
+    public void setResources(Set<ResourcesDTO> resources) {
+        this.resources = resources;
+    }
+
     public LearningCompetencyDTO getLearningCompetency() {
         return learningCompetency;
     }
@@ -54,11 +110,10 @@ public class StrategiesDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof StrategiesDTO)) {
+        if (!(o instanceof StrategiesDTO strategiesDTO)) {
             return false;
         }
 
-        StrategiesDTO strategiesDTO = (StrategiesDTO) o;
         if (this.id == null) {
             return false;
         }
@@ -77,6 +132,11 @@ public class StrategiesDTO implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
+            ", resources=" + getResources() +
             ", learningCompetency=" + getLearningCompetency() +
             "}";
     }

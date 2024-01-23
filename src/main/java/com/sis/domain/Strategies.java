@@ -2,11 +2,13 @@ package com.sis.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A Strategies.
@@ -15,7 +17,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "strategies")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Strategies implements Serializable {
+public class Strategies extends AbstractAuditingEntity<Long> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,12 +29,18 @@ public class Strategies implements Serializable {
     @Column(name = "name")
     private String name;
 
+    @Lob
     @Column(name = "description")
     private String description;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "strategies")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "rel_strategies__resources",
+        joinColumns = @JoinColumn(name = "strategies_id"),
+        inverseJoinColumns = @JoinColumn(name = "resources_id")
+    )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "strategies", "assessment" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "strategies", "assessments" }, allowSetters = true)
     private Set<Resources> resources = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,10 +49,18 @@ public class Strategies implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
+    public Strategies() {
+        super();
+    }
+
+    public Strategies(Long id) {
+        super();
+        this.setId(id);
+    }
+
     public Long getId() {
         return this.id;
     }
-
     public Strategies id(Long id) {
         this.setId(id);
         return this;
@@ -80,17 +96,31 @@ public class Strategies implements Serializable {
         this.description = description;
     }
 
+    public Strategies createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    public Strategies createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
+        return this;
+    }
+
+    public Strategies lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
+        return this;
+    }
+
+    public Strategies lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
     public Set<Resources> getResources() {
         return this.resources;
     }
 
     public void setResources(Set<Resources> resources) {
-        if (this.resources != null) {
-            this.resources.forEach(i -> i.setStrategies(null));
-        }
-        if (resources != null) {
-            resources.forEach(i -> i.setStrategies(this));
-        }
         this.resources = resources;
     }
 
@@ -101,13 +131,18 @@ public class Strategies implements Serializable {
 
     public Strategies addResources(Resources resources) {
         this.resources.add(resources);
-        resources.setStrategies(this);
         return this;
     }
 
     public Strategies removeResources(Resources resources) {
         this.resources.remove(resources);
-        resources.setStrategies(null);
+        return this;
+    }
+    public Strategies removeResources(Long resourceId) {
+        this.resources
+            .stream()
+            .filter(r -> r.getId().longValue() == resourceId.longValue())
+            .findFirst().map(r -> this.resources.remove(r));
         return this;
     }
 
@@ -150,6 +185,10 @@ public class Strategies implements Serializable {
             "id=" + getId() +
             ", name='" + getName() + "'" +
             ", description='" + getDescription() + "'" +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             "}";
     }
 }

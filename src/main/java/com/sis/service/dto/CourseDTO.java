@@ -3,9 +3,8 @@ package com.sis.service.dto;
 import jakarta.persistence.Lob;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import java.util.HashSet;
+import java.time.Instant;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * A DTO for the {@link com.sis.domain.Course} entity.
@@ -14,8 +13,6 @@ import java.util.Set;
 public class CourseDTO implements Serializable {
 
     private Long id;
-
-    private AppConfigDTO gradelevel;
 
     @Size(max = 50)
     private String subject;
@@ -30,9 +27,17 @@ public class CourseDTO implements Serializable {
 
     private AppConfigDTO schYr;
 
-    private Set<InstructorDTO> instructors = new HashSet<>();
+    @Size(max = 50)
+    private String createdBy;
 
-    private Set<StudentDTO> students = new HashSet<>();
+    private Instant createdDate;
+
+    @Size(max = 50)
+    private String lastModifiedBy;
+
+    private Instant lastModifiedDate;
+
+    private AppConfigDTO gradelevel;
 
     public Long getId() {
         return id;
@@ -40,14 +45,6 @@ public class CourseDTO implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public AppConfigDTO getGradelevel() {
-        return gradelevel;
-    }
-
-    public void setGradelevel(AppConfigDTO gradelevel) {
-        this.gradelevel = gradelevel;
     }
 
     public String getSubject() {
@@ -90,20 +87,44 @@ public class CourseDTO implements Serializable {
         this.schYr = schYr;
     }
 
-    public Set<InstructorDTO> getInstructors() {
-        return instructors;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setInstructors(Set<InstructorDTO> instructors) {
-        this.instructors = instructors;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
-    public Set<StudentDTO> getStudents() {
-        return students;
+    public Instant getCreatedDate() {
+        return createdDate;
     }
 
-    public void setStudents(Set<StudentDTO> students) {
-        this.students = students;
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public AppConfigDTO getGradelevel() {
+        return gradelevel;
+    }
+
+    public void setGradelevel(AppConfigDTO gradelevel) {
+        this.gradelevel = gradelevel;
     }
 
     @Override
@@ -111,11 +132,10 @@ public class CourseDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CourseDTO)) {
+        if (!(o instanceof CourseDTO courseDTO)) {
             return false;
         }
 
-        CourseDTO courseDTO = (CourseDTO) o;
         if (this.id == null) {
             return false;
         }
@@ -132,14 +152,15 @@ public class CourseDTO implements Serializable {
     public String toString() {
         return "CourseDTO{" +
             "id=" + getId() +
-            ", gradelevel='" + getGradelevel() + "'" +
             ", subject='" + getSubject() + "'" +
             ", hoursPerQuarter=" + getHoursPerQuarter() +
             ", courseDescription='" + getCourseDescription() + "'" +
             ", courseObjectives='" + getCourseObjectives() + "'" +
-            ", schYr=" + getSchYr() +
-            ", instructors=" + getInstructors() +
-            ", students=" + getStudents() +
+            ", createdBy='" + getCreatedBy() + "'" +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", lastModifiedBy='" + getLastModifiedBy() + "'" +
+            ", lastModifiedDate='" + getLastModifiedDate() + "'" +
+            ", gradelevel=" + getGradelevel() +
             "}";
     }
 }
