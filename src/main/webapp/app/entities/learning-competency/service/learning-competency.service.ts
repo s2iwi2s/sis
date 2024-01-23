@@ -74,6 +74,12 @@ export class LearningCompetencyService {
       .pipe(map(res => this.convertResponseArrayFromServer(res)));
   }
 
+  queryByCourse(courseId: number): Observable<EntityArrayResponseType> {
+    return this.http
+      .get<RestLearningCompetency[]>(`${this.resourceUrl}/${courseId}/course`, { observe: 'response' })
+      .pipe(map(res => this.convertResponseArrayFromServer(res)));
+  }
+
   delete(id: number): Observable<HttpResponse<{}>> {
     return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
   }

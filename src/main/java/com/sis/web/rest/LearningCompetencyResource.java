@@ -185,4 +185,11 @@ public class LearningCompetencyResource {
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }
+
+    @GetMapping("/{id}/course")
+    public ResponseEntity<List<LearningCompetencyDTO>> getAllLearningCompetenciesByCourse(@PathVariable("id") Long courseId) {
+        log.debug("REST request to get a page of LearningCompetencies");
+        List<LearningCompetencyDTO> list =  learningCompetencyService.findAllByCourse(courseId);
+        return ResponseEntity.ok(list);
+    }
 }
