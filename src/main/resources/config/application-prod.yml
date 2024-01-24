@@ -33,9 +33,9 @@ spring:
       enabled: false
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://localhost:5432/SchInfoSys
-    username: SchInfoSys
-    password:
+    url: jdbc:postgresql://pg-db-s2iwi2s-a12a.a.aivencloud.com:14536/sis-prod-db
+    username: avnadmin
+    password: AVNS_5JL8YJgoJM5sytBHXSW
     hikari:
       poolName: Hikari
       auto-commit: false

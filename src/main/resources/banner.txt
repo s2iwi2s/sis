@@ -1,5 +1,5 @@
 
-  ${AnsiColor.GREEN}  ____  _ ____
+  ${AnsiColor.GREEN}  ____  _ ____      WPIDOR
   ${AnsiColor.GREEN} / ___|(_) ___|${AnsiColor.RED}   _
   ${AnsiColor.GREEN} \___ \| \___ \${AnsiColor.RED} _| |_
   ${AnsiColor.GREEN}  ___) | |___) ${AnsiColor.RED}|_   _|

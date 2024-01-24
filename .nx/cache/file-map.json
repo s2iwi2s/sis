@@ -1,0 +1,3522 @@
+{
+  "version": "6.0",
+  "nxVersion": "17.2.8",
+  "deps": {
+    "@angular/cdk": "^17.0.5",
+    "@angular/common": "17.0.6",
+    "@angular/compiler": "17.0.6",
+    "@angular/core": "17.0.6",
+    "@angular/forms": "17.0.6",
+    "@angular/localize": "17.0.6",
+    "@angular/platform-browser": "17.0.6",
+    "@angular/platform-browser-dynamic": "17.0.6",
+    "@angular/router": "17.0.6",
+    "@fortawesome/angular-fontawesome": "0.14.0",
+    "@fortawesome/fontawesome-svg-core": "6.5.1",
+    "@fortawesome/free-solid-svg-icons": "6.5.1",
+    "@ng-bootstrap/ng-bootstrap": "16.0.0",
+    "@ngx-translate/core": "15.0.0",
+    "@ngx-translate/http-loader": "8.0.0",
+    "@popperjs/core": "2.11.8",
+    "@tinymce/tinymce-angular": "^7.0.0",
+    "bootstrap": "5.3.2",
+    "dayjs": "1.11.10",
+    "ngx-infinite-scroll": "17.0.0",
+    "rxjs": "7.8.1",
+    "tinymce": "^6.8.2",
+    "tslib": "2.6.2",
+    "zone.js": "0.14.2",
+    "@angular-builders/custom-webpack": "17.0.0",
+    "@angular-builders/jest": "17.0.0",
+    "@angular-devkit/build-angular": "17.0.6",
+    "@angular-eslint/eslint-plugin": "17.1.1",
+    "@angular/cli": "17.0.6",
+    "@angular/compiler-cli": "17.0.6",
+    "@angular/service-worker": "17.0.6",
+    "@types/jest": "29.5.11",
+    "@types/node": "18.19.3",
+    "@typescript-eslint/eslint-plugin": "6.13.2",
+    "@typescript-eslint/parser": "6.13.2",
+    "browser-sync": "2.29.3",
+    "browser-sync-webpack-plugin": "2.3.0",
+    "buffer": "6.0.3",
+    "concurrently": "8.2.2",
+    "copy-webpack-plugin": "11.0.0",
+    "eslint": "8.55.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-webpack-plugin": "4.0.1",
+    "folder-hash": "4.0.4",
+    "generator-jhipster": "8.1.0",
+    "husky": "8.0.3",
+    "jest": "29.7.0",
+    "jest-date-mock": "1.0.8",
+    "jest-environment-jsdom": "29.7.0",
+    "jest-junit": "16.0.0",
+    "jest-preset-angular": "13.1.4",
+    "jest-sonar": "0.2.16",
+    "lint-staged": "15.2.0",
+    "merge-jsons-webpack-plugin": "2.0.1",
+    "prettier": "3.1.0",
+    "prettier-plugin-java": "2.5.0",
+    "prettier-plugin-packagejson": "2.4.7",
+    "rimraf": "5.0.5",
+    "swagger-ui-dist": "5.10.3",
+    "ts-jest": "29.1.1",
+    "typescript": "5.2.2",
+    "wait-on": "7.2.0",
+    "webpack-bundle-analyzer": "4.10.1",
+    "webpack-merge": "5.10.0",
+    "webpack-notifier": "1.15.0"
+  },
+  "pathMappings": {},
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "projectFileMap": {},
+    "nonProjectFiles": [
+      {
+        "file": ".devcontainer/Dockerfile",
+        "hash": "8370607022972175136"
+      },
+      {
+        "file": ".devcontainer/devcontainer.json",
+        "hash": "13726224416817880131"
+      },
+      {
+        "file": ".editorconfig",
+        "hash": "13778135464114245626"
+      },
+      {
+        "file": ".eslintignore",
+        "hash": "6674647404681479866"
+      },
+      {
+        "file": ".eslintrc.json",
+        "hash": "9026031316150254021"
+      },
+      {
+        "file": ".gitattributes",
+        "hash": "4743146119223801276"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "5651191732409324366"
+      },
+      {
+        "file": ".husky/pre-commit",
+        "hash": "12399060066918617778"
+      },
+      {
+        "file": ".jhipster/AppConfig.json",
+        "hash": "10747885212612313239"
+      },
+      {
+        "file": ".jhipster/Assessment.json",
+        "hash": "8562949668956389045"
+      },
+      {
+        "file": ".jhipster/Course.json",
+        "hash": "5268429962240869173"
+      },
+      {
+        "file": ".jhipster/CurriculumMap.json",
+        "hash": "12686302803424611180"
+      },
+      {
+        "file": ".jhipster/Instructor.json",
+        "hash": "8289303005779367008"
+      },
+      {
+        "file": ".jhipster/LearningCompetency.json",
+        "hash": "17950814305278287566"
+      },
+      {
+        "file": ".jhipster/Org.json",
+        "hash": "14883163474828602157"
+      },
+      {
+        "file": ".jhipster/Resources.json",
+        "hash": "8419192621054403696"
+      },
+      {
+        "file": ".jhipster/Strategies.json",
+        "hash": "7875551004189987181"
+      },
+      {
+        "file": ".jhipster/Student.json",
+        "hash": "3309458152976027823"
+      },
+      {
+        "file": ".lintstagedrc.cjs",
+        "hash": "1673842028990406902"
+      },
+      {
+        "file": ".mvn/jvm.config",
+        "hash": "4055606894390288348"
+      },
+      {
+        "file": ".mvn/wrapper/maven-wrapper.properties",
+        "hash": "4324330846705012811"
+      },
+      {
+        "file": ".prettierignore",
+        "hash": "9341163149495030913"
+      },
+      {
+        "file": ".prettierrc",
+        "hash": "10264882104536293490"
+      },
+      {
+        "file": ".yo-rc.json",
+        "hash": "9819034106347568078"
+      },
+      {
+        "file": "README.md",
+        "hash": "13516787035790941909"
+      },
+      {
+        "file": "angular.json",
+        "hash": "4120905292750268247"
+      },
+      {
+        "file": "checkstyle.xml",
+        "hash": "16853395861645577562"
+      },
+      {
+        "file": "jest.conf.js",
+        "hash": "5054893528742419616"
+      },
+      {
+        "file": "jhipster-jdl.jdl",
+        "hash": "4451742073561068359"
+      },
+      {
+        "file": "mvnw",
+        "hash": "14322037322246706326"
+      },
+      {
+        "file": "mvnw.cmd",
+        "hash": "14562733881189784978"
+      },
+      {
+        "file": "ngsw-config.json",
+        "hash": "17384300172734177802"
+      },
+      {
+        "file": "npmw",
+        "hash": "8442694104322047471"
+      },
+      {
+        "file": "npmw.cmd",
+        "hash": "17842356658682996442"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "7540325011930920775"
+      },
+      {
+        "file": "package.json",
+        "hash": "9263936101528697468"
+      },
+      {
+        "file": "pom.xml",
+        "hash": "17201282049877026932"
+      },
+      {
+        "file": "qodana.yaml",
+        "hash": "6537176539207994096"
+      },
+      {
+        "file": "sch-info-sys.iml",
+        "hash": "14523924039538128895"
+      },
+      {
+        "file": "sonar-project.properties",
+        "hash": "9661043992948845344"
+      },
+      {
+        "file": "src/main/docker/app.yml",
+        "hash": "476666721493286498"
+      },
+      {
+        "file": "src/main/docker/grafana/provisioning/dashboards/JVM.json",
+        "hash": "2399676515841718417"
+      },
+      {
+        "file": "src/main/docker/grafana/provisioning/dashboards/dashboard.yml",
+        "hash": "9229724166412317477"
+      },
+      {
+        "file": "src/main/docker/grafana/provisioning/datasources/datasource.yml",
+        "hash": "17837959412308604529"
+      },
+      {
+        "file": "src/main/docker/jhipster-control-center.yml",
+        "hash": "17672951761534093783"
+      },
+      {
+        "file": "src/main/docker/jib/entrypoint.sh",
+        "hash": "12004167426170110865"
+      },
+      {
+        "file": "src/main/docker/monitoring.yml",
+        "hash": "8750380717007796601"
+      },
+      {
+        "file": "src/main/docker/postgresql.yml",
+        "hash": "5296287339445095977"
+      },
+      {
+        "file": "src/main/docker/prometheus/prometheus.yml",
+        "hash": "14690390137704025537"
+      },
+      {
+        "file": "src/main/docker/services.yml",
+        "hash": "8983311080146446643"
+      },
+      {
+        "file": "src/main/docker/sonar.yml",
+        "hash": "2469590369522013042"
+      },
+      {
+        "file": "src/main/java/com/sis/ApplicationWebXml.java",
+        "hash": "18427929490279636568"
+      },
+      {
+        "file": "src/main/java/com/sis/GeneratedByJHipster.java",
+        "hash": "5143083095282213647"
+      },
+      {
+        "file": "src/main/java/com/sis/SchInfoSysApp.java",
+        "hash": "8714679992881694236"
+      },
+      {
+        "file": "src/main/java/com/sis/aop/logging/LoggingAspect.java",
+        "hash": "15994830779994569200"
+      },
+      {
+        "file": "src/main/java/com/sis/aop/logging/package-info.java",
+        "hash": "6348779713208498209"
+      },
+      {
+        "file": "src/main/java/com/sis/config/ApplicationProperties.java",
+        "hash": "8958257805135393276"
+      },
+      {
+        "file": "src/main/java/com/sis/config/AsyncConfiguration.java",
+        "hash": "3329543712590735273"
+      },
+      {
+        "file": "src/main/java/com/sis/config/CRLFLogConverter.java",
+        "hash": "6343141407190536947"
+      },
+      {
+        "file": "src/main/java/com/sis/config/CacheConfiguration.java",
+        "hash": "484747224480307879"
+      },
+      {
+        "file": "src/main/java/com/sis/config/Constants.java",
+        "hash": "10271468202462505791"
+      },
+      {
+        "file": "src/main/java/com/sis/config/DatabaseConfiguration.java",
+        "hash": "16224346440409138896"
+      },
+      {
+        "file": "src/main/java/com/sis/config/DateTimeFormatConfiguration.java",
+        "hash": "16514339857247083921"
+      },
+      {
+        "file": "src/main/java/com/sis/config/JacksonConfiguration.java",
+        "hash": "9403491392539857326"
+      },
+      {
+        "file": "src/main/java/com/sis/config/LiquibaseConfiguration.java",
+        "hash": "64588125040299247"
+      },
+      {
+        "file": "src/main/java/com/sis/config/LocaleConfiguration.java",
+        "hash": "17132054993243435807"
+      },
+      {
+        "file": "src/main/java/com/sis/config/LoggingAspectConfiguration.java",
+        "hash": "3426541942767012349"
+      },
+      {
+        "file": "src/main/java/com/sis/config/LoggingConfiguration.java",
+        "hash": "14442392303175846467"
+      },
+      {
+        "file": "src/main/java/com/sis/config/SecurityConfiguration.java",
+        "hash": "5793509656417311988"
+      },
+      {
+        "file": "src/main/java/com/sis/config/SecurityJwtConfiguration.java",
+        "hash": "2512197928366032557"
+      },
+      {
+        "file": "src/main/java/com/sis/config/StaticResourcesWebConfiguration.java",
+        "hash": "15598161121440402948"
+      },
+      {
+        "file": "src/main/java/com/sis/config/WebConfigurer.java",
+        "hash": "750075522972377901"
+      },
+      {
+        "file": "src/main/java/com/sis/config/package-info.java",
+        "hash": "8671861190459920536"
+      },
+      {
+        "file": "src/main/java/com/sis/domain/AbstractAuditingEntity.java",
+        "hash": "5576067232310997956"
+      },
+      {
+        "file": "src/main/java/com/sis/domain/AppConfig.java",
+        "hash": "17641506154711338075"
+      },
+      {
+        "file": "src/main/java/com/sis/domain/Assessment.java",
+        "hash": "8299335764546566601"
+      },
+      {
+        "file": "src/main/java/com/sis/domain/Authority.java",
+        "hash": "12585263673452659433"
+      },
+      {
+        "file": "src/main/java/com/sis/domain/Course.java",
+        "hash": "104164003986438044"
+      },
+      {
+        "file": "src/main/java/com/sis/domain/CurriculumMap.java",
+        "hash": "14638518470508345480"
+      },
+      {
+        "file": "src/main/java/com/sis/domain/Instructor.java",
+        "hash": "4029641420455267785"
+      },
+      {
+        "file": "src/main/java/com/sis/domain/LearningCompetency.java",
+        "hash": "12311612458274326494"
+      },
+      {
+        "file": "src/main/java/com/sis/domain/Org.java",
+        "hash": "9657544707205240229"
+      },
+      {
+        "file": "src/main/java/com/sis/domain/Resources.java",
+        "hash": "2553143054174903860"
+      },
+      {
+        "file": "src/main/java/com/sis/domain/Strategies.java",
+        "hash": "10039040935107733825"
+      },
+      {
+        "file": "src/main/java/com/sis/domain/Student.java",
+        "hash": "3170709512927137566"
+      },
+      {
+        "file": "src/main/java/com/sis/domain/User.java",
+        "hash": "16226743968628599857"
+      },
+      {
+        "file": "src/main/java/com/sis/domain/package-info.java",
+        "hash": "4747047726592556071"
+      },
+      {
+        "file": "src/main/java/com/sis/management/SecurityMetersService.java",
+        "hash": "10732649349998676394"
+      },
+      {
+        "file": "src/main/java/com/sis/management/package-info.java",
+        "hash": "11161933747158537094"
+      },
+      {
+        "file": "src/main/java/com/sis/package-info.java",
+        "hash": "2509379583340435956"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/AppConfigRepository.java",
+        "hash": "7532079378641351745"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/AssessmentRepository.java",
+        "hash": "14866198850413736596"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/AssessmentRepositoryWithBagRelationships.java",
+        "hash": "16853447204848061466"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/AssessmentRepositoryWithBagRelationshipsImpl.java",
+        "hash": "16057453991531946929"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/AuthorityRepository.java",
+        "hash": "8939412331183443962"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/CourseRepository.java",
+        "hash": "1355688865860899459"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/CourseRepositoryWithBagRelationships.java",
+        "hash": "6062189147870067425"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/CourseRepositoryWithBagRelationshipsImpl.java",
+        "hash": "16921277270617450242"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/CurriculumMapRepository.java",
+        "hash": "14182524331629547465"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/InstructorRepository.java",
+        "hash": "16881380787102934408"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/InstructorRepositoryWithBagRelationships.java",
+        "hash": "4921016274535802182"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/InstructorRepositoryWithBagRelationshipsImpl.java",
+        "hash": "17768041904812320417"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/LearningCompetencyRepository.java",
+        "hash": "14056793470825131210"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/OrgRepository.java",
+        "hash": "14039303301124416060"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/ResourcesRepository.java",
+        "hash": "15347839067661263774"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/StrategiesRepository.java",
+        "hash": "1468860740067664166"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/StrategiesRepositoryWithBagRelationships.java",
+        "hash": "7969760149868235766"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/StrategiesRepositoryWithBagRelationshipsImpl.java",
+        "hash": "13872256090533212566"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/StudentRepository.java",
+        "hash": "11708150681998296877"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/StudentRepositoryWithBagRelationships.java",
+        "hash": "10730277957680527031"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/StudentRepositoryWithBagRelationshipsImpl.java",
+        "hash": "15689144640629883990"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/UserRepository.java",
+        "hash": "2819883046637821675"
+      },
+      {
+        "file": "src/main/java/com/sis/repository/package-info.java",
+        "hash": "2884763465149315630"
+      },
+      {
+        "file": "src/main/java/com/sis/security/AuthoritiesConstants.java",
+        "hash": "1870379092862031316"
+      },
+      {
+        "file": "src/main/java/com/sis/security/DomainUserDetailsService.java",
+        "hash": "11969556490995882910"
+      },
+      {
+        "file": "src/main/java/com/sis/security/SecurityUtils.java",
+        "hash": "14205638087139453205"
+      },
+      {
+        "file": "src/main/java/com/sis/security/SpringSecurityAuditorAware.java",
+        "hash": "2638385182952909977"
+      },
+      {
+        "file": "src/main/java/com/sis/security/UserNotActivatedException.java",
+        "hash": "14068532140458794304"
+      },
+      {
+        "file": "src/main/java/com/sis/security/package-info.java",
+        "hash": "10304256360151509151"
+      },
+      {
+        "file": "src/main/java/com/sis/service/AppConfigService.java",
+        "hash": "3700953164712286023"
+      },
+      {
+        "file": "src/main/java/com/sis/service/AssessmentService.java",
+        "hash": "7093342162485185970"
+      },
+      {
+        "file": "src/main/java/com/sis/service/CourseService.java",
+        "hash": "921708180248224416"
+      },
+      {
+        "file": "src/main/java/com/sis/service/CurriculumMapService.java",
+        "hash": "1447902859461719088"
+      },
+      {
+        "file": "src/main/java/com/sis/service/EmailAlreadyUsedException.java",
+        "hash": "16173530939763916726"
+      },
+      {
+        "file": "src/main/java/com/sis/service/InstructorService.java",
+        "hash": "3153777484279357162"
+      },
+      {
+        "file": "src/main/java/com/sis/service/InvalidPasswordException.java",
+        "hash": "258244677783872980"
+      },
+      {
+        "file": "src/main/java/com/sis/service/LearningCompetencyService.java",
+        "hash": "7089845771365692392"
+      },
+      {
+        "file": "src/main/java/com/sis/service/MailService.java",
+        "hash": "2010174997281973572"
+      },
+      {
+        "file": "src/main/java/com/sis/service/OrgService.java",
+        "hash": "17649579483370094171"
+      },
+      {
+        "file": "src/main/java/com/sis/service/ResourcesService.java",
+        "hash": "1544154842852987366"
+      },
+      {
+        "file": "src/main/java/com/sis/service/StrategiesService.java",
+        "hash": "12410580418604669522"
+      },
+      {
+        "file": "src/main/java/com/sis/service/StudentService.java",
+        "hash": "6866092142050684265"
+      },
+      {
+        "file": "src/main/java/com/sis/service/UserService.java",
+        "hash": "17094245165580409324"
+      },
+      {
+        "file": "src/main/java/com/sis/service/UsernameAlreadyUsedException.java",
+        "hash": "7575395632366117842"
+      },
+      {
+        "file": "src/main/java/com/sis/service/dto/AdminUserDTO.java",
+        "hash": "17101216718592297935"
+      },
+      {
+        "file": "src/main/java/com/sis/service/dto/AppConfigDTO.java",
+        "hash": "15365891098035204510"
+      },
+      {
+        "file": "src/main/java/com/sis/service/dto/AssessmentDTO.java",
+        "hash": "1146851672384401962"
+      },
+      {
+        "file": "src/main/java/com/sis/service/dto/CourseDTO.java",
+        "hash": "17289999580628632136"
+      },
+      {
+        "file": "src/main/java/com/sis/service/dto/CurriculumMapDTO.java",
+        "hash": "8714655774973172331"
+      },
+      {
+        "file": "src/main/java/com/sis/service/dto/InstructorDTO.java",
+        "hash": "7704612001217390887"
+      },
+      {
+        "file": "src/main/java/com/sis/service/dto/LearningCompetencyDTO.java",
+        "hash": "7803458130424996488"
+      },
+      {
+        "file": "src/main/java/com/sis/service/dto/OrgDTO.java",
+        "hash": "9302242937803064692"
+      },
+      {
+        "file": "src/main/java/com/sis/service/dto/PasswordChangeDTO.java",
+        "hash": "2275563453249900920"
+      },
+      {
+        "file": "src/main/java/com/sis/service/dto/ResourcesDTO.java",
+        "hash": "9816194587003195333"
+      },
+      {
+        "file": "src/main/java/com/sis/service/dto/StrategiesDTO.java",
+        "hash": "17537352300413971718"
+      },
+      {
+        "file": "src/main/java/com/sis/service/dto/StudentDTO.java",
+        "hash": "562909329420888379"
+      },
+      {
+        "file": "src/main/java/com/sis/service/dto/UserDTO.java",
+        "hash": "6168909142530848442"
+      },
+      {
+        "file": "src/main/java/com/sis/service/dto/package-info.java",
+        "hash": "13092014090713667913"
+      },
+      {
+        "file": "src/main/java/com/sis/service/impl/AppConfigServiceImpl.java",
+        "hash": "16655241811226337435"
+      },
+      {
+        "file": "src/main/java/com/sis/service/impl/AssessmentServiceImpl.java",
+        "hash": "9148765622581686868"
+      },
+      {
+        "file": "src/main/java/com/sis/service/impl/CourseServiceImpl.java",
+        "hash": "16782921493220957635"
+      },
+      {
+        "file": "src/main/java/com/sis/service/impl/CurriculumMapServiceImpl.java",
+        "hash": "9499866241955870724"
+      },
+      {
+        "file": "src/main/java/com/sis/service/impl/InstructorServiceImpl.java",
+        "hash": "12447078949746259902"
+      },
+      {
+        "file": "src/main/java/com/sis/service/impl/LearningCompetencyServiceImpl.java",
+        "hash": "9728908792930290259"
+      },
+      {
+        "file": "src/main/java/com/sis/service/impl/OrgServiceImpl.java",
+        "hash": "14308169093307583424"
+      },
+      {
+        "file": "src/main/java/com/sis/service/impl/ResourcesServiceImpl.java",
+        "hash": "15516373673983462388"
+      },
+      {
+        "file": "src/main/java/com/sis/service/impl/StrategiesServiceImpl.java",
+        "hash": "5201646832335287458"
+      },
+      {
+        "file": "src/main/java/com/sis/service/impl/StudentServiceImpl.java",
+        "hash": "15985631147142385879"
+      },
+      {
+        "file": "src/main/java/com/sis/service/impl/package-info.java",
+        "hash": "12201724163294735677"
+      },
+      {
+        "file": "src/main/java/com/sis/service/mapper/AppConfigMapper.java",
+        "hash": "17379075481979802063"
+      },
+      {
+        "file": "src/main/java/com/sis/service/mapper/AssessmentMapper.java",
+        "hash": "14095436872937063345"
+      },
+      {
+        "file": "src/main/java/com/sis/service/mapper/CourseMapper.java",
+        "hash": "13755508976668377699"
+      },
+      {
+        "file": "src/main/java/com/sis/service/mapper/CurriculumMapMapper.java",
+        "hash": "14512156062428604521"
+      },
+      {
+        "file": "src/main/java/com/sis/service/mapper/EntityMapper.java",
+        "hash": "3894308846952219096"
+      },
+      {
+        "file": "src/main/java/com/sis/service/mapper/InstructorMapper.java",
+        "hash": "16342715935291280016"
+      },
+      {
+        "file": "src/main/java/com/sis/service/mapper/LearningCompetencyMapper.java",
+        "hash": "18327237838807423339"
+      },
+      {
+        "file": "src/main/java/com/sis/service/mapper/OrgMapper.java",
+        "hash": "3588237447709835721"
+      },
+      {
+        "file": "src/main/java/com/sis/service/mapper/ResourcesMapper.java",
+        "hash": "4385749775854609013"
+      },
+      {
+        "file": "src/main/java/com/sis/service/mapper/StrategiesMapper.java",
+        "hash": "12265919328561364666"
+      },
+      {
+        "file": "src/main/java/com/sis/service/mapper/StudentMapper.java",
+        "hash": "2375547183142391356"
+      },
+      {
+        "file": "src/main/java/com/sis/service/mapper/UserMapper.java",
+        "hash": "11005441724689113892"
+      },
+      {
+        "file": "src/main/java/com/sis/service/mapper/package-info.java",
+        "hash": "6943067829908033652"
+      },
+      {
+        "file": "src/main/java/com/sis/service/package-info.java",
+        "hash": "10178060946490147843"
+      },
+      {
+        "file": "src/main/java/com/sis/service/util/ImageUtil.java",
+        "hash": "2171856460877407727"
+      },
+      {
+        "file": "src/main/java/com/sis/web/filter/SpaWebFilter.java",
+        "hash": "12307017201789027993"
+      },
+      {
+        "file": "src/main/java/com/sis/web/filter/package-info.java",
+        "hash": "12129532615192930768"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/AccountResource.java",
+        "hash": "10544440759429857029"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/AppConfigResource.java",
+        "hash": "5891012743464295883"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/AssessmentResource.java",
+        "hash": "16518325615158167385"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/AuthenticateController.java",
+        "hash": "398391277315122215"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/CourseResource.java",
+        "hash": "674824452017114161"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/CurriculumMapResource.java",
+        "hash": "5454093067415125690"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/InstructorResource.java",
+        "hash": "5389088750115061655"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/LearningCompetencyResource.java",
+        "hash": "8867734087098535859"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/OrgResource.java",
+        "hash": "7172826805996463488"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/PublicUserResource.java",
+        "hash": "1434904770926396897"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/ResourcesResource.java",
+        "hash": "15955919790833607948"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/StrategiesResource.java",
+        "hash": "17007577334914082050"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/StudentResource.java",
+        "hash": "5341862629956609668"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/UserResource.java",
+        "hash": "16886558060077324127"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/errors/BadRequestAlertException.java",
+        "hash": "12299944502677955533"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/errors/EmailAlreadyUsedException.java",
+        "hash": "5695523363933045039"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/errors/ErrorConstants.java",
+        "hash": "2531523084700464522"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/errors/ExceptionTranslator.java",
+        "hash": "12552335398250726882"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/errors/FieldErrorVM.java",
+        "hash": "15056156068798670034"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/errors/InvalidPasswordException.java",
+        "hash": "3935166860917954000"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/errors/LoginAlreadyUsedException.java",
+        "hash": "11193520158338319691"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/errors/package-info.java",
+        "hash": "17781601654840349263"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/package-info.java",
+        "hash": "3444319230113512567"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/vm/KeyAndPasswordVM.java",
+        "hash": "4069530378087775246"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/vm/LoginVM.java",
+        "hash": "4390468623515333104"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/vm/ManagedUserVM.java",
+        "hash": "9255401173120257105"
+      },
+      {
+        "file": "src/main/java/com/sis/web/rest/vm/package-info.java",
+        "hash": "15867752185884200177"
+      },
+      {
+        "file": "src/main/resources/banner.txt",
+        "hash": "7847412617751504665"
+      },
+      {
+        "file": "src/main/resources/config/application-dev.yml",
+        "hash": "15554068258202111918"
+      },
+      {
+        "file": "src/main/resources/config/application-prod.yml",
+        "hash": "15136759126926993862"
+      },
+      {
+        "file": "src/main/resources/config/application-tls.yml",
+        "hash": "11556846225576784761"
+      },
+      {
+        "file": "src/main/resources/config/application.yml",
+        "hash": "12867241532732361970"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/00000000000000_initial_schema.xml",
+        "hash": "14777257675351714792"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104091514_added_entity_Org.xml",
+        "hash": "17110315100894060991"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104091514_added_entity_constraints_Org.xml",
+        "hash": "18251014136688616204"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104091614_added_entity_Instructor.xml",
+        "hash": "16607410360139301609"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104091614_added_entity_constraints_Instructor.xml",
+        "hash": "6512080825747088597"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104091714_added_entity_Student.xml",
+        "hash": "17666411424931341755"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104091714_added_entity_constraints_Student.xml",
+        "hash": "11889082729249989511"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104091814_added_entity_Course.xml",
+        "hash": "15997547815240721630"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104091814_added_entity_constraints_Course.xml",
+        "hash": "12362014006288840755"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104091914_added_entity_AppConfig.xml",
+        "hash": "104367338379407523"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104091914_added_entity_constraints_AppConfig.xml",
+        "hash": "1284253242582955651"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104092014_added_entity_CurriculumMap.xml",
+        "hash": "5917197724497407460"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104092014_added_entity_constraints_CurriculumMap.xml",
+        "hash": "9142377833164498588"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104092114_added_entity_LearningCompetency.xml",
+        "hash": "8490053458737615524"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104092114_added_entity_constraints_LearningCompetency.xml",
+        "hash": "16261940786235951845"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104092214_added_entity_Strategies.xml",
+        "hash": "4413908911652410760"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104092214_added_entity_constraints_Strategies.xml",
+        "hash": "12806804779088278730"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104092314_added_entity_Assessment.xml",
+        "hash": "8304255188905210572"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104092314_added_entity_constraints_Assessment.xml",
+        "hash": "10074328622279219934"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104092414_added_entity_Resources.xml",
+        "hash": "16019189678457254516"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104092414_added_entity_Tag.xml",
+        "hash": "14800920780353315349"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/changelog/20240104092414_added_entity_constraints_Resources.xml",
+        "hash": "3894728587127978560"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/data/app_config.csv",
+        "hash": "4267270735184443835"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/data/authority.csv",
+        "hash": "11997263253237822955"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/data/course.csv",
+        "hash": "1928218566068826152"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/data/instructor.csv",
+        "hash": "2982312221711808172"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/data/org.csv",
+        "hash": "9480590019824803812"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/data/user.csv",
+        "hash": "16225132999882686587"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/data/user_authority.csv",
+        "hash": "8642485841822697479"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/fake-data/app_config.csv",
+        "hash": "13052443522408640968"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/fake-data/assessment.csv",
+        "hash": "11857922136683946241"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/fake-data/blob/hipster.png",
+        "hash": "17904416785532795777"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/fake-data/blob/hipster.txt",
+        "hash": "9985699044914858671"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/fake-data/course.csv",
+        "hash": "16658848798602890712"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/fake-data/curriculum_map.csv",
+        "hash": "11372444838196358944"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/fake-data/instructor.csv",
+        "hash": "15907251006852960517"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/fake-data/learning_competency.csv",
+        "hash": "1066998613077758680"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/fake-data/org.csv",
+        "hash": "496305231442171947"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/fake-data/resources.csv",
+        "hash": "11010232371868219939"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/fake-data/strategies.csv",
+        "hash": "17998817530314373083"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/fake-data/student.csv",
+        "hash": "3747550192455967862"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/fake-data/tag.csv",
+        "hash": "4272827698603414094"
+      },
+      {
+        "file": "src/main/resources/config/liquibase/master.xml",
+        "hash": "8851122973542533770"
+      },
+      {
+        "file": "src/main/resources/config/sql-script/sql_script-2024-01-19.sql",
+        "hash": "4774817492800038316"
+      },
+      {
+        "file": "src/main/resources/config/tls/keystore.p12",
+        "hash": "14764037270815631420"
+      },
+      {
+        "file": "src/main/resources/i18n/messages.properties",
+        "hash": "16285565498318969034"
+      },
+      {
+        "file": "src/main/resources/i18n/messages_en.properties",
+        "hash": "10962450038275446057"
+      },
+      {
+        "file": "src/main/resources/logback-spring.xml",
+        "hash": "18245394404525065950"
+      },
+      {
+        "file": "src/main/resources/templates/error.html",
+        "hash": "7059271791683005038"
+      },
+      {
+        "file": "src/main/resources/templates/mail/activationEmail.html",
+        "hash": "3674831878872641726"
+      },
+      {
+        "file": "src/main/resources/templates/mail/creationEmail.html",
+        "hash": "143514473758458434"
+      },
+      {
+        "file": "src/main/resources/templates/mail/passwordResetEmail.html",
+        "hash": "14587098289100534571"
+      },
+      {
+        "file": "src/main/webapp/404.html",
+        "hash": "7102262816917310697"
+      },
+      {
+        "file": "src/main/webapp/WEB-INF/web.xml",
+        "hash": "11172337706224415693"
+      },
+      {
+        "file": "src/main/webapp/app/account/account.route.ts",
+        "hash": "3574069060505560241"
+      },
+      {
+        "file": "src/main/webapp/app/account/activate/activate.component.html",
+        "hash": "3348446075652577504"
+      },
+      {
+        "file": "src/main/webapp/app/account/activate/activate.component.spec.ts",
+        "hash": "13962049566461920532"
+      },
+      {
+        "file": "src/main/webapp/app/account/activate/activate.component.ts",
+        "hash": "17090601960392461185"
+      },
+      {
+        "file": "src/main/webapp/app/account/activate/activate.route.ts",
+        "hash": "4363809587748257208"
+      },
+      {
+        "file": "src/main/webapp/app/account/activate/activate.service.spec.ts",
+        "hash": "12503953973744899872"
+      },
+      {
+        "file": "src/main/webapp/app/account/activate/activate.service.ts",
+        "hash": "11190544619387819125"
+      },
+      {
+        "file": "src/main/webapp/app/account/password-reset/finish/password-reset-finish.component.html",
+        "hash": "246385686255389374"
+      },
+      {
+        "file": "src/main/webapp/app/account/password-reset/finish/password-reset-finish.component.spec.ts",
+        "hash": "16433214487263746472"
+      },
+      {
+        "file": "src/main/webapp/app/account/password-reset/finish/password-reset-finish.component.ts",
+        "hash": "14415954925386877524"
+      },
+      {
+        "file": "src/main/webapp/app/account/password-reset/finish/password-reset-finish.route.ts",
+        "hash": "1014403275595168215"
+      },
+      {
+        "file": "src/main/webapp/app/account/password-reset/finish/password-reset-finish.service.spec.ts",
+        "hash": "15775324616458358410"
+      },
+      {
+        "file": "src/main/webapp/app/account/password-reset/finish/password-reset-finish.service.ts",
+        "hash": "1437180542973706942"
+      },
+      {
+        "file": "src/main/webapp/app/account/password-reset/init/password-reset-init.component.html",
+        "hash": "17210922970148996095"
+      },
+      {
+        "file": "src/main/webapp/app/account/password-reset/init/password-reset-init.component.spec.ts",
+        "hash": "98661922783308605"
+      },
+      {
+        "file": "src/main/webapp/app/account/password-reset/init/password-reset-init.component.ts",
+        "hash": "5767374018311060663"
+      },
+      {
+        "file": "src/main/webapp/app/account/password-reset/init/password-reset-init.route.ts",
+        "hash": "10120309206950978404"
+      },
+      {
+        "file": "src/main/webapp/app/account/password-reset/init/password-reset-init.service.spec.ts",
+        "hash": "11410997120194919523"
+      },
+      {
+        "file": "src/main/webapp/app/account/password-reset/init/password-reset-init.service.ts",
+        "hash": "8831697136282527873"
+      },
+      {
+        "file": "src/main/webapp/app/account/password/password-strength-bar/password-strength-bar.component.html",
+        "hash": "12627629072573261561"
+      },
+      {
+        "file": "src/main/webapp/app/account/password/password-strength-bar/password-strength-bar.component.scss",
+        "hash": "8243147778911953004"
+      },
+      {
+        "file": "src/main/webapp/app/account/password/password-strength-bar/password-strength-bar.component.spec.ts",
+        "hash": "13765089548656049417"
+      },
+      {
+        "file": "src/main/webapp/app/account/password/password-strength-bar/password-strength-bar.component.ts",
+        "hash": "4929311622751848182"
+      },
+      {
+        "file": "src/main/webapp/app/account/password/password.component.html",
+        "hash": "8769621059634790605"
+      },
+      {
+        "file": "src/main/webapp/app/account/password/password.component.spec.ts",
+        "hash": "1192065629281864005"
+      },
+      {
+        "file": "src/main/webapp/app/account/password/password.component.ts",
+        "hash": "11344866113374548356"
+      },
+      {
+        "file": "src/main/webapp/app/account/password/password.route.ts",
+        "hash": "3866050602244367827"
+      },
+      {
+        "file": "src/main/webapp/app/account/password/password.service.spec.ts",
+        "hash": "7442117144391203251"
+      },
+      {
+        "file": "src/main/webapp/app/account/password/password.service.ts",
+        "hash": "16033940521510462651"
+      },
+      {
+        "file": "src/main/webapp/app/account/register/register.component.html",
+        "hash": "10749555227327713742"
+      },
+      {
+        "file": "src/main/webapp/app/account/register/register.component.spec.ts",
+        "hash": "12594973259777450334"
+      },
+      {
+        "file": "src/main/webapp/app/account/register/register.component.ts",
+        "hash": "733437039134636648"
+      },
+      {
+        "file": "src/main/webapp/app/account/register/register.model.ts",
+        "hash": "9052653820980873400"
+      },
+      {
+        "file": "src/main/webapp/app/account/register/register.route.ts",
+        "hash": "13899973282822311930"
+      },
+      {
+        "file": "src/main/webapp/app/account/register/register.service.spec.ts",
+        "hash": "10758321841401731627"
+      },
+      {
+        "file": "src/main/webapp/app/account/register/register.service.ts",
+        "hash": "1537342937726825421"
+      },
+      {
+        "file": "src/main/webapp/app/account/settings/settings.component.html",
+        "hash": "13417177659568774171"
+      },
+      {
+        "file": "src/main/webapp/app/account/settings/settings.component.spec.ts",
+        "hash": "11720238440089368077"
+      },
+      {
+        "file": "src/main/webapp/app/account/settings/settings.component.ts",
+        "hash": "67586314983908301"
+      },
+      {
+        "file": "src/main/webapp/app/account/settings/settings.route.ts",
+        "hash": "14273851575850296664"
+      },
+      {
+        "file": "src/main/webapp/app/admin/admin.routes.ts",
+        "hash": "1889214247268396121"
+      },
+      {
+        "file": "src/main/webapp/app/admin/configuration/configuration.component.html",
+        "hash": "13665367056897556875"
+      },
+      {
+        "file": "src/main/webapp/app/admin/configuration/configuration.component.spec.ts",
+        "hash": "3597778484704168226"
+      },
+      {
+        "file": "src/main/webapp/app/admin/configuration/configuration.component.ts",
+        "hash": "7214885741723124212"
+      },
+      {
+        "file": "src/main/webapp/app/admin/configuration/configuration.model.ts",
+        "hash": "3626153208551572722"
+      },
+      {
+        "file": "src/main/webapp/app/admin/configuration/configuration.service.spec.ts",
+        "hash": "14291823999295450323"
+      },
+      {
+        "file": "src/main/webapp/app/admin/configuration/configuration.service.ts",
+        "hash": "12196745395524844226"
+      },
+      {
+        "file": "src/main/webapp/app/admin/docs/docs.component.html",
+        "hash": "3372043408636752136"
+      },
+      {
+        "file": "src/main/webapp/app/admin/docs/docs.component.scss",
+        "hash": "15582941980080348984"
+      },
+      {
+        "file": "src/main/webapp/app/admin/docs/docs.component.ts",
+        "hash": "2349474495319484903"
+      },
+      {
+        "file": "src/main/webapp/app/admin/health/health.component.html",
+        "hash": "6129173182356481166"
+      },
+      {
+        "file": "src/main/webapp/app/admin/health/health.component.spec.ts",
+        "hash": "8948762504938362477"
+      },
+      {
+        "file": "src/main/webapp/app/admin/health/health.component.ts",
+        "hash": "17697666306565155123"
+      },
+      {
+        "file": "src/main/webapp/app/admin/health/health.model.ts",
+        "hash": "8212496536502621025"
+      },
+      {
+        "file": "src/main/webapp/app/admin/health/health.service.spec.ts",
+        "hash": "13425395177797925787"
+      },
+      {
+        "file": "src/main/webapp/app/admin/health/health.service.ts",
+        "hash": "10434090622795268748"
+      },
+      {
+        "file": "src/main/webapp/app/admin/health/modal/health-modal.component.html",
+        "hash": "11511249119593135529"
+      },
+      {
+        "file": "src/main/webapp/app/admin/health/modal/health-modal.component.spec.ts",
+        "hash": "7114067694564444838"
+      },
+      {
+        "file": "src/main/webapp/app/admin/health/modal/health-modal.component.ts",
+        "hash": "5182970879985123003"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/jvm-memory/jvm-memory.component.html",
+        "hash": "6728637163950000362"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/jvm-memory/jvm-memory.component.ts",
+        "hash": "9496071308809966647"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/jvm-threads/jvm-threads.component.html",
+        "hash": "16457321405031012157"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/jvm-threads/jvm-threads.component.ts",
+        "hash": "5997974186029478632"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/metrics-cache/metrics-cache.component.html",
+        "hash": "962657049419869134"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/metrics-cache/metrics-cache.component.ts",
+        "hash": "10010265958467856254"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/metrics-datasource/metrics-datasource.component.html",
+        "hash": "16771136347604520852"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/metrics-datasource/metrics-datasource.component.ts",
+        "hash": "10621708861092519115"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/metrics-endpoints-requests/metrics-endpoints-requests.component.html",
+        "hash": "8179570159653829941"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/metrics-endpoints-requests/metrics-endpoints-requests.component.ts",
+        "hash": "16244337803440711964"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/metrics-garbagecollector/metrics-garbagecollector.component.html",
+        "hash": "13510649413300245687"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/metrics-garbagecollector/metrics-garbagecollector.component.ts",
+        "hash": "17969296925674074905"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/metrics-modal-threads/metrics-modal-threads.component.html",
+        "hash": "2651567399868026743"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/metrics-modal-threads/metrics-modal-threads.component.spec.ts",
+        "hash": "5519293392187957482"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/metrics-modal-threads/metrics-modal-threads.component.ts",
+        "hash": "1301185010800827974"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/metrics-request/metrics-request.component.html",
+        "hash": "9326231832295475705"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/metrics-request/metrics-request.component.ts",
+        "hash": "13826362749205372748"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/metrics-system/metrics-system.component.html",
+        "hash": "7517614643301647228"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/blocks/metrics-system/metrics-system.component.ts",
+        "hash": "13254508940431257671"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/metrics.component.html",
+        "hash": "2700359007732434248"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/metrics.component.spec.ts",
+        "hash": "4822314944587596822"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/metrics.component.ts",
+        "hash": "9053634145392123202"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/metrics.model.ts",
+        "hash": "14085563532908131517"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/metrics.service.spec.ts",
+        "hash": "2299235683644254530"
+      },
+      {
+        "file": "src/main/webapp/app/admin/metrics/metrics.service.ts",
+        "hash": "12203757349866352035"
+      },
+      {
+        "file": "src/main/webapp/app/admin/user-management/delete/user-management-delete-dialog.component.html",
+        "hash": "7627199772458648407"
+      },
+      {
+        "file": "src/main/webapp/app/admin/user-management/delete/user-management-delete-dialog.component.spec.ts",
+        "hash": "14094059523445358864"
+      },
+      {
+        "file": "src/main/webapp/app/admin/user-management/delete/user-management-delete-dialog.component.ts",
+        "hash": "12826959217853919132"
+      },
+      {
+        "file": "src/main/webapp/app/admin/user-management/detail/user-management-detail.component.html",
+        "hash": "11831433303470019841"
+      },
+      {
+        "file": "src/main/webapp/app/admin/user-management/detail/user-management-detail.component.spec.ts",
+        "hash": "1783163953988719573"
+      },
+      {
+        "file": "src/main/webapp/app/admin/user-management/detail/user-management-detail.component.ts",
+        "hash": "4601820885503456572"
+      },
+      {
+        "file": "src/main/webapp/app/admin/user-management/list/user-management.component.html",
+        "hash": "14533572483035505479"
+      },
+      {
+        "file": "src/main/webapp/app/admin/user-management/list/user-management.component.spec.ts",
+        "hash": "13002735648100032831"
+      },
+      {
+        "file": "src/main/webapp/app/admin/user-management/list/user-management.component.ts",
+        "hash": "8126440135830285867"
+      },
+      {
+        "file": "src/main/webapp/app/admin/user-management/service/user-management.service.spec.ts",
+        "hash": "15850343690271234591"
+      },
+      {
+        "file": "src/main/webapp/app/admin/user-management/service/user-management.service.ts",
+        "hash": "10618106930571901706"
+      },
+      {
+        "file": "src/main/webapp/app/admin/user-management/update/user-management-update.component.html",
+        "hash": "4069795667038415004"
+      },
+      {
+        "file": "src/main/webapp/app/admin/user-management/update/user-management-update.component.spec.ts",
+        "hash": "14217379143205387266"
+      },
+      {
+        "file": "src/main/webapp/app/admin/user-management/update/user-management-update.component.ts",
+        "hash": "16672947671731928926"
+      },
+      {
+        "file": "src/main/webapp/app/admin/user-management/user-management.model.ts",
+        "hash": "5597798391468771011"
+      },
+      {
+        "file": "src/main/webapp/app/admin/user-management/user-management.route.ts",
+        "hash": "3989791058870146085"
+      },
+      {
+        "file": "src/main/webapp/app/app-page-title-strategy.ts",
+        "hash": "14239841012527427036"
+      },
+      {
+        "file": "src/main/webapp/app/app.component.ts",
+        "hash": "14268118484628176741"
+      },
+      {
+        "file": "src/main/webapp/app/app.config.ts",
+        "hash": "4782796621739488347"
+      },
+      {
+        "file": "src/main/webapp/app/app.constants.ts",
+        "hash": "3254180348349988549"
+      },
+      {
+        "file": "src/main/webapp/app/app.routes.ts",
+        "hash": "17226023954850091944"
+      },
+      {
+        "file": "src/main/webapp/app/config/authority.constants.ts",
+        "hash": "9852604514562003324"
+      },
+      {
+        "file": "src/main/webapp/app/config/datepicker-adapter.ts",
+        "hash": "4581066979432461859"
+      },
+      {
+        "file": "src/main/webapp/app/config/dayjs.ts",
+        "hash": "12657683629953007740"
+      },
+      {
+        "file": "src/main/webapp/app/config/error.constants.ts",
+        "hash": "2303416965647490586"
+      },
+      {
+        "file": "src/main/webapp/app/config/font-awesome-icons.ts",
+        "hash": "4827500626309425864"
+      },
+      {
+        "file": "src/main/webapp/app/config/input.constants.ts",
+        "hash": "15526039301055779417"
+      },
+      {
+        "file": "src/main/webapp/app/config/language.constants.ts",
+        "hash": "8228309342431860359"
+      },
+      {
+        "file": "src/main/webapp/app/config/navigation.constants.ts",
+        "hash": "2254990348612717324"
+      },
+      {
+        "file": "src/main/webapp/app/config/pagination.constants.ts",
+        "hash": "4033899708326916073"
+      },
+      {
+        "file": "src/main/webapp/app/config/translation.config.ts",
+        "hash": "2337939887057898854"
+      },
+      {
+        "file": "src/main/webapp/app/config/uib-pagination.config.ts",
+        "hash": "3653053443228170164"
+      },
+      {
+        "file": "src/main/webapp/app/core/auth/account.model.ts",
+        "hash": "9688741039672143925"
+      },
+      {
+        "file": "src/main/webapp/app/core/auth/account.service.spec.ts",
+        "hash": "2755024353853535741"
+      },
+      {
+        "file": "src/main/webapp/app/core/auth/account.service.ts",
+        "hash": "6224643204736138857"
+      },
+      {
+        "file": "src/main/webapp/app/core/auth/auth-jwt.service.spec.ts",
+        "hash": "14488580115713568002"
+      },
+      {
+        "file": "src/main/webapp/app/core/auth/auth-jwt.service.ts",
+        "hash": "7545755499484754143"
+      },
+      {
+        "file": "src/main/webapp/app/core/auth/state-storage.service.ts",
+        "hash": "13186368699577476492"
+      },
+      {
+        "file": "src/main/webapp/app/core/auth/user-route-access.service.ts",
+        "hash": "12864155566038954603"
+      },
+      {
+        "file": "src/main/webapp/app/core/config/application-config.service.spec.ts",
+        "hash": "1699229605000125156"
+      },
+      {
+        "file": "src/main/webapp/app/core/config/application-config.service.ts",
+        "hash": "7665315651888623641"
+      },
+      {
+        "file": "src/main/webapp/app/core/interceptor/auth-expired.interceptor.ts",
+        "hash": "9628899213849732347"
+      },
+      {
+        "file": "src/main/webapp/app/core/interceptor/auth.interceptor.ts",
+        "hash": "17449159383949004737"
+      },
+      {
+        "file": "src/main/webapp/app/core/interceptor/error-handler.interceptor.ts",
+        "hash": "9408539350802726218"
+      },
+      {
+        "file": "src/main/webapp/app/core/interceptor/index.ts",
+        "hash": "13477698899654491779"
+      },
+      {
+        "file": "src/main/webapp/app/core/interceptor/notification.interceptor.ts",
+        "hash": "5394269321217538523"
+      },
+      {
+        "file": "src/main/webapp/app/core/request/request-util.ts",
+        "hash": "18235987039191418809"
+      },
+      {
+        "file": "src/main/webapp/app/core/request/request.model.ts",
+        "hash": "181148718022341560"
+      },
+      {
+        "file": "src/main/webapp/app/core/util/alert.service.spec.ts",
+        "hash": "2209717184472007013"
+      },
+      {
+        "file": "src/main/webapp/app/core/util/alert.service.ts",
+        "hash": "9411059871028573663"
+      },
+      {
+        "file": "src/main/webapp/app/core/util/data-util.service.spec.ts",
+        "hash": "1230830277789675382"
+      },
+      {
+        "file": "src/main/webapp/app/core/util/data-util.service.ts",
+        "hash": "10663326858462108953"
+      },
+      {
+        "file": "src/main/webapp/app/core/util/event-manager.service.spec.ts",
+        "hash": "475041237158441266"
+      },
+      {
+        "file": "src/main/webapp/app/core/util/event-manager.service.ts",
+        "hash": "11834223053106381844"
+      },
+      {
+        "file": "src/main/webapp/app/core/util/html-util.service.spec.ts",
+        "hash": "12690526184120498247"
+      },
+      {
+        "file": "src/main/webapp/app/core/util/html-util.service.ts",
+        "hash": "9333869146017636881"
+      },
+      {
+        "file": "src/main/webapp/app/core/util/operators.spec.ts",
+        "hash": "12384539187483138410"
+      },
+      {
+        "file": "src/main/webapp/app/core/util/operators.ts",
+        "hash": "6772504111430558947"
+      },
+      {
+        "file": "src/main/webapp/app/core/util/parse-links.service.spec.ts",
+        "hash": "13647403523547386709"
+      },
+      {
+        "file": "src/main/webapp/app/core/util/parse-links.service.ts",
+        "hash": "17688973275583320517"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/app-config.model.ts",
+        "hash": "14303090329268481429"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/app-config.routes.ts",
+        "hash": "9737425097240151807"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/app-config.test-samples.ts",
+        "hash": "13865137766457607073"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/delete/app-config-delete-dialog.component.html",
+        "hash": "7844094483343003710"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/delete/app-config-delete-dialog.component.spec.ts",
+        "hash": "2781678822988748387"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/delete/app-config-delete-dialog.component.ts",
+        "hash": "12083293228915331970"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/detail/app-config-detail.component.html",
+        "hash": "10614674933629805698"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/detail/app-config-detail.component.spec.ts",
+        "hash": "12013753284793034217"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/detail/app-config-detail.component.ts",
+        "hash": "17716291145294925762"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/list/app-config.component.html",
+        "hash": "5519537672944810160"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/list/app-config.component.spec.ts",
+        "hash": "4454674233051420237"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/list/app-config.component.ts",
+        "hash": "14976098387873298338"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/route/app-config-routing-resolve.service.spec.ts",
+        "hash": "8813762717012738644"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/route/app-config-routing-resolve.service.ts",
+        "hash": "3462306076129511737"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/service/app-config.service.spec.ts",
+        "hash": "15867945714610311334"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/service/app-config.service.ts",
+        "hash": "1552914460811057581"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/update/app-config-form.service.spec.ts",
+        "hash": "8482717280804104784"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/update/app-config-form.service.ts",
+        "hash": "11162852561336575366"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/update/app-config-update.component.html",
+        "hash": "17564641312699219643"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/update/app-config-update.component.spec.ts",
+        "hash": "15682615566031247757"
+      },
+      {
+        "file": "src/main/webapp/app/entities/app-config/update/app-config-update.component.ts",
+        "hash": "6711310734600660701"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/assessment.model.ts",
+        "hash": "9985026327846678955"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/assessment.routes.ts",
+        "hash": "4368144846740053423"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/assessment.test-samples.ts",
+        "hash": "7466508845173330010"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/delete/assessment-delete-dialog.component.html",
+        "hash": "13669521260378294339"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/delete/assessment-delete-dialog.component.spec.ts",
+        "hash": "9560847319909656230"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/delete/assessment-delete-dialog.component.ts",
+        "hash": "6271891204324486197"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/detail/assessment-detail.component.html",
+        "hash": "3611212427689516418"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/detail/assessment-detail.component.spec.ts",
+        "hash": "17309444850248340861"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/detail/assessment-detail.component.ts",
+        "hash": "5499510609222688784"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/list/assessment.component.html",
+        "hash": "1330207451920037377"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/list/assessment.component.spec.ts",
+        "hash": "855330099282336027"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/list/assessment.component.ts",
+        "hash": "4050629866816743648"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/route/assessment-routing-resolve.service.spec.ts",
+        "hash": "13747473961230932508"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/route/assessment-routing-resolve.service.ts",
+        "hash": "5115286521872469660"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/service/assessment.service.spec.ts",
+        "hash": "9558612175470593216"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/service/assessment.service.ts",
+        "hash": "313814503391427257"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/update/assessment-form.service.spec.ts",
+        "hash": "17919931364486642078"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/update/assessment-form.service.ts",
+        "hash": "11861926758762645570"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/update/assessment-update.component.html",
+        "hash": "15326453517537720850"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/update/assessment-update.component.spec.ts",
+        "hash": "12810652113378322618"
+      },
+      {
+        "file": "src/main/webapp/app/entities/assessment/update/assessment-update.component.ts",
+        "hash": "9015732820753126206"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/course.model.ts",
+        "hash": "9514434132689292604"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/course.routes.ts",
+        "hash": "15041244836673208364"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/course.test-samples.ts",
+        "hash": "11659590218416933312"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/delete/course-delete-dialog.component.html",
+        "hash": "2886843793841020653"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/delete/course-delete-dialog.component.spec.ts",
+        "hash": "12859523185602444261"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/delete/course-delete-dialog.component.ts",
+        "hash": "12969294583660540129"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/detail/course-detail.component.html",
+        "hash": "1097214026188815552"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/detail/course-detail.component.spec.ts",
+        "hash": "14416706676448722519"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/detail/course-detail.component.ts",
+        "hash": "1112668703830770893"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/list/course.component.html",
+        "hash": "4682569775141923027"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/list/course.component.spec.ts",
+        "hash": "853259004063848857"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/list/course.component.ts",
+        "hash": "7577198461767520907"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/route/course-routing-resolve.service.spec.ts",
+        "hash": "10056605395149727054"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/route/course-routing-resolve.service.ts",
+        "hash": "17325331687062668935"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/service/course.service.spec.ts",
+        "hash": "12844056782985619779"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/service/course.service.ts",
+        "hash": "4596916452652796365"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/update/course-form.service.spec.ts",
+        "hash": "13106502858629548995"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/update/course-form.service.ts",
+        "hash": "9666621511223349002"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/update/course-update.component.html",
+        "hash": "6128002568785858125"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/update/course-update.component.spec.ts",
+        "hash": "13605290530229868316"
+      },
+      {
+        "file": "src/main/webapp/app/entities/course/update/course-update.component.ts",
+        "hash": "8246780014529246371"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/curriculum-map.model.ts",
+        "hash": "1868678440984566775"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/curriculum-map.routes.ts",
+        "hash": "10036011739016417828"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/curriculum-map.test-samples.ts",
+        "hash": "4049256728797848270"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/delete/curriculum-map-delete-dialog.component.html",
+        "hash": "14886815083317608967"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/delete/curriculum-map-delete-dialog.component.spec.ts",
+        "hash": "14450016833842644448"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/delete/curriculum-map-delete-dialog.component.ts",
+        "hash": "4818818030099129088"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/detail/curriculum-map-detail.component.html",
+        "hash": "8735503343742261691"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/detail/curriculum-map-detail.component.spec.ts",
+        "hash": "14868150520870495541"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/detail/curriculum-map-detail.component.ts",
+        "hash": "1862099103850480634"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/list/curriculum-map.component.html",
+        "hash": "13167967478897988186"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/list/curriculum-map.component.spec.ts",
+        "hash": "11204447483793926075"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/list/curriculum-map.component.ts",
+        "hash": "7911047703029906821"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/route/curriculum-map-routing-resolve.service.spec.ts",
+        "hash": "18061214182039692789"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/route/curriculum-map-routing-resolve.service.ts",
+        "hash": "237355989614382888"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/service/curriculum-map.service.spec.ts",
+        "hash": "4676009181828190218"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/service/curriculum-map.service.ts",
+        "hash": "11378999547799961898"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/update/curriculum-map-form.service.spec.ts",
+        "hash": "8823518755675885548"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/update/curriculum-map-form.service.ts",
+        "hash": "2198346045096985721"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/update/curriculum-map-update.component.html",
+        "hash": "2818687285316962868"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/update/curriculum-map-update.component.spec.ts",
+        "hash": "16953420428820463547"
+      },
+      {
+        "file": "src/main/webapp/app/entities/curriculum-map/update/curriculum-map-update.component.ts",
+        "hash": "556931027871201760"
+      },
+      {
+        "file": "src/main/webapp/app/entities/entity-navbar-items.ts",
+        "hash": "7910563604811249734"
+      },
+      {
+        "file": "src/main/webapp/app/entities/entity.routes.ts",
+        "hash": "16354022081006579862"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/delete/instructor-delete-dialog.component.html",
+        "hash": "3533165235202456729"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/delete/instructor-delete-dialog.component.spec.ts",
+        "hash": "9081508054873469603"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/delete/instructor-delete-dialog.component.ts",
+        "hash": "5350978121920457467"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/detail/instructor-detail.component.html",
+        "hash": "16706265893304622465"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/detail/instructor-detail.component.spec.ts",
+        "hash": "10726758892806431745"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/detail/instructor-detail.component.ts",
+        "hash": "10955764969669053304"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/instructor.model.ts",
+        "hash": "17521360627182384886"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/instructor.routes.ts",
+        "hash": "2127170201441275330"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/instructor.test-samples.ts",
+        "hash": "5567413486665969249"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/list/instructor.component.html",
+        "hash": "12302721460681278856"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/list/instructor.component.spec.ts",
+        "hash": "10974239649065595862"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/list/instructor.component.ts",
+        "hash": "12505712278982068629"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/route/instructor-routing-resolve.service.spec.ts",
+        "hash": "9926501551505696029"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/route/instructor-routing-resolve.service.ts",
+        "hash": "15271949996104722778"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/service/instructor.service.spec.ts",
+        "hash": "10424953653264504831"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/service/instructor.service.ts",
+        "hash": "7156890596344810002"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/update/instructor-form.service.spec.ts",
+        "hash": "14438931895907743465"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/update/instructor-form.service.ts",
+        "hash": "16440653292170322592"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/update/instructor-update.component.html",
+        "hash": "12672437000129026095"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/update/instructor-update.component.spec.ts",
+        "hash": "11506915515872922370"
+      },
+      {
+        "file": "src/main/webapp/app/entities/instructor/update/instructor-update.component.ts",
+        "hash": "9988437477078895942"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/delete/learning-competency-delete-dialog.component.html",
+        "hash": "8358413578880271119"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/delete/learning-competency-delete-dialog.component.spec.ts",
+        "hash": "2447382074257891950"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/delete/learning-competency-delete-dialog.component.ts",
+        "hash": "9735844439253672759"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/detail/learning-competency-detail.component.html",
+        "hash": "3320833041167854768"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/detail/learning-competency-detail.component.spec.ts",
+        "hash": "18440246164911631856"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/detail/learning-competency-detail.component.ts",
+        "hash": "14682287284809596721"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/learning-competency.model.ts",
+        "hash": "4670067881092501754"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/learning-competency.routes.ts",
+        "hash": "13926579008937136704"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/learning-competency.test-samples.ts",
+        "hash": "14338421644878709624"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/list/learning-competency.component.html",
+        "hash": "10510611979691717354"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/list/learning-competency.component.spec.ts",
+        "hash": "496532848759042998"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/list/learning-competency.component.ts",
+        "hash": "17095814309373178478"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/route/learning-competency-routing-resolve.service.spec.ts",
+        "hash": "1862377702995085374"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/route/learning-competency-routing-resolve.service.ts",
+        "hash": "7510205342292257223"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/service/learning-competency.service.spec.ts",
+        "hash": "14694393821155419051"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/service/learning-competency.service.ts",
+        "hash": "13450665097258191217"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/update/learning-competency-form.service.spec.ts",
+        "hash": "4580234084704374767"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/update/learning-competency-form.service.ts",
+        "hash": "7967705263611648107"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/update/learning-competency-update.component.html",
+        "hash": "12440463421947908869"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/update/learning-competency-update.component.spec.ts",
+        "hash": "9886568098817960447"
+      },
+      {
+        "file": "src/main/webapp/app/entities/learning-competency/update/learning-competency-update.component.ts",
+        "hash": "11436374882943840900"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/delete/org-delete-dialog.component.html",
+        "hash": "6448727442090136627"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/delete/org-delete-dialog.component.spec.ts",
+        "hash": "14501667677841067358"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/delete/org-delete-dialog.component.ts",
+        "hash": "11954586773014007477"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/detail/org-detail.component.html",
+        "hash": "2374792557455441661"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/detail/org-detail.component.spec.ts",
+        "hash": "12980391733020865049"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/detail/org-detail.component.ts",
+        "hash": "17641798140158950227"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/list/org.component.html",
+        "hash": "4209503191979052987"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/list/org.component.spec.ts",
+        "hash": "13127834550566745843"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/list/org.component.ts",
+        "hash": "14136867021044623731"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/org.model.ts",
+        "hash": "4589599478879832769"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/org.routes.ts",
+        "hash": "3800630736955553964"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/org.test-samples.ts",
+        "hash": "1319647201803036251"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/route/org-routing-resolve.service.spec.ts",
+        "hash": "6612055502467333658"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/route/org-routing-resolve.service.ts",
+        "hash": "10384897264817674352"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/service/org.service.spec.ts",
+        "hash": "9537052836561227724"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/service/org.service.ts",
+        "hash": "14425598877364023107"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/update/org-form.service.spec.ts",
+        "hash": "10655891752352167939"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/update/org-form.service.ts",
+        "hash": "640741436984983955"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/update/org-update.component.html",
+        "hash": "14924152912011223992"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/update/org-update.component.spec.ts",
+        "hash": "9383520322639148576"
+      },
+      {
+        "file": "src/main/webapp/app/entities/org/update/org-update.component.ts",
+        "hash": "579436632022408697"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/delete/resources-delete-dialog.component.html",
+        "hash": "408619218550955532"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/delete/resources-delete-dialog.component.spec.ts",
+        "hash": "11667493223129897085"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/delete/resources-delete-dialog.component.ts",
+        "hash": "12648015821063060222"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/detail/resources-detail.component.html",
+        "hash": "4103164896041128006"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/detail/resources-detail.component.spec.ts",
+        "hash": "8719715820719574556"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/detail/resources-detail.component.ts",
+        "hash": "9273368411354586957"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/list/resources.component.html",
+        "hash": "4045029201291221501"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/list/resources.component.spec.ts",
+        "hash": "5525830250932298884"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/list/resources.component.ts",
+        "hash": "6577812464364224790"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/resources.model.ts",
+        "hash": "10649796544348167508"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/resources.routes.ts",
+        "hash": "1324820711693571679"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/resources.test-samples.ts",
+        "hash": "6230479609392746566"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/route/resources-routing-resolve.service.spec.ts",
+        "hash": "3564490253988618404"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/route/resources-routing-resolve.service.ts",
+        "hash": "5520836983112766498"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/service/resources.service.spec.ts",
+        "hash": "5690260373768897499"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/service/resources.service.ts",
+        "hash": "4312290778949467746"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/update/resources-form.service.spec.ts",
+        "hash": "5056950496152015350"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/update/resources-form.service.ts",
+        "hash": "7604693185053881837"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/update/resources-update.component.html",
+        "hash": "13814549070364430346"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/update/resources-update.component.spec.ts",
+        "hash": "10503324292663841065"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/update/resources-update.component.ts",
+        "hash": "3832867579010626799"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/upload-dialog/resources-upload-dialog.component.html",
+        "hash": "12964027796359369308"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/upload-dialog/resources-upload-dialog.component.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/upload-dialog/resources-upload-dialog.component.spec.ts",
+        "hash": "899255400908111039"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/upload-dialog/resources-upload-dialog.component.ts",
+        "hash": "10101289354928321445"
+      },
+      {
+        "file": "src/main/webapp/app/entities/resources/upload-dialog/resources-upload-dialog.service.ts",
+        "hash": "7825306142234825237"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/delete/strategies-delete-dialog.component.html",
+        "hash": "7203790756246508933"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/delete/strategies-delete-dialog.component.spec.ts",
+        "hash": "677817306068905094"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/delete/strategies-delete-dialog.component.ts",
+        "hash": "6656126554588747536"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/detail/strategies-detail.component.html",
+        "hash": "4255957489151256111"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/detail/strategies-detail.component.spec.ts",
+        "hash": "8958661387657639006"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/detail/strategies-detail.component.ts",
+        "hash": "4910645857641197326"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/list/strategies.component.html",
+        "hash": "7638041569224033361"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/list/strategies.component.spec.ts",
+        "hash": "1175158527376900578"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/list/strategies.component.ts",
+        "hash": "11766289668923989960"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/route/strategies-routing-resolve.service.spec.ts",
+        "hash": "7424474489924562714"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/route/strategies-routing-resolve.service.ts",
+        "hash": "15787660876093795881"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/service/strategies.service.spec.ts",
+        "hash": "8567469608928709211"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/service/strategies.service.ts",
+        "hash": "7721424095497448322"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/strategies.model.ts",
+        "hash": "5638564417979108017"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/strategies.routes.ts",
+        "hash": "6911936589526919791"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/strategies.test-samples.ts",
+        "hash": "14685009293414019676"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/update/strategies-form.service.spec.ts",
+        "hash": "18226887468450249483"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/update/strategies-form.service.ts",
+        "hash": "18442026997431913338"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/update/strategies-update.component.html",
+        "hash": "71147215261153462"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/update/strategies-update.component.spec.ts",
+        "hash": "15953608693758545560"
+      },
+      {
+        "file": "src/main/webapp/app/entities/strategies/update/strategies-update.component.ts",
+        "hash": "11948493136197988673"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/delete/student-delete-dialog.component.html",
+        "hash": "16461474717410875326"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/delete/student-delete-dialog.component.spec.ts",
+        "hash": "7475182943321005073"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/delete/student-delete-dialog.component.ts",
+        "hash": "7685639898182452610"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/detail/student-detail.component.html",
+        "hash": "1480484439772475014"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/detail/student-detail.component.spec.ts",
+        "hash": "11795280990313059767"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/detail/student-detail.component.ts",
+        "hash": "6390389261097208180"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/list/student.component.html",
+        "hash": "11506843458655843043"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/list/student.component.spec.ts",
+        "hash": "5519715196755757524"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/list/student.component.ts",
+        "hash": "14529131676945144626"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/route/student-routing-resolve.service.spec.ts",
+        "hash": "4077110401004280159"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/route/student-routing-resolve.service.ts",
+        "hash": "6444939677722289358"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/service/student.service.spec.ts",
+        "hash": "16039973183894566117"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/service/student.service.ts",
+        "hash": "2905834838207060605"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/student.model.ts",
+        "hash": "3205474985029212593"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/student.routes.ts",
+        "hash": "7500905296198668069"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/student.test-samples.ts",
+        "hash": "3094733808312861446"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/update/student-form.service.spec.ts",
+        "hash": "13274484479083134108"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/update/student-form.service.ts",
+        "hash": "16935945080938793011"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/update/student-update.component.html",
+        "hash": "10888116939283317529"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/update/student-update.component.spec.ts",
+        "hash": "7787784125395443064"
+      },
+      {
+        "file": "src/main/webapp/app/entities/student/update/student-update.component.ts",
+        "hash": "18191098864450553153"
+      },
+      {
+        "file": "src/main/webapp/app/entities/user/user.model.ts",
+        "hash": "15755342935080295045"
+      },
+      {
+        "file": "src/main/webapp/app/entities/user/user.service.spec.ts",
+        "hash": "4612061916342681247"
+      },
+      {
+        "file": "src/main/webapp/app/entities/user/user.service.ts",
+        "hash": "8344450144643447799"
+      },
+      {
+        "file": "src/main/webapp/app/home/home.component.html",
+        "hash": "1944881867400806100"
+      },
+      {
+        "file": "src/main/webapp/app/home/home.component.scss",
+        "hash": "1155451580931905567"
+      },
+      {
+        "file": "src/main/webapp/app/home/home.component.spec.ts",
+        "hash": "12203121529080224888"
+      },
+      {
+        "file": "src/main/webapp/app/home/home.component.ts",
+        "hash": "1105607927788617023"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/error/error.component.html",
+        "hash": "11199333653127193376"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/error/error.component.ts",
+        "hash": "7001904243832023541"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/error/error.route.ts",
+        "hash": "7893712560512844416"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/footer/footer.component.html",
+        "hash": "6555205954990138274"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/footer/footer.component.ts",
+        "hash": "8900057801954524206"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/main/main.component.html",
+        "hash": "17033072688235040361"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/main/main.component.spec.ts",
+        "hash": "17829943998109330521"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/main/main.component.ts",
+        "hash": "2832992629286849949"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/navbar/active-menu.directive.ts",
+        "hash": "10994506954270266071"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/navbar/navbar-item.model.d.ts",
+        "hash": "14383592955642914487"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/navbar/navbar.component.html",
+        "hash": "5491837005213648926"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/navbar/navbar.component.scss",
+        "hash": "11656774202190559677"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/navbar/navbar.component.spec.ts",
+        "hash": "6402286054496573408"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/navbar/navbar.component.ts",
+        "hash": "1300862993561802458"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/profiles/page-ribbon.component.scss",
+        "hash": "13411470504918286113"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/profiles/page-ribbon.component.spec.ts",
+        "hash": "769929449357635994"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/profiles/page-ribbon.component.ts",
+        "hash": "1948018765946522396"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/profiles/profile-info.model.ts",
+        "hash": "4464463462978191785"
+      },
+      {
+        "file": "src/main/webapp/app/layouts/profiles/profile.service.ts",
+        "hash": "4847639252427432279"
+      },
+      {
+        "file": "src/main/webapp/app/login/login.component.html",
+        "hash": "4094529729373599932"
+      },
+      {
+        "file": "src/main/webapp/app/login/login.component.spec.ts",
+        "hash": "14459057223300428976"
+      },
+      {
+        "file": "src/main/webapp/app/login/login.component.ts",
+        "hash": "9224508266641396567"
+      },
+      {
+        "file": "src/main/webapp/app/login/login.model.ts",
+        "hash": "17676253211846761189"
+      },
+      {
+        "file": "src/main/webapp/app/login/login.service.ts",
+        "hash": "14251941883573759326"
+      },
+      {
+        "file": "src/main/webapp/app/modules/curriculum-mapping/curriculum-mapping-dashboard.routes.ts",
+        "hash": "959366211443320253"
+      },
+      {
+        "file": "src/main/webapp/app/modules/curriculum-mapping/curriculum-mapping-dashboard/curriculum-mapping-dashboard.component.html",
+        "hash": "229896838520035497"
+      },
+      {
+        "file": "src/main/webapp/app/modules/curriculum-mapping/curriculum-mapping-dashboard/curriculum-mapping-dashboard.component.scss",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "src/main/webapp/app/modules/curriculum-mapping/curriculum-mapping-dashboard/curriculum-mapping-dashboard.component.spec.ts",
+        "hash": "2665473606364274745"
+      },
+      {
+        "file": "src/main/webapp/app/modules/curriculum-mapping/curriculum-mapping-dashboard/curriculum-mapping-dashboard.component.ts",
+        "hash": "8313545533492530858"
+      },
+      {
+        "file": "src/main/webapp/app/modules/modules-navbar-items.ts",
+        "hash": "8814948733552781116"
+      },
+      {
+        "file": "src/main/webapp/app/modules/modules.routes.ts",
+        "hash": "6331270495147850020"
+      },
+      {
+        "file": "src/main/webapp/app/shared/alert/alert-error.component.html",
+        "hash": "5958504223079193343"
+      },
+      {
+        "file": "src/main/webapp/app/shared/alert/alert-error.component.spec.ts",
+        "hash": "17036193745817167092"
+      },
+      {
+        "file": "src/main/webapp/app/shared/alert/alert-error.component.ts",
+        "hash": "4855550117129585156"
+      },
+      {
+        "file": "src/main/webapp/app/shared/alert/alert-error.model.ts",
+        "hash": "5722197193820766374"
+      },
+      {
+        "file": "src/main/webapp/app/shared/alert/alert.component.html",
+        "hash": "5958504223079193343"
+      },
+      {
+        "file": "src/main/webapp/app/shared/alert/alert.component.spec.ts",
+        "hash": "8068795135975686099"
+      },
+      {
+        "file": "src/main/webapp/app/shared/alert/alert.component.ts",
+        "hash": "7403235207177075099"
+      },
+      {
+        "file": "src/main/webapp/app/shared/auth/has-any-authority.directive.spec.ts",
+        "hash": "4805036453299177737"
+      },
+      {
+        "file": "src/main/webapp/app/shared/auth/has-any-authority.directive.ts",
+        "hash": "14536381861628664010"
+      },
+      {
+        "file": "src/main/webapp/app/shared/date/duration.pipe.ts",
+        "hash": "6375594768572730164"
+      },
+      {
+        "file": "src/main/webapp/app/shared/date/format-medium-date.pipe.spec.ts",
+        "hash": "7199796564199787668"
+      },
+      {
+        "file": "src/main/webapp/app/shared/date/format-medium-date.pipe.ts",
+        "hash": "5509808715016536060"
+      },
+      {
+        "file": "src/main/webapp/app/shared/date/format-medium-datetime.pipe.spec.ts",
+        "hash": "2658555910411398479"
+      },
+      {
+        "file": "src/main/webapp/app/shared/date/format-medium-datetime.pipe.ts",
+        "hash": "14527271235302059625"
+      },
+      {
+        "file": "src/main/webapp/app/shared/date/index.ts",
+        "hash": "12311003730602427197"
+      },
+      {
+        "file": "src/main/webapp/app/shared/drag-drop/drag-drop.directive.ts",
+        "hash": "7189227019577711022"
+      },
+      {
+        "file": "src/main/webapp/app/shared/file-drag-drop/upload-file.component.html",
+        "hash": "10877813107615456515"
+      },
+      {
+        "file": "src/main/webapp/app/shared/file-drag-drop/upload-file.component.scss",
+        "hash": "518948264763055908"
+      },
+      {
+        "file": "src/main/webapp/app/shared/file-drag-drop/upload-file.component.ts",
+        "hash": "2572087324647045873"
+      },
+      {
+        "file": "src/main/webapp/app/shared/filter/filter.component.html",
+        "hash": "2769511837236987745"
+      },
+      {
+        "file": "src/main/webapp/app/shared/filter/filter.component.ts",
+        "hash": "2327402865694503540"
+      },
+      {
+        "file": "src/main/webapp/app/shared/filter/filter.model.spec.ts",
+        "hash": "6330737144404479613"
+      },
+      {
+        "file": "src/main/webapp/app/shared/filter/filter.model.ts",
+        "hash": "9973829409533823109"
+      },
+      {
+        "file": "src/main/webapp/app/shared/filter/index.ts",
+        "hash": "853237203300648015"
+      },
+      {
+        "file": "src/main/webapp/app/shared/language/find-language-from-key.pipe.ts",
+        "hash": "1076386123581612853"
+      },
+      {
+        "file": "src/main/webapp/app/shared/language/index.ts",
+        "hash": "17323059177481355390"
+      },
+      {
+        "file": "src/main/webapp/app/shared/language/translate.directive.spec.ts",
+        "hash": "4638346053559300241"
+      },
+      {
+        "file": "src/main/webapp/app/shared/language/translate.directive.ts",
+        "hash": "6278027636913355579"
+      },
+      {
+        "file": "src/main/webapp/app/shared/language/translation.module.ts",
+        "hash": "17869701933810943740"
+      },
+      {
+        "file": "src/main/webapp/app/shared/pagination/index.ts",
+        "hash": "7519707130433421824"
+      },
+      {
+        "file": "src/main/webapp/app/shared/pagination/item-count.component.spec.ts",
+        "hash": "7015376929345076067"
+      },
+      {
+        "file": "src/main/webapp/app/shared/pagination/item-count.component.ts",
+        "hash": "8056606819152062261"
+      },
+      {
+        "file": "src/main/webapp/app/shared/shared.module.ts",
+        "hash": "10095336877889401167"
+      },
+      {
+        "file": "src/main/webapp/app/shared/sort/index.ts",
+        "hash": "1088518711227498870"
+      },
+      {
+        "file": "src/main/webapp/app/shared/sort/sort-by.directive.spec.ts",
+        "hash": "1141672905244145186"
+      },
+      {
+        "file": "src/main/webapp/app/shared/sort/sort-by.directive.ts",
+        "hash": "792692123768933886"
+      },
+      {
+        "file": "src/main/webapp/app/shared/sort/sort.directive.spec.ts",
+        "hash": "3215977949718724191"
+      },
+      {
+        "file": "src/main/webapp/app/shared/sort/sort.directive.ts",
+        "hash": "6067032553174191778"
+      },
+      {
+        "file": "src/main/webapp/app/shared/sort/sort.service.ts",
+        "hash": "16003233065863215641"
+      },
+      {
+        "file": "src/main/webapp/bootstrap.ts",
+        "hash": "3807087564771336135"
+      },
+      {
+        "file": "src/main/webapp/content/css/loading.css",
+        "hash": "3622390148947199390"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_0.svg",
+        "hash": "9163750749717892782"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_0_head-192.png",
+        "hash": "3514473160484230872"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_0_head-256.png",
+        "hash": "17786283446985359618"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_0_head-384.png",
+        "hash": "10491581293569081700"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_0_head-512.png",
+        "hash": "12252947585561517252"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_1.svg",
+        "hash": "8253630578017012815"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_1_head-192.png",
+        "hash": "15326133517524950657"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_1_head-256.png",
+        "hash": "17118250592667235732"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_1_head-384.png",
+        "hash": "2098408006077351885"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_1_head-512.png",
+        "hash": "10267211588720303547"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_2.svg",
+        "hash": "12127270104519138684"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_2_head-192.png",
+        "hash": "13669422520981215349"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_2_head-256.png",
+        "hash": "6991209728539796287"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_2_head-384.png",
+        "hash": "15365362353975467713"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_2_head-512.png",
+        "hash": "1226032996478499360"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_3.svg",
+        "hash": "17896790044162453663"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_3_head-192.png",
+        "hash": "13740986388836338957"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_3_head-256.png",
+        "hash": "15018399562588854900"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_3_head-384.png",
+        "hash": "15603227498592349136"
+      },
+      {
+        "file": "src/main/webapp/content/images/jhipster_family_member_3_head-512.png",
+        "hash": "15665482840294606313"
+      },
+      {
+        "file": "src/main/webapp/content/images/logo-jhipster.png",
+        "hash": "3650672163733026577"
+      },
+      {
+        "file": "src/main/webapp/content/scss/_bootstrap-variables.scss",
+        "hash": "16061112022549698931"
+      },
+      {
+        "file": "src/main/webapp/content/scss/global.scss",
+        "hash": "4711736649756996204"
+      },
+      {
+        "file": "src/main/webapp/content/scss/vendor.scss",
+        "hash": "9818208752000119346"
+      },
+      {
+        "file": "src/main/webapp/declarations.d.ts",
+        "hash": "8319208272464222561"
+      },
+      {
+        "file": "src/main/webapp/favicon.ico",
+        "hash": "1551300838853130043"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/activate.json",
+        "hash": "8332962290866200062"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/appConfig.json",
+        "hash": "7669791396435198459"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/assessment.json",
+        "hash": "16688470092337842818"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/configuration.json",
+        "hash": "16880115892701638271"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/course.json",
+        "hash": "13011888477940307443"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/curriculumMap.json",
+        "hash": "13545353727128440115"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/curriculumMappingDashboard.json",
+        "hash": "12179843704846018808"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/error.json",
+        "hash": "6754225940264503833"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/global.json",
+        "hash": "16958693095559257514"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/health.json",
+        "hash": "7692500869386993360"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/home.json",
+        "hash": "15929561388250410447"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/instructor.json",
+        "hash": "4483137033324055287"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/learningCompetency.json",
+        "hash": "15802496961875596477"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/login.json",
+        "hash": "14991499390708308405"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/logs.json",
+        "hash": "10421496413947081848"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/metrics.json",
+        "hash": "11335896526171451057"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/org.json",
+        "hash": "8846766397566732607"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/password.json",
+        "hash": "16400297933298641033"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/register.json",
+        "hash": "14183771959522244429"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/reset.json",
+        "hash": "13739037980353502916"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/resources.json",
+        "hash": "13757173717174252996"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/sessions.json",
+        "hash": "4465394351006703702"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/settings.json",
+        "hash": "9999941667721448360"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/strategies.json",
+        "hash": "10248430283512517312"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/student.json",
+        "hash": "8494257314454899623"
+      },
+      {
+        "file": "src/main/webapp/i18n/en/user-management.json",
+        "hash": "15945212791477157498"
+      },
+      {
+        "file": "src/main/webapp/index.html",
+        "hash": "9970694674764777512"
+      },
+      {
+        "file": "src/main/webapp/main.ts",
+        "hash": "15680640379862188532"
+      },
+      {
+        "file": "src/main/webapp/manifest.webapp",
+        "hash": "7321894617873726020"
+      },
+      {
+        "file": "src/main/webapp/robots.txt",
+        "hash": "17106844822299164471"
+      },
+      {
+        "file": "src/main/webapp/swagger-ui/index.html",
+        "hash": "4573799713982839375"
+      },
+      {
+        "file": "src/test/SchInfoSysApp.http",
+        "hash": "279066617874233237"
+      },
+      {
+        "file": "src/test/java/com/sis/IntegrationTest.java",
+        "hash": "8867951831000494602"
+      },
+      {
+        "file": "src/test/java/com/sis/TechnicalStructureTest.java",
+        "hash": "4955521917837319721"
+      },
+      {
+        "file": "src/test/java/com/sis/config/AsyncSyncConfiguration.java",
+        "hash": "13365499801528426347"
+      },
+      {
+        "file": "src/test/java/com/sis/config/EmbeddedSQL.java",
+        "hash": "11961572231431215368"
+      },
+      {
+        "file": "src/test/java/com/sis/config/PostgreSqlTestContainer.java",
+        "hash": "16220685271888560045"
+      },
+      {
+        "file": "src/test/java/com/sis/config/SpringBootTestClassOrderer.java",
+        "hash": "10287412148394199613"
+      },
+      {
+        "file": "src/test/java/com/sis/config/SqlTestContainer.java",
+        "hash": "2287395893781316940"
+      },
+      {
+        "file": "src/test/java/com/sis/config/SqlTestContainersSpringContextCustomizerFactory.java",
+        "hash": "6885086339323773144"
+      },
+      {
+        "file": "src/test/java/com/sis/config/StaticResourcesWebConfigurerTest.java",
+        "hash": "9434150104076444257"
+      },
+      {
+        "file": "src/test/java/com/sis/config/WebConfigurerTest.java",
+        "hash": "11996915680751154359"
+      },
+      {
+        "file": "src/test/java/com/sis/config/WebConfigurerTestController.java",
+        "hash": "2364959187193782273"
+      },
+      {
+        "file": "src/test/java/com/sis/config/timezone/HibernateTimeZoneIT.java",
+        "hash": "10540038388099088387"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/AppConfigTest.java",
+        "hash": "17110677958008396069"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/AppConfigTestSamples.java",
+        "hash": "13019898547687120570"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/AssessmentTest.java",
+        "hash": "2462690381906168383"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/AssessmentTestSamples.java",
+        "hash": "4414659311089524729"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/CourseTest.java",
+        "hash": "18143293144026770969"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/CourseTestSamples.java",
+        "hash": "6675243846933100132"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/CurriculumMapTest.java",
+        "hash": "17788921965999189916"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/CurriculumMapTestSamples.java",
+        "hash": "3688591342001031615"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/InstructorTest.java",
+        "hash": "17294524490685441996"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/InstructorTestSamples.java",
+        "hash": "12884802068436127210"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/LearningCompetencyTest.java",
+        "hash": "4343961698993402701"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/LearningCompetencyTestSamples.java",
+        "hash": "9565126898952778523"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/OrgTest.java",
+        "hash": "5749941059654159839"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/OrgTestSamples.java",
+        "hash": "12457384028683407466"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/ResourcesTest.java",
+        "hash": "15341781395778944877"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/ResourcesTestSamples.java",
+        "hash": "15112492445712216691"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/StrategiesTest.java",
+        "hash": "7281957520880508401"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/StrategiesTestSamples.java",
+        "hash": "9798028867825223361"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/StudentTest.java",
+        "hash": "10608429673941017977"
+      },
+      {
+        "file": "src/test/java/com/sis/domain/StudentTestSamples.java",
+        "hash": "9018488703216194821"
+      },
+      {
+        "file": "src/test/java/com/sis/management/SecurityMetersServiceTests.java",
+        "hash": "10808512981183483278"
+      },
+      {
+        "file": "src/test/java/com/sis/repository/timezone/DateTimeWrapper.java",
+        "hash": "900412739527410791"
+      },
+      {
+        "file": "src/test/java/com/sis/repository/timezone/DateTimeWrapperRepository.java",
+        "hash": "14612818817797530852"
+      },
+      {
+        "file": "src/test/java/com/sis/security/DomainUserDetailsServiceIT.java",
+        "hash": "1019151403613529021"
+      },
+      {
+        "file": "src/test/java/com/sis/security/SecurityUtilsUnitTest.java",
+        "hash": "15847664870491934452"
+      },
+      {
+        "file": "src/test/java/com/sis/security/jwt/AuthenticationIntegrationTest.java",
+        "hash": "7048063716322680853"
+      },
+      {
+        "file": "src/test/java/com/sis/security/jwt/JwtAuthenticationTestUtils.java",
+        "hash": "8817281229507620411"
+      },
+      {
+        "file": "src/test/java/com/sis/security/jwt/TokenAuthenticationIT.java",
+        "hash": "3023057847594965507"
+      },
+      {
+        "file": "src/test/java/com/sis/security/jwt/TokenAuthenticationSecurityMetersIT.java",
+        "hash": "15778462194545274101"
+      },
+      {
+        "file": "src/test/java/com/sis/service/MailServiceIT.java",
+        "hash": "15906874789820994981"
+      },
+      {
+        "file": "src/test/java/com/sis/service/UserServiceIT.java",
+        "hash": "4467366003376808233"
+      },
+      {
+        "file": "src/test/java/com/sis/service/dto/AppConfigDTOTest.java",
+        "hash": "2623507720135671116"
+      },
+      {
+        "file": "src/test/java/com/sis/service/dto/AssessmentDTOTest.java",
+        "hash": "7918959702278536073"
+      },
+      {
+        "file": "src/test/java/com/sis/service/dto/CourseDTOTest.java",
+        "hash": "9809844982912815164"
+      },
+      {
+        "file": "src/test/java/com/sis/service/dto/CurriculumMapDTOTest.java",
+        "hash": "5180827271341877945"
+      },
+      {
+        "file": "src/test/java/com/sis/service/dto/InstructorDTOTest.java",
+        "hash": "16974989524428768098"
+      },
+      {
+        "file": "src/test/java/com/sis/service/dto/LearningCompetencyDTOTest.java",
+        "hash": "16925670326690256326"
+      },
+      {
+        "file": "src/test/java/com/sis/service/dto/OrgDTOTest.java",
+        "hash": "10080782757676529858"
+      },
+      {
+        "file": "src/test/java/com/sis/service/dto/ResourcesDTOTest.java",
+        "hash": "4722904578695405383"
+      },
+      {
+        "file": "src/test/java/com/sis/service/dto/StrategiesDTOTest.java",
+        "hash": "5482913708693758048"
+      },
+      {
+        "file": "src/test/java/com/sis/service/dto/StudentDTOTest.java",
+        "hash": "4919530391037071087"
+      },
+      {
+        "file": "src/test/java/com/sis/service/mapper/AppConfigMapperTest.java",
+        "hash": "2714607473268385629"
+      },
+      {
+        "file": "src/test/java/com/sis/service/mapper/AssessmentMapperTest.java",
+        "hash": "8678398257471495836"
+      },
+      {
+        "file": "src/test/java/com/sis/service/mapper/CourseMapperTest.java",
+        "hash": "17360039481638294366"
+      },
+      {
+        "file": "src/test/java/com/sis/service/mapper/CurriculumMapMapperTest.java",
+        "hash": "15467501214013254940"
+      },
+      {
+        "file": "src/test/java/com/sis/service/mapper/InstructorMapperTest.java",
+        "hash": "5840084698761735774"
+      },
+      {
+        "file": "src/test/java/com/sis/service/mapper/LearningCompetencyMapperTest.java",
+        "hash": "3349260108134134979"
+      },
+      {
+        "file": "src/test/java/com/sis/service/mapper/OrgMapperTest.java",
+        "hash": "3816357352150767352"
+      },
+      {
+        "file": "src/test/java/com/sis/service/mapper/ResourcesMapperTest.java",
+        "hash": "16045659010672958032"
+      },
+      {
+        "file": "src/test/java/com/sis/service/mapper/StrategiesMapperTest.java",
+        "hash": "8314142618095960571"
+      },
+      {
+        "file": "src/test/java/com/sis/service/mapper/StudentMapperTest.java",
+        "hash": "70370624219465108"
+      },
+      {
+        "file": "src/test/java/com/sis/service/mapper/UserMapperTest.java",
+        "hash": "15255332500388521438"
+      },
+      {
+        "file": "src/test/java/com/sis/web/filter/SpaWebFilterIT.java",
+        "hash": "1332767461243529182"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/AccountResourceIT.java",
+        "hash": "14911495315037922385"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/AppConfigResourceIT.java",
+        "hash": "12167365302940584059"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/AssessmentResourceIT.java",
+        "hash": "7775664526969237396"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/AuthenticateControllerIT.java",
+        "hash": "1400433147269684314"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/CourseResourceIT.java",
+        "hash": "1334432848603986765"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/CurriculumMapResourceIT.java",
+        "hash": "8925508654702888930"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/InstructorResourceIT.java",
+        "hash": "11399785034260233690"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/LearningCompetencyResourceIT.java",
+        "hash": "6819309615574787144"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/OrgResourceIT.java",
+        "hash": "14442191946697490373"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/PublicUserResourceIT.java",
+        "hash": "2995243642182665360"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/ResourcesResourceIT.java",
+        "hash": "4477209008613253407"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/StrategiesResourceIT.java",
+        "hash": "3891639459861287637"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/StudentResourceIT.java",
+        "hash": "14718701944090641129"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/TestUtil.java",
+        "hash": "15768937853550924581"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/UserResourceIT.java",
+        "hash": "17796242978804507106"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/WithUnauthenticatedMockUser.java",
+        "hash": "810674408256586829"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/errors/ExceptionTranslatorIT.java",
+        "hash": "14592086669942793609"
+      },
+      {
+        "file": "src/test/java/com/sis/web/rest/errors/ExceptionTranslatorTestController.java",
+        "hash": "1276590980356324747"
+      },
+      {
+        "file": "src/test/resources/META-INF/spring.factories",
+        "hash": "987407305106750045"
+      },
+      {
+        "file": "src/test/resources/config/application-testdev.yml",
+        "hash": "373206423733801991"
+      },
+      {
+        "file": "src/test/resources/config/application-testprod.yml",
+        "hash": "10145173128011180542"
+      },
+      {
+        "file": "src/test/resources/config/application.yml",
+        "hash": "3080259700175661046"
+      },
+      {
+        "file": "src/test/resources/i18n/messages_en.properties",
+        "hash": "6822774225154613432"
+      },
+      {
+        "file": "src/test/resources/junit-platform.properties",
+        "hash": "1962081733665704456"
+      },
+      {
+        "file": "src/test/resources/logback.xml",
+        "hash": "15132908385232153619"
+      },
+      {
+        "file": "src/test/resources/templates/mail/activationEmail.html",
+        "hash": "6077951361975787974"
+      },
+      {
+        "file": "src/test/resources/templates/mail/creationEmail.html",
+        "hash": "17691947208817668369"
+      },
+      {
+        "file": "src/test/resources/templates/mail/passwordResetEmail.html",
+        "hash": "4162721142021606426"
+      },
+      {
+        "file": "src/test/resources/templates/mail/testEmail.html",
+        "hash": "15575587392697151749"
+      },
+      {
+        "file": "tsconfig.app.json",
+        "hash": "3516994872720366373"
+      },
+      {
+        "file": "tsconfig.json",
+        "hash": "13937179130813036566"
+      },
+      {
+        "file": "tsconfig.spec.json",
+        "hash": "16087161477644447257"
+      },
+      {
+        "file": "webpack/environment.js",
+        "hash": "5461878215046770559"
+      },
+      {
+        "file": "webpack/logo-jhipster.png",
+        "hash": "3943036427625776837"
+      },
+      {
+        "file": "webpack/proxy.conf.js",
+        "hash": "1868532115781775143"
+      },
+      {
+        "file": "webpack/webpack.custom.js",
+        "hash": "2277159801232319890"
+      }
+    ]
+  }
+}

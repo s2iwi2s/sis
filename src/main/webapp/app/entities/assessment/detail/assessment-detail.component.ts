@@ -17,7 +17,9 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 export class AssessmentDetailComponent {
   @Input() assessment: IAssessment | null = null;
 
-  tinyMCEDisabledOptions = OPT_TINY_MCE_DISABLED;
+  protected readonly tinyMCEOptions = OPT_TINY_MCE;
+
+  protected readonly tinyMCEDisabledOptions = OPT_TINY_MCE_DISABLED;
 
   constructor(
     protected dataUtils: DataUtils,
@@ -35,6 +37,4 @@ export class AssessmentDetailComponent {
   previousState(): void {
     window.history.back();
   }
-
-  protected readonly tinyMCEOptions = OPT_TINY_MCE;
 }

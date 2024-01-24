@@ -1,10 +1,12 @@
 import { Directive, EventEmitter, HostBinding, HostListener, Output } from '@angular/core';
 
 @Directive({
+  // eslint-disable-next-line @angular-eslint/directive-selector
   selector: '[jhi-drag-drop]',
 })
+
 export class DragDropDirective {
-  @Output() onDrop = new EventEmitter<any>();
+  @Output() doDrop = new EventEmitter<any>();
 
   @HostBinding('style.background-color') background = '#f5fcff';
   @HostBinding('style.opacity') opacity = '1';
@@ -33,7 +35,7 @@ export class DragDropDirective {
     this.opacity = '1';
     const files = evt.dataTransfer.files;
     if (files.length > 0) {
-      this.onDrop.emit(files);
+      this.doDrop.emit(files);
     }
   }
 }

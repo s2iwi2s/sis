@@ -94,6 +94,6 @@ public class CurriculumMapServiceImpl implements CurriculumMapService {
     public List<CurriculumMapDTO> findByCourse(Long courseId) {
         return courseRepository.findById(courseId)
             .map(curriculumMapRepository::findByCourse)
-            .map(curriculumMapMapper::toDto).get();
+            .map(curriculumMapMapper::toDto).orElseThrow();
     }
 }
