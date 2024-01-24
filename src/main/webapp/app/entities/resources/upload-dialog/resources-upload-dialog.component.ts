@@ -1,19 +1,19 @@
-import {Component} from '@angular/core';
-import {FormsModule} from '@angular/forms';
-import {forkJoin} from "rxjs";
-import {NgbActiveModal} from "@ng-bootstrap/ng-bootstrap";
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { forkJoin } from "rxjs";
+import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 
 import SharedModule from 'app/shared/shared.module';
 
-import {ResourcesService} from "../service/resources.service";
-import {DataUtils} from "../../../core/util/data-util.service";
-import {IResources} from "../resources.model";
-import {IAssessment} from "../../assessment/assessment.model";
-import {ITEM_SAVED_EVENT, ITEM_UPLOADED_EVENT} from "../../../config/navigation.constants";
-import {AssessmentService} from "../../assessment/service/assessment.service";
-import {IStrategies} from "../../strategies/strategies.model";
-import {StrategiesService} from "../../strategies/service/strategies.service";
-import {ResourcesUploadDialogService} from "./resources-upload-dialog.service";
+import { ResourcesService } from "../service/resources.service";
+import { DataUtils } from "../../../core/util/data-util.service";
+import { IResources } from "../resources.model";
+import { IAssessment } from "../../assessment/assessment.model";
+import { ITEM_SAVED_EVENT, ITEM_UPLOADED_EVENT } from "../../../config/navigation.constants";
+import { AssessmentService } from "../../assessment/service/assessment.service";
+import { IStrategies } from "../../strategies/strategies.model";
+import { StrategiesService } from "../../strategies/service/strategies.service";
+import { ResourcesUploadDialogService } from "./resources-upload-dialog.service";
 
 @Component({
   selector: 'jhi-resources-upload-dialog',
@@ -35,11 +35,11 @@ export class ResourcesUploadDialogComponent {
     protected dataUtils: DataUtils,) {
   }
 
-  submitForm() {
+  submitForm(): void {
     this.activeModal.close(ITEM_UPLOADED_EVENT);
   }
 
-  save(callback: (resourcesAry: Pick<IResources, "id" | "fileName" | "documentContentType">[], activeModal: NgbActiveModal) => void) {
+  save(callback: (resourcesAry: Pick<IResources, "id" | "fileName" | "documentContentType">[], activeModal: NgbActiveModal) => void): void {
     forkJoin(this.files
       .map(file => this.dataUtils.fileToResource(file)))
       .subscribe(resourcesAry => {
@@ -48,21 +48,7 @@ export class ResourcesUploadDialogComponent {
       });
   }
 
-  // updateAssessment(resourcesAry: Pick<IResources, "id" | "fileName" | "documentContentType">[], activeModal: NgbActiveModal) {
-  //   this.assessment.resources = [...(this.assessment.resources ? this.assessment.resources : []), ...resourcesAry];
-  //   this.assessmentService.update(this.assessment).subscribe(ret => {
-  //     activeModal.close(ITEM_SAVED_EVENT);
-  //   });
-  // }
-  //
-  // updateStrategies(resourcesAry: Pick<IResources, "id" | "fileName" | "documentContentType">[], activeModal: NgbActiveModal) {
-  //   this.strategies.resources = [...(this.strategies.resources ? this.strategies.resources : []), ...resourcesAry];
-  //   this.strategiesService.update(this.strategies).subscribe(ret => {
-  //     activeModal.close(ITEM_SAVED_EVENT);
-  //   });
-  // }
-
-  cancel() {
+  cancel(): void {
     this.activeModal.dismiss();
   }
 }

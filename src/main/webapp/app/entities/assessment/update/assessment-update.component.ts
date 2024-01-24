@@ -1,27 +1,28 @@
-import {Component, OnInit} from '@angular/core';
-import {HttpResponse} from '@angular/common/http';
-import {ActivatedRoute} from '@angular/router';
-import {filter, Observable, switchMap} from 'rxjs';
-import {finalize, map} from 'rxjs/operators';
+/* eslint-disable @typescript-eslint/require-await */
+import { Component, OnInit } from '@angular/core';
+import { HttpResponse } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
+import { filter, Observable, switchMap } from 'rxjs';
+import { finalize, map } from 'rxjs/operators';
 
 import SharedModule from 'app/shared/shared.module';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import {AlertError} from 'app/shared/alert/alert-error.model';
-import {EventManager, EventWithContent} from 'app/core/util/event-manager.service';
-import {DataUtils, FileLoadError} from 'app/core/util/data-util.service';
-import {IResources} from 'app/entities/resources/resources.model';
-import {ResourcesService} from 'app/entities/resources/service/resources.service';
-import {ILearningCompetency} from 'app/entities/learning-competency/learning-competency.model';
-import {LearningCompetencyService} from 'app/entities/learning-competency/service/learning-competency.service';
-import {AssessmentService} from '../service/assessment.service';
-import {IAssessment} from '../assessment.model';
-import {AssessmentFormGroup, AssessmentFormService} from './assessment-form.service';
-import {OPT_TINY_MCE} from "../../../app.constants";
-import {ITEM_DELETED_EVENT, ITEM_SAVED_EVENT, ITEM_UPLOADED_EVENT} from "../../../config/navigation.constants";
-import {NgbActiveModal, NgbModal} from "@ng-bootstrap/ng-bootstrap";
-import {ResourcesDeleteDialogComponent} from "../../resources/delete/resources-delete-dialog.component";
-import {ResourcesUploadDialogComponent} from "../../resources/upload-dialog/resources-upload-dialog.component";
+import { AlertError } from 'app/shared/alert/alert-error.model';
+import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
+import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
+import { IResources } from 'app/entities/resources/resources.model';
+import { ResourcesService } from 'app/entities/resources/service/resources.service';
+import { ILearningCompetency } from 'app/entities/learning-competency/learning-competency.model';
+import { LearningCompetencyService } from 'app/entities/learning-competency/service/learning-competency.service';
+import { AssessmentService } from '../service/assessment.service';
+import { IAssessment } from '../assessment.model';
+import { AssessmentFormGroup, AssessmentFormService } from './assessment-form.service';
+import { OPT_TINY_MCE } from "../../../app.constants";
+import { ITEM_DELETED_EVENT, ITEM_SAVED_EVENT, ITEM_UPLOADED_EVENT } from "../../../config/navigation.constants";
+import { NgbActiveModal, NgbModal } from "@ng-bootstrap/ng-bootstrap";
+import { ResourcesDeleteDialogComponent } from "../../resources/delete/resources-delete-dialog.component";
+import { ResourcesUploadDialogComponent } from "../../resources/upload-dialog/resources-upload-dialog.component";
 
 @Component({
   standalone: true,
@@ -50,7 +51,7 @@ export class AssessmentUpdateComponent implements OnInit {
     protected activatedRoute: ActivatedRoute,
     protected resourcesDeleteDialogModalService: NgbModal,
     protected resourcesUploadDialogModalService: NgbModal,
-  ) {}
+  ) { }
 
   compareResources = (o1: IResources | null, o2: IResources | null): boolean => this.resourcesService.compareResources(o1, o2);
 
@@ -97,20 +98,58 @@ export class AssessmentUpdateComponent implements OnInit {
     }
   }
 
-  protected subscribeToSaveResponse(result: Observable<HttpResponse<IAssessment>>): void {
-    result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
-      next: () => this.onSaveSuccess(),
-      error: () => this.onSaveError(),
-    });
-  }
-
   baseUrl(api: string): string {
     const url = window.location.href;
     return url.split('/assessment')[0] + api;
   }
 
-  public onClipboardCopy(successful: boolean): void {
-    console.log(successful);
+  onClipboardCopy(successful: boolean): void {
+    ;
+  }
+
+  deleteResource(resources: IResources): void {
+    const modalRef = this.resourcesDeleteDialogModalService.open(ResourcesDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
+    modalRef.componentInstance.resources = resources;
+    // unsubscribe not needed because closed completes on modal close
+    modalRef.closed
+      .pipe(
+        filter(reason => reason === ITEM_DELETED_EVENT),
+        switchMap(async () => this.deleteResourceResponse(resources)),
+      )
+      .subscribe();
+  }
+
+  deleteResourceResponse(resources: IResources): void {
+    this.deleteResourceFromForm(resources);
+    this.loadRelationshipsOptions();
+  }
+
+  showAddImagesForm(): void {
+    const modalRef = this.resourcesUploadDialogModalService.open(ResourcesUploadDialogComponent, { size: 'lg', backdrop: 'static' });
+    // unsubscribe not needed because closed completes on modal close
+    modalRef.closed
+      .pipe(
+        filter(reason => reason === ITEM_UPLOADED_EVENT),
+        switchMap(async () => {
+          modalRef.componentInstance.save((resourcesAry: Pick<IResources, "id" | "fileName" | "documentContentType">[], activeModal: NgbActiveModal) => {
+            if (this.assessment) {
+              this.assessment.resources = [...(this.assessment.resources ? this.assessment.resources : []), ...resourcesAry];
+              this.assessmentService.update(this.assessment).subscribe(ret => {
+                this.updateForm(this.assessment ? this.assessment : { id: 0 });
+                this.loadRelationshipsOptions()
+              });
+            }
+          });
+        }),
+      )
+      .subscribe();
+  }
+
+  protected subscribeToSaveResponse(result: Observable<HttpResponse<IAssessment>>): void {
+    result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
+      next: () => this.onSaveSuccess(),
+      error: () => this.onSaveError(),
+    });
   }
 
   protected onSaveSuccess(): void {
@@ -141,25 +180,12 @@ export class AssessmentUpdateComponent implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
-    console.log('loadRelationshipsOptions--->');
-    this.resourcesService.queryResourcesByAssessmentId(this.assessment?.id??0)
+    this.resourcesService.queryResourcesByAssessmentId(this.assessment?.id ?? 0)
       .pipe(map((res: HttpResponse<IResources[]>) => res.body ?? []))
       .pipe(
-        map((resources: IResources[]) => {
-          return this.resourcesService.addResourcesToCollectionIfMissing<IResources>(resources, ...(this.assessment?.resources ?? []))
-        }),
+        map((resources: IResources[]) => this.resourcesService.addResourcesToCollectionIfMissing<IResources>(resources, ...(this.assessment?.resources ?? []))),
       )
       .subscribe((resources: IResources[]) => (this.resourcesSharedCollection = resources));
-
-    // this.resourcesService
-    //   .query()
-    //   .pipe(map((res: HttpResponse<IResources[]>) => res.body ?? []))
-    //   .pipe(
-    //     map((resources: IResources[]) =>
-    //       this.resourcesService.addResourcesToCollectionIfMissing<IResources>(resources, ...(this.assessment?.resources ?? [])),
-    //     ),
-    //   )
-    //   .subscribe((resources: IResources[]) => (this.resourcesSharedCollection = resources));
 
     this.learningCompetencyService
       .query()
@@ -175,24 +201,9 @@ export class AssessmentUpdateComponent implements OnInit {
       .subscribe((learningCompetencies: ILearningCompetency[]) => (this.learningCompetenciesSharedCollection = learningCompetencies));
   }
 
-  deleteResource(resources: IResources) {
-    const modalRef = this.resourcesDeleteDialogModalService.open(ResourcesDeleteDialogComponent, { size: 'lg', backdrop: 'static' });
-    modalRef.componentInstance.resources = resources;
-    // unsubscribe not needed because closed completes on modal close
-    modalRef.closed
-      .pipe(
-        filter(reason => reason === ITEM_DELETED_EVENT),
-        switchMap(async () => {
-          this.deleteResourceFromForm(resources);
-          this.loadRelationshipsOptions();
-        }),
-      )
-      .subscribe();
-  }
-
-  private deleteResourceFromForm(resourceToRemove: IResources) {
-    if(this.assessment) {
-      if(!this.assessment.resources) {
+  private deleteResourceFromForm(resourceToRemove: IResources): void {
+    if (this.assessment) {
+      if (!this.assessment.resources) {
         this.assessment.resources = [];
       }
       this.assessment.resources = this.assessment.resources.filter(r => r.id !== resourceToRemove.id);
@@ -200,26 +211,5 @@ export class AssessmentUpdateComponent implements OnInit {
         resources: this.assessment.resources
       })
     }
-  }
-
-  showAddImagesForm() {
-    const modalRef = this.resourcesUploadDialogModalService.open(ResourcesUploadDialogComponent, { size: 'lg', backdrop: 'static' });
-    // unsubscribe not needed because closed completes on modal close
-    modalRef.closed
-      .pipe(
-        filter(reason => reason === ITEM_UPLOADED_EVENT),
-        switchMap(async () => {
-          modalRef.componentInstance.save((resourcesAry: Pick<IResources, "id" | "fileName" | "documentContentType">[], activeModal: NgbActiveModal) => {
-            if(this.assessment){
-              this.assessment.resources = [...(this.assessment?.resources ? this.assessment.resources : []), ...resourcesAry];
-              this.assessmentService.update(this.assessment).subscribe(ret => {
-                this.updateForm(this.assessment? this.assessment : {id: 0});
-                this.loadRelationshipsOptions()
-              });
-            }
-          });
-        }),
-      )
-      .subscribe();
   }
 }

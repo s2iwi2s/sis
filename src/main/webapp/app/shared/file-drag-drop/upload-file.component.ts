@@ -18,14 +18,7 @@ export class UploadFileComponent {
   }
 
   uploadFile(files: FileList): void {
-    // if (files.length > 0) {
-    //   this.files.push(files[0]);
-    // }
-    console.log('uploadFile = ', files);
-    console.log('files.length = ', files.length);
-    console.log('maxFiles = ', this.maxFiles);
     for (let i = 0; i < files.length && i < this.maxFiles; i++) {
-      console.log('i = ', i);
       this.files.push(files[i]);
     }
     this.fileChanged.emit(files);
