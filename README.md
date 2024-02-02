@@ -1,5 +1,5 @@
 # SchInfoSys
-
+#testing add comment
 This application was generated using JHipster 8.1.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v8.1.0](https://www.jhipster.tech/documentation-archive/v8.1.0).
 
 ## Project Structure
