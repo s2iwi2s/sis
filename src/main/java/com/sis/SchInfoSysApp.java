@@ -105,5 +105,18 @@ public class SchInfoSysApp {
             contextPath,
             env.getActiveProfiles().length == 0 ? env.getDefaultProfiles() : env.getActiveProfiles()
         );
+        String dsUrl = env.getProperty("spring.datasource.url");
+        String dsUser = env.getProperty("spring.datasource.username");
+        log.info(
+            CRLFLogConverter.CRLF_SAFE_MARKER,
+            """
+
+            ----------------------------------------------------------
+            \tds url: {}
+            \tds user: {}
+            ----------------------------------------------------------""",
+            dsUrl,
+            dsUser
+        );
     }
 }
