@@ -1,14 +1,14 @@
 <div class="d-flex justify-content-center">
-  <div class="col">
-    <h2 data-cy="curriculumMappingDashboardHeading"><span
-      jhiTranslate="schInfoSysApp.curriculumMappingDashboard.home.title">Curriculum Mapping Dashboard</span></h2>
+  <div class="col-8">
+    <h2 data-cy="curriculumMappingDashboardHeading" class="d-print-none"><span
+      jhiTranslate="schInfoSysApp.curriculumMappingView.home.title">Curriculum Mapping View</span></h2>
 
-    <hr/>
+    <hr class="d-print-none"/>
 
     <jhi-alert-error></jhi-alert-error>
     <jhi-alert></jhi-alert>
 
-    <div class="shadow-sm py-2 pb-3 mb-sm-3 bg-body-tertiary rounded-4 row col-sm-6">
+    <div class="shadow-sm py-2 pb-3 mb-sm-3 bg-body-tertiary rounded-4 row col-sm-6 d-print-none">
       <label class="form-label col-sm-12" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.searchCourse"
              for="field_course">searchCourse</label>
       <div class="input-group">
@@ -25,6 +25,7 @@
     </div>
 
     @if (selectedCourse) {
+
       <jhi-course-detail-card
         [selectedCourse]="selectedCourse"></jhi-course-detail-card>
 
@@ -39,21 +40,21 @@
               <a [routerLink]="['/curriculum-map', selectedCourse.id, 1, 'new']" >Add Curriculum Map <fa-icon icon="plus"></fa-icon></a>
             </div>
           }
-
           <jhi-scope-seq-card
             [selectedCourse]="selectedCourse"
             [curMapByQuarter]="curMapByQuarter"
-            [selectedQuarter]="selectedQuarter"
+            [selectedQuarter]="-1"
             [hasCurMap]="hasCurMap"></jhi-scope-seq-card>
 
-          <jhi-quarter-card
-            [selectedCourse]="selectedCourse"
-            [curMapByQuarter]="curMapByQuarter"
-            [selectedQuarter]="selectedQuarter"
-            [lcMap]="lcMap"
-            [sMap]="sMap"
-            [aMap]="aMap"></jhi-quarter-card>
-
+          @for(key of curMapByQuarter.keys(); track $index) {
+            <jhi-quarter-card
+              [selectedCourse]="selectedCourse"
+              [curMapByQuarter]="curMapByQuarter"
+              [selectedQuarter]="+key"
+              [lcMap]="lcMap"
+              [sMap]="sMap"
+              [aMap]="aMap"></jhi-quarter-card>
+          }
         </div>
       </div>
     }

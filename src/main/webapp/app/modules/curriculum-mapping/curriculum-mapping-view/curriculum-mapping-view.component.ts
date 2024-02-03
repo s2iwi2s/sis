@@ -30,21 +30,21 @@ import {
   AssessmentService,
   EntityArrayResponseType as AssessmentEntityArrayResponseType
 } from "../../../entities/assessment/service/assessment.service";
-import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {CourseDetailCardComponent} from "../course-detail-card/course-detail-card.component";
-import {ScopeSeqCardComponent} from "../scope-seq-card/scope-seq-card.component";
 import {QuarterCardComponent} from "../quarter-card/quarter-card.component";
+import {ScopeSeqCardComponent} from "../scope-seq-card/scope-seq-card.component";
+import {RouterLink} from "@angular/router";
 
 @Component({
-  selector: 'jhi-curriculum-mapping-dashboard',
+  selector: 'jhi-curriculum-mapping-view',
   standalone: true,
-  imports: [SharedModule, NgbTypeaheadModule, FormsModule, JsonPipe, KeyValuePipe, RouterLink, CourseDetailCardComponent, ScopeSeqCardComponent, QuarterCardComponent],
-  templateUrl: './curriculum-mapping-dashboard.component.html'
+  imports: [SharedModule, NgbTypeaheadModule, FormsModule, JsonPipe, KeyValuePipe, CourseDetailCardComponent, QuarterCardComponent, ScopeSeqCardComponent, RouterLink],
+  templateUrl: './curriculum-mapping-view.component.html',
+  styleUrl: './curriculum-mapping-view.component.scss'
 })
-export class CurriculumMappingDashboardComponent implements OnInit {
+export class CurriculumMappingViewComponent implements OnInit {
 
   selectedCourse: ICourse | null = null;
-  selectedQuarter: number = 1;
 
   courses?: ICourse[] | null = [];
 
@@ -56,10 +56,7 @@ export class CurriculumMappingDashboardComponent implements OnInit {
 
   isLoading = false;
 
-  constructor(
-    protected router: Router,
-    protected activatedRoute: ActivatedRoute,
-    protected courseService: CourseService,
+  constructor(protected courseService: CourseService,
     protected curriculumMapService: CurriculumMapService,
     protected learningCompetencyService: LearningCompetencyService,
     protected strategiesService: StrategiesService,
@@ -68,17 +65,6 @@ export class CurriculumMappingDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.activatedRoute.data.subscribe(({ course }) => {
-      if(course) {
-        this.selectedCourse = course;
-        forkJoin([this.curriculumMapService.queryByCourse(course.id),
-          this.learningCompetencyService.queryByCourse(course.id),
-          this.strategiesService.queryByCourse(course.id),
-          this.assessmentService.queryByCourse(course.id)])
-          .subscribe(res => this.loadCurriculumMappingsResponse(res));
-      }
-    });
-
     this.courseService.query().subscribe(er => this.courses = er.body);
   }
 
@@ -100,7 +86,11 @@ export class CurriculumMappingDashboardComponent implements OnInit {
 
   loadCurriculumMappings(course: ICourse | null): void {
     if (course) {
-      this.router.navigate(['/', 'curriculum-mapping', 'dashboard', course.id, this.selectedQuarter]);
+      forkJoin([this.curriculumMapService.queryByCourse(course.id),
+      this.learningCompetencyService.queryByCourse(course.id),
+      this.strategiesService.queryByCourse(course.id),
+      this.assessmentService.queryByCourse(course.id)])
+        .subscribe(res => this.loadCurriculumMappingsResponse(res));
     }
   }
 
@@ -114,7 +104,6 @@ export class CurriculumMappingDashboardComponent implements OnInit {
       this.aMap = this.mapAssessmentByLearningCompetency(aRes.body ?? [])
       this.curMapByQuarter = this.mapCurriculumByQuarter(currRes.body ?? []);
 
-      this.activatedRoute.params.subscribe(({quarterNo}) => this.selectedQuarter = +quarterNo);
     }
   }
 
@@ -148,6 +137,11 @@ export class CurriculumMappingDashboardComponent implements OnInit {
     return hash;
   }
 
+
+  getLearningCompetenciesFromMapping(currMapId: number): ILearningCompetency[] {
+    return this.lcMap.get(currMapId) ?? [];
+  }
+
   mapStrategiesByLearningCompetency(array: IStrategies[]): Map<number, IStrategies[]> {
     const hash = array.reduce((mapper: Map<number, IStrategies[]>, item: IStrategies) => {
       const key = item.learningCompetency?.id ?? 0;
@@ -162,6 +156,10 @@ export class CurriculumMappingDashboardComponent implements OnInit {
     return hash;
   }
 
+  getStrategiesFromMapping(learningCompetencyId: number): IStrategies[] {
+    return this.sMap.get(learningCompetencyId) ?? [];
+  }
+
   mapAssessmentByLearningCompetency(array: IAssessment[]): Map<number, IAssessment[]> {
     const hash = array.reduce((mapper: Map<number, IAssessment[]>, item: IAssessment) => {
       const key = item.learningCompetency?.id ?? 0;
@@ -174,5 +172,9 @@ export class CurriculumMappingDashboardComponent implements OnInit {
       return mapper;
     }, new Map<number, IAssessment[]>());
     return hash;
+  }
+
+  getAssessmentFromMapping(learningCompetencyId: number): IAssessment[] {
+    return this.aMap.get(learningCompetencyId) ?? [];
   }
 }

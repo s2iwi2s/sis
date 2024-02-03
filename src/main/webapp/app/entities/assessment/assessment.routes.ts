@@ -33,6 +33,14 @@ const assessmentRoute: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
+    path: ':learningCompetencyId/new',
+    component: AssessmentUpdateComponent,
+    resolve: {
+      assessment: AssessmentResolve,
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
     path: ':id/edit',
     component: AssessmentUpdateComponent,
     resolve: {

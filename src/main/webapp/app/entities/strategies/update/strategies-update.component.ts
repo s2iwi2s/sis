@@ -61,6 +61,9 @@ export class StrategiesUpdateComponent implements OnInit {
       this.strategies = strategies;
       if (strategies) {
         this.updateForm(strategies);
+        if(strategies.id === -1){
+          this.editForm.patchValue({id: null})
+        }
       }
 
       this.loadRelationshipsOptions();
