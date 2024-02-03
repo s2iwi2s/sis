@@ -8,7 +8,7 @@ import { ICourse } from '../course.model';
 import { CourseService } from '../service/course.service';
 
 export const courseResolve = (route: ActivatedRouteSnapshot): Observable<null | ICourse> => {
-  const id = route.params['id'];
+  const id = route.params['id'] || route.params['courseId'];
   if (id) {
     return inject(CourseService)
       .find(id)

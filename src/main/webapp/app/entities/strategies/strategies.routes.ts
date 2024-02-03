@@ -33,6 +33,14 @@ const strategiesRoute: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
+    path: ':learningCompetencyId/new',
+    component: StrategiesUpdateComponent,
+    resolve: {
+      strategies: StrategiesResolve,
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
     path: ':id/edit',
     component: StrategiesUpdateComponent,
     resolve: {

@@ -63,6 +63,11 @@ export class AssessmentUpdateComponent implements OnInit {
       this.assessment = assessment;
       if (assessment) {
         this.updateForm(assessment);
+        if(assessment.id === -1){
+          this.editForm.patchValue({
+            id: null
+          })
+        }
       }
 
       this.loadRelationshipsOptions();

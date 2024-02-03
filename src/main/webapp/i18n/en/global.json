@@ -7,7 +7,9 @@
       "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
       "modules": {
         "main": "SiS+",
-        "curriculumMappingDashboard": "Curriculum Mapping Dashboard"
+        "curriculumMapping": "Curriculum Mapping",
+        "curriculumMappingView": "View",
+        "curriculumMappingDashboard": "Dashboard"
       },
       "entities": {
         "main": "Entities",

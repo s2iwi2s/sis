@@ -4,7 +4,7 @@ import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { of, EMPTY, Observable } from 'rxjs';
 import { mergeMap } from 'rxjs/operators';
 
-import { ICurriculumMap } from '../curriculum-map.model';
+import {ICurriculumMap, NewCurriculumMap} from '../curriculum-map.model';
 import { CurriculumMapService } from '../service/curriculum-map.service';
 
 export const curriculumMapResolve = (route: ActivatedRouteSnapshot): Observable<null | ICurriculumMap> => {
@@ -22,6 +22,11 @@ export const curriculumMapResolve = (route: ActivatedRouteSnapshot): Observable<
           }
         }),
       );
+  }
+  const courseId = route.params['courseId'];
+  const quarterNo = route.params['quarterNo'];
+  if(courseId) {
+    return of({id:-1, quarterNo: quarterNo||1, course:{id: +courseId}});
   }
   return of(null);
 };
