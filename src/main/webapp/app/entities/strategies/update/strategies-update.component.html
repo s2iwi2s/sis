@@ -90,14 +90,14 @@
         <div class="row mb-3">
           @for (resource of editForm.get('resources')?.value; track $index) {
             <div class="row col-sm-12">
-              <div class="col-sm-3">
+              <div class="col-sm-4">
                 <a class="btn btn-sm" [cdkCopyToClipboard]="baseUrl('/api/resources/doc/'+resource.id)"
                    (cdkCopyToClipboardCopied)="onClipboardCopy($event)">
                   <fa-icon icon="paperclip"></fa-icon>
                 </a>
                 <a href="/api/resources/doc/{{ resource.id }}">{{ resource.fileName }}</a>
               </div>
-              <div class="col-sm-9">
+              <div class="col-sm-8">
                 ({{ resource.documentContentType }})
                 <a (click)="deleteResource(resource)"><fa-icon icon="times"></fa-icon></a>
 

@@ -23,6 +23,16 @@ export const learningCompetencyResolve = (route: ActivatedRouteSnapshot): Observ
         }),
       );
   }
+  const curriculumMapId = route.params['curriculumMapId'];
+
+  if(curriculumMapId) {
+    return of({
+      id: -1,
+      curriculumMap: {
+        id: +curriculumMapId
+      }
+    });
+  }
   return of(null);
 };
 

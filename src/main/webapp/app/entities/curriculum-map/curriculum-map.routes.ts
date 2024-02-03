@@ -33,6 +33,14 @@ const curriculumMapRoute: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
+    path: ':courseId/:quarterNo/new',
+    component: CurriculumMapUpdateComponent,
+    resolve: {
+      curriculumMap: CurriculumMapResolve,
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
     path: ':id/edit',
     component: CurriculumMapUpdateComponent,
     resolve: {

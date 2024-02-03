@@ -1,0 +1,25 @@
+
+  <div class="row py-2 mb-sm-3 bg-body-tertiary">
+    <div class="col-sm-6 mb-sm-1">
+      <span class="fw-bold" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.gradelevel">gradelevel</span>:
+      <a class="d-print-none" [routerLink]="['/course', selectedCourse?.id, 'edit']">{{ selectedCourse?.gradelevel?.description }}</a>
+    </div>
+    <div class="col-sm-6 mb-sm-1 text-end">
+          <span class="fw-bold"
+                jhiTranslate="schInfoSysApp.curriculumMappingDashboard.hoursPerQuarter">hoursPerQuarter</span>:
+      {{ selectedCourse?.hoursPerQuarter }}
+    </div>
+    <div class="col-sm-12 mb-sm-3">
+      <span class="fw-bold" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.subject">subject</span>:
+      {{ selectedCourse?.subject }}
+    </div>
+    <div class="col-sm-12 mb-sm-1"><span class="fw-bold"
+                                         jhiTranslate="schInfoSysApp.curriculumMappingDashboard.courseDescription">courseDescription</span>
+    </div>
+    <div class="col-sm-12 mb-sm-2">{{ selectedCourse?.courseDescription }}</div>
+    <div class="col-sm-12 mb-sm-2">
+        <span class="fw-bold"
+              jhiTranslate="schInfoSysApp.curriculumMappingDashboard.courseObjectives">courseObjectives</span>
+    </div>
+    <div class="col-sm-12 mb-sm-3" [innerHtml]="htmlUtilService.toHtml(selectedCourse?.courseObjectives || '')"></div>
+  </div>

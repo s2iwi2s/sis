@@ -84,6 +84,11 @@ export class LearningCompetencyUpdateComponent implements OnInit {
   protected updateForm(learningCompetency: ILearningCompetency): void {
     this.learningCompetency = learningCompetency;
     this.learningCompetencyFormService.resetForm(this.editForm, learningCompetency);
+    if(learningCompetency.id === -1){
+      this.editForm.patchValue({
+        id: null
+      })
+    }
 
     this.curriculumMapsSharedCollection = this.curriculumMapService.addCurriculumMapToCollectionIfMissing<ICurriculumMap>(
       this.curriculumMapsSharedCollection,

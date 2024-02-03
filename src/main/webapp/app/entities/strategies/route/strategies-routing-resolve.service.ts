@@ -23,6 +23,14 @@ export const strategiesResolve = (route: ActivatedRouteSnapshot): Observable<nul
         }),
       );
   }
+  const learningCompetencyId = route.params['learningCompetencyId'];
+  if(learningCompetencyId){
+    return of({
+      id: -1,
+      learningCompetency: {id: +learningCompetencyId}
+    });
+  }
+
   return of(null);
 };
 
