@@ -2,6 +2,12 @@
 
 This application was generated using JHipster 8.1.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v8.1.0](https://www.jhipster.tech/documentation-archive/v8.1.0).
 
+## Parameters to change the datasource in 'run_sis' script
+
+```
+java -jar -Dspring.datasource.username=ds-username -Dspring.datasource.password=ds-pwd -Dspring.datasource.url=jdbc:postgresql://localhost:5432/SchInfoSys sis.jar
+```
+
 ## Project Structure
 
 Node is required for generation and recommended for development. `package.json` is always generated for a better development experience with prettier, commit hooks, scripts and so on.

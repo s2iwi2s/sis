@@ -7,3 +7,8 @@
 
 ${AnsiColor.BRIGHT_BLUE}:: JHipster 🤓  :: Running Spring Boot ${spring-boot.version} :: Startup profile(s) ${spring.profiles.active} ::
 :: https://www.jhipster.tech ::${AnsiColor.DEFAULT}
+${AnsiColor.BRIGHT_BLUE}
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:: ${AnsiColor.BRIGHT_RED}ds url=${spring.datasource.url}${AnsiColor.BRIGHT_BLUE}
+:: ${AnsiColor.BRIGHT_RED}ds username=${spring.datasource.username}${AnsiColor.BRIGHT_BLUE}
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

@@ -28,14 +28,20 @@ export class QuarterCardComponent {
   @Input() aMap: Map<number, IAssessment[]> = new Map();
 
   getLearningCompetenciesFromMapping(currMapId: number): ILearningCompetency[] {
-    return this.lcMap.get(currMapId) ?? [];
+    const array = this.lcMap.get(currMapId) ?? []
+    array.sort((a, b) => (a.seqNo ?? 0) - (b.seqNo ?? 0));
+    return array;
   }
 
   getStrategiesFromMapping(learningCompetencyId: number): IStrategies[] {
+    const array = this.sMap.get(learningCompetencyId) ?? []
+    array.sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
     return this.sMap.get(learningCompetencyId) ?? [];
   }
 
   getAssessmentFromMapping(learningCompetencyId: number): IAssessment[] {
-    return this.aMap.get(learningCompetencyId) ?? [];
+    const array = this.aMap.get(learningCompetencyId) ?? []
+    array.sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
+    return array;
   }
 }
