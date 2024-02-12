@@ -25,9 +25,11 @@ export const strategiesResolve = (route: ActivatedRouteSnapshot): Observable<nul
   }
   const learningCompetencyId = route.params['learningCompetencyId'];
   if(learningCompetencyId){
+    const seqNo = route.params['seqNo'];
+    const competencyCode = route.params['competencyCode'];
     return of({
       id: -1,
-      learningCompetency: {id: +learningCompetencyId}
+      learningCompetency: {id: +learningCompetencyId, seqNo: +seqNo, competencyCode: competencyCode}
     });
   }
 
