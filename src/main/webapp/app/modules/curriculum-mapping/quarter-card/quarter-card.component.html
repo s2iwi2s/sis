@@ -75,7 +75,7 @@
                         </tbody>
                       </table>
                     }
-                      <div class="col-12"><a class="d-print-none" [routerLink]="['/strategies', l?.id, 'new']"><fa-icon icon="plus"></fa-icon></a></div>
+                      <div class="col-12"><a class="d-print-none" [routerLink]="['/strategies', l?.id, l?.seqNo, l?.competencyCode, 'new']"><fa-icon icon="plus"></fa-icon></a></div>
                     </div>
                   </td>
                   <td>
@@ -96,7 +96,7 @@
                           </tbody>
                         </table>
                       }
-                      <div class="col-12"><a class="d-print-none" [routerLink]="['/assessment', l?.id, 'new']" ><fa-icon icon="plus"></fa-icon></a></div>
+                      <div class="col-12"><a class="d-print-none" [routerLink]="['/assessment', l?.id, l?.seqNo, l?.competencyCode, 'new']" ><fa-icon icon="plus"></fa-icon></a></div>
                     </div>
                   </td>
                 </tr>

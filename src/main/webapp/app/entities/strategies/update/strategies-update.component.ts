@@ -58,6 +58,7 @@ export class StrategiesUpdateComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ strategies }) => {
+      console.log('strategies=>', strategies);
       this.strategies = strategies;
       if (strategies) {
         this.updateForm(strategies);

@@ -33,7 +33,7 @@ const assessmentRoute: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
-    path: ':learningCompetencyId/new',
+    path: ':learningCompetencyId/:seqNo/:competencyCode/new',
     component: AssessmentUpdateComponent,
     resolve: {
       assessment: AssessmentResolve,
