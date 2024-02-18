@@ -2,7 +2,7 @@
   <div class="row py-2 mb-sm-3 bg-body-tertiary">
     <div class="col-sm-6 mb-sm-1">
       <span class="fw-bold" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.gradelevel">gradelevel</span>:
-      <a class="d-print-none" [routerLink]="['/course', selectedCourse?.id, 'edit']">{{ selectedCourse?.gradelevel?.description }}</a>
+      <a [routerLink]="['/course', selectedCourse?.id, 'edit']">{{ selectedCourse?.gradelevel?.description }}</a>
     </div>
     <div class="col-sm-6 mb-sm-1 text-end">
           <span class="fw-bold"
