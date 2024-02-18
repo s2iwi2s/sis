@@ -15,6 +15,9 @@
       <span jhiTranslate="schInfoSysApp.curriculumMappingDashboard.timeFrame">timeFrame</span>
     </th>
     <th>
+      <span jhiTranslate="schInfoSysApp.curriculumMappingDashboard.topic">Topic</span>
+    </th>
+    <th>
       <span jhiTranslate="schInfoSysApp.curriculumMappingDashboard.contentStandards">contentStandards</span>
     </th>
     <th>
@@ -30,6 +33,7 @@
           <a class="d-print-none" [routerLink]="['/curriculum-map', c?.id, 'edit']"><fa-icon icon="pencil-alt"></fa-icon></a>
           Week {{ c.weekNo }}
         </td>
+        <td>{{ c.topic }}</td>
         <td>{{ c.contentStandards }}</td>
         <td>{{ c.performanceStandards }}</td>
         <td>
