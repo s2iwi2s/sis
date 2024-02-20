@@ -3,6 +3,7 @@ package com.sis.service.dto;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -34,6 +35,8 @@ public class CurriculumMapDTO implements Serializable {
     private Instant lastModifiedDate;
 
     private CourseDTO course;
+
+    private List<LearningCompetencyDTO> learningCompetencyDTOS;
 
     public Long getId() {
         return id;
@@ -121,6 +124,14 @@ public class CurriculumMapDTO implements Serializable {
 
     public void setCourse(CourseDTO course) {
         this.course = course;
+    }
+
+    public List<LearningCompetencyDTO> getLearningCompetencyDTOS() {
+        return learningCompetencyDTOS;
+    }
+
+    public void setLearningCompetencyDTOS(List<LearningCompetencyDTO> learningCompetencyDTOS) {
+        this.learningCompetencyDTOS = learningCompetencyDTOS;
     }
 
     @Override

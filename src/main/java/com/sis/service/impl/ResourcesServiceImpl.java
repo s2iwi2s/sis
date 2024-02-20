@@ -12,6 +12,11 @@ import com.sis.service.ResourcesService;
 import com.sis.service.dto.ResourcesDTO;
 import com.sis.service.mapper.ResourcesMapper;
 import com.sis.service.util.ImageUtil;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
@@ -20,12 +25,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Service Implementation for managing {@link com.sis.domain.Resources}.
@@ -46,10 +45,13 @@ public class ResourcesServiceImpl implements ResourcesService {
 
     private final AppConfigRepository appConfigRepository;
 
-    public ResourcesServiceImpl(ResourcesRepository resourcesRepository, ResourcesMapper resourcesMapper,
-                                StrategiesRepository strategiesRepository,
-                                AssessmentRepository assessmentRepository,
-                                AppConfigRepository appConfigRepository) {
+    public ResourcesServiceImpl(
+        ResourcesRepository resourcesRepository,
+        ResourcesMapper resourcesMapper,
+        StrategiesRepository strategiesRepository,
+        AssessmentRepository assessmentRepository,
+        AppConfigRepository appConfigRepository
+    ) {
         this.resourcesRepository = resourcesRepository;
         this.resourcesMapper = resourcesMapper;
         this.strategiesRepository = strategiesRepository;
@@ -63,7 +65,7 @@ public class ResourcesServiceImpl implements ResourcesService {
         Resources resources = resourcesMapper.toEntity(resourcesDTO);
 
         String type = resourcesDTO.getDocumentContentType();
-        if(type.toLowerCase().contains("image")) {
+        if (type.toLowerCase().contains("image")) {
             toThumbnail(resourcesDTO, resources);
         }
 
@@ -72,26 +74,29 @@ public class ResourcesServiceImpl implements ResourcesService {
     }
 
     private void toThumbnail(ResourcesDTO resourcesDTO, Resources resources) throws IOException {
-        byte[] document = resources.getDocument();
         String[] fileName = resourcesDTO.getFileName().split("\\.");
         String formatName = fileName[fileName.length - 1];
         int height = getHeight();
 
-        byte[] result = ImageUtil.toThumbnail(document, formatName, height);
-        resources.setDocument(result);
+        if (height != -1) {
+            byte[] result = ImageUtil.toThumbnail(resources.getDocument(), formatName, height);
+            resources.setDocument(result);
+        }
     }
 
     private int getHeight() {
-        int height = 100;
+        int height = -1;
         try {
-            Example<AppConfig> example = Example.of(new AppConfig().code("IMG_HEIGHT").createdDate(null).lastModifiedDate(null), ExampleMatcher.matchingAll().withIgnoreCase());
-
+            Example<AppConfig> example = Example.of(
+                new AppConfig().code("IMG_HEIGHT").createdDate(null).lastModifiedDate(null),
+                ExampleMatcher.matchingAll().withIgnoreCase()
+            );
             List<AppConfig> appConfigs = appConfigRepository.findAll(example);
-            if(!appConfigs.isEmpty()) {
+            if (!appConfigs.isEmpty()) {
                 height = Integer.parseInt(appConfigs.get(0).getValue());
             }
         } catch (NumberFormatException e) {
-            log.error("Unable to find IMG_HEIGHT in appconfig" +  e.getMessage(), e);
+            log.error("Unable to find IMG_HEIGHT in appconfig" + e.getMessage(), e);
         }
         return height;
     }
@@ -137,14 +142,17 @@ public class ResourcesServiceImpl implements ResourcesService {
     public void delete(Long id) {
         log.debug("Request to delete Resources : {}", id);
 
-        resourcesRepository.findById(id)
+        resourcesRepository
+            .findById(id)
             .ifPresent(r -> {
-                strategiesRepository.findByResources(r)
+                strategiesRepository
+                    .findByResources(r)
                     .ifPresent(s -> {
                         s.removeResources(r);
                         strategiesRepository.save(s);
                     });
-                assessmentRepository.findByResources(r)
+                assessmentRepository
+                    .findByResources(r)
                     .ifPresent(a -> {
                         a.removeResources(r);
                         assessmentRepository.save(a);
@@ -166,6 +174,4 @@ public class ResourcesServiceImpl implements ResourcesService {
         Example<Resources> example = Example.of(resources, ExampleMatcher.matchingAll().withIgnoreCase());
         return resourcesRepository.findAll(example).stream().map(resourcesMapper::toDto).collect(Collectors.toSet());
     }
-
-
 }

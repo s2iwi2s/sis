@@ -1,44 +1,39 @@
 package com.sis.service.util;
 
-import com.sis.service.dto.ResourcesDTO;
-import net.coobird.thumbnailator.Thumbnails;
-
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Base64;
+import javax.imageio.ImageIO;
+import net.coobird.thumbnailator.Thumbnails;
 
 public interface ImageUtil {
-
-    public static byte[] toThumbnail(byte[] document, String formatName, int targetHeight) throws IOException {
-        BufferedImage bufferedImage = ImageUtil.base64ToBufferedImage(document);
-        bufferedImage = ImageUtil.resizeImage(bufferedImage, formatName,targetHeight);
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-
-        ImageIO.write(bufferedImage, formatName, os);
-//        String result = Base64.getEncoder().encodeToString(os.toByteArray());
-//        byte[] result = Base64.getEncoder().encodeToString(os.toByteArray()).getBytes();
-        return os.toByteArray();
+    static byte[] toThumbnail(byte[] document, String formatName, int targetHeight) throws IOException {
+        BufferedImage bufferedImage = base64ToBufferedImage(document);
+        bufferedImage = resizeImage(bufferedImage, formatName, targetHeight);
+        return bufferedImageToByteArray(bufferedImage, formatName);
     }
 
     static BufferedImage base64ToBufferedImage(byte[] imageData) throws IOException {
-        InputStream inputStream = new ByteArrayInputStream(imageData);
-        return ImageIO.read(inputStream);
+        try (InputStream inputStream = new ByteArrayInputStream(imageData)) {
+            return ImageIO.read(inputStream);
+        }
     }
 
     static BufferedImage resizeImage(BufferedImage originalImage, String outputFormat, int targetHeight) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        Thumbnails.of(originalImage)
-//            .size(targetWidth, targetHeight)
-            .height(targetHeight)
-            .outputFormat(outputFormat) // JPEG
-            .outputQuality(0.90)
-            .toOutputStream(outputStream);
+        Thumbnails.of(originalImage).height(targetHeight).outputFormat(outputFormat).outputQuality(0.90).toOutputStream(outputStream);
         byte[] data = outputStream.toByteArray();
-        ByteArrayInputStream inputStream = new ByteArrayInputStream(data);
-        return ImageIO.read(inputStream);
+        try (ByteArrayInputStream inputStream = new ByteArrayInputStream(data)) {
+            return ImageIO.read(inputStream);
+        }
+    }
+
+    static byte[] bufferedImageToByteArray(BufferedImage bufferedImage, String formatName) throws IOException {
+        try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+            ImageIO.write(bufferedImage, formatName, os);
+            return os.toByteArray();
+        }
     }
 }
