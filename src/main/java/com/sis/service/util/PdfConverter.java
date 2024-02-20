@@ -17,18 +17,15 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 @Component
 public interface PdfConverter {
     public static ReportResponseDTO htmlToPdf(String filename, String html) throws IOException {
-        Logger log = LoggerFactory.getLogger(PdfConverter.class);
-        log.info("html=>{}", html);
         Document document = Jsoup.parse(html, "UTF-8");
         document.outputSettings().syntax(Document.OutputSettings.Syntax.xml);
+
         String safeHtml = document.html();
-        //
         //        safeHtml = "<!DOCTYPE test [" +
         //            "  <!ENTITY nbsp \"&#160;\">" +
         //            "]>" + safeHtml;
         safeHtml =
             "<!DOCTYPE math " + "PUBLIC \"-//W3C//DTD MathML 3.0//EN\" " + "\"http://www.w3.org/Math/DTD/mathml3/mathml3.dtd\">" + safeHtml;
-        log.info("safeHtml=>{}", safeHtml);
 
         ITextRenderer renderer = new ITextRenderer();
 

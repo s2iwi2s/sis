@@ -81,6 +81,7 @@ export class CurriculumMappingDashboardComponent implements OnInit {
       if (course) {
         this.isLoading = true;
         this.selectedCourse = course;
+        this.clear();
         forkJoin([
           this.curriculumMapService.queryByCourse(course.id),
           this.learningCompetencyService.queryByCourse(course.id),
@@ -139,6 +140,12 @@ export class CurriculumMappingDashboardComponent implements OnInit {
         this.isLoading = false;
       });
     }
+  }
+  clear() {
+    this.lcMap = new Map();
+    this.sMap = new Map();
+    this.aMap = new Map();
+    this.curMapByQuarter = new Map();
   }
 
   mapCurriculumByQuarter(array: ICurriculumMap[] = []): Map<number, ICurriculumMap[]> {
