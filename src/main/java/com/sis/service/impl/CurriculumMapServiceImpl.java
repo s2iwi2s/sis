@@ -7,7 +7,6 @@ import com.sis.service.CourseService;
 import com.sis.service.CurriculumMapService;
 import com.sis.service.dto.CurriculumMapDTO;
 import com.sis.service.mapper.CurriculumMapMapper;
-
 import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -32,8 +31,11 @@ public class CurriculumMapServiceImpl implements CurriculumMapService {
 
     private final CourseRepository courseRepository;
 
-    public CurriculumMapServiceImpl(CurriculumMapRepository curriculumMapRepository, CurriculumMapMapper curriculumMapMapper,
-                                    CourseRepository courseRepository) {
+    public CurriculumMapServiceImpl(
+        CurriculumMapRepository curriculumMapRepository,
+        CurriculumMapMapper curriculumMapMapper,
+        CourseRepository courseRepository
+    ) {
         this.curriculumMapRepository = curriculumMapRepository;
         this.curriculumMapMapper = curriculumMapMapper;
         this.courseRepository = courseRepository;
@@ -92,8 +94,10 @@ public class CurriculumMapServiceImpl implements CurriculumMapService {
 
     @Override
     public List<CurriculumMapDTO> findByCourse(Long courseId) {
-        return courseRepository.findById(courseId)
-            .map(curriculumMapRepository::findByCourse)
-            .map(curriculumMapMapper::toDto).orElseThrow();
+        return courseRepository
+            .findById(courseId)
+            .map(curriculumMapRepository::findByCourseOrderByQuarterNoAscWeekNoAsc)
+            .map(curriculumMapMapper::toDto)
+            .orElseThrow();
     }
 }
