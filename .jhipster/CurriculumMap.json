@@ -1,0 +1,62 @@
+{
+  "annotations": {
+    "changelogDate": "20240104092014"
+  },
+  "applications": ["SchInfoSys"],
+  "dto": "mapstruct",
+  "entityTableName": "curriculum_map",
+  "fields": [
+    {
+      "fieldName": "quarterNo",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "weekNo",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "topic",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "contentStandards",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "performanceStandards",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "CurriculumMap",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "learningCompetency",
+      "relationshipName": "learningCompetency",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

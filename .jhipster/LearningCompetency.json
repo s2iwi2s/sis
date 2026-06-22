@@ -1,0 +1,62 @@
+{
+  "annotations": {
+    "changelogDate": "20240104092114"
+  },
+  "applications": ["SchInfoSys"],
+  "dto": "mapstruct",
+  "entityTableName": "learning_competency",
+  "fields": [
+    {
+      "fieldName": "seqNo",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "competencyCode",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "LearningCompetency",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "strategies",
+      "relationshipName": "strategies",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "assessment",
+      "relationshipName": "assessment",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

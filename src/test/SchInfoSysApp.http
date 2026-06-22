@@ -1,0 +1,31 @@
+### Authorization by token,Retrieve and save token.
+POST http://localhost:8080/api/authenticate
+Content-Type: application/json
+
+{"username":"admin","password":"admin"}
+
+> {% client.global.set("auth_token", response.body.id_token); %}
+
+<> 2024-01-13T171255.200.json
+
+### create org
+POST http://localhost:8080/api/orgs
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+
+{
+  "id": null,
+  "name": "ST. LORENZO RUIZ ACADEMY OF TAGUM, INC.",
+  "logo": "logo url here",
+  "address": "Tagum City, Davao del Norte",
+  "currSchYr": "M"
+}
+
+### get all org by 20
+GET http://localhost:8080/api/orgs
+Authorization: Bearer {{auth_token}}
+
+<> 2024-01-13T171255.400.json
+
+###
+

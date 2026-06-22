@@ -1,0 +1,31 @@
+{
+  "schInfoSysApp": {
+    "strategies": {
+      "home": {
+        "title": "Strategies",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Strategies",
+        "createOrEditLabel": "Create or edit a Strategies",
+        "notFound": "No Strategies found"
+      },
+      "created": "A new Strategies is created with identifier {{ param }}",
+      "updated": "A Strategies is updated with identifier {{ param }}",
+      "deleted": "A Strategies is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Strategies {{ id }}?"
+      },
+      "detail": {
+        "title": "Strategies"
+      },
+      "id": "ID",
+      "name": "Name",
+      "description": "Description",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
+      "resources": "Resources",
+      "learningCompetency": "Learning Competency"
+    }
+  }
+}

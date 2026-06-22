@@ -1,0 +1,55 @@
+{
+  "annotations": {
+    "changelogDate": "20240104092314"
+  },
+  "applications": ["SchInfoSys"],
+  "dto": "mapstruct",
+  "entityTableName": "assessment",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "instruction",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "markScheme",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "Assessment",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "resources",
+      "relationshipName": "resources",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-many"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

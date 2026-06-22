@@ -1,0 +1,86 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (assessment) {
+      <div>
+        <h2 data-cy="assessmentDetailsHeading"><span jhiTranslate="schInfoSysApp.assessment.detail.title">Assessment</span></h2>
+
+        <hr />
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ assessment.id }}</span>
+          </dd>
+
+          <dt><span jhiTranslate="schInfoSysApp.assessment.learningCompetency">Learning Competency</span></dt>
+          <dd>
+            @if (assessment.learningCompetency) {
+              <div>
+                <a [routerLink]="['/learning-competency', assessment.learningCompetency.id, 'view']">{{
+                    assessment.learningCompetency.seqNo + ' - ' + assessment.learningCompetency.competencyCode
+                  }}</a>
+              </div>
+            }
+          </dd>
+
+          <dt><span jhiTranslate="schInfoSysApp.assessment.name">Name</span></dt>
+          <dd>
+            <span>{{ assessment.name }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.assessment.instruction">Instruction</span></dt>
+          <dd>
+            <span>
+              <textarea class="form-control" [readOnly]="true">{{ assessment.instruction }}</textarea>
+            </span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.assessment.markScheme">Mark Scheme</span></dt>
+          <dd>
+            <span>
+              <editor
+                class="form-control"
+                [disabled]="true"
+                [(ngModel)]="assessment.markScheme"
+                [init]="tinyMCEDisabledOptions"></editor>
+            </span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.assessment.createdBy">Created By</span></dt>
+          <dd>
+            <span>{{ assessment.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.assessment.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ assessment.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.assessment.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ assessment.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.assessment.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ assessment.lastModifiedDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.assessment.resources">Resources</span></dt>
+          <dd>
+            @for (resources of assessment.resources; track $index; let last = $last) {
+              <div class="col-sm-12">
+                <a [routerLink]="['/resources', resources.id, 'view']">{{ resources.fileName }} ({{ resources.documentContentType }})</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/assessment', assessment.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

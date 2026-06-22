@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <!--
+        Added the constraints for entity Resources.
+    -->
+    <changeSet id="20240104092414-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="strategies_id"
+                                 baseTableName="resources"
+                                 constraintName="fk_resources__strategies_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="strategies"
+                                 onDelete="CASCADE"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="assessment_id"
+                                 baseTableName="resources"
+                                 constraintName="fk_resources__assessment_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="assessment"
+                                 onDelete="CASCADE"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="tag_id"
+                                 baseTableName="rel_resources__tag"
+                                 constraintName="fk_rel_resources__tag__tag_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tag"
+                                 onDelete="CASCADE"
+        />
+    </changeSet>
+</databaseChangeLog>
