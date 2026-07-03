@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
+
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IStrategies, NewStrategies } from '../strategies.model';
 
@@ -28,7 +29,7 @@ type StrategiesFormRawValue = FormValueOf<IStrategies>;
 
 type NewStrategiesFormRawValue = FormValueOf<NewStrategies>;
 
-type StrategiesFormDefaults = Pick<NewStrategies, 'id' | 'createdDate' | 'lastModifiedDate' | 'resources'>;
+type StrategiesFormDefaults = Pick<NewStrategies, 'id' | 'createdDate' | 'lastModifiedDate' | 'resourceses'>;
 
 type StrategiesFormGroupContent = {
   id: FormControl<StrategiesFormRawValue['id'] | NewStrategies['id']>;
@@ -38,7 +39,7 @@ type StrategiesFormGroupContent = {
   createdDate: FormControl<StrategiesFormRawValue['createdDate']>;
   lastModifiedBy: FormControl<StrategiesFormRawValue['lastModifiedBy']>;
   lastModifiedDate: FormControl<StrategiesFormRawValue['lastModifiedDate']>;
-  resources: FormControl<StrategiesFormRawValue['resources']>;
+  resourceses: FormControl<StrategiesFormRawValue['resourceses']>;
   learningCompetency: FormControl<StrategiesFormRawValue['learningCompetency']>;
 };
 
@@ -46,10 +47,10 @@ export type StrategiesFormGroup = FormGroup<StrategiesFormGroupContent>;
 
 @Injectable({ providedIn: 'root' })
 export class StrategiesFormService {
-  createStrategiesFormGroup(strategies: StrategiesFormGroupInput = { id: null }): StrategiesFormGroup {
+  createStrategiesFormGroup(strategies?: StrategiesFormGroupInput): StrategiesFormGroup {
     const strategiesRawValue = this.convertStrategiesToStrategiesRawValue({
       ...this.getFormDefaults(),
-      ...strategies,
+      ...(strategies ?? { id: null }),
     });
     return new FormGroup<StrategiesFormGroupContent>({
       id: new FormControl(
@@ -69,23 +70,21 @@ export class StrategiesFormService {
         validators: [Validators.maxLength(50)],
       }),
       lastModifiedDate: new FormControl(strategiesRawValue.lastModifiedDate),
-      resources: new FormControl(strategiesRawValue.resources ?? []),
+      resourceses: new FormControl(strategiesRawValue.resourceses ?? []),
       learningCompetency: new FormControl(strategiesRawValue.learningCompetency),
     });
   }
 
   getStrategies(form: StrategiesFormGroup): IStrategies | NewStrategies {
-    return this.convertStrategiesRawValueToStrategies(form.getRawValue() as StrategiesFormRawValue | NewStrategiesFormRawValue);
+    return this.convertStrategiesRawValueToStrategies(form.getRawValue());
   }
 
   resetForm(form: StrategiesFormGroup, strategies: StrategiesFormGroupInput): void {
     const strategiesRawValue = this.convertStrategiesToStrategiesRawValue({ ...this.getFormDefaults(), ...strategies });
-    form.reset(
-      {
-        ...strategiesRawValue,
-        id: { value: strategiesRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
-    );
+    form.reset({
+      ...strategiesRawValue,
+      id: { value: strategiesRawValue.id, disabled: true },
+    });
   }
 
   private getFormDefaults(): StrategiesFormDefaults {
@@ -95,7 +94,7 @@ export class StrategiesFormService {
       id: null,
       createdDate: currentTime,
       lastModifiedDate: currentTime,
-      resources: [],
+      resourceses: [],
     };
   }
 
@@ -116,7 +115,7 @@ export class StrategiesFormService {
       ...strategies,
       createdDate: strategies.createdDate ? strategies.createdDate.format(DATE_TIME_FORMAT) : undefined,
       lastModifiedDate: strategies.lastModifiedDate ? strategies.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
-      resources: strategies.resources ?? [],
+      resourceses: strategies.resourceses ?? [],
     };
   }
 }

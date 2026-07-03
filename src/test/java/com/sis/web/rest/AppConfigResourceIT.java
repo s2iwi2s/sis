@@ -1,10 +1,13 @@
 package com.sis.web.rest;
 
+import static com.sis.domain.AppConfigAsserts.*;
+import static com.sis.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sis.IntegrationTest;
 import com.sis.domain.AppConfig;
 import com.sis.repository.AppConfigRepository;
@@ -13,13 +16,13 @@ import com.sis.service.mapper.AppConfigMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -67,6 +70,9 @@ class AppConfigResourceIT {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
+    private ObjectMapper om;
+
+    @Autowired
     private AppConfigRepository appConfigRepository;
 
     @Autowired
@@ -80,14 +86,16 @@ class AppConfigResourceIT {
 
     private AppConfig appConfig;
 
+    private AppConfig insertedAppConfig;
+
     /**
      * Create an entity for this test.
      *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static AppConfig createEntity(EntityManager em) {
-        AppConfig appConfig = new AppConfig()
+    public static AppConfig createEntity() {
+        return new AppConfig()
             .code(DEFAULT_CODE)
             .value(DEFAULT_VALUE)
             .description(DEFAULT_DESCRIPTION)
@@ -97,7 +105,6 @@ class AppConfigResourceIT {
             .createdDate(DEFAULT_CREATED_DATE)
             .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
             .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
-        return appConfig;
     }
 
     /**
@@ -106,8 +113,8 @@ class AppConfigResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static AppConfig createUpdatedEntity(EntityManager em) {
-        AppConfig appConfig = new AppConfig()
+    public static AppConfig createUpdatedEntity() {
+        return new AppConfig()
             .code(UPDATED_CODE)
             .value(UPDATED_VALUE)
             .description(UPDATED_DESCRIPTION)
@@ -117,37 +124,43 @@ class AppConfigResourceIT {
             .createdDate(UPDATED_CREATED_DATE)
             .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
             .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
-        return appConfig;
     }
 
     @BeforeEach
-    public void initTest() {
-        appConfig = createEntity(em);
+    void initTest() {
+        appConfig = createEntity();
+    }
+
+    @AfterEach
+    void cleanup() {
+        if (insertedAppConfig != null) {
+            appConfigRepository.delete(insertedAppConfig);
+            insertedAppConfig = null;
+        }
     }
 
     @Test
     @Transactional
     void createAppConfig() throws Exception {
-        int databaseSizeBeforeCreate = appConfigRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the AppConfig
         AppConfigDTO appConfigDTO = appConfigMapper.toDto(appConfig);
-        restAppConfigMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(appConfigDTO)))
-            .andExpect(status().isCreated());
+        var returnedAppConfigDTO = om.readValue(
+            restAppConfigMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(appConfigDTO)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            AppConfigDTO.class
+        );
 
         // Validate the AppConfig in the database
-        List<AppConfig> appConfigList = appConfigRepository.findAll();
-        assertThat(appConfigList).hasSize(databaseSizeBeforeCreate + 1);
-        AppConfig testAppConfig = appConfigList.get(appConfigList.size() - 1);
-        assertThat(testAppConfig.getCode()).isEqualTo(DEFAULT_CODE);
-        assertThat(testAppConfig.getValue()).isEqualTo(DEFAULT_VALUE);
-        assertThat(testAppConfig.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
-        assertThat(testAppConfig.getJson()).isEqualTo(DEFAULT_JSON);
-        assertThat(testAppConfig.getPriority()).isEqualTo(DEFAULT_PRIORITY);
-        assertThat(testAppConfig.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
-        assertThat(testAppConfig.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
-        assertThat(testAppConfig.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
-        assertThat(testAppConfig.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
+        assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedAppConfig = appConfigMapper.toEntity(returnedAppConfigDTO);
+        assertAppConfigUpdatableFieldsEquals(returnedAppConfig, getPersistedAppConfig(returnedAppConfig));
+
+        insertedAppConfig = returnedAppConfig;
     }
 
     @Test
@@ -157,23 +170,22 @@ class AppConfigResourceIT {
         appConfig.setId(1L);
         AppConfigDTO appConfigDTO = appConfigMapper.toDto(appConfig);
 
-        int databaseSizeBeforeCreate = appConfigRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restAppConfigMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(appConfigDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(appConfigDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the AppConfig in the database
-        List<AppConfig> appConfigList = appConfigRepository.findAll();
-        assertThat(appConfigList).hasSize(databaseSizeBeforeCreate);
+        assertSameRepositoryCount(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     void getAllAppConfigs() throws Exception {
         // Initialize the database
-        appConfigRepository.saveAndFlush(appConfig);
+        insertedAppConfig = appConfigRepository.saveAndFlush(appConfig);
 
         // Get all the appConfigList
         restAppConfigMockMvc
@@ -196,7 +208,7 @@ class AppConfigResourceIT {
     @Transactional
     void getAppConfig() throws Exception {
         // Initialize the database
-        appConfigRepository.saveAndFlush(appConfig);
+        insertedAppConfig = appConfigRepository.saveAndFlush(appConfig);
 
         // Get the appConfig
         restAppConfigMockMvc
@@ -226,9 +238,9 @@ class AppConfigResourceIT {
     @Transactional
     void putExistingAppConfig() throws Exception {
         // Initialize the database
-        appConfigRepository.saveAndFlush(appConfig);
+        insertedAppConfig = appConfigRepository.saveAndFlush(appConfig);
 
-        int databaseSizeBeforeUpdate = appConfigRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the appConfig
         AppConfig updatedAppConfig = appConfigRepository.findById(appConfig.getId()).orElseThrow();
@@ -250,29 +262,19 @@ class AppConfigResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, appConfigDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(appConfigDTO))
+                    .content(om.writeValueAsBytes(appConfigDTO))
             )
             .andExpect(status().isOk());
 
         // Validate the AppConfig in the database
-        List<AppConfig> appConfigList = appConfigRepository.findAll();
-        assertThat(appConfigList).hasSize(databaseSizeBeforeUpdate);
-        AppConfig testAppConfig = appConfigList.get(appConfigList.size() - 1);
-        assertThat(testAppConfig.getCode()).isEqualTo(UPDATED_CODE);
-        assertThat(testAppConfig.getValue()).isEqualTo(UPDATED_VALUE);
-        assertThat(testAppConfig.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testAppConfig.getJson()).isEqualTo(UPDATED_JSON);
-        assertThat(testAppConfig.getPriority()).isEqualTo(UPDATED_PRIORITY);
-        assertThat(testAppConfig.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testAppConfig.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testAppConfig.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testAppConfig.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertPersistedAppConfigToMatchAllProperties(updatedAppConfig);
     }
 
     @Test
     @Transactional
     void putNonExistingAppConfig() throws Exception {
-        int databaseSizeBeforeUpdate = appConfigRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         appConfig.setId(longCount.incrementAndGet());
 
         // Create the AppConfig
@@ -283,19 +285,18 @@ class AppConfigResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, appConfigDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(appConfigDTO))
+                    .content(om.writeValueAsBytes(appConfigDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the AppConfig in the database
-        List<AppConfig> appConfigList = appConfigRepository.findAll();
-        assertThat(appConfigList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithIdMismatchAppConfig() throws Exception {
-        int databaseSizeBeforeUpdate = appConfigRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         appConfig.setId(longCount.incrementAndGet());
 
         // Create the AppConfig
@@ -306,19 +307,18 @@ class AppConfigResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(appConfigDTO))
+                    .content(om.writeValueAsBytes(appConfigDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the AppConfig in the database
-        List<AppConfig> appConfigList = appConfigRepository.findAll();
-        assertThat(appConfigList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithMissingIdPathParamAppConfig() throws Exception {
-        int databaseSizeBeforeUpdate = appConfigRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         appConfig.setId(longCount.incrementAndGet());
 
         // Create the AppConfig
@@ -326,62 +326,56 @@ class AppConfigResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restAppConfigMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(appConfigDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(appConfigDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the AppConfig in the database
-        List<AppConfig> appConfigList = appConfigRepository.findAll();
-        assertThat(appConfigList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void partialUpdateAppConfigWithPatch() throws Exception {
         // Initialize the database
-        appConfigRepository.saveAndFlush(appConfig);
+        insertedAppConfig = appConfigRepository.saveAndFlush(appConfig);
 
-        int databaseSizeBeforeUpdate = appConfigRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the appConfig using partial update
         AppConfig partialUpdatedAppConfig = new AppConfig();
         partialUpdatedAppConfig.setId(appConfig.getId());
 
         partialUpdatedAppConfig
-            .description(UPDATED_DESCRIPTION)
+            .priority(UPDATED_PRIORITY)
             .createdBy(UPDATED_CREATED_BY)
             .createdDate(UPDATED_CREATED_DATE)
-            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY);
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restAppConfigMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedAppConfig.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedAppConfig))
+                    .content(om.writeValueAsBytes(partialUpdatedAppConfig))
             )
             .andExpect(status().isOk());
 
         // Validate the AppConfig in the database
-        List<AppConfig> appConfigList = appConfigRepository.findAll();
-        assertThat(appConfigList).hasSize(databaseSizeBeforeUpdate);
-        AppConfig testAppConfig = appConfigList.get(appConfigList.size() - 1);
-        assertThat(testAppConfig.getCode()).isEqualTo(DEFAULT_CODE);
-        assertThat(testAppConfig.getValue()).isEqualTo(DEFAULT_VALUE);
-        assertThat(testAppConfig.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testAppConfig.getJson()).isEqualTo(DEFAULT_JSON);
-        assertThat(testAppConfig.getPriority()).isEqualTo(DEFAULT_PRIORITY);
-        assertThat(testAppConfig.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testAppConfig.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testAppConfig.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testAppConfig.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertAppConfigUpdatableFieldsEquals(
+            createUpdateProxyForBean(partialUpdatedAppConfig, appConfig),
+            getPersistedAppConfig(appConfig)
+        );
     }
 
     @Test
     @Transactional
     void fullUpdateAppConfigWithPatch() throws Exception {
         // Initialize the database
-        appConfigRepository.saveAndFlush(appConfig);
+        insertedAppConfig = appConfigRepository.saveAndFlush(appConfig);
 
-        int databaseSizeBeforeUpdate = appConfigRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the appConfig using partial update
         AppConfig partialUpdatedAppConfig = new AppConfig();
@@ -402,29 +396,20 @@ class AppConfigResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedAppConfig.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedAppConfig))
+                    .content(om.writeValueAsBytes(partialUpdatedAppConfig))
             )
             .andExpect(status().isOk());
 
         // Validate the AppConfig in the database
-        List<AppConfig> appConfigList = appConfigRepository.findAll();
-        assertThat(appConfigList).hasSize(databaseSizeBeforeUpdate);
-        AppConfig testAppConfig = appConfigList.get(appConfigList.size() - 1);
-        assertThat(testAppConfig.getCode()).isEqualTo(UPDATED_CODE);
-        assertThat(testAppConfig.getValue()).isEqualTo(UPDATED_VALUE);
-        assertThat(testAppConfig.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testAppConfig.getJson()).isEqualTo(UPDATED_JSON);
-        assertThat(testAppConfig.getPriority()).isEqualTo(UPDATED_PRIORITY);
-        assertThat(testAppConfig.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testAppConfig.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testAppConfig.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testAppConfig.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertAppConfigUpdatableFieldsEquals(partialUpdatedAppConfig, getPersistedAppConfig(partialUpdatedAppConfig));
     }
 
     @Test
     @Transactional
     void patchNonExistingAppConfig() throws Exception {
-        int databaseSizeBeforeUpdate = appConfigRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         appConfig.setId(longCount.incrementAndGet());
 
         // Create the AppConfig
@@ -435,19 +420,18 @@ class AppConfigResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, appConfigDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(appConfigDTO))
+                    .content(om.writeValueAsBytes(appConfigDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the AppConfig in the database
-        List<AppConfig> appConfigList = appConfigRepository.findAll();
-        assertThat(appConfigList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithIdMismatchAppConfig() throws Exception {
-        int databaseSizeBeforeUpdate = appConfigRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         appConfig.setId(longCount.incrementAndGet());
 
         // Create the AppConfig
@@ -458,19 +442,18 @@ class AppConfigResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(appConfigDTO))
+                    .content(om.writeValueAsBytes(appConfigDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the AppConfig in the database
-        List<AppConfig> appConfigList = appConfigRepository.findAll();
-        assertThat(appConfigList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithMissingIdPathParamAppConfig() throws Exception {
-        int databaseSizeBeforeUpdate = appConfigRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         appConfig.setId(longCount.incrementAndGet());
 
         // Create the AppConfig
@@ -478,23 +461,20 @@ class AppConfigResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restAppConfigMockMvc
-            .perform(
-                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(appConfigDTO))
-            )
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(appConfigDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the AppConfig in the database
-        List<AppConfig> appConfigList = appConfigRepository.findAll();
-        assertThat(appConfigList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void deleteAppConfig() throws Exception {
         // Initialize the database
-        appConfigRepository.saveAndFlush(appConfig);
+        insertedAppConfig = appConfigRepository.saveAndFlush(appConfig);
 
-        int databaseSizeBeforeDelete = appConfigRepository.findAll().size();
+        long databaseSizeBeforeDelete = getRepositoryCount();
 
         // Delete the appConfig
         restAppConfigMockMvc
@@ -502,7 +482,34 @@ class AppConfigResourceIT {
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
-        List<AppConfig> appConfigList = appConfigRepository.findAll();
-        assertThat(appConfigList).hasSize(databaseSizeBeforeDelete - 1);
+        assertDecrementedRepositoryCount(databaseSizeBeforeDelete);
+    }
+
+    protected long getRepositoryCount() {
+        return appConfigRepository.count();
+    }
+
+    protected void assertIncrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore + 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertDecrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore - 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertSameRepositoryCount(long countBefore) {
+        assertThat(countBefore).isEqualTo(getRepositoryCount());
+    }
+
+    protected AppConfig getPersistedAppConfig(AppConfig appConfig) {
+        return appConfigRepository.findById(appConfig.getId()).orElseThrow();
+    }
+
+    protected void assertPersistedAppConfigToMatchAllProperties(AppConfig expectedAppConfig) {
+        assertAppConfigAllPropertiesEquals(expectedAppConfig, getPersistedAppConfig(expectedAppConfig));
+    }
+
+    protected void assertPersistedAppConfigToMatchUpdatableProperties(AppConfig expectedAppConfig) {
+        assertAppConfigAllUpdatablePropertiesEquals(expectedAppConfig, getPersistedAppConfig(expectedAppConfig));
     }
 }

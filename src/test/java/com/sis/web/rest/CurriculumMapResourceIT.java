@@ -1,10 +1,13 @@
 package com.sis.web.rest;
 
+import static com.sis.domain.CurriculumMapAsserts.*;
+import static com.sis.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sis.IntegrationTest;
 import com.sis.domain.CurriculumMap;
 import com.sis.repository.CurriculumMapRepository;
@@ -13,13 +16,13 @@ import com.sis.service.mapper.CurriculumMapMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -67,6 +70,9 @@ class CurriculumMapResourceIT {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
+    private ObjectMapper om;
+
+    @Autowired
     private CurriculumMapRepository curriculumMapRepository;
 
     @Autowired
@@ -80,14 +86,16 @@ class CurriculumMapResourceIT {
 
     private CurriculumMap curriculumMap;
 
+    private CurriculumMap insertedCurriculumMap;
+
     /**
      * Create an entity for this test.
      *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static CurriculumMap createEntity(EntityManager em) {
-        CurriculumMap curriculumMap = new CurriculumMap()
+    public static CurriculumMap createEntity() {
+        return new CurriculumMap()
             .quarterNo(DEFAULT_QUARTER_NO)
             .weekNo(DEFAULT_WEEK_NO)
             .topic(DEFAULT_TOPIC)
@@ -97,7 +105,6 @@ class CurriculumMapResourceIT {
             .createdDate(DEFAULT_CREATED_DATE)
             .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
             .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
-        return curriculumMap;
     }
 
     /**
@@ -106,8 +113,8 @@ class CurriculumMapResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static CurriculumMap createUpdatedEntity(EntityManager em) {
-        CurriculumMap curriculumMap = new CurriculumMap()
+    public static CurriculumMap createUpdatedEntity() {
+        return new CurriculumMap()
             .quarterNo(UPDATED_QUARTER_NO)
             .weekNo(UPDATED_WEEK_NO)
             .topic(UPDATED_TOPIC)
@@ -117,39 +124,43 @@ class CurriculumMapResourceIT {
             .createdDate(UPDATED_CREATED_DATE)
             .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
             .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
-        return curriculumMap;
     }
 
     @BeforeEach
-    public void initTest() {
-        curriculumMap = createEntity(em);
+    void initTest() {
+        curriculumMap = createEntity();
+    }
+
+    @AfterEach
+    void cleanup() {
+        if (insertedCurriculumMap != null) {
+            curriculumMapRepository.delete(insertedCurriculumMap);
+            insertedCurriculumMap = null;
+        }
     }
 
     @Test
     @Transactional
     void createCurriculumMap() throws Exception {
-        int databaseSizeBeforeCreate = curriculumMapRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the CurriculumMap
         CurriculumMapDTO curriculumMapDTO = curriculumMapMapper.toDto(curriculumMap);
-        restCurriculumMapMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(curriculumMapDTO))
-            )
-            .andExpect(status().isCreated());
+        var returnedCurriculumMapDTO = om.readValue(
+            restCurriculumMapMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(curriculumMapDTO)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            CurriculumMapDTO.class
+        );
 
         // Validate the CurriculumMap in the database
-        List<CurriculumMap> curriculumMapList = curriculumMapRepository.findAll();
-        assertThat(curriculumMapList).hasSize(databaseSizeBeforeCreate + 1);
-        CurriculumMap testCurriculumMap = curriculumMapList.get(curriculumMapList.size() - 1);
-        assertThat(testCurriculumMap.getQuarterNo()).isEqualTo(DEFAULT_QUARTER_NO);
-        assertThat(testCurriculumMap.getWeekNo()).isEqualTo(DEFAULT_WEEK_NO);
-        assertThat(testCurriculumMap.getTopic()).isEqualTo(DEFAULT_TOPIC);
-        assertThat(testCurriculumMap.getContentStandards()).isEqualTo(DEFAULT_CONTENT_STANDARDS);
-        assertThat(testCurriculumMap.getPerformanceStandards()).isEqualTo(DEFAULT_PERFORMANCE_STANDARDS);
-        assertThat(testCurriculumMap.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
-        assertThat(testCurriculumMap.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
-        assertThat(testCurriculumMap.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
-        assertThat(testCurriculumMap.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
+        assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedCurriculumMap = curriculumMapMapper.toEntity(returnedCurriculumMapDTO);
+        assertCurriculumMapUpdatableFieldsEquals(returnedCurriculumMap, getPersistedCurriculumMap(returnedCurriculumMap));
+
+        insertedCurriculumMap = returnedCurriculumMap;
     }
 
     @Test
@@ -159,25 +170,22 @@ class CurriculumMapResourceIT {
         curriculumMap.setId(1L);
         CurriculumMapDTO curriculumMapDTO = curriculumMapMapper.toDto(curriculumMap);
 
-        int databaseSizeBeforeCreate = curriculumMapRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restCurriculumMapMockMvc
-            .perform(
-                post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(curriculumMapDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(curriculumMapDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the CurriculumMap in the database
-        List<CurriculumMap> curriculumMapList = curriculumMapRepository.findAll();
-        assertThat(curriculumMapList).hasSize(databaseSizeBeforeCreate);
+        assertSameRepositoryCount(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     void getAllCurriculumMaps() throws Exception {
         // Initialize the database
-        curriculumMapRepository.saveAndFlush(curriculumMap);
+        insertedCurriculumMap = curriculumMapRepository.saveAndFlush(curriculumMap);
 
         // Get all the curriculumMapList
         restCurriculumMapMockMvc
@@ -200,7 +208,7 @@ class CurriculumMapResourceIT {
     @Transactional
     void getCurriculumMap() throws Exception {
         // Initialize the database
-        curriculumMapRepository.saveAndFlush(curriculumMap);
+        insertedCurriculumMap = curriculumMapRepository.saveAndFlush(curriculumMap);
 
         // Get the curriculumMap
         restCurriculumMapMockMvc
@@ -230,9 +238,9 @@ class CurriculumMapResourceIT {
     @Transactional
     void putExistingCurriculumMap() throws Exception {
         // Initialize the database
-        curriculumMapRepository.saveAndFlush(curriculumMap);
+        insertedCurriculumMap = curriculumMapRepository.saveAndFlush(curriculumMap);
 
-        int databaseSizeBeforeUpdate = curriculumMapRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the curriculumMap
         CurriculumMap updatedCurriculumMap = curriculumMapRepository.findById(curriculumMap.getId()).orElseThrow();
@@ -254,29 +262,19 @@ class CurriculumMapResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, curriculumMapDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(curriculumMapDTO))
+                    .content(om.writeValueAsBytes(curriculumMapDTO))
             )
             .andExpect(status().isOk());
 
         // Validate the CurriculumMap in the database
-        List<CurriculumMap> curriculumMapList = curriculumMapRepository.findAll();
-        assertThat(curriculumMapList).hasSize(databaseSizeBeforeUpdate);
-        CurriculumMap testCurriculumMap = curriculumMapList.get(curriculumMapList.size() - 1);
-        assertThat(testCurriculumMap.getQuarterNo()).isEqualTo(UPDATED_QUARTER_NO);
-        assertThat(testCurriculumMap.getWeekNo()).isEqualTo(UPDATED_WEEK_NO);
-        assertThat(testCurriculumMap.getTopic()).isEqualTo(UPDATED_TOPIC);
-        assertThat(testCurriculumMap.getContentStandards()).isEqualTo(UPDATED_CONTENT_STANDARDS);
-        assertThat(testCurriculumMap.getPerformanceStandards()).isEqualTo(UPDATED_PERFORMANCE_STANDARDS);
-        assertThat(testCurriculumMap.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testCurriculumMap.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testCurriculumMap.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testCurriculumMap.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertPersistedCurriculumMapToMatchAllProperties(updatedCurriculumMap);
     }
 
     @Test
     @Transactional
     void putNonExistingCurriculumMap() throws Exception {
-        int databaseSizeBeforeUpdate = curriculumMapRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         curriculumMap.setId(longCount.incrementAndGet());
 
         // Create the CurriculumMap
@@ -287,19 +285,18 @@ class CurriculumMapResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, curriculumMapDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(curriculumMapDTO))
+                    .content(om.writeValueAsBytes(curriculumMapDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the CurriculumMap in the database
-        List<CurriculumMap> curriculumMapList = curriculumMapRepository.findAll();
-        assertThat(curriculumMapList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithIdMismatchCurriculumMap() throws Exception {
-        int databaseSizeBeforeUpdate = curriculumMapRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         curriculumMap.setId(longCount.incrementAndGet());
 
         // Create the CurriculumMap
@@ -310,19 +307,18 @@ class CurriculumMapResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(curriculumMapDTO))
+                    .content(om.writeValueAsBytes(curriculumMapDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the CurriculumMap in the database
-        List<CurriculumMap> curriculumMapList = curriculumMapRepository.findAll();
-        assertThat(curriculumMapList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithMissingIdPathParamCurriculumMap() throws Exception {
-        int databaseSizeBeforeUpdate = curriculumMapRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         curriculumMap.setId(longCount.incrementAndGet());
 
         // Create the CurriculumMap
@@ -330,65 +326,51 @@ class CurriculumMapResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restCurriculumMapMockMvc
-            .perform(
-                put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(curriculumMapDTO))
-            )
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(curriculumMapDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the CurriculumMap in the database
-        List<CurriculumMap> curriculumMapList = curriculumMapRepository.findAll();
-        assertThat(curriculumMapList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void partialUpdateCurriculumMapWithPatch() throws Exception {
         // Initialize the database
-        curriculumMapRepository.saveAndFlush(curriculumMap);
+        insertedCurriculumMap = curriculumMapRepository.saveAndFlush(curriculumMap);
 
-        int databaseSizeBeforeUpdate = curriculumMapRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the curriculumMap using partial update
         CurriculumMap partialUpdatedCurriculumMap = new CurriculumMap();
         partialUpdatedCurriculumMap.setId(curriculumMap.getId());
 
-        partialUpdatedCurriculumMap
-            .contentStandards(UPDATED_CONTENT_STANDARDS)
-            .performanceStandards(UPDATED_PERFORMANCE_STANDARDS)
-            .createdBy(UPDATED_CREATED_BY)
-            .createdDate(UPDATED_CREATED_DATE)
-            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
+        partialUpdatedCurriculumMap.performanceStandards(UPDATED_PERFORMANCE_STANDARDS).lastModifiedBy(UPDATED_LAST_MODIFIED_BY);
 
         restCurriculumMapMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedCurriculumMap.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedCurriculumMap))
+                    .content(om.writeValueAsBytes(partialUpdatedCurriculumMap))
             )
             .andExpect(status().isOk());
 
         // Validate the CurriculumMap in the database
-        List<CurriculumMap> curriculumMapList = curriculumMapRepository.findAll();
-        assertThat(curriculumMapList).hasSize(databaseSizeBeforeUpdate);
-        CurriculumMap testCurriculumMap = curriculumMapList.get(curriculumMapList.size() - 1);
-        assertThat(testCurriculumMap.getQuarterNo()).isEqualTo(DEFAULT_QUARTER_NO);
-        assertThat(testCurriculumMap.getWeekNo()).isEqualTo(DEFAULT_WEEK_NO);
-        assertThat(testCurriculumMap.getTopic()).isEqualTo(DEFAULT_TOPIC);
-        assertThat(testCurriculumMap.getContentStandards()).isEqualTo(UPDATED_CONTENT_STANDARDS);
-        assertThat(testCurriculumMap.getPerformanceStandards()).isEqualTo(UPDATED_PERFORMANCE_STANDARDS);
-        assertThat(testCurriculumMap.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testCurriculumMap.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testCurriculumMap.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
-        assertThat(testCurriculumMap.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertCurriculumMapUpdatableFieldsEquals(
+            createUpdateProxyForBean(partialUpdatedCurriculumMap, curriculumMap),
+            getPersistedCurriculumMap(curriculumMap)
+        );
     }
 
     @Test
     @Transactional
     void fullUpdateCurriculumMapWithPatch() throws Exception {
         // Initialize the database
-        curriculumMapRepository.saveAndFlush(curriculumMap);
+        insertedCurriculumMap = curriculumMapRepository.saveAndFlush(curriculumMap);
 
-        int databaseSizeBeforeUpdate = curriculumMapRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the curriculumMap using partial update
         CurriculumMap partialUpdatedCurriculumMap = new CurriculumMap();
@@ -409,29 +391,20 @@ class CurriculumMapResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedCurriculumMap.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedCurriculumMap))
+                    .content(om.writeValueAsBytes(partialUpdatedCurriculumMap))
             )
             .andExpect(status().isOk());
 
         // Validate the CurriculumMap in the database
-        List<CurriculumMap> curriculumMapList = curriculumMapRepository.findAll();
-        assertThat(curriculumMapList).hasSize(databaseSizeBeforeUpdate);
-        CurriculumMap testCurriculumMap = curriculumMapList.get(curriculumMapList.size() - 1);
-        assertThat(testCurriculumMap.getQuarterNo()).isEqualTo(UPDATED_QUARTER_NO);
-        assertThat(testCurriculumMap.getWeekNo()).isEqualTo(UPDATED_WEEK_NO);
-        assertThat(testCurriculumMap.getTopic()).isEqualTo(UPDATED_TOPIC);
-        assertThat(testCurriculumMap.getContentStandards()).isEqualTo(UPDATED_CONTENT_STANDARDS);
-        assertThat(testCurriculumMap.getPerformanceStandards()).isEqualTo(UPDATED_PERFORMANCE_STANDARDS);
-        assertThat(testCurriculumMap.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testCurriculumMap.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testCurriculumMap.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testCurriculumMap.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertCurriculumMapUpdatableFieldsEquals(partialUpdatedCurriculumMap, getPersistedCurriculumMap(partialUpdatedCurriculumMap));
     }
 
     @Test
     @Transactional
     void patchNonExistingCurriculumMap() throws Exception {
-        int databaseSizeBeforeUpdate = curriculumMapRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         curriculumMap.setId(longCount.incrementAndGet());
 
         // Create the CurriculumMap
@@ -442,19 +415,18 @@ class CurriculumMapResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, curriculumMapDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(curriculumMapDTO))
+                    .content(om.writeValueAsBytes(curriculumMapDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the CurriculumMap in the database
-        List<CurriculumMap> curriculumMapList = curriculumMapRepository.findAll();
-        assertThat(curriculumMapList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithIdMismatchCurriculumMap() throws Exception {
-        int databaseSizeBeforeUpdate = curriculumMapRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         curriculumMap.setId(longCount.incrementAndGet());
 
         // Create the CurriculumMap
@@ -465,19 +437,18 @@ class CurriculumMapResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(curriculumMapDTO))
+                    .content(om.writeValueAsBytes(curriculumMapDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the CurriculumMap in the database
-        List<CurriculumMap> curriculumMapList = curriculumMapRepository.findAll();
-        assertThat(curriculumMapList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithMissingIdPathParamCurriculumMap() throws Exception {
-        int databaseSizeBeforeUpdate = curriculumMapRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         curriculumMap.setId(longCount.incrementAndGet());
 
         // Create the CurriculumMap
@@ -485,25 +456,20 @@ class CurriculumMapResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restCurriculumMapMockMvc
-            .perform(
-                patch(ENTITY_API_URL)
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(curriculumMapDTO))
-            )
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(curriculumMapDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the CurriculumMap in the database
-        List<CurriculumMap> curriculumMapList = curriculumMapRepository.findAll();
-        assertThat(curriculumMapList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void deleteCurriculumMap() throws Exception {
         // Initialize the database
-        curriculumMapRepository.saveAndFlush(curriculumMap);
+        insertedCurriculumMap = curriculumMapRepository.saveAndFlush(curriculumMap);
 
-        int databaseSizeBeforeDelete = curriculumMapRepository.findAll().size();
+        long databaseSizeBeforeDelete = getRepositoryCount();
 
         // Delete the curriculumMap
         restCurriculumMapMockMvc
@@ -511,7 +477,34 @@ class CurriculumMapResourceIT {
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
-        List<CurriculumMap> curriculumMapList = curriculumMapRepository.findAll();
-        assertThat(curriculumMapList).hasSize(databaseSizeBeforeDelete - 1);
+        assertDecrementedRepositoryCount(databaseSizeBeforeDelete);
+    }
+
+    protected long getRepositoryCount() {
+        return curriculumMapRepository.count();
+    }
+
+    protected void assertIncrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore + 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertDecrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore - 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertSameRepositoryCount(long countBefore) {
+        assertThat(countBefore).isEqualTo(getRepositoryCount());
+    }
+
+    protected CurriculumMap getPersistedCurriculumMap(CurriculumMap curriculumMap) {
+        return curriculumMapRepository.findById(curriculumMap.getId()).orElseThrow();
+    }
+
+    protected void assertPersistedCurriculumMapToMatchAllProperties(CurriculumMap expectedCurriculumMap) {
+        assertCurriculumMapAllPropertiesEquals(expectedCurriculumMap, getPersistedCurriculumMap(expectedCurriculumMap));
+    }
+
+    protected void assertPersistedCurriculumMapToMatchUpdatableProperties(CurriculumMap expectedCurriculumMap) {
+        assertCurriculumMapAllUpdatablePropertiesEquals(expectedCurriculumMap, getPersistedCurriculumMap(expectedCurriculumMap));
     }
 }

@@ -1,24 +1,22 @@
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 import { ASC } from 'app/config/navigation.constants';
-import { ResourcesComponent } from './list/resources.component';
-import { ResourcesDetailComponent } from './detail/resources-detail.component';
-import { ResourcesUpdateComponent } from './update/resources-update.component';
+import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+
 import ResourcesResolve from './route/resources-routing-resolve.service';
 
 const resourcesRoute: Routes = [
   {
     path: '',
-    component: ResourcesComponent,
+    loadComponent: () => import('./list/resources').then(m => m.Resources),
     data: {
-      defaultSort: 'id,' + ASC,
+      defaultSort: `id,${ASC}`,
     },
     canActivate: [UserRouteAccessService],
   },
   {
     path: ':id/view',
-    component: ResourcesDetailComponent,
+    loadComponent: () => import('./detail/resources-detail').then(m => m.ResourcesDetail),
     resolve: {
       resources: ResourcesResolve,
     },
@@ -26,7 +24,7 @@ const resourcesRoute: Routes = [
   },
   {
     path: 'new',
-    component: ResourcesUpdateComponent,
+    loadComponent: () => import('./update/resources-update').then(m => m.ResourcesUpdate),
     resolve: {
       resources: ResourcesResolve,
     },
@@ -34,7 +32,7 @@ const resourcesRoute: Routes = [
   },
   {
     path: ':id/edit',
-    component: ResourcesUpdateComponent,
+    loadComponent: () => import('./update/resources-update').then(m => m.ResourcesUpdate),
     resolve: {
       resources: ResourcesResolve,
     },

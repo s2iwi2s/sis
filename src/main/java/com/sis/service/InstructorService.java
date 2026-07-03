@@ -42,14 +42,6 @@ public interface InstructorService {
     Page<InstructorDTO> findAll(Pageable pageable);
 
     /**
-     * Get all the instructors with eager load of many-to-many relationships.
-     *
-     * @param pageable the pagination information.
-     * @return the list of entities.
-     */
-    Page<InstructorDTO> findAllWithEagerRelationships(Pageable pageable);
-
-    /**
      * Get the "id" instructor.
      *
      * @param id the id of the entity.

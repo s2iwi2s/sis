@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpResponse, httpResource } from '@angular/common/http';
+import { Injectable, computed, inject, signal } from '@angular/core';
 
 import dayjs from 'dayjs/esm';
+import { Observable, map } from 'rxjs';
 
-import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
+import { isPresent } from 'app/core/util/operators';
 import { IStrategies, NewStrategies } from '../strategies.model';
 
 export type PartialUpdateStrategies = Partial<IStrategies> & Pick<IStrategies, 'id'>;
@@ -24,60 +22,75 @@ export type NewRestStrategies = RestOf<NewStrategies>;
 
 export type PartialUpdateRestStrategies = RestOf<PartialUpdateStrategies>;
 
-export type EntityResponseType = HttpResponse<IStrategies>;
-export type EntityArrayResponseType = HttpResponse<IStrategies[]>;
+@Injectable()
+export class StrategiesesService {
+  readonly strategiesesParams = signal<Record<string, string | number | boolean | readonly (string | number | boolean)[]> | undefined>(
+    undefined,
+  );
+  readonly strategiesesResource = httpResource<RestStrategies[]>(() => {
+    const params = this.strategiesesParams();
+    if (!params) {
+      return undefined;
+    }
+    return { url: this.resourceUrl, params };
+  });
+  /**
+   * This signal holds the list of strategies that have been fetched. It is updated when the strategiesesResource emits a new value.
+   * In case of error while fetching the strategieses, the signal is set to an empty array.
+   */
+  readonly strategieses = computed(() =>
+    (this.strategiesesResource.hasValue() ? this.strategiesesResource.value() : []).map(item => this.convertValueFromServer(item)),
+  );
+  protected readonly applicationConfigService = inject(ApplicationConfigService);
+  protected readonly resourceUrl = this.applicationConfigService.getEndpointFor('api/strategies');
+
+  protected convertValueFromServer(restStrategies: RestStrategies): IStrategies {
+    return {
+      ...restStrategies,
+      createdDate: restStrategies.createdDate ? dayjs(restStrategies.createdDate) : undefined,
+      lastModifiedDate: restStrategies.lastModifiedDate ? dayjs(restStrategies.lastModifiedDate) : undefined,
+    };
+  }
+}
 
 @Injectable({ providedIn: 'root' })
-export class StrategiesService {
-  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/strategies');
+export class StrategiesService extends StrategiesesService {
+  protected readonly http = inject(HttpClient);
 
-  constructor(
-    protected http: HttpClient,
-    protected applicationConfigService: ApplicationConfigService,
-  ) {}
+  create(strategies: NewStrategies): Observable<IStrategies> {
+    const copy = this.convertValueFromClient(strategies);
+    return this.http.post<RestStrategies>(this.resourceUrl, copy).pipe(map(res => this.convertResponseFromServer(res)));
+  }
 
-  create(strategies: NewStrategies): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(strategies);
+  update(strategies: IStrategies): Observable<IStrategies> {
+    const copy = this.convertValueFromClient(strategies);
     return this.http
-      .post<RestStrategies>(this.resourceUrl, copy, { observe: 'response' })
+      .put<RestStrategies>(`${this.resourceUrl}/${encodeURIComponent(this.getStrategiesIdentifier(strategies))}`, copy)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  update(strategies: IStrategies): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(strategies);
+  partialUpdate(strategies: PartialUpdateStrategies): Observable<IStrategies> {
+    const copy = this.convertValueFromClient(strategies);
     return this.http
-      .put<RestStrategies>(`${this.resourceUrl}/${this.getStrategiesIdentifier(strategies)}`, copy, { observe: 'response' })
+      .patch<RestStrategies>(`${this.resourceUrl}/${encodeURIComponent(this.getStrategiesIdentifier(strategies))}`, copy)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  partialUpdate(strategies: PartialUpdateStrategies): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(strategies);
+  find(id: number): Observable<IStrategies> {
     return this.http
-      .patch<RestStrategies>(`${this.resourceUrl}/${this.getStrategiesIdentifier(strategies)}`, copy, { observe: 'response' })
+      .get<RestStrategies>(`${this.resourceUrl}/${encodeURIComponent(id)}`)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  find(id: number): Observable<EntityResponseType> {
-    return this.http
-      .get<RestStrategies>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
-  }
-
-  query(req?: any): Observable<EntityArrayResponseType> {
+  query(req?: any): Observable<HttpResponse<IStrategies[]>> {
     const options = createRequestOption(req);
     return this.http
       .get<RestStrategies[]>(this.resourceUrl, { params: options, observe: 'response' })
-      .pipe(map(res => this.convertResponseArrayFromServer(res)));
+      .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
   }
 
-  queryByCourse(courseId: number): Observable<EntityArrayResponseType> {
-    return this.http
-      .get<RestStrategies[]>(`${this.resourceUrl}/${courseId}/course`, { observe: 'response' })
-      .pipe(map(res => this.convertResponseArrayFromServer(res)));
-  }
-
-  delete(id: number): Observable<HttpResponse<{}>> {
-    return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  delete(id: number): Observable<undefined> {
+    return this.http.delete<undefined>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
   }
 
   getStrategiesIdentifier(strategies: Pick<IStrategies, 'id'>): number {
@@ -90,12 +103,12 @@ export class StrategiesService {
 
   addStrategiesToCollectionIfMissing<Type extends Pick<IStrategies, 'id'>>(
     strategiesCollection: Type[],
-    ...strategiesToCheck: (Type | null | undefined)[]
+    ...strategiesesToCheck: (Type | null | undefined)[]
   ): Type[] {
-    const strategies: Type[] = strategiesToCheck.filter(isPresent);
-    if (strategies.length > 0) {
-      const strategiesCollectionIdentifiers = strategiesCollection.map(strategiesItem => this.getStrategiesIdentifier(strategiesItem)!);
-      const strategiesToAdd = strategies.filter(strategiesItem => {
+    const strategieses: Type[] = strategiesesToCheck.filter(isPresent);
+    if (strategieses.length > 0) {
+      const strategiesCollectionIdentifiers = strategiesCollection.map(strategiesItem => this.getStrategiesIdentifier(strategiesItem));
+      const strategiesesToAdd = strategieses.filter(strategiesItem => {
         const strategiesIdentifier = this.getStrategiesIdentifier(strategiesItem);
         if (strategiesCollectionIdentifiers.includes(strategiesIdentifier)) {
           return false;
@@ -103,12 +116,12 @@ export class StrategiesService {
         strategiesCollectionIdentifiers.push(strategiesIdentifier);
         return true;
       });
-      return [...strategiesToAdd, ...strategiesCollection];
+      return [...strategiesesToAdd, ...strategiesCollection];
     }
     return strategiesCollection;
   }
 
-  protected convertDateFromClient<T extends IStrategies | NewStrategies | PartialUpdateStrategies>(strategies: T): RestOf<T> {
+  protected convertValueFromClient<T extends IStrategies | NewStrategies | PartialUpdateStrategies>(strategies: T): RestOf<T> {
     return {
       ...strategies,
       createdDate: strategies.createdDate?.toJSON() ?? null,
@@ -116,23 +129,11 @@ export class StrategiesService {
     };
   }
 
-  protected convertDateFromServer(restStrategies: RestStrategies): IStrategies {
-    return {
-      ...restStrategies,
-      createdDate: restStrategies.createdDate ? dayjs(restStrategies.createdDate) : undefined,
-      lastModifiedDate: restStrategies.lastModifiedDate ? dayjs(restStrategies.lastModifiedDate) : undefined,
-    };
+  protected convertResponseFromServer(res: RestStrategies): IStrategies {
+    return this.convertValueFromServer(res);
   }
 
-  protected convertResponseFromServer(res: HttpResponse<RestStrategies>): HttpResponse<IStrategies> {
-    return res.clone({
-      body: res.body ? this.convertDateFromServer(res.body) : null,
-    });
-  }
-
-  protected convertResponseArrayFromServer(res: HttpResponse<RestStrategies[]>): HttpResponse<IStrategies[]> {
-    return res.clone({
-      body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
-    });
+  protected convertResponseArrayFromServer(res: RestStrategies[]): IStrategies[] {
+    return res.map(item => this.convertValueFromServer(item));
   }
 }

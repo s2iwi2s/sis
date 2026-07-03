@@ -17,8 +17,5 @@ public interface LearningCompetencyMapper extends EntityMapper<LearningCompetenc
     @Named("curriculumMapId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "quarterNo", source = "quarterNo")
-    @Mapping(target = "weekNo", source = "weekNo")
-    @Mapping(target = "topic", source = "topic")
     CurriculumMapDTO toDtoCurriculumMapId(CurriculumMap curriculumMap);
 }

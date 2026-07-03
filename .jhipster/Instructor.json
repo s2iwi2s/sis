@@ -1,10 +1,10 @@
 {
   "annotations": {
-    "changelogDate": "20240104091614"
+    "changelogDate": "20260702214345",
+    "enableAudit": true
   },
   "applications": ["SchInfoSys"],
   "dto": "mapstruct",
-  "entityTableName": "instructor",
   "fields": [
     {
       "fieldName": "firstName",
@@ -69,10 +69,18 @@
       "relationshipType": "one-to-one"
     },
     {
-      "otherEntityName": "course",
-      "relationshipName": "course",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "instructor",
+      "relationshipName": "user",
       "relationshipSide": "left",
-      "relationshipType": "many-to-many"
+      "relationshipType": "one-to-one",
+      "relationshipWithBuiltInEntity": true
+    },
+    {
+      "otherEntityName": "courseSchedule",
+      "relationshipName": "courseSchedule",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
     }
   ],
   "searchEngine": "no",

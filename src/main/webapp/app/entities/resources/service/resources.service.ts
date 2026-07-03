@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpResponse, httpResource } from '@angular/common/http';
+import { Injectable, computed, inject, signal } from '@angular/core';
 
 import dayjs from 'dayjs/esm';
+import { Observable, map } from 'rxjs';
 
-import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
+import { isPresent } from 'app/core/util/operators';
 import { IResources, NewResources } from '../resources.model';
 
 export type PartialUpdateResources = Partial<IResources> & Pick<IResources, 'id'>;
@@ -24,64 +22,75 @@ export type NewRestResources = RestOf<NewResources>;
 
 export type PartialUpdateRestResources = RestOf<PartialUpdateResources>;
 
-export type EntityResponseType = HttpResponse<IResources>;
-export type EntityArrayResponseType = HttpResponse<IResources[]>;
+@Injectable()
+export class ResourcesesService {
+  readonly resourcesesParams = signal<Record<string, string | number | boolean | readonly (string | number | boolean)[]> | undefined>(
+    undefined,
+  );
+  readonly resourcesesResource = httpResource<RestResources[]>(() => {
+    const params = this.resourcesesParams();
+    if (!params) {
+      return undefined;
+    }
+    return { url: this.resourceUrl, params };
+  });
+  /**
+   * This signal holds the list of resources that have been fetched. It is updated when the resourcesesResource emits a new value.
+   * In case of error while fetching the resourceses, the signal is set to an empty array.
+   */
+  readonly resourceses = computed(() =>
+    (this.resourcesesResource.hasValue() ? this.resourcesesResource.value() : []).map(item => this.convertValueFromServer(item)),
+  );
+  protected readonly applicationConfigService = inject(ApplicationConfigService);
+  protected readonly resourceUrl = this.applicationConfigService.getEndpointFor('api/resources');
+
+  protected convertValueFromServer(restResources: RestResources): IResources {
+    return {
+      ...restResources,
+      createdDate: restResources.createdDate ? dayjs(restResources.createdDate) : undefined,
+      lastModifiedDate: restResources.lastModifiedDate ? dayjs(restResources.lastModifiedDate) : undefined,
+    };
+  }
+}
 
 @Injectable({ providedIn: 'root' })
-export class ResourcesService {
-  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/resources');
+export class ResourcesService extends ResourcesesService {
+  protected readonly http = inject(HttpClient);
 
-  constructor(
-    protected http: HttpClient,
-    protected applicationConfigService: ApplicationConfigService,
-  ) {}
+  create(resources: NewResources): Observable<IResources> {
+    const copy = this.convertValueFromClient(resources);
+    return this.http.post<RestResources>(this.resourceUrl, copy).pipe(map(res => this.convertResponseFromServer(res)));
+  }
 
-  create(resources: NewResources): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(resources);
+  update(resources: IResources): Observable<IResources> {
+    const copy = this.convertValueFromClient(resources);
     return this.http
-      .post<RestResources>(this.resourceUrl, copy, { observe: 'response' })
+      .put<RestResources>(`${this.resourceUrl}/${encodeURIComponent(this.getResourcesIdentifier(resources))}`, copy)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  update(resources: IResources): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(resources);
+  partialUpdate(resources: PartialUpdateResources): Observable<IResources> {
+    const copy = this.convertValueFromClient(resources);
     return this.http
-      .put<RestResources>(`${this.resourceUrl}/${this.getResourcesIdentifier(resources)}`, copy, { observe: 'response' })
+      .patch<RestResources>(`${this.resourceUrl}/${encodeURIComponent(this.getResourcesIdentifier(resources))}`, copy)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  partialUpdate(resources: PartialUpdateResources): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(resources);
+  find(id: number): Observable<IResources> {
     return this.http
-      .patch<RestResources>(`${this.resourceUrl}/${this.getResourcesIdentifier(resources)}`, copy, { observe: 'response' })
+      .get<RestResources>(`${this.resourceUrl}/${encodeURIComponent(id)}`)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  find(id: number): Observable<EntityResponseType> {
-    return this.http
-      .get<RestResources>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
-  }
-
-  query(req?: any): Observable<EntityArrayResponseType> {
+  query(req?: any): Observable<HttpResponse<IResources[]>> {
     const options = createRequestOption(req);
     return this.http
       .get<RestResources[]>(this.resourceUrl, { params: options, observe: 'response' })
-      .pipe(map(res => this.convertResponseArrayFromServer(res)));
-  }
-  queryResourcesByAssessmentId(assessmentId: number): Observable<EntityArrayResponseType> {
-    return this.http
-      .get<RestResources[]>(`${this.resourceUrl}/${assessmentId}/assessment`, { observe: 'response' })
-      .pipe(map(res => this.convertResponseArrayFromServer(res)));
-  }
-  queryResourcesByStrategiestId(assessmentId: number): Observable<EntityArrayResponseType> {
-    return this.http
-      .get<RestResources[]>(`${this.resourceUrl}/${assessmentId}/strategies`, { observe: 'response' })
-      .pipe(map(res => this.convertResponseArrayFromServer(res)));
+      .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
   }
 
-  delete(id: number): Observable<HttpResponse<{}>> {
-    return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  delete(id: number): Observable<undefined> {
+    return this.http.delete<undefined>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
   }
 
   getResourcesIdentifier(resources: Pick<IResources, 'id'>): number {
@@ -94,12 +103,12 @@ export class ResourcesService {
 
   addResourcesToCollectionIfMissing<Type extends Pick<IResources, 'id'>>(
     resourcesCollection: Type[],
-    ...resourcesToCheck: (Type | null | undefined)[]
+    ...resourcesesToCheck: (Type | null | undefined)[]
   ): Type[] {
-    const resources: Type[] = resourcesToCheck.filter(isPresent);
-    if (resources.length > 0) {
-      const resourcesCollectionIdentifiers = resourcesCollection.map(resourcesItem => this.getResourcesIdentifier(resourcesItem)!);
-      const resourcesToAdd = resources.filter(resourcesItem => {
+    const resourceses: Type[] = resourcesesToCheck.filter(isPresent);
+    if (resourceses.length > 0) {
+      const resourcesCollectionIdentifiers = resourcesCollection.map(resourcesItem => this.getResourcesIdentifier(resourcesItem));
+      const resourcesesToAdd = resourceses.filter(resourcesItem => {
         const resourcesIdentifier = this.getResourcesIdentifier(resourcesItem);
         if (resourcesCollectionIdentifiers.includes(resourcesIdentifier)) {
           return false;
@@ -107,12 +116,12 @@ export class ResourcesService {
         resourcesCollectionIdentifiers.push(resourcesIdentifier);
         return true;
       });
-      return [...resourcesToAdd, ...resourcesCollection];
+      return [...resourcesesToAdd, ...resourcesCollection];
     }
     return resourcesCollection;
   }
 
-  protected convertDateFromClient<T extends IResources | NewResources | PartialUpdateResources>(resources: T): RestOf<T> {
+  protected convertValueFromClient<T extends IResources | NewResources | PartialUpdateResources>(resources: T): RestOf<T> {
     return {
       ...resources,
       createdDate: resources.createdDate?.toJSON() ?? null,
@@ -120,23 +129,11 @@ export class ResourcesService {
     };
   }
 
-  protected convertDateFromServer(restResources: RestResources): IResources {
-    return {
-      ...restResources,
-      createdDate: restResources.createdDate ? dayjs(restResources.createdDate) : undefined,
-      lastModifiedDate: restResources.lastModifiedDate ? dayjs(restResources.lastModifiedDate) : undefined,
-    };
+  protected convertResponseFromServer(res: RestResources): IResources {
+    return this.convertValueFromServer(res);
   }
 
-  protected convertResponseFromServer(res: HttpResponse<RestResources>): HttpResponse<IResources> {
-    return res.clone({
-      body: res.body ? this.convertDateFromServer(res.body) : null,
-    });
-  }
-
-  protected convertResponseArrayFromServer(res: HttpResponse<RestResources[]>): HttpResponse<IResources[]> {
-    return res.clone({
-      body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
-    });
+  protected convertResponseArrayFromServer(res: RestResources[]): IResources[] {
+    return res.map(item => this.convertValueFromServer(item));
   }
 }

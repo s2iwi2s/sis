@@ -1,10 +1,10 @@
 {
   "annotations": {
-    "changelogDate": "20240104091814"
+    "changelogDate": "20260702214545",
+    "enableAudit": true
   },
   "applications": ["SchInfoSys"],
   "dto": "mapstruct",
-  "entityTableName": "course",
   "fields": [
     {
       "fieldName": "subject",
@@ -18,13 +18,11 @@
     },
     {
       "fieldName": "courseDescription",
-      "fieldType": "byte[]",
-      "fieldTypeBlobContent": "text"
+      "fieldType": "TextBlob"
     },
     {
       "fieldName": "courseObjectives",
-      "fieldType": "byte[]",
-      "fieldTypeBlobContent": "text"
+      "fieldType": "TextBlob"
     },
     {
       "fieldName": "createdBy",
@@ -57,10 +55,28 @@
       "relationshipType": "one-to-one"
     },
     {
+      "otherEntityName": "departments",
+      "relationshipName": "department",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-one"
+    },
+    {
       "otherEntityName": "curriculumMap",
       "relationshipName": "curriculumMap",
       "relationshipSide": "left",
       "relationshipType": "one-to-many"
+    },
+    {
+      "otherEntityName": "academicYear",
+      "relationshipName": "year",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "academicTerms",
+      "relationshipName": "terms",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
     }
   ],
   "searchEngine": "no",

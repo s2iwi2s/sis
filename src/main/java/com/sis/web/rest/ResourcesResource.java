@@ -6,20 +6,19 @@ import com.sis.service.dto.ResourcesDTO;
 import com.sis.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.*;
-
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -32,11 +31,11 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/resources")
 public class ResourcesResource {
 
-    private final Logger log = LoggerFactory.getLogger(ResourcesResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ResourcesResource.class);
 
     private static final String ENTITY_NAME = "resources";
 
-    @Value("${jhipster.clientApp.name}")
+    @Value("${jhipster.clientApp.name:schInfoSys}")
     private String applicationName;
 
     private final ResourcesService resourcesService;
@@ -56,16 +55,15 @@ public class ResourcesResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<ResourcesDTO> createResources(@Valid @RequestBody ResourcesDTO resourcesDTO) throws URISyntaxException, IOException {
-        log.debug("REST request to save Resources : {}", resourcesDTO);
+    public ResponseEntity<ResourcesDTO> createResources(@Valid @RequestBody ResourcesDTO resourcesDTO) throws URISyntaxException {
+        LOG.debug("REST request to save Resources : {}", resourcesDTO);
         if (resourcesDTO.getId() != null) {
             throw new BadRequestAlertException("A new resources cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        ResourcesDTO result = resourcesService.save(resourcesDTO);
-        return ResponseEntity
-            .created(new URI("/api/resources/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        resourcesDTO = resourcesService.save(resourcesDTO);
+        return ResponseEntity.created(new URI("/api/resources/" + resourcesDTO.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, resourcesDTO.getId().toString()))
+            .body(resourcesDTO);
     }
 
     /**
@@ -83,7 +81,7 @@ public class ResourcesResource {
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody ResourcesDTO resourcesDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update Resources : {}, {}", id, resourcesDTO);
+        LOG.debug("REST request to update Resources : {}, {}", id, resourcesDTO);
         if (resourcesDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -95,11 +93,10 @@ public class ResourcesResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        ResourcesDTO result = resourcesService.update(resourcesDTO);
-        return ResponseEntity
-            .ok()
+        resourcesDTO = resourcesService.update(resourcesDTO);
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, resourcesDTO.getId().toString()))
-            .body(result);
+            .body(resourcesDTO);
     }
 
     /**
@@ -118,7 +115,7 @@ public class ResourcesResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody ResourcesDTO resourcesDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Resources partially : {}, {}", id, resourcesDTO);
+        LOG.debug("REST request to partial update Resources partially : {}, {}", id, resourcesDTO);
         if (resourcesDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -139,14 +136,14 @@ public class ResourcesResource {
     }
 
     /**
-     * {@code GET  /resources} : get all the resources.
+     * {@code GET  /resources} : get all the Resources.
      *
      * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of resources in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Resources in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<ResourcesDTO>> getAllResources(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
-        log.debug("REST request to get a page of Resources");
+    public ResponseEntity<List<ResourcesDTO>> getAllResourceses(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
+        LOG.debug("REST request to get a page of Resourceses");
         Page<ResourcesDTO> page = resourcesService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -160,7 +157,7 @@ public class ResourcesResource {
      */
     @GetMapping("/{id}")
     public ResponseEntity<ResourcesDTO> getResources(@PathVariable("id") Long id) {
-        log.debug("REST request to get Resources : {}", id);
+        LOG.debug("REST request to get Resources : {}", id);
         Optional<ResourcesDTO> resourcesDTO = resourcesService.findOne(id);
         return ResponseUtil.wrapOrNotFound(resourcesDTO);
     }
@@ -173,41 +170,10 @@ public class ResourcesResource {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteResources(@PathVariable("id") Long id) {
-        log.debug("REST request to delete Resources : {}", id);
+        LOG.debug("REST request to delete Resources : {}", id);
         resourcesService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
-    }
-
-    @GetMapping("/doc/{id}")
-    public ResponseEntity<byte[]> getDocResources(@PathVariable("id") Long id) {
-        log.debug("REST request to get Resources : {}", id);
-        Optional<ResourcesDTO> resourcesDTO = resourcesService.findOne(id);
-
-        return resourcesDTO.map((res) -> {
-            byte[] document = res.getDocument();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setCacheControl(CacheControl.noCache().getHeaderValue());
-
-            return ResponseEntity.ok().headers(headers).contentType(MediaType.valueOf(res.getDocumentContentType())).body(document);
-        }).orElseThrow(() -> {
-            return new ResponseStatusException(HttpStatus.NOT_FOUND);
-        });
-    }
-
-    @GetMapping("/{id}/assessment")
-    public ResponseEntity<Set<ResourcesDTO>> findAllByAssessment(@PathVariable("id") Long assessmentId) {
-        log.debug("REST request to get selected Resources by assessment id : {}", assessmentId);
-        Set<ResourcesDTO> resourcesDTOs = resourcesService.findResourcesByAssessments(assessmentId);
-        return ResponseEntity.ok(resourcesDTOs);
-    }
-
-    @GetMapping("/{id}/strategies")
-    public ResponseEntity<Set<ResourcesDTO>> findAllByStrategies(@PathVariable("id") Long strategiesId) {
-        log.debug("REST request to get selected Resources by strategies id : {}", strategiesId);
-        Set<ResourcesDTO> resourcesDTOs = resourcesService.findResourcesByStrategies(strategiesId);
-        return ResponseEntity.ok(resourcesDTOs);
     }
 }

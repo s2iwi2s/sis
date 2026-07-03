@@ -3,27 +3,27 @@ import dayjs from 'dayjs/esm';
 import { ICourse, NewCourse } from './course.model';
 
 export const sampleWithRequiredData: ICourse = {
-  id: 24066,
+  id: 8824,
 };
 
 export const sampleWithPartialData: ICourse = {
-  id: 32263,
-  subject: 'during anti detail',
-  hoursPerQuarter: 23462,
-  courseDescription: '../fake-data/blob/hipster.txt',
-  createdDate: dayjs('2024-01-04T01:51'),
+  id: 29293,
+  subject: 'ugh',
+  hoursPerQuarter: 17207,
+  createdDate: dayjs('2026-07-02T03:59'),
+  lastModifiedBy: 'blaspheme',
 };
 
 export const sampleWithFullData: ICourse = {
-  id: 32006,
-  subject: 'inside',
-  hoursPerQuarter: 4284,
+  id: 30968,
+  subject: 'weakly',
+  hoursPerQuarter: 12043,
   courseDescription: '../fake-data/blob/hipster.txt',
   courseObjectives: '../fake-data/blob/hipster.txt',
-  createdBy: 'harbour',
-  createdDate: dayjs('2024-01-03T20:50'),
-  lastModifiedBy: 'rarely powerfully even',
-  lastModifiedDate: dayjs('2024-01-04T00:50'),
+  createdBy: 'yippee',
+  createdDate: dayjs('2026-07-02T01:08'),
+  lastModifiedBy: 'drat develop after',
+  lastModifiedDate: dayjs('2026-07-02T11:59'),
 };
 
 export const sampleWithNewData: NewCourse = {

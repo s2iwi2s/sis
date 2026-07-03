@@ -1,6 +1,7 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 
-import { sampleWithRequiredData, sampleWithNewData } from '../instructor.test-samples';
+import { sampleWithNewData, sampleWithRequiredData } from '../instructor.test-samples';
 
 import { InstructorFormService } from './instructor-form.service';
 
@@ -8,7 +9,6 @@ describe('Instructor Form Service', () => {
   let service: InstructorFormService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
     service = TestBed.inject(InstructorFormService);
   });
 
@@ -33,7 +33,7 @@ describe('Instructor Form Service', () => {
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
             gender: expect.any(Object),
-            courses: expect.any(Object),
+            user: expect.any(Object),
           }),
         );
       });
@@ -57,7 +57,7 @@ describe('Instructor Form Service', () => {
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
             gender: expect.any(Object),
-            courses: expect.any(Object),
+            user: expect.any(Object),
           }),
         );
       });
@@ -67,7 +67,7 @@ describe('Instructor Form Service', () => {
       it('should return NewInstructor for default Instructor initial value', () => {
         const formGroup = service.createInstructorFormGroup(sampleWithNewData);
 
-        const instructor = service.getInstructor(formGroup) as any;
+        const instructor = service.getInstructor(formGroup);
 
         expect(instructor).toMatchObject(sampleWithNewData);
       });
@@ -75,7 +75,7 @@ describe('Instructor Form Service', () => {
       it('should return NewInstructor for empty Instructor initial value', () => {
         const formGroup = service.createInstructorFormGroup();
 
-        const instructor = service.getInstructor(formGroup) as any;
+        const instructor = service.getInstructor(formGroup);
 
         expect(instructor).toMatchObject({});
       });
@@ -83,7 +83,7 @@ describe('Instructor Form Service', () => {
       it('should return IInstructor', () => {
         const formGroup = service.createInstructorFormGroup(sampleWithRequiredData);
 
-        const instructor = service.getInstructor(formGroup) as any;
+        const instructor = service.getInstructor(formGroup);
 
         expect(instructor).toMatchObject(sampleWithRequiredData);
       });

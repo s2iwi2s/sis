@@ -1,10 +1,10 @@
 {
   "annotations": {
-    "changelogDate": "20240104092214"
+    "changelogDate": "20260702215145",
+    "enableAudit": true
   },
   "applications": ["SchInfoSys"],
   "dto": "mapstruct",
-  "entityTableName": "strategies",
   "fields": [
     {
       "fieldName": "name",
@@ -12,7 +12,7 @@
     },
     {
       "fieldName": "description",
-      "fieldType": "byte[]"
+      "fieldType": "TextBlob"
     },
     {
       "fieldName": "createdBy",

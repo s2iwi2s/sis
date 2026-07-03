@@ -1,8 +1,9 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { ILearningCompetency } from '../learning-competency.model';
-import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../learning-competency.test-samples';
+import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../learning-competency.test-samples';
 
 import { LearningCompetencyService, RestLearningCompetency } from './learning-competency.service';
 
@@ -19,7 +20,7 @@ describe('LearningCompetency Service', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      providers: [provideHttpClientTesting()],
     });
     expectedResult = null;
     service = TestBed.inject(LearningCompetencyService);
@@ -31,7 +32,7 @@ describe('LearningCompetency Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.find(123).subscribe(resp => (expectedResult = resp.body));
+      service.find(123).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush(returnedFromService);
@@ -43,7 +44,7 @@ describe('LearningCompetency Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.create(learningCompetency).subscribe(resp => (expectedResult = resp.body));
+      service.create(learningCompetency).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'POST' });
       req.flush(returnedFromService);
@@ -55,7 +56,7 @@ describe('LearningCompetency Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.update(learningCompetency).subscribe(resp => (expectedResult = resp.body));
+      service.update(learningCompetency).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'PUT' });
       req.flush(returnedFromService);
@@ -67,7 +68,7 @@ describe('LearningCompetency Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.partialUpdate(patchObject).subscribe(resp => (expectedResult = resp.body));
+      service.partialUpdate(patchObject).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'PATCH' });
       req.flush(returnedFromService);
@@ -88,21 +89,17 @@ describe('LearningCompetency Service', () => {
     });
 
     it('should delete a LearningCompetency', () => {
-      const expected = true;
+      service.delete(123).subscribe();
 
-      service.delete(123).subscribe(resp => (expectedResult = resp.ok));
-
-      const req = httpMock.expectOne({ method: 'DELETE' });
-      req.flush({ status: 200 });
-      expect(expectedResult).toBe(expected);
+      const requests = httpMock.match({ method: 'DELETE' });
+      expect(requests.length).toBe(1);
     });
 
     describe('addLearningCompetencyToCollectionIfMissing', () => {
       it('should add a LearningCompetency to an empty array', () => {
         const learningCompetency: ILearningCompetency = sampleWithRequiredData;
         expectedResult = service.addLearningCompetencyToCollectionIfMissing([], learningCompetency);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(learningCompetency);
+        expect(expectedResult).toEqual([learningCompetency]);
       });
 
       it('should not add a LearningCompetency to an array that contains it', () => {
@@ -136,16 +133,13 @@ describe('LearningCompetency Service', () => {
         const learningCompetency: ILearningCompetency = sampleWithRequiredData;
         const learningCompetency2: ILearningCompetency = sampleWithPartialData;
         expectedResult = service.addLearningCompetencyToCollectionIfMissing([], learningCompetency, learningCompetency2);
-        expect(expectedResult).toHaveLength(2);
-        expect(expectedResult).toContain(learningCompetency);
-        expect(expectedResult).toContain(learningCompetency2);
+        expect(expectedResult).toEqual([learningCompetency, learningCompetency2]);
       });
 
       it('should accept null and undefined values', () => {
         const learningCompetency: ILearningCompetency = sampleWithRequiredData;
         expectedResult = service.addLearningCompetencyToCollectionIfMissing([], null, learningCompetency, undefined);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(learningCompetency);
+        expect(expectedResult).toEqual([learningCompetency]);
       });
 
       it('should return initial array if no LearningCompetency is added', () => {
@@ -156,7 +150,7 @@ describe('LearningCompetency Service', () => {
     });
 
     describe('compareLearningCompetency', () => {
-      it('Should return true if both entities are null', () => {
+      it('should return true if both entities are null', () => {
         const entity1 = null;
         const entity2 = null;
 
@@ -165,8 +159,8 @@ describe('LearningCompetency Service', () => {
         expect(compareResult).toEqual(true);
       });
 
-      it('Should return false if one entity is null', () => {
-        const entity1 = { id: 123 };
+      it('should return false if one entity is null', () => {
+        const entity1 = { id: 10670 };
         const entity2 = null;
 
         const compareResult1 = service.compareLearningCompetency(entity1, entity2);
@@ -176,9 +170,9 @@ describe('LearningCompetency Service', () => {
         expect(compareResult2).toEqual(false);
       });
 
-      it('Should return false if primaryKey differs', () => {
-        const entity1 = { id: 123 };
-        const entity2 = { id: 456 };
+      it('should return false if primaryKey differs', () => {
+        const entity1 = { id: 10670 };
+        const entity2 = { id: 20625 };
 
         const compareResult1 = service.compareLearningCompetency(entity1, entity2);
         const compareResult2 = service.compareLearningCompetency(entity2, entity1);
@@ -187,9 +181,9 @@ describe('LearningCompetency Service', () => {
         expect(compareResult2).toEqual(false);
       });
 
-      it('Should return false if primaryKey matches', () => {
-        const entity1 = { id: 123 };
-        const entity2 = { id: 123 };
+      it('should return false if primaryKey matches', () => {
+        const entity1 = { id: 10670 };
+        const entity2 = { id: 10670 };
 
         const compareResult1 = service.compareLearningCompetency(entity1, entity2);
         const compareResult2 = service.compareLearningCompetency(entity2, entity1);

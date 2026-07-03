@@ -31,11 +31,11 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/courses")
 public class CourseResource {
 
-    private final Logger log = LoggerFactory.getLogger(CourseResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CourseResource.class);
 
     private static final String ENTITY_NAME = "course";
 
-    @Value("${jhipster.clientApp.name}")
+    @Value("${jhipster.clientApp.name:schInfoSys}")
     private String applicationName;
 
     private final CourseService courseService;
@@ -56,15 +56,14 @@ public class CourseResource {
      */
     @PostMapping("")
     public ResponseEntity<CourseDTO> createCourse(@Valid @RequestBody CourseDTO courseDTO) throws URISyntaxException {
-        log.debug("REST request to save Course : {}", courseDTO);
+        LOG.debug("REST request to save Course : {}", courseDTO);
         if (courseDTO.getId() != null) {
             throw new BadRequestAlertException("A new course cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        CourseDTO result = courseService.save(courseDTO);
-        return ResponseEntity
-            .created(new URI("/api/courses/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        courseDTO = courseService.save(courseDTO);
+        return ResponseEntity.created(new URI("/api/courses/" + courseDTO.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, courseDTO.getId().toString()))
+            .body(courseDTO);
     }
 
     /**
@@ -82,7 +81,7 @@ public class CourseResource {
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody CourseDTO courseDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update Course : {}, {}", id, courseDTO);
+        LOG.debug("REST request to update Course : {}, {}", id, courseDTO);
         if (courseDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -94,11 +93,10 @@ public class CourseResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        CourseDTO result = courseService.update(courseDTO);
-        return ResponseEntity
-            .ok()
+        courseDTO = courseService.update(courseDTO);
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, courseDTO.getId().toString()))
-            .body(result);
+            .body(courseDTO);
     }
 
     /**
@@ -117,7 +115,7 @@ public class CourseResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody CourseDTO courseDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Course partially : {}, {}", id, courseDTO);
+        LOG.debug("REST request to partial update Course partially : {}, {}", id, courseDTO);
         if (courseDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -138,14 +136,14 @@ public class CourseResource {
     }
 
     /**
-     * {@code GET  /courses} : get all the courses.
+     * {@code GET  /courses} : get all the Courses.
      *
      * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of courses in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Courses in body.
      */
     @GetMapping("")
     public ResponseEntity<List<CourseDTO>> getAllCourses(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
-        log.debug("REST request to get a page of Courses");
+        LOG.debug("REST request to get a page of Courses");
         Page<CourseDTO> page = courseService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -159,7 +157,7 @@ public class CourseResource {
      */
     @GetMapping("/{id}")
     public ResponseEntity<CourseDTO> getCourse(@PathVariable("id") Long id) {
-        log.debug("REST request to get Course : {}", id);
+        LOG.debug("REST request to get Course : {}", id);
         Optional<CourseDTO> courseDTO = courseService.findOne(id);
         return ResponseUtil.wrapOrNotFound(courseDTO);
     }
@@ -172,10 +170,9 @@ public class CourseResource {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCourse(@PathVariable("id") Long id) {
-        log.debug("REST request to delete Course : {}", id);
+        LOG.debug("REST request to delete Course : {}", id);
         courseService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }

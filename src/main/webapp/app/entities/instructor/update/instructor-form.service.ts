@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
+
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IInstructor, NewInstructor } from '../instructor.model';
 
@@ -29,7 +30,7 @@ type InstructorFormRawValue = FormValueOf<IInstructor>;
 
 type NewInstructorFormRawValue = FormValueOf<NewInstructor>;
 
-type InstructorFormDefaults = Pick<NewInstructor, 'id' | 'hireDate' | 'createdDate' | 'lastModifiedDate' | 'courses'>;
+type InstructorFormDefaults = Pick<NewInstructor, 'id' | 'hireDate' | 'createdDate' | 'lastModifiedDate'>;
 
 type InstructorFormGroupContent = {
   id: FormControl<InstructorFormRawValue['id'] | NewInstructor['id']>;
@@ -46,17 +47,17 @@ type InstructorFormGroupContent = {
   lastModifiedBy: FormControl<InstructorFormRawValue['lastModifiedBy']>;
   lastModifiedDate: FormControl<InstructorFormRawValue['lastModifiedDate']>;
   gender: FormControl<InstructorFormRawValue['gender']>;
-  courses: FormControl<InstructorFormRawValue['courses']>;
+  user: FormControl<InstructorFormRawValue['user']>;
 };
 
 export type InstructorFormGroup = FormGroup<InstructorFormGroupContent>;
 
 @Injectable({ providedIn: 'root' })
 export class InstructorFormService {
-  createInstructorFormGroup(instructor: InstructorFormGroupInput = { id: null }): InstructorFormGroup {
+  createInstructorFormGroup(instructor?: InstructorFormGroupInput): InstructorFormGroup {
     const instructorRawValue = this.convertInstructorToInstructorRawValue({
       ...this.getFormDefaults(),
-      ...instructor,
+      ...(instructor ?? { id: null }),
     });
     return new FormGroup<InstructorFormGroupContent>({
       id: new FormControl(
@@ -83,22 +84,20 @@ export class InstructorFormService {
       }),
       lastModifiedDate: new FormControl(instructorRawValue.lastModifiedDate),
       gender: new FormControl(instructorRawValue.gender),
-      courses: new FormControl(instructorRawValue.courses ?? []),
+      user: new FormControl(instructorRawValue.user),
     });
   }
 
   getInstructor(form: InstructorFormGroup): IInstructor | NewInstructor {
-    return this.convertInstructorRawValueToInstructor(form.getRawValue() as InstructorFormRawValue | NewInstructorFormRawValue);
+    return this.convertInstructorRawValueToInstructor(form.getRawValue());
   }
 
   resetForm(form: InstructorFormGroup, instructor: InstructorFormGroupInput): void {
     const instructorRawValue = this.convertInstructorToInstructorRawValue({ ...this.getFormDefaults(), ...instructor });
-    form.reset(
-      {
-        ...instructorRawValue,
-        id: { value: instructorRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
-    );
+    form.reset({
+      ...instructorRawValue,
+      id: { value: instructorRawValue.id, disabled: true },
+    });
   }
 
   private getFormDefaults(): InstructorFormDefaults {
@@ -109,7 +108,6 @@ export class InstructorFormService {
       hireDate: currentTime,
       createdDate: currentTime,
       lastModifiedDate: currentTime,
-      courses: [],
     };
   }
 
@@ -132,7 +130,6 @@ export class InstructorFormService {
       hireDate: instructor.hireDate ? instructor.hireDate.format(DATE_TIME_FORMAT) : undefined,
       createdDate: instructor.createdDate ? instructor.createdDate.format(DATE_TIME_FORMAT) : undefined,
       lastModifiedDate: instructor.lastModifiedDate ? instructor.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
-      courses: instructor.courses ?? [],
     };
   }
 }

@@ -31,11 +31,11 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/instructors")
 public class InstructorResource {
 
-    private final Logger log = LoggerFactory.getLogger(InstructorResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InstructorResource.class);
 
     private static final String ENTITY_NAME = "instructor";
 
-    @Value("${jhipster.clientApp.name}")
+    @Value("${jhipster.clientApp.name:schInfoSys}")
     private String applicationName;
 
     private final InstructorService instructorService;
@@ -56,15 +56,14 @@ public class InstructorResource {
      */
     @PostMapping("")
     public ResponseEntity<InstructorDTO> createInstructor(@Valid @RequestBody InstructorDTO instructorDTO) throws URISyntaxException {
-        log.debug("REST request to save Instructor : {}", instructorDTO);
+        LOG.debug("REST request to save Instructor : {}", instructorDTO);
         if (instructorDTO.getId() != null) {
             throw new BadRequestAlertException("A new instructor cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        InstructorDTO result = instructorService.save(instructorDTO);
-        return ResponseEntity
-            .created(new URI("/api/instructors/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        instructorDTO = instructorService.save(instructorDTO);
+        return ResponseEntity.created(new URI("/api/instructors/" + instructorDTO.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, instructorDTO.getId().toString()))
+            .body(instructorDTO);
     }
 
     /**
@@ -82,7 +81,7 @@ public class InstructorResource {
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody InstructorDTO instructorDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update Instructor : {}, {}", id, instructorDTO);
+        LOG.debug("REST request to update Instructor : {}, {}", id, instructorDTO);
         if (instructorDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -94,11 +93,10 @@ public class InstructorResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        InstructorDTO result = instructorService.update(instructorDTO);
-        return ResponseEntity
-            .ok()
+        instructorDTO = instructorService.update(instructorDTO);
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, instructorDTO.getId().toString()))
-            .body(result);
+            .body(instructorDTO);
     }
 
     /**
@@ -117,7 +115,7 @@ public class InstructorResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody InstructorDTO instructorDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Instructor partially : {}, {}", id, instructorDTO);
+        LOG.debug("REST request to partial update Instructor partially : {}, {}", id, instructorDTO);
         if (instructorDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -138,24 +136,15 @@ public class InstructorResource {
     }
 
     /**
-     * {@code GET  /instructors} : get all the instructors.
+     * {@code GET  /instructors} : get all the Instructors.
      *
      * @param pageable the pagination information.
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of instructors in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Instructors in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<InstructorDTO>> getAllInstructors(
-        @org.springdoc.core.annotations.ParameterObject Pageable pageable,
-        @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
-    ) {
-        log.debug("REST request to get a page of Instructors");
-        Page<InstructorDTO> page;
-        if (eagerload) {
-            page = instructorService.findAllWithEagerRelationships(pageable);
-        } else {
-            page = instructorService.findAll(pageable);
-        }
+    public ResponseEntity<List<InstructorDTO>> getAllInstructors(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
+        LOG.debug("REST request to get a page of Instructors");
+        Page<InstructorDTO> page = instructorService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -168,7 +157,7 @@ public class InstructorResource {
      */
     @GetMapping("/{id}")
     public ResponseEntity<InstructorDTO> getInstructor(@PathVariable("id") Long id) {
-        log.debug("REST request to get Instructor : {}", id);
+        LOG.debug("REST request to get Instructor : {}", id);
         Optional<InstructorDTO> instructorDTO = instructorService.findOne(id);
         return ResponseUtil.wrapOrNotFound(instructorDTO);
     }
@@ -181,10 +170,9 @@ public class InstructorResource {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteInstructor(@PathVariable("id") Long id) {
-        log.debug("REST request to delete Instructor : {}", id);
+        LOG.debug("REST request to delete Instructor : {}", id);
         instructorService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }

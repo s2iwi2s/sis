@@ -10,7 +10,7 @@
 # ===================================================================
 # Standard Spring Boot properties.
 # Full reference is available at:
-# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# https://docs.spring.io/spring-boot/appendix/application-properties/index.html
 # ===================================================================
 
 spring:
@@ -19,7 +19,7 @@ spring:
   # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
   liquibase:
     contexts: test
-  jackson:
+  jackson2:
     serialization:
       write-durations-as-timestamps: false
   mail:
@@ -28,6 +28,12 @@ spring:
     allow-bean-definition-overriding: true
   messages:
     basename: i18n/messages
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          authority-prefix: ''
+          authorities-claim-name: auth
   task:
     execution:
       thread-name-prefix: sch-info-sys-task-
@@ -69,7 +75,7 @@ jhipster:
     authentication:
       jwt:
         # This token must be encoded using Base64 (you can type `echo 'secret-key'|base64` on your command line)
-        base64-secret: ZDJlNjc2ZDQzMjVkYzlmZjAzMjdkZDU5NDZjYjg5ODkyNjJlNjQyNzI0MWM5MjYzZmI0ZmViODM0YmJhNjJkMGRhMGZlNmE4OTMxMjViZDE5MDQyNDEwMmQ4NmY4ZjJhMTI4MmNmMTJlMzEzMWQ0ZGJlMjBkOTdhNDE5OTA4NmE=
+        base64-secret: NmE0YTc2ZjE0ZDJkM2M1NjM0ZWEwMDVmN2NiOGE3M2NmZWRkNmMxYTM5OWYzNmQ2ZGY2NTRiMjRhZWYyZjkwNWRhMjFmMmM1M2U3ZGZmYjg4MGQ1YmRmMmE1OWE4NWZmYjY1MzZlN2JhOTVlZDZhMjQyZmY5ZTExYWZkZjcyM2Y=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 86400

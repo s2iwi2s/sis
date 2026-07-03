@@ -3,7 +3,6 @@ package com.sis.web.rest;
 import com.sis.repository.AssessmentRepository;
 import com.sis.service.AssessmentService;
 import com.sis.service.dto.AssessmentDTO;
-import com.sis.service.dto.StrategiesDTO;
 import com.sis.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -32,11 +31,11 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/assessments")
 public class AssessmentResource {
 
-    private final Logger log = LoggerFactory.getLogger(AssessmentResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AssessmentResource.class);
 
     private static final String ENTITY_NAME = "assessment";
 
-    @Value("${jhipster.clientApp.name}")
+    @Value("${jhipster.clientApp.name:schInfoSys}")
     private String applicationName;
 
     private final AssessmentService assessmentService;
@@ -57,15 +56,14 @@ public class AssessmentResource {
      */
     @PostMapping("")
     public ResponseEntity<AssessmentDTO> createAssessment(@Valid @RequestBody AssessmentDTO assessmentDTO) throws URISyntaxException {
-        log.debug("REST request to save Assessment : {}", assessmentDTO);
+        LOG.debug("REST request to save Assessment : {}", assessmentDTO);
         if (assessmentDTO.getId() != null) {
             throw new BadRequestAlertException("A new assessment cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        AssessmentDTO result = assessmentService.save(assessmentDTO);
-        return ResponseEntity
-            .created(new URI("/api/assessments/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        assessmentDTO = assessmentService.save(assessmentDTO);
+        return ResponseEntity.created(new URI("/api/assessments/" + assessmentDTO.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, assessmentDTO.getId().toString()))
+            .body(assessmentDTO);
     }
 
     /**
@@ -83,7 +81,7 @@ public class AssessmentResource {
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody AssessmentDTO assessmentDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update Assessment : {}, {}", id, assessmentDTO);
+        LOG.debug("REST request to update Assessment : {}, {}", id, assessmentDTO);
         if (assessmentDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -95,11 +93,10 @@ public class AssessmentResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        AssessmentDTO result = assessmentService.update(assessmentDTO);
-        return ResponseEntity
-            .ok()
+        assessmentDTO = assessmentService.update(assessmentDTO);
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, assessmentDTO.getId().toString()))
-            .body(result);
+            .body(assessmentDTO);
     }
 
     /**
@@ -118,7 +115,7 @@ public class AssessmentResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody AssessmentDTO assessmentDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Assessment partially : {}, {}", id, assessmentDTO);
+        LOG.debug("REST request to partial update Assessment partially : {}, {}", id, assessmentDTO);
         if (assessmentDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -139,18 +136,18 @@ public class AssessmentResource {
     }
 
     /**
-     * {@code GET  /assessments} : get all the assessments.
+     * {@code GET  /assessments} : get all the Assessments.
      *
      * @param pageable the pagination information.
      * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of assessments in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Assessments in body.
      */
     @GetMapping("")
     public ResponseEntity<List<AssessmentDTO>> getAllAssessments(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
         @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
     ) {
-        log.debug("REST request to get a page of Assessments");
+        LOG.debug("REST request to get a page of Assessments");
         Page<AssessmentDTO> page;
         if (eagerload) {
             page = assessmentService.findAllWithEagerRelationships(pageable);
@@ -169,7 +166,7 @@ public class AssessmentResource {
      */
     @GetMapping("/{id}")
     public ResponseEntity<AssessmentDTO> getAssessment(@PathVariable("id") Long id) {
-        log.debug("REST request to get Assessment : {}", id);
+        LOG.debug("REST request to get Assessment : {}", id);
         Optional<AssessmentDTO> assessmentDTO = assessmentService.findOne(id);
         return ResponseUtil.wrapOrNotFound(assessmentDTO);
     }
@@ -182,26 +179,10 @@ public class AssessmentResource {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAssessment(@PathVariable("id") Long id) {
-        log.debug("REST request to delete Assessment : {}", id);
+        LOG.debug("REST request to delete Assessment : {}", id);
         assessmentService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
-    }
-    @DeleteMapping("/{id}/{resourcesId}")
-    public ResponseEntity<Void> deleteAssessment(@PathVariable("id") Long id, @PathVariable("resourcesId") Long resourcesId) {
-        assessmentService.delete(id, resourcesId);
-        return ResponseEntity
-            .noContent()
-            .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
-            .build();
-    }
-
-    @GetMapping("/{id}/course")
-    public ResponseEntity<List<AssessmentDTO>> getAllAssessmentByCourse(@PathVariable("id") Long courseId) {
-        log.debug("REST request to get a page of Assessment by Course {}", courseId);
-        List<AssessmentDTO> list = assessmentService.findAllByCourse(courseId);
-        return ResponseEntity.ok(list);
     }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, Observer, Subscription } from 'rxjs';
-import { filter, share } from 'rxjs/operators';
+
+import { Observable, Observer, Subscription, filter, share } from 'rxjs';
 
 export class EventWithContent<T> {
   constructor(
@@ -10,7 +10,7 @@ export class EventWithContent<T> {
 }
 
 /**
- * An utility class to manage RX events
+ * A utility class to manage RX events
  */
 @Injectable({
   providedIn: 'root',
@@ -44,16 +44,7 @@ export class EventManager {
       eventNames = [eventNames];
     }
     return this.observable
-      .pipe(
-        filter((event: EventWithContent<unknown> | string) => {
-          for (const eventName of eventNames) {
-            if ((typeof event === 'string' && event === eventName) || (typeof event !== 'string' && event.name === eventName)) {
-              return true;
-            }
-          }
-          return false;
-        }),
-      )
+      .pipe(filter((event: EventWithContent<unknown> | string) => eventNames.includes(typeof event === 'string' ? event : event.name)))
       .subscribe(callback);
   }
 

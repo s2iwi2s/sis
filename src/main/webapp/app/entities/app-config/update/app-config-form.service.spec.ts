@@ -1,6 +1,7 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 
-import { sampleWithRequiredData, sampleWithNewData } from '../app-config.test-samples';
+import { sampleWithNewData, sampleWithRequiredData } from '../app-config.test-samples';
 
 import { AppConfigFormService } from './app-config-form.service';
 
@@ -8,7 +9,6 @@ describe('AppConfig Form Service', () => {
   let service: AppConfigFormService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
     service = TestBed.inject(AppConfigFormService);
   });
 
@@ -57,7 +57,7 @@ describe('AppConfig Form Service', () => {
       it('should return NewAppConfig for default AppConfig initial value', () => {
         const formGroup = service.createAppConfigFormGroup(sampleWithNewData);
 
-        const appConfig = service.getAppConfig(formGroup) as any;
+        const appConfig = service.getAppConfig(formGroup);
 
         expect(appConfig).toMatchObject(sampleWithNewData);
       });
@@ -65,7 +65,7 @@ describe('AppConfig Form Service', () => {
       it('should return NewAppConfig for empty AppConfig initial value', () => {
         const formGroup = service.createAppConfigFormGroup();
 
-        const appConfig = service.getAppConfig(formGroup) as any;
+        const appConfig = service.getAppConfig(formGroup);
 
         expect(appConfig).toMatchObject({});
       });
@@ -73,7 +73,7 @@ describe('AppConfig Form Service', () => {
       it('should return IAppConfig', () => {
         const formGroup = service.createAppConfigFormGroup(sampleWithRequiredData);
 
-        const appConfig = service.getAppConfig(formGroup) as any;
+        const appConfig = service.getAppConfig(formGroup);
 
         expect(appConfig).toMatchObject(sampleWithRequiredData);
       });

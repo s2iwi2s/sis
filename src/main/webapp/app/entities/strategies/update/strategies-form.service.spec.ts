@@ -1,6 +1,7 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 
-import { sampleWithRequiredData, sampleWithNewData } from '../strategies.test-samples';
+import { sampleWithNewData, sampleWithRequiredData } from '../strategies.test-samples';
 
 import { StrategiesFormService } from './strategies-form.service';
 
@@ -8,7 +9,6 @@ describe('Strategies Form Service', () => {
   let service: StrategiesFormService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
     service = TestBed.inject(StrategiesFormService);
   });
 
@@ -26,7 +26,7 @@ describe('Strategies Form Service', () => {
             createdDate: expect.any(Object),
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
-            resources: expect.any(Object),
+            resourceses: expect.any(Object),
             learningCompetency: expect.any(Object),
           }),
         );
@@ -44,7 +44,7 @@ describe('Strategies Form Service', () => {
             createdDate: expect.any(Object),
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
-            resources: expect.any(Object),
+            resourceses: expect.any(Object),
             learningCompetency: expect.any(Object),
           }),
         );
@@ -55,7 +55,7 @@ describe('Strategies Form Service', () => {
       it('should return NewStrategies for default Strategies initial value', () => {
         const formGroup = service.createStrategiesFormGroup(sampleWithNewData);
 
-        const strategies = service.getStrategies(formGroup) as any;
+        const strategies = service.getStrategies(formGroup);
 
         expect(strategies).toMatchObject(sampleWithNewData);
       });
@@ -63,7 +63,7 @@ describe('Strategies Form Service', () => {
       it('should return NewStrategies for empty Strategies initial value', () => {
         const formGroup = service.createStrategiesFormGroup();
 
-        const strategies = service.getStrategies(formGroup) as any;
+        const strategies = service.getStrategies(formGroup);
 
         expect(strategies).toMatchObject({});
       });
@@ -71,7 +71,7 @@ describe('Strategies Form Service', () => {
       it('should return IStrategies', () => {
         const formGroup = service.createStrategiesFormGroup(sampleWithRequiredData);
 
-        const strategies = service.getStrategies(formGroup) as any;
+        const strategies = service.getStrategies(formGroup);
 
         expect(strategies).toMatchObject(sampleWithRequiredData);
       });

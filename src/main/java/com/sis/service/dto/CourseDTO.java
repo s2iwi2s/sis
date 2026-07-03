@@ -25,8 +25,6 @@ public class CourseDTO implements Serializable {
     @Lob
     private String courseObjectives;
 
-    private AppConfigDTO schYr;
-
     @Size(max = 50)
     private String createdBy;
 
@@ -39,18 +37,18 @@ public class CourseDTO implements Serializable {
 
     private AppConfigDTO gradelevel;
 
+    private DepartmentsDTO department;
+
+    private AcademicYearDTO year;
+
+    private AcademicTermsDTO terms;
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public CourseDTO id(Long id) {
-        this.id = id;
-
-        return this;
     }
 
     public String getSubject() {
@@ -83,14 +81,6 @@ public class CourseDTO implements Serializable {
 
     public void setCourseObjectives(String courseObjectives) {
         this.courseObjectives = courseObjectives;
-    }
-
-    public AppConfigDTO getSchYr() {
-        return schYr;
-    }
-
-    public void setSchYr(AppConfigDTO schYr) {
-        this.schYr = schYr;
     }
 
     public String getCreatedBy() {
@@ -133,15 +123,40 @@ public class CourseDTO implements Serializable {
         this.gradelevel = gradelevel;
     }
 
+    public DepartmentsDTO getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(DepartmentsDTO department) {
+        this.department = department;
+    }
+
+    public AcademicYearDTO getYear() {
+        return year;
+    }
+
+    public void setYear(AcademicYearDTO year) {
+        this.year = year;
+    }
+
+    public AcademicTermsDTO getTerms() {
+        return terms;
+    }
+
+    public void setTerms(AcademicTermsDTO terms) {
+        this.terms = terms;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof CourseDTO courseDTO)) {
+        if (!(o instanceof CourseDTO)) {
             return false;
         }
 
+        CourseDTO courseDTO = (CourseDTO) o;
         if (this.id == null) {
             return false;
         }
@@ -167,6 +182,9 @@ public class CourseDTO implements Serializable {
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", gradelevel=" + getGradelevel() +
+            ", department=" + getDepartment() +
+            ", year=" + getYear() +
+            ", terms=" + getTerms() +
             "}";
     }
 }

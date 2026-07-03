@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class StudentServiceImpl implements StudentService {
 
-    private final Logger log = LoggerFactory.getLogger(StudentServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StudentServiceImpl.class);
 
     private final StudentRepository studentRepository;
 
@@ -33,7 +33,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentDTO save(StudentDTO studentDTO) {
-        log.debug("Request to save Student : {}", studentDTO);
+        LOG.debug("Request to save Student : {}", studentDTO);
         Student student = studentMapper.toEntity(studentDTO);
         student = studentRepository.save(student);
         return studentMapper.toDto(student);
@@ -41,7 +41,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public StudentDTO update(StudentDTO studentDTO) {
-        log.debug("Request to update Student : {}", studentDTO);
+        LOG.debug("Request to update Student : {}", studentDTO);
         Student student = studentMapper.toEntity(studentDTO);
         student = studentRepository.save(student);
         return studentMapper.toDto(student);
@@ -49,7 +49,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Optional<StudentDTO> partialUpdate(StudentDTO studentDTO) {
-        log.debug("Request to partially update Student : {}", studentDTO);
+        LOG.debug("Request to partially update Student : {}", studentDTO);
 
         return studentRepository
             .findById(studentDTO.getId())
@@ -65,24 +65,20 @@ public class StudentServiceImpl implements StudentService {
     @Override
     @Transactional(readOnly = true)
     public Page<StudentDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all Students");
+        LOG.debug("Request to get all Students");
         return studentRepository.findAll(pageable).map(studentMapper::toDto);
-    }
-
-    public Page<StudentDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return studentRepository.findAllWithEagerRelationships(pageable).map(studentMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<StudentDTO> findOne(Long id) {
-        log.debug("Request to get Student : {}", id);
-        return studentRepository.findOneWithEagerRelationships(id).map(studentMapper::toDto);
+        LOG.debug("Request to get Student : {}", id);
+        return studentRepository.findById(id).map(studentMapper::toDto);
     }
 
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Student : {}", id);
+        LOG.debug("Request to delete Student : {}", id);
         studentRepository.deleteById(id);
     }
 }

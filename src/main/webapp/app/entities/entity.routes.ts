@@ -2,9 +2,9 @@ import { Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'org',
-    data: { pageTitle: 'schInfoSysApp.org.home.title' },
-    loadChildren: () => import('./org/org.routes'),
+    path: 'authority',
+    data: { pageTitle: 'schInfoSysApp.adminAuthority.home.title' },
+    loadChildren: () => import('./admin/authority/authority.routes'),
   },
   {
     path: 'instructor',
@@ -20,6 +20,16 @@ const routes: Routes = [
     path: 'course',
     data: { pageTitle: 'schInfoSysApp.course.home.title' },
     loadChildren: () => import('./course/course.routes'),
+  },
+  {
+    path: 'course-schedule',
+    data: { pageTitle: 'schInfoSysApp.courseSchedule.home.title' },
+    loadChildren: () => import('./course-schedule/course-schedule.routes'),
+  },
+  {
+    path: 'departments',
+    data: { pageTitle: 'schInfoSysApp.departments.home.title' },
+    loadChildren: () => import('./departments/departments.routes'),
   },
   {
     path: 'app-config',
@@ -50,6 +60,21 @@ const routes: Routes = [
     path: 'resources',
     data: { pageTitle: 'schInfoSysApp.resources.home.title' },
     loadChildren: () => import('./resources/resources.routes'),
+  },
+  {
+    path: 'academic-year',
+    data: { pageTitle: 'schInfoSysApp.academicYear.home.title' },
+    loadChildren: () => import('./academic-year/academic-year.routes'),
+  },
+  {
+    path: 'academic-terms',
+    data: { pageTitle: 'schInfoSysApp.academicTerms.home.title' },
+    loadChildren: () => import('./academic-terms/academic-terms.routes'),
+  },
+  {
+    path: 'user-management',
+    data: { pageTitle: 'userManagement.home.title' },
+    loadChildren: () => import('./admin/user-management/user-management.routes'),
   },
   /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
 ];

@@ -3,24 +3,25 @@ import dayjs from 'dayjs/esm';
 import { IAssessment, NewAssessment } from './assessment.model';
 
 export const sampleWithRequiredData: IAssessment = {
-  id: 5235,
+  id: 4003,
 };
 
 export const sampleWithPartialData: IAssessment = {
-  id: 6113,
-  instruction: 'needily',
-  lastModifiedDate: dayjs('2024-01-04T07:43'),
+  id: 9985,
+  name: 'gratefully likely duffel',
+  createdBy: 'although aside resource',
+  createdDate: dayjs('2026-07-02T03:45'),
 };
 
 export const sampleWithFullData: IAssessment = {
-  id: 29652,
-  name: 'civilization confiscate',
-  instruction: 'inculcate',
+  id: 1893,
+  name: 'pish',
+  instruction: 'between blah contrail',
   markScheme: '../fake-data/blob/hipster.txt',
-  createdBy: 'brr onto',
-  createdDate: dayjs('2024-01-03T11:06'),
-  lastModifiedBy: 'nylon so',
-  lastModifiedDate: dayjs('2024-01-03T14:06'),
+  createdBy: 'besides than',
+  createdDate: dayjs('2026-07-02T14:23'),
+  lastModifiedBy: 'meanwhile oof mainstream',
+  lastModifiedDate: dayjs('2026-07-02T06:06'),
 };
 
 export const sampleWithNewData: NewAssessment = {

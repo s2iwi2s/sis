@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 public interface StrategiesRepositoryWithBagRelationships {
     Optional<Strategies> fetchBagRelationships(Optional<Strategies> strategies);
 
-    List<Strategies> fetchBagRelationships(List<Strategies> strategies);
+    List<Strategies> fetchBagRelationships(List<Strategies> strategieses);
 
-    Page<Strategies> fetchBagRelationships(Page<Strategies> strategies);
+    Page<Strategies> fetchBagRelationships(Page<Strategies> strategieses);
 }

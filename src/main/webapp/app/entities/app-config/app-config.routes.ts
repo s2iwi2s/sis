@@ -1,24 +1,22 @@
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 import { ASC } from 'app/config/navigation.constants';
-import { AppConfigComponent } from './list/app-config.component';
-import { AppConfigDetailComponent } from './detail/app-config-detail.component';
-import { AppConfigUpdateComponent } from './update/app-config-update.component';
+import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+
 import AppConfigResolve from './route/app-config-routing-resolve.service';
 
 const appConfigRoute: Routes = [
   {
     path: '',
-    component: AppConfigComponent,
+    loadComponent: () => import('./list/app-config').then(m => m.AppConfig),
     data: {
-      defaultSort: 'id,' + ASC,
+      defaultSort: `id,${ASC}`,
     },
     canActivate: [UserRouteAccessService],
   },
   {
     path: ':id/view',
-    component: AppConfigDetailComponent,
+    loadComponent: () => import('./detail/app-config-detail').then(m => m.AppConfigDetail),
     resolve: {
       appConfig: AppConfigResolve,
     },
@@ -26,7 +24,7 @@ const appConfigRoute: Routes = [
   },
   {
     path: 'new',
-    component: AppConfigUpdateComponent,
+    loadComponent: () => import('./update/app-config-update').then(m => m.AppConfigUpdate),
     resolve: {
       appConfig: AppConfigResolve,
     },
@@ -34,7 +32,7 @@ const appConfigRoute: Routes = [
   },
   {
     path: ':id/edit',
-    component: AppConfigUpdateComponent,
+    loadComponent: () => import('./update/app-config-update').then(m => m.AppConfigUpdate),
     resolve: {
       appConfig: AppConfigResolve,
     },

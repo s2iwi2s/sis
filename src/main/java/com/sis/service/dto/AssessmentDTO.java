@@ -33,7 +33,7 @@ public class AssessmentDTO implements Serializable {
 
     private Instant lastModifiedDate;
 
-    private Set<ResourcesDTO> resources = new HashSet<>();
+    private Set<ResourcesDTO> resourceses = new HashSet<>();
 
     private LearningCompetencyDTO learningCompetency;
 
@@ -101,12 +101,12 @@ public class AssessmentDTO implements Serializable {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public Set<ResourcesDTO> getResources() {
-        return resources;
+    public Set<ResourcesDTO> getResourceses() {
+        return resourceses;
     }
 
-    public void setResources(Set<ResourcesDTO> resources) {
-        this.resources = resources;
+    public void setResourceses(Set<ResourcesDTO> resourceses) {
+        this.resourceses = resourceses;
     }
 
     public LearningCompetencyDTO getLearningCompetency() {
@@ -122,10 +122,11 @@ public class AssessmentDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof AssessmentDTO assessmentDTO)) {
+        if (!(o instanceof AssessmentDTO)) {
             return false;
         }
 
+        AssessmentDTO assessmentDTO = (AssessmentDTO) o;
         if (this.id == null) {
             return false;
         }
@@ -149,7 +150,7 @@ public class AssessmentDTO implements Serializable {
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
-            ", resources=" + getResources() +
+            ", resourceses=" + getResourceses() +
             ", learningCompetency=" + getLearningCompetency() +
             "}";
     }

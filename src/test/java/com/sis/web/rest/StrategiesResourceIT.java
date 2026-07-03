@@ -1,11 +1,14 @@
 package com.sis.web.rest;
 
+import static com.sis.domain.StrategiesAsserts.*;
+import static com.sis.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sis.IntegrationTest;
 import com.sis.domain.Strategies;
 import com.sis.repository.StrategiesRepository;
@@ -16,16 +19,16 @@ import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -67,6 +70,9 @@ class StrategiesResourceIT {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
+    private ObjectMapper om;
+
+    @Autowired
     private StrategiesRepository strategiesRepository;
 
     @Mock
@@ -86,21 +92,22 @@ class StrategiesResourceIT {
 
     private Strategies strategies;
 
+    private Strategies insertedStrategies;
+
     /**
      * Create an entity for this test.
      *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Strategies createEntity(EntityManager em) {
-        Strategies strategies = new Strategies()
+    public static Strategies createEntity() {
+        return new Strategies()
             .name(DEFAULT_NAME)
             .description(DEFAULT_DESCRIPTION)
             .createdBy(DEFAULT_CREATED_BY)
             .createdDate(DEFAULT_CREATED_DATE)
             .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
             .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
-        return strategies;
     }
 
     /**
@@ -109,42 +116,51 @@ class StrategiesResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Strategies createUpdatedEntity(EntityManager em) {
-        Strategies strategies = new Strategies()
+    public static Strategies createUpdatedEntity() {
+        return new Strategies()
             .name(UPDATED_NAME)
             .description(UPDATED_DESCRIPTION)
             .createdBy(UPDATED_CREATED_BY)
             .createdDate(UPDATED_CREATED_DATE)
             .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
             .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
-        return strategies;
     }
 
     @BeforeEach
-    public void initTest() {
-        strategies = createEntity(em);
+    void initTest() {
+        strategies = createEntity();
+    }
+
+    @AfterEach
+    void cleanup() {
+        if (insertedStrategies != null) {
+            strategiesRepository.delete(insertedStrategies);
+            insertedStrategies = null;
+        }
     }
 
     @Test
     @Transactional
     void createStrategies() throws Exception {
-        int databaseSizeBeforeCreate = strategiesRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Strategies
         StrategiesDTO strategiesDTO = strategiesMapper.toDto(strategies);
-        restStrategiesMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(strategiesDTO)))
-            .andExpect(status().isCreated());
+        var returnedStrategiesDTO = om.readValue(
+            restStrategiesMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(strategiesDTO)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            StrategiesDTO.class
+        );
 
         // Validate the Strategies in the database
-        List<Strategies> strategiesList = strategiesRepository.findAll();
-        assertThat(strategiesList).hasSize(databaseSizeBeforeCreate + 1);
-        Strategies testStrategies = strategiesList.get(strategiesList.size() - 1);
-        assertThat(testStrategies.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testStrategies.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
-        assertThat(testStrategies.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
-        assertThat(testStrategies.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
-        assertThat(testStrategies.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
-        assertThat(testStrategies.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
+        assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedStrategies = strategiesMapper.toEntity(returnedStrategiesDTO);
+        assertStrategiesUpdatableFieldsEquals(returnedStrategies, getPersistedStrategies(returnedStrategies));
+
+        insertedStrategies = returnedStrategies;
     }
 
     @Test
@@ -154,23 +170,22 @@ class StrategiesResourceIT {
         strategies.setId(1L);
         StrategiesDTO strategiesDTO = strategiesMapper.toDto(strategies);
 
-        int databaseSizeBeforeCreate = strategiesRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restStrategiesMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(strategiesDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(strategiesDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Strategies in the database
-        List<Strategies> strategiesList = strategiesRepository.findAll();
-        assertThat(strategiesList).hasSize(databaseSizeBeforeCreate);
+        assertSameRepositoryCount(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
-    void getAllStrategies() throws Exception {
+    void getAllStrategieses() throws Exception {
         // Initialize the database
-        strategiesRepository.saveAndFlush(strategies);
+        insertedStrategies = strategiesRepository.saveAndFlush(strategies);
 
         // Get all the strategiesList
         restStrategiesMockMvc
@@ -187,7 +202,7 @@ class StrategiesResourceIT {
     }
 
     @SuppressWarnings({ "unchecked" })
-    void getAllStrategiesWithEagerRelationshipsIsEnabled() throws Exception {
+    void getAllStrategiesesWithEagerRelationshipsIsEnabled() throws Exception {
         when(strategiesServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         restStrategiesMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
@@ -196,7 +211,7 @@ class StrategiesResourceIT {
     }
 
     @SuppressWarnings({ "unchecked" })
-    void getAllStrategiesWithEagerRelationshipsIsNotEnabled() throws Exception {
+    void getAllStrategiesesWithEagerRelationshipsIsNotEnabled() throws Exception {
         when(strategiesServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
 
         restStrategiesMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
@@ -207,7 +222,7 @@ class StrategiesResourceIT {
     @Transactional
     void getStrategies() throws Exception {
         // Initialize the database
-        strategiesRepository.saveAndFlush(strategies);
+        insertedStrategies = strategiesRepository.saveAndFlush(strategies);
 
         // Get the strategies
         restStrategiesMockMvc
@@ -234,9 +249,9 @@ class StrategiesResourceIT {
     @Transactional
     void putExistingStrategies() throws Exception {
         // Initialize the database
-        strategiesRepository.saveAndFlush(strategies);
+        insertedStrategies = strategiesRepository.saveAndFlush(strategies);
 
-        int databaseSizeBeforeUpdate = strategiesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the strategies
         Strategies updatedStrategies = strategiesRepository.findById(strategies.getId()).orElseThrow();
@@ -255,26 +270,19 @@ class StrategiesResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, strategiesDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(strategiesDTO))
+                    .content(om.writeValueAsBytes(strategiesDTO))
             )
             .andExpect(status().isOk());
 
         // Validate the Strategies in the database
-        List<Strategies> strategiesList = strategiesRepository.findAll();
-        assertThat(strategiesList).hasSize(databaseSizeBeforeUpdate);
-        Strategies testStrategies = strategiesList.get(strategiesList.size() - 1);
-        assertThat(testStrategies.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testStrategies.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testStrategies.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testStrategies.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testStrategies.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testStrategies.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertPersistedStrategiesToMatchAllProperties(updatedStrategies);
     }
 
     @Test
     @Transactional
     void putNonExistingStrategies() throws Exception {
-        int databaseSizeBeforeUpdate = strategiesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         strategies.setId(longCount.incrementAndGet());
 
         // Create the Strategies
@@ -285,19 +293,18 @@ class StrategiesResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, strategiesDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(strategiesDTO))
+                    .content(om.writeValueAsBytes(strategiesDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Strategies in the database
-        List<Strategies> strategiesList = strategiesRepository.findAll();
-        assertThat(strategiesList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithIdMismatchStrategies() throws Exception {
-        int databaseSizeBeforeUpdate = strategiesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         strategies.setId(longCount.incrementAndGet());
 
         // Create the Strategies
@@ -308,19 +315,18 @@ class StrategiesResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(strategiesDTO))
+                    .content(om.writeValueAsBytes(strategiesDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Strategies in the database
-        List<Strategies> strategiesList = strategiesRepository.findAll();
-        assertThat(strategiesList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithMissingIdPathParamStrategies() throws Exception {
-        int databaseSizeBeforeUpdate = strategiesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         strategies.setId(longCount.incrementAndGet());
 
         // Create the Strategies
@@ -328,55 +334,55 @@ class StrategiesResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restStrategiesMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(strategiesDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(strategiesDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Strategies in the database
-        List<Strategies> strategiesList = strategiesRepository.findAll();
-        assertThat(strategiesList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void partialUpdateStrategiesWithPatch() throws Exception {
         // Initialize the database
-        strategiesRepository.saveAndFlush(strategies);
+        insertedStrategies = strategiesRepository.saveAndFlush(strategies);
 
-        int databaseSizeBeforeUpdate = strategiesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the strategies using partial update
         Strategies partialUpdatedStrategies = new Strategies();
         partialUpdatedStrategies.setId(strategies.getId());
 
-        partialUpdatedStrategies.description(UPDATED_DESCRIPTION).createdBy(UPDATED_CREATED_BY).createdDate(UPDATED_CREATED_DATE);
+        partialUpdatedStrategies
+            .description(UPDATED_DESCRIPTION)
+            .createdBy(UPDATED_CREATED_BY)
+            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restStrategiesMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedStrategies.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedStrategies))
+                    .content(om.writeValueAsBytes(partialUpdatedStrategies))
             )
             .andExpect(status().isOk());
 
         // Validate the Strategies in the database
-        List<Strategies> strategiesList = strategiesRepository.findAll();
-        assertThat(strategiesList).hasSize(databaseSizeBeforeUpdate);
-        Strategies testStrategies = strategiesList.get(strategiesList.size() - 1);
-        assertThat(testStrategies.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testStrategies.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testStrategies.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testStrategies.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testStrategies.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
-        assertThat(testStrategies.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertStrategiesUpdatableFieldsEquals(
+            createUpdateProxyForBean(partialUpdatedStrategies, strategies),
+            getPersistedStrategies(strategies)
+        );
     }
 
     @Test
     @Transactional
     void fullUpdateStrategiesWithPatch() throws Exception {
         // Initialize the database
-        strategiesRepository.saveAndFlush(strategies);
+        insertedStrategies = strategiesRepository.saveAndFlush(strategies);
 
-        int databaseSizeBeforeUpdate = strategiesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the strategies using partial update
         Strategies partialUpdatedStrategies = new Strategies();
@@ -394,26 +400,20 @@ class StrategiesResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedStrategies.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedStrategies))
+                    .content(om.writeValueAsBytes(partialUpdatedStrategies))
             )
             .andExpect(status().isOk());
 
         // Validate the Strategies in the database
-        List<Strategies> strategiesList = strategiesRepository.findAll();
-        assertThat(strategiesList).hasSize(databaseSizeBeforeUpdate);
-        Strategies testStrategies = strategiesList.get(strategiesList.size() - 1);
-        assertThat(testStrategies.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testStrategies.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testStrategies.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testStrategies.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testStrategies.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testStrategies.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertStrategiesUpdatableFieldsEquals(partialUpdatedStrategies, getPersistedStrategies(partialUpdatedStrategies));
     }
 
     @Test
     @Transactional
     void patchNonExistingStrategies() throws Exception {
-        int databaseSizeBeforeUpdate = strategiesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         strategies.setId(longCount.incrementAndGet());
 
         // Create the Strategies
@@ -424,19 +424,18 @@ class StrategiesResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, strategiesDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(strategiesDTO))
+                    .content(om.writeValueAsBytes(strategiesDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Strategies in the database
-        List<Strategies> strategiesList = strategiesRepository.findAll();
-        assertThat(strategiesList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithIdMismatchStrategies() throws Exception {
-        int databaseSizeBeforeUpdate = strategiesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         strategies.setId(longCount.incrementAndGet());
 
         // Create the Strategies
@@ -447,19 +446,18 @@ class StrategiesResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(strategiesDTO))
+                    .content(om.writeValueAsBytes(strategiesDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Strategies in the database
-        List<Strategies> strategiesList = strategiesRepository.findAll();
-        assertThat(strategiesList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithMissingIdPathParamStrategies() throws Exception {
-        int databaseSizeBeforeUpdate = strategiesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         strategies.setId(longCount.incrementAndGet());
 
         // Create the Strategies
@@ -467,23 +465,20 @@ class StrategiesResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restStrategiesMockMvc
-            .perform(
-                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(strategiesDTO))
-            )
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(strategiesDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Strategies in the database
-        List<Strategies> strategiesList = strategiesRepository.findAll();
-        assertThat(strategiesList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void deleteStrategies() throws Exception {
         // Initialize the database
-        strategiesRepository.saveAndFlush(strategies);
+        insertedStrategies = strategiesRepository.saveAndFlush(strategies);
 
-        int databaseSizeBeforeDelete = strategiesRepository.findAll().size();
+        long databaseSizeBeforeDelete = getRepositoryCount();
 
         // Delete the strategies
         restStrategiesMockMvc
@@ -491,7 +486,34 @@ class StrategiesResourceIT {
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
-        List<Strategies> strategiesList = strategiesRepository.findAll();
-        assertThat(strategiesList).hasSize(databaseSizeBeforeDelete - 1);
+        assertDecrementedRepositoryCount(databaseSizeBeforeDelete);
+    }
+
+    protected long getRepositoryCount() {
+        return strategiesRepository.count();
+    }
+
+    protected void assertIncrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore + 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertDecrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore - 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertSameRepositoryCount(long countBefore) {
+        assertThat(countBefore).isEqualTo(getRepositoryCount());
+    }
+
+    protected Strategies getPersistedStrategies(Strategies strategies) {
+        return strategiesRepository.findById(strategies.getId()).orElseThrow();
+    }
+
+    protected void assertPersistedStrategiesToMatchAllProperties(Strategies expectedStrategies) {
+        assertStrategiesAllPropertiesEquals(expectedStrategies, getPersistedStrategies(expectedStrategies));
+    }
+
+    protected void assertPersistedStrategiesToMatchUpdatableProperties(Strategies expectedStrategies) {
+        assertStrategiesAllUpdatablePropertiesEquals(expectedStrategies, getPersistedStrategies(expectedStrategies));
     }
 }

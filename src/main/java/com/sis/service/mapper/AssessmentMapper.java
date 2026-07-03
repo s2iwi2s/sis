@@ -15,7 +15,7 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface AssessmentMapper extends EntityMapper<AssessmentDTO, Assessment> {
-    @Mapping(target = "resources", source = "resources", qualifiedByName = "resourcesIdSet")
+    @Mapping(target = "resourceses", source = "resourceses", qualifiedByName = "resourcesIdSet")
     @Mapping(target = "learningCompetency", source = "learningCompetency", qualifiedByName = "learningCompetencyId")
     AssessmentDTO toDto(Assessment s);
 
@@ -25,8 +25,6 @@ public interface AssessmentMapper extends EntityMapper<AssessmentDTO, Assessment
     @Named("resourcesId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "fileName", source = "fileName")
-    @Mapping(target = "documentContentType", source = "documentContentType")
     ResourcesDTO toDtoResourcesId(Resources resources);
 
     @Named("resourcesIdSet")
@@ -37,7 +35,5 @@ public interface AssessmentMapper extends EntityMapper<AssessmentDTO, Assessment
     @Named("learningCompetencyId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
-    @Mapping(target = "seqNo", source = "seqNo")
-    @Mapping(target = "competencyCode", source = "competencyCode")
     LearningCompetencyDTO toDtoLearningCompetencyId(LearningCompetency learningCompetency);
 }

@@ -3,6 +3,7 @@ package com.sis.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -17,12 +18,14 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "curriculum_map")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class CurriculumMap extends AbstractAuditingEntity<Long> implements Serializable {
+public class CurriculumMap implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id")
     private Long id;
 
@@ -41,13 +44,27 @@ public class CurriculumMap extends AbstractAuditingEntity<Long> implements Seria
     @Column(name = "performance_standards")
     private String performanceStandards;
 
+    @Size(max = 50)
+    @Column(name = "created_by", length = 50)
+    private String createdBy;
+
+    @Column(name = "created_date")
+    private Instant createdDate;
+
+    @Size(max = 50)
+    @Column(name = "last_modified_by", length = 50)
+    private String lastModifiedBy;
+
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "curriculumMap")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "strategies", "assessments", "curriculumMap" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "strategieses", "assessments", "curriculumMap" }, allowSetters = true)
     private Set<LearningCompetency> learningCompetencies = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "gradelevel", "curriculumMaps", "instructors", "students" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "gradelevel", "department", "curriculumMaps", "year", "terms" }, allowSetters = true)
     private Course course;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -130,9 +147,21 @@ public class CurriculumMap extends AbstractAuditingEntity<Long> implements Seria
         this.performanceStandards = performanceStandards;
     }
 
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
     public CurriculumMap createdBy(String createdBy) {
         this.setCreatedBy(createdBy);
         return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return this.createdDate;
     }
 
     public CurriculumMap createdDate(Instant createdDate) {
@@ -140,14 +169,34 @@ public class CurriculumMap extends AbstractAuditingEntity<Long> implements Seria
         return this;
     }
 
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
     public CurriculumMap lastModifiedBy(String lastModifiedBy) {
         this.setLastModifiedBy(lastModifiedBy);
         return this;
     }
 
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
     public CurriculumMap lastModifiedDate(Instant lastModifiedDate) {
         this.setLastModifiedDate(lastModifiedDate);
         return this;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public Set<LearningCompetency> getLearningCompetencies() {

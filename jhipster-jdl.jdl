@@ -15,152 +15,199 @@ application {
   entities *
 }
 
-entity Org{
-    name String,
-    logo String,
-    address String,
-    createdBy String maxlength(50),
-    createdDate Instant,
-    lastModifiedBy String maxlength(50),
-    lastModifiedDate Instant
-}
-
+@EnableAudit
 entity Instructor {
-	firstName String,
-	middleName String,
-	lastName String,
-	email String,
-	phoneNumber String,
-	hireDate Instant,
-	salary Long,
-	commissionPct Long,
-    createdBy String maxlength(50),
-    createdDate Instant,
-    lastModifiedBy String maxlength(50),
+	firstName String
+	middleName String
+	lastName String
+	email String
+	phoneNumber String
+	hireDate Instant
+	salary Long
+	commissionPct Long
+    createdBy String maxlength(50)
+    createdDate Instant
+    lastModifiedBy String maxlength(50)
     lastModifiedDate Instant
 }
 
+@EnableAudit
 entity Student {
-    lrn String,
-    firstName String maxlength(50),
-    middleName String maxlength(50),
-    lastName String maxlength(50),
-    extName String maxlength(10),
-    birthDate Instant,
-    birthPlace String maxlength(50),
-    contactNo String maxlength(12),
-    address1 String maxlength(200),
-    address2 String maxlength(200),
-    city String maxlength(50),
-    zipCode String maxlength(10),
-    country String maxlength(50),
-    nationality String maxlength(100),
-    motherTongue String maxlength(50),
-    religion String maxlength(100),
-    fathersLastName String maxlength(50),
-    fathersMiddleName String maxlength(50),
-    fathersFirstName String maxlength(50),
-    fathersExtName String maxlength(50),
-    fathersOccupation String maxlength(50),
-    fathersContacts String maxlength(50),
-    mothersLastName String maxlength(50),
-    mothersMiddleName String maxlength(50),
-    mothersFirstName String maxlength(50),
-    mothersOccupation String maxlength(50),
-    mothersContacts String maxlength(50),
-    guardianFullName String maxlength(50),
-    guardianContacts String maxlength(50),
-    createdBy String maxlength(50),
-    createdDate Instant,
-    lastModifiedBy String maxlength(50),
+    lrn String
+    firstName String maxlength(50)
+    middleName String maxlength(50)
+    lastName String maxlength(50)
+    extName String maxlength(10)
+    birthDate Instant
+    birthPlace String maxlength(50)
+    contactNo String maxlength(12)
+    address1 String maxlength(200)
+    address2 String maxlength(200)
+    city String maxlength(50)
+    zipCode String maxlength(10)
+    country String maxlength(50)
+    nationality String maxlength(100)
+    motherTongue String maxlength(50)
+    religion String maxlength(100)
+    fathersLastName String maxlength(50)
+    fathersMiddleName String maxlength(50)
+    fathersFirstName String maxlength(50)
+    fathersExtName String maxlength(50)
+    fathersOccupation String maxlength(50)
+    fathersContacts String maxlength(50)
+    mothersLastName String maxlength(50)
+    mothersMiddleName String maxlength(50)
+    mothersFirstName String maxlength(50)
+    mothersOccupation String maxlength(50)
+    mothersContacts String maxlength(50)
+    guardianFullName String maxlength(50)
+    guardianContacts String maxlength(50)
+    createdBy String maxlength(50)
+    createdDate Instant
+    lastModifiedBy String maxlength(50)
     lastModifiedDate Instant
 }
 
+@EnableAudit
 entity Course {
-	subject String maxlength(50),
-	hoursPerQuarter Long,
-	courseDescription TextBlob,
-	courseObjectives TextBlob,
-    createdBy String maxlength(50),
-    createdDate Instant,
-    lastModifiedBy String maxlength(50),
+	subject String maxlength(50)
+	hoursPerQuarter Long
+	courseDescription TextBlob
+	courseObjectives TextBlob
+    createdBy String maxlength(50)
+    createdDate Instant
+    lastModifiedBy String maxlength(50)
     lastModifiedDate Instant
 }
 
+@EnableAudit
+entity CourseSchedule {
+    Room String maxlength(50)
+    WeekDay Integer
+	StartTime Instant
+    EndTime Instant
+	Description String maxlength(250)
+    createdBy String maxlength(50)
+    createdDate Instant
+    lastModifiedBy String maxlength(50)
+    lastModifiedDate Instant
+}
+
+@EnableAudit
+entity Departments {
+    name String maxlength(50)
+    description String maxlength(250)
+    createdBy String maxlength(50)
+    createdDate Instant
+    lastModifiedBy String maxlength(50)
+    lastModifiedDate Instant
+}
+
+@EnableAudit
 entity AppConfig {
-	code String,
-    value String,
- 	description String,
-    json TextBlob,
-	priority Integer,
-    createdBy String maxlength(50),
-    createdDate Instant,
-    lastModifiedBy String maxlength(50),
+	code String
+    value String
+ 	description String
+    json TextBlob
+	priority Integer
+    createdBy String maxlength(50)
+    createdDate Instant
+    lastModifiedBy String maxlength(50)
     lastModifiedDate Instant
 }
 
+@EnableAudit
 entity CurriculumMap {
-	quarterNo Integer,
-	weekNo Integer,
-	topic String,
-	contentStandards String,
+	quarterNo Integer
+	weekNo Integer
+	topic String
+	contentStandards String
 	performanceStandards String
-    createdBy String maxlength(50),
-    createdDate Instant,
-    lastModifiedBy String maxlength(50),
+    createdBy String maxlength(50)
+    createdDate Instant
+    lastModifiedBy String maxlength(50)
     lastModifiedDate Instant
 }
 
+@EnableAudit
 entity LearningCompetency {
-	seqNo Integer,
-	competencyCode String maxlength(50),
-	description String,
-    createdBy String maxlength(50),
-    createdDate Instant,
-    lastModifiedBy String maxlength(50),
+	seqNo Integer
+	competencyCode String maxlength(50)
+	description String
+    createdBy String maxlength(50)
+    createdDate Instant
+    lastModifiedBy String maxlength(50)
     lastModifiedDate Instant
 }
 
+@EnableAudit
 entity Strategies {
-	name String,
+	name String
 	description TextBlob
-    createdBy String maxlength(50),
-    createdDate Instant,
-    lastModifiedBy String maxlength(50),
+    createdBy String maxlength(50)
+    createdDate Instant
+    lastModifiedBy String maxlength(50)
     lastModifiedDate Instant
 }
 
+@EnableAudit
 entity Assessment {
-	name String,
-	instruction String,
-	markScheme TextBlob,
-    createdBy String maxlength(50),
-    createdDate Instant,
-    lastModifiedBy String maxlength(50),
+	name String
+	instruction String
+	markScheme TextBlob
+    createdBy String maxlength(50)
+    createdDate Instant
+    lastModifiedBy String maxlength(50)
     lastModifiedDate Instant
 }
 
+@EnableAudit
 entity Resources {
-	fileName String maxlength(50),
-    document AnyBlob,
-    createdBy String maxlength(50),
-    createdDate Instant,
-    lastModifiedBy String maxlength(50),
+	fileName String maxlength(50)
+    document AnyBlob
+    createdBy String maxlength(50)
+    createdDate Instant
+    lastModifiedBy String maxlength(50)
+    lastModifiedDate Instant
+}
+
+@EnableAudit
+entity AcademicYear {
+	name String
+    code String
+    startDate LocalDate
+    endDate LocalDate
+    current Boolean
+    createdBy String maxlength(50)
+    createdDate Instant
+    lastModifiedBy String maxlength(50)
+    lastModifiedDate Instant
+}
+
+@EnableAudit
+entity AcademicTerms {
+	name String
+    code String
+    startDate LocalDate
+    endDate LocalDate
+    current Boolean
+    createdBy String maxlength(50)
+    createdDate Instant
+    lastModifiedBy String maxlength(50)
     lastModifiedDate Instant
 }
 
 relationship OneToOne {
-  Org{currSchYr} to AppConfig
   Student{gender} to AppConfig
   Instructor{gender} to AppConfig
+  Instructor to User with builtInEntity
+  Student to User with builtInEntity
   //Course{schYr} to AppConfig
   Course{gradelevel} to AppConfig
+  Course{department} to Departments
 }
 
 relationship ManyToMany {
-    Instructor{course} to Course
-    Student{course} to Course
-
 	Strategies{resources} to Resources
 	Assessment{resources} to Resources
 }
@@ -170,6 +217,16 @@ relationship OneToMany {
 	CurriculumMap{learningCompetency} to LearningCompetency
     LearningCompetency{strategies} to Strategies
     LearningCompetency{assessment} to Assessment
+    Instructor{courseSchedule} to CourseSchedule
+    Student{courseSchedule} to CourseSchedule
+}
+
+relationship ManyToOne{
+	AcademicTerms{year} to AcademicYear
+    Course{year} to AcademicYear
+	Course{terms} to AcademicTerms
+    CourseSchedule{terms} to AcademicTerms
+    CourseSchedule{year} to AcademicYear
 }
 
 // paginate Org, Instructor, Student, Course, AppConfig, CurriculumMap, LearningCompetency, Strategies, Assessment, Resources with pagination

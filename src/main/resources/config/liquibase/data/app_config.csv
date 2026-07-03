@@ -1,7 +1,0 @@
-id;code;value;description;json;priority;created_by;created_date;last_modified_by;last_modified_date
-1;SY;2023-2024;2023 to 2024;;1;admin;2024-01-04T04:47:30;admin;2024-01-04T04:47:30
-2;GENDER;M;Male;;1;admin;2024-01-04T04:47:30;admin;2024-01-04T04:47:30
-3;GENDER;F;Female;;2;admin;2024-01-04T04:47:30;admin;2024-01-04T04:47:30
-4;GRADE_LEVEL;Pre-K;Pre-K;;1;admin;2024-01-04T04:47:30;admin;2024-01-04T04:47:30
-5;GRADE_LEVEL;Kindergarten;Kindergarten;;2;admin;2024-01-04T04:47:30;admin;2024-01-04T04:47:30
-6;IMG_HEIGHT;100;100 PIXELS;;1;admin;2024-01-04T04:47:30;admin;2024-01-04T04:47:30

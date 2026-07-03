@@ -1,6 +1,7 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 
-import { sampleWithRequiredData, sampleWithNewData } from '../resources.test-samples';
+import { sampleWithNewData, sampleWithRequiredData } from '../resources.test-samples';
 
 import { ResourcesFormService } from './resources-form.service';
 
@@ -8,7 +9,6 @@ describe('Resources Form Service', () => {
   let service: ResourcesFormService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
     service = TestBed.inject(ResourcesFormService);
   });
 
@@ -26,6 +26,8 @@ describe('Resources Form Service', () => {
             createdDate: expect.any(Object),
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
+            strategieses: expect.any(Object),
+            assessments: expect.any(Object),
           }),
         );
       });
@@ -42,6 +44,8 @@ describe('Resources Form Service', () => {
             createdDate: expect.any(Object),
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
+            strategieses: expect.any(Object),
+            assessments: expect.any(Object),
           }),
         );
       });
@@ -51,7 +55,7 @@ describe('Resources Form Service', () => {
       it('should return NewResources for default Resources initial value', () => {
         const formGroup = service.createResourcesFormGroup(sampleWithNewData);
 
-        const resources = service.getResources(formGroup) as any;
+        const resources = service.getResources(formGroup);
 
         expect(resources).toMatchObject(sampleWithNewData);
       });
@@ -59,7 +63,7 @@ describe('Resources Form Service', () => {
       it('should return NewResources for empty Resources initial value', () => {
         const formGroup = service.createResourcesFormGroup();
 
-        const resources = service.getResources(formGroup) as any;
+        const resources = service.getResources(formGroup);
 
         expect(resources).toMatchObject({});
       });
@@ -67,7 +71,7 @@ describe('Resources Form Service', () => {
       it('should return IResources', () => {
         const formGroup = service.createResourcesFormGroup(sampleWithRequiredData);
 
-        const resources = service.getResources(formGroup) as any;
+        const resources = service.getResources(formGroup);
 
         expect(resources).toMatchObject(sampleWithRequiredData);
       });

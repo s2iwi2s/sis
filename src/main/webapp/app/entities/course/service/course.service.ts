@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpResponse, httpResource } from '@angular/common/http';
+import { Injectable, computed, inject, signal } from '@angular/core';
 
 import dayjs from 'dayjs/esm';
+import { Observable, map } from 'rxjs';
 
-import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
+import { isPresent } from 'app/core/util/operators';
 import { ICourse, NewCourse } from '../course.model';
 
 export type PartialUpdateCourse = Partial<ICourse> & Pick<ICourse, 'id'>;
@@ -24,54 +22,73 @@ export type NewRestCourse = RestOf<NewCourse>;
 
 export type PartialUpdateRestCourse = RestOf<PartialUpdateCourse>;
 
-export type EntityResponseType = HttpResponse<ICourse>;
-export type EntityArrayResponseType = HttpResponse<ICourse[]>;
+@Injectable()
+export class CoursesService {
+  readonly coursesParams = signal<Record<string, string | number | boolean | readonly (string | number | boolean)[]> | undefined>(
+    undefined,
+  );
+  readonly coursesResource = httpResource<RestCourse[]>(() => {
+    const params = this.coursesParams();
+    if (!params) {
+      return undefined;
+    }
+    return { url: this.resourceUrl, params };
+  });
+  /**
+   * This signal holds the list of course that have been fetched. It is updated when the coursesResource emits a new value.
+   * In case of error while fetching the courses, the signal is set to an empty array.
+   */
+  readonly courses = computed(() =>
+    (this.coursesResource.hasValue() ? this.coursesResource.value() : []).map(item => this.convertValueFromServer(item)),
+  );
+  protected readonly applicationConfigService = inject(ApplicationConfigService);
+  protected readonly resourceUrl = this.applicationConfigService.getEndpointFor('api/courses');
+
+  protected convertValueFromServer(restCourse: RestCourse): ICourse {
+    return {
+      ...restCourse,
+      createdDate: restCourse.createdDate ? dayjs(restCourse.createdDate) : undefined,
+      lastModifiedDate: restCourse.lastModifiedDate ? dayjs(restCourse.lastModifiedDate) : undefined,
+    };
+  }
+}
 
 @Injectable({ providedIn: 'root' })
-export class CourseService {
-  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/courses');
+export class CourseService extends CoursesService {
+  protected readonly http = inject(HttpClient);
 
-  constructor(
-    protected http: HttpClient,
-    protected applicationConfigService: ApplicationConfigService,
-  ) {}
+  create(course: NewCourse): Observable<ICourse> {
+    const copy = this.convertValueFromClient(course);
+    return this.http.post<RestCourse>(this.resourceUrl, copy).pipe(map(res => this.convertResponseFromServer(res)));
+  }
 
-  create(course: NewCourse): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(course);
+  update(course: ICourse): Observable<ICourse> {
+    const copy = this.convertValueFromClient(course);
     return this.http
-      .post<RestCourse>(this.resourceUrl, copy, { observe: 'response' })
+      .put<RestCourse>(`${this.resourceUrl}/${encodeURIComponent(this.getCourseIdentifier(course))}`, copy)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  update(course: ICourse): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(course);
+  partialUpdate(course: PartialUpdateCourse): Observable<ICourse> {
+    const copy = this.convertValueFromClient(course);
     return this.http
-      .put<RestCourse>(`${this.resourceUrl}/${this.getCourseIdentifier(course)}`, copy, { observe: 'response' })
+      .patch<RestCourse>(`${this.resourceUrl}/${encodeURIComponent(this.getCourseIdentifier(course))}`, copy)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  partialUpdate(course: PartialUpdateCourse): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(course);
-    return this.http
-      .patch<RestCourse>(`${this.resourceUrl}/${this.getCourseIdentifier(course)}`, copy, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
+  find(id: number): Observable<ICourse> {
+    return this.http.get<RestCourse>(`${this.resourceUrl}/${encodeURIComponent(id)}`).pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  find(id: number): Observable<EntityResponseType> {
-    return this.http
-      .get<RestCourse>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
-  }
-
-  query(req?: any): Observable<EntityArrayResponseType> {
+  query(req?: any): Observable<HttpResponse<ICourse[]>> {
     const options = createRequestOption(req);
     return this.http
       .get<RestCourse[]>(this.resourceUrl, { params: options, observe: 'response' })
-      .pipe(map(res => this.convertResponseArrayFromServer(res)));
+      .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
   }
 
-  delete(id: number): Observable<HttpResponse<{}>> {
-    return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  delete(id: number): Observable<undefined> {
+    return this.http.delete<undefined>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
   }
 
   getCourseIdentifier(course: Pick<ICourse, 'id'>): number {
@@ -88,7 +105,7 @@ export class CourseService {
   ): Type[] {
     const courses: Type[] = coursesToCheck.filter(isPresent);
     if (courses.length > 0) {
-      const courseCollectionIdentifiers = courseCollection.map(courseItem => this.getCourseIdentifier(courseItem)!);
+      const courseCollectionIdentifiers = courseCollection.map(courseItem => this.getCourseIdentifier(courseItem));
       const coursesToAdd = courses.filter(courseItem => {
         const courseIdentifier = this.getCourseIdentifier(courseItem);
         if (courseCollectionIdentifiers.includes(courseIdentifier)) {
@@ -102,7 +119,7 @@ export class CourseService {
     return courseCollection;
   }
 
-  protected convertDateFromClient<T extends ICourse | NewCourse | PartialUpdateCourse>(course: T): RestOf<T> {
+  protected convertValueFromClient<T extends ICourse | NewCourse | PartialUpdateCourse>(course: T): RestOf<T> {
     return {
       ...course,
       createdDate: course.createdDate?.toJSON() ?? null,
@@ -110,23 +127,11 @@ export class CourseService {
     };
   }
 
-  protected convertDateFromServer(restCourse: RestCourse): ICourse {
-    return {
-      ...restCourse,
-      createdDate: restCourse.createdDate ? dayjs(restCourse.createdDate) : undefined,
-      lastModifiedDate: restCourse.lastModifiedDate ? dayjs(restCourse.lastModifiedDate) : undefined,
-    };
+  protected convertResponseFromServer(res: RestCourse): ICourse {
+    return this.convertValueFromServer(res);
   }
 
-  protected convertResponseFromServer(res: HttpResponse<RestCourse>): HttpResponse<ICourse> {
-    return res.clone({
-      body: res.body ? this.convertDateFromServer(res.body) : null,
-    });
-  }
-
-  protected convertResponseArrayFromServer(res: HttpResponse<RestCourse[]>): HttpResponse<ICourse[]> {
-    return res.clone({
-      body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
-    });
+  protected convertResponseArrayFromServer(res: RestCourse[]): ICourse[] {
+    return res.map(item => this.convertValueFromServer(item));
   }
 }

@@ -1,10 +1,10 @@
 {
   "annotations": {
-    "changelogDate": "20240104092314"
+    "changelogDate": "20260702215245",
+    "enableAudit": true
   },
   "applications": ["SchInfoSys"],
   "dto": "mapstruct",
-  "entityTableName": "assessment",
   "fields": [
     {
       "fieldName": "name",
@@ -16,8 +16,7 @@
     },
     {
       "fieldName": "markScheme",
-      "fieldType": "byte[]",
-      "fieldTypeBlobContent": "text"
+      "fieldType": "TextBlob"
     },
     {
       "fieldName": "createdBy",

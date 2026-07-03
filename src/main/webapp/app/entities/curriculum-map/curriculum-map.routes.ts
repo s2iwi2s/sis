@@ -1,24 +1,22 @@
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 import { ASC } from 'app/config/navigation.constants';
-import { CurriculumMapComponent } from './list/curriculum-map.component';
-import { CurriculumMapDetailComponent } from './detail/curriculum-map-detail.component';
-import { CurriculumMapUpdateComponent } from './update/curriculum-map-update.component';
+import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+
 import CurriculumMapResolve from './route/curriculum-map-routing-resolve.service';
 
 const curriculumMapRoute: Routes = [
   {
     path: '',
-    component: CurriculumMapComponent,
+    loadComponent: () => import('./list/curriculum-map').then(m => m.CurriculumMap),
     data: {
-      defaultSort: 'id,' + ASC,
+      defaultSort: `id,${ASC}`,
     },
     canActivate: [UserRouteAccessService],
   },
   {
     path: ':id/view',
-    component: CurriculumMapDetailComponent,
+    loadComponent: () => import('./detail/curriculum-map-detail').then(m => m.CurriculumMapDetail),
     resolve: {
       curriculumMap: CurriculumMapResolve,
     },
@@ -26,15 +24,7 @@ const curriculumMapRoute: Routes = [
   },
   {
     path: 'new',
-    component: CurriculumMapUpdateComponent,
-    resolve: {
-      curriculumMap: CurriculumMapResolve,
-    },
-    canActivate: [UserRouteAccessService],
-  },
-  {
-    path: ':courseId/:quarterNo/new',
-    component: CurriculumMapUpdateComponent,
+    loadComponent: () => import('./update/curriculum-map-update').then(m => m.CurriculumMapUpdate),
     resolve: {
       curriculumMap: CurriculumMapResolve,
     },
@@ -42,7 +32,7 @@ const curriculumMapRoute: Routes = [
   },
   {
     path: ':id/edit',
-    component: CurriculumMapUpdateComponent,
+    loadComponent: () => import('./update/curriculum-map-update').then(m => m.CurriculumMapUpdate),
     resolve: {
       curriculumMap: CurriculumMapResolve,
     },

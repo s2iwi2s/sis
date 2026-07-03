@@ -1,6 +1,7 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 
-import { sampleWithRequiredData, sampleWithNewData } from '../student.test-samples';
+import { sampleWithNewData, sampleWithRequiredData } from '../student.test-samples';
 
 import { StudentFormService } from './student-form.service';
 
@@ -8,7 +9,6 @@ describe('Student Form Service', () => {
   let service: StudentFormService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
     service = TestBed.inject(StudentFormService);
   });
 
@@ -54,7 +54,7 @@ describe('Student Form Service', () => {
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
             gender: expect.any(Object),
-            courses: expect.any(Object),
+            user: expect.any(Object),
           }),
         );
       });
@@ -99,7 +99,7 @@ describe('Student Form Service', () => {
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
             gender: expect.any(Object),
-            courses: expect.any(Object),
+            user: expect.any(Object),
           }),
         );
       });
@@ -109,7 +109,7 @@ describe('Student Form Service', () => {
       it('should return NewStudent for default Student initial value', () => {
         const formGroup = service.createStudentFormGroup(sampleWithNewData);
 
-        const student = service.getStudent(formGroup) as any;
+        const student = service.getStudent(formGroup);
 
         expect(student).toMatchObject(sampleWithNewData);
       });
@@ -117,7 +117,7 @@ describe('Student Form Service', () => {
       it('should return NewStudent for empty Student initial value', () => {
         const formGroup = service.createStudentFormGroup();
 
-        const student = service.getStudent(formGroup) as any;
+        const student = service.getStudent(formGroup);
 
         expect(student).toMatchObject({});
       });
@@ -125,7 +125,7 @@ describe('Student Form Service', () => {
       it('should return IStudent', () => {
         const formGroup = service.createStudentFormGroup(sampleWithRequiredData);
 
-        const student = service.getStudent(formGroup) as any;
+        const student = service.getStudent(formGroup);
 
         expect(student).toMatchObject(sampleWithRequiredData);
       });

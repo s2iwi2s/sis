@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpResponse, httpResource } from '@angular/common/http';
+import { Injectable, computed, inject, signal } from '@angular/core';
 
 import dayjs from 'dayjs/esm';
+import { Observable, map } from 'rxjs';
 
-import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
+import { isPresent } from 'app/core/util/operators';
 import { IAssessment, NewAssessment } from '../assessment.model';
 
 export type PartialUpdateAssessment = Partial<IAssessment> & Pick<IAssessment, 'id'>;
@@ -24,60 +22,75 @@ export type NewRestAssessment = RestOf<NewAssessment>;
 
 export type PartialUpdateRestAssessment = RestOf<PartialUpdateAssessment>;
 
-export type EntityResponseType = HttpResponse<IAssessment>;
-export type EntityArrayResponseType = HttpResponse<IAssessment[]>;
+@Injectable()
+export class AssessmentsService {
+  readonly assessmentsParams = signal<Record<string, string | number | boolean | readonly (string | number | boolean)[]> | undefined>(
+    undefined,
+  );
+  readonly assessmentsResource = httpResource<RestAssessment[]>(() => {
+    const params = this.assessmentsParams();
+    if (!params) {
+      return undefined;
+    }
+    return { url: this.resourceUrl, params };
+  });
+  /**
+   * This signal holds the list of assessment that have been fetched. It is updated when the assessmentsResource emits a new value.
+   * In case of error while fetching the assessments, the signal is set to an empty array.
+   */
+  readonly assessments = computed(() =>
+    (this.assessmentsResource.hasValue() ? this.assessmentsResource.value() : []).map(item => this.convertValueFromServer(item)),
+  );
+  protected readonly applicationConfigService = inject(ApplicationConfigService);
+  protected readonly resourceUrl = this.applicationConfigService.getEndpointFor('api/assessments');
+
+  protected convertValueFromServer(restAssessment: RestAssessment): IAssessment {
+    return {
+      ...restAssessment,
+      createdDate: restAssessment.createdDate ? dayjs(restAssessment.createdDate) : undefined,
+      lastModifiedDate: restAssessment.lastModifiedDate ? dayjs(restAssessment.lastModifiedDate) : undefined,
+    };
+  }
+}
 
 @Injectable({ providedIn: 'root' })
-export class AssessmentService {
-  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/assessments');
+export class AssessmentService extends AssessmentsService {
+  protected readonly http = inject(HttpClient);
 
-  constructor(
-    protected http: HttpClient,
-    protected applicationConfigService: ApplicationConfigService,
-  ) {}
+  create(assessment: NewAssessment): Observable<IAssessment> {
+    const copy = this.convertValueFromClient(assessment);
+    return this.http.post<RestAssessment>(this.resourceUrl, copy).pipe(map(res => this.convertResponseFromServer(res)));
+  }
 
-  create(assessment: NewAssessment): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(assessment);
+  update(assessment: IAssessment): Observable<IAssessment> {
+    const copy = this.convertValueFromClient(assessment);
     return this.http
-      .post<RestAssessment>(this.resourceUrl, copy, { observe: 'response' })
+      .put<RestAssessment>(`${this.resourceUrl}/${encodeURIComponent(this.getAssessmentIdentifier(assessment))}`, copy)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  update(assessment: IAssessment): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(assessment);
+  partialUpdate(assessment: PartialUpdateAssessment): Observable<IAssessment> {
+    const copy = this.convertValueFromClient(assessment);
     return this.http
-      .put<RestAssessment>(`${this.resourceUrl}/${this.getAssessmentIdentifier(assessment)}`, copy, { observe: 'response' })
+      .patch<RestAssessment>(`${this.resourceUrl}/${encodeURIComponent(this.getAssessmentIdentifier(assessment))}`, copy)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  partialUpdate(assessment: PartialUpdateAssessment): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(assessment);
+  find(id: number): Observable<IAssessment> {
     return this.http
-      .patch<RestAssessment>(`${this.resourceUrl}/${this.getAssessmentIdentifier(assessment)}`, copy, { observe: 'response' })
+      .get<RestAssessment>(`${this.resourceUrl}/${encodeURIComponent(id)}`)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  find(id: number): Observable<EntityResponseType> {
-    return this.http
-      .get<RestAssessment>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
-  }
-
-  query(req?: any): Observable<EntityArrayResponseType> {
+  query(req?: any): Observable<HttpResponse<IAssessment[]>> {
     const options = createRequestOption(req);
     return this.http
       .get<RestAssessment[]>(this.resourceUrl, { params: options, observe: 'response' })
-      .pipe(map(res => this.convertResponseArrayFromServer(res)));
+      .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
   }
 
-  queryByCourse(courseId: number): Observable<EntityArrayResponseType> {
-    return this.http
-      .get<RestAssessment[]>(`${this.resourceUrl}/${courseId}/course`, { observe: 'response' })
-      .pipe(map(res => this.convertResponseArrayFromServer(res)));
-  }
-
-  delete(id: number): Observable<HttpResponse<{}>> {
-    return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  delete(id: number): Observable<undefined> {
+    return this.http.delete<undefined>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
   }
 
   getAssessmentIdentifier(assessment: Pick<IAssessment, 'id'>): number {
@@ -94,7 +107,7 @@ export class AssessmentService {
   ): Type[] {
     const assessments: Type[] = assessmentsToCheck.filter(isPresent);
     if (assessments.length > 0) {
-      const assessmentCollectionIdentifiers = assessmentCollection.map(assessmentItem => this.getAssessmentIdentifier(assessmentItem)!);
+      const assessmentCollectionIdentifiers = assessmentCollection.map(assessmentItem => this.getAssessmentIdentifier(assessmentItem));
       const assessmentsToAdd = assessments.filter(assessmentItem => {
         const assessmentIdentifier = this.getAssessmentIdentifier(assessmentItem);
         if (assessmentCollectionIdentifiers.includes(assessmentIdentifier)) {
@@ -108,7 +121,7 @@ export class AssessmentService {
     return assessmentCollection;
   }
 
-  protected convertDateFromClient<T extends IAssessment | NewAssessment | PartialUpdateAssessment>(assessment: T): RestOf<T> {
+  protected convertValueFromClient<T extends IAssessment | NewAssessment | PartialUpdateAssessment>(assessment: T): RestOf<T> {
     return {
       ...assessment,
       createdDate: assessment.createdDate?.toJSON() ?? null,
@@ -116,23 +129,11 @@ export class AssessmentService {
     };
   }
 
-  protected convertDateFromServer(restAssessment: RestAssessment): IAssessment {
-    return {
-      ...restAssessment,
-      createdDate: restAssessment.createdDate ? dayjs(restAssessment.createdDate) : undefined,
-      lastModifiedDate: restAssessment.lastModifiedDate ? dayjs(restAssessment.lastModifiedDate) : undefined,
-    };
+  protected convertResponseFromServer(res: RestAssessment): IAssessment {
+    return this.convertValueFromServer(res);
   }
 
-  protected convertResponseFromServer(res: HttpResponse<RestAssessment>): HttpResponse<IAssessment> {
-    return res.clone({
-      body: res.body ? this.convertDateFromServer(res.body) : null,
-    });
-  }
-
-  protected convertResponseArrayFromServer(res: HttpResponse<RestAssessment[]>): HttpResponse<IAssessment[]> {
-    return res.clone({
-      body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
-    });
+  protected convertResponseArrayFromServer(res: RestAssessment[]): IAssessment[] {
+    return res.map(item => this.convertValueFromServer(item));
   }
 }

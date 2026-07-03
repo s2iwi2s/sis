@@ -3,6 +3,7 @@ package com.sis.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -17,12 +18,14 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "learning_competency")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class LearningCompetency extends AbstractAuditingEntity<Long> implements Serializable {
+public class LearningCompetency implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id")
     private Long id;
 
@@ -36,14 +39,28 @@ public class LearningCompetency extends AbstractAuditingEntity<Long> implements 
     @Column(name = "description")
     private String description;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "learningCompetency")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "resources", "learningCompetency" }, allowSetters = true)
-    private Set<Strategies> strategies = new HashSet<>();
+    @Size(max = 50)
+    @Column(name = "created_by", length = 50)
+    private String createdBy;
+
+    @Column(name = "created_date")
+    private Instant createdDate;
+
+    @Size(max = 50)
+    @Column(name = "last_modified_by", length = 50)
+    private String lastModifiedBy;
+
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "learningCompetency")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "resources", "learningCompetency" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "resourceses", "learningCompetency" }, allowSetters = true)
+    private Set<Strategies> strategieses = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "learningCompetency")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "resourceses", "learningCompetency" }, allowSetters = true)
     private Set<Assessment> assessments = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -104,9 +121,21 @@ public class LearningCompetency extends AbstractAuditingEntity<Long> implements 
         this.description = description;
     }
 
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
     public LearningCompetency createdBy(String createdBy) {
         this.setCreatedBy(createdBy);
         return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return this.createdDate;
     }
 
     public LearningCompetency createdDate(Instant createdDate) {
@@ -114,9 +143,25 @@ public class LearningCompetency extends AbstractAuditingEntity<Long> implements 
         return this;
     }
 
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
     public LearningCompetency lastModifiedBy(String lastModifiedBy) {
         this.setLastModifiedBy(lastModifiedBy);
         return this;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
     }
 
     public LearningCompetency lastModifiedDate(Instant lastModifiedDate) {
@@ -124,33 +169,37 @@ public class LearningCompetency extends AbstractAuditingEntity<Long> implements 
         return this;
     }
 
-    public Set<Strategies> getStrategies() {
-        return this.strategies;
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
-    public void setStrategies(Set<Strategies> strategies) {
-        if (this.strategies != null) {
-            this.strategies.forEach(i -> i.setLearningCompetency(null));
-        }
-        if (strategies != null) {
-            strategies.forEach(i -> i.setLearningCompetency(this));
-        }
-        this.strategies = strategies;
+    public Set<Strategies> getStrategieses() {
+        return this.strategieses;
     }
 
-    public LearningCompetency strategies(Set<Strategies> strategies) {
-        this.setStrategies(strategies);
+    public void setStrategieses(Set<Strategies> strategieses) {
+        if (this.strategieses != null) {
+            this.strategieses.forEach(i -> i.setLearningCompetency(null));
+        }
+        if (strategieses != null) {
+            strategieses.forEach(i -> i.setLearningCompetency(this));
+        }
+        this.strategieses = strategieses;
+    }
+
+    public LearningCompetency strategieses(Set<Strategies> strategieses) {
+        this.setStrategieses(strategieses);
         return this;
     }
 
     public LearningCompetency addStrategies(Strategies strategies) {
-        this.strategies.add(strategies);
+        this.strategieses.add(strategies);
         strategies.setLearningCompetency(this);
         return this;
     }
 
     public LearningCompetency removeStrategies(Strategies strategies) {
-        this.strategies.remove(strategies);
+        this.strategieses.remove(strategies);
         strategies.setLearningCompetency(null);
         return this;
     }

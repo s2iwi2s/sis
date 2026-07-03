@@ -1,33 +1,29 @@
 package com.sis.web.rest;
 
+import static com.sis.domain.InstructorAsserts.*;
+import static com.sis.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sis.IntegrationTest;
 import com.sis.domain.Instructor;
 import com.sis.repository.InstructorRepository;
-import com.sis.service.InstructorService;
+import com.sis.repository.UserRepository;
 import com.sis.service.dto.InstructorDTO;
 import com.sis.service.mapper.InstructorMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link InstructorResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class InstructorResourceIT {
@@ -85,16 +80,16 @@ class InstructorResourceIT {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
+    private ObjectMapper om;
+
+    @Autowired
     private InstructorRepository instructorRepository;
 
-    @Mock
-    private InstructorRepository instructorRepositoryMock;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private InstructorMapper instructorMapper;
-
-    @Mock
-    private InstructorService instructorServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -104,14 +99,16 @@ class InstructorResourceIT {
 
     private Instructor instructor;
 
+    private Instructor insertedInstructor;
+
     /**
      * Create an entity for this test.
      *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Instructor createEntity(EntityManager em) {
-        Instructor instructor = new Instructor()
+    public static Instructor createEntity() {
+        return new Instructor()
             .firstName(DEFAULT_FIRST_NAME)
             .middleName(DEFAULT_MIDDLE_NAME)
             .lastName(DEFAULT_LAST_NAME)
@@ -124,7 +121,6 @@ class InstructorResourceIT {
             .createdDate(DEFAULT_CREATED_DATE)
             .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
             .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
-        return instructor;
     }
 
     /**
@@ -133,8 +129,8 @@ class InstructorResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Instructor createUpdatedEntity(EntityManager em) {
-        Instructor instructor = new Instructor()
+    public static Instructor createUpdatedEntity() {
+        return new Instructor()
             .firstName(UPDATED_FIRST_NAME)
             .middleName(UPDATED_MIDDLE_NAME)
             .lastName(UPDATED_LAST_NAME)
@@ -147,40 +143,43 @@ class InstructorResourceIT {
             .createdDate(UPDATED_CREATED_DATE)
             .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
             .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
-        return instructor;
     }
 
     @BeforeEach
-    public void initTest() {
-        instructor = createEntity(em);
+    void initTest() {
+        instructor = createEntity();
+    }
+
+    @AfterEach
+    void cleanup() {
+        if (insertedInstructor != null) {
+            instructorRepository.delete(insertedInstructor);
+            insertedInstructor = null;
+        }
     }
 
     @Test
     @Transactional
     void createInstructor() throws Exception {
-        int databaseSizeBeforeCreate = instructorRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Instructor
         InstructorDTO instructorDTO = instructorMapper.toDto(instructor);
-        restInstructorMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(instructorDTO)))
-            .andExpect(status().isCreated());
+        var returnedInstructorDTO = om.readValue(
+            restInstructorMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(instructorDTO)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            InstructorDTO.class
+        );
 
         // Validate the Instructor in the database
-        List<Instructor> instructorList = instructorRepository.findAll();
-        assertThat(instructorList).hasSize(databaseSizeBeforeCreate + 1);
-        Instructor testInstructor = instructorList.get(instructorList.size() - 1);
-        assertThat(testInstructor.getFirstName()).isEqualTo(DEFAULT_FIRST_NAME);
-        assertThat(testInstructor.getMiddleName()).isEqualTo(DEFAULT_MIDDLE_NAME);
-        assertThat(testInstructor.getLastName()).isEqualTo(DEFAULT_LAST_NAME);
-        assertThat(testInstructor.getEmail()).isEqualTo(DEFAULT_EMAIL);
-        assertThat(testInstructor.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
-        assertThat(testInstructor.getHireDate()).isEqualTo(DEFAULT_HIRE_DATE);
-        assertThat(testInstructor.getSalary()).isEqualTo(DEFAULT_SALARY);
-        assertThat(testInstructor.getCommissionPct()).isEqualTo(DEFAULT_COMMISSION_PCT);
-        assertThat(testInstructor.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
-        assertThat(testInstructor.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
-        assertThat(testInstructor.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
-        assertThat(testInstructor.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
+        assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedInstructor = instructorMapper.toEntity(returnedInstructorDTO);
+        assertInstructorUpdatableFieldsEquals(returnedInstructor, getPersistedInstructor(returnedInstructor));
+
+        insertedInstructor = returnedInstructor;
     }
 
     @Test
@@ -190,23 +189,22 @@ class InstructorResourceIT {
         instructor.setId(1L);
         InstructorDTO instructorDTO = instructorMapper.toDto(instructor);
 
-        int databaseSizeBeforeCreate = instructorRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restInstructorMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(instructorDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(instructorDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Instructor in the database
-        List<Instructor> instructorList = instructorRepository.findAll();
-        assertThat(instructorList).hasSize(databaseSizeBeforeCreate);
+        assertSameRepositoryCount(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     void getAllInstructors() throws Exception {
         // Initialize the database
-        instructorRepository.saveAndFlush(instructor);
+        insertedInstructor = instructorRepository.saveAndFlush(instructor);
 
         // Get all the instructorList
         restInstructorMockMvc
@@ -228,28 +226,11 @@ class InstructorResourceIT {
             .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
     }
 
-    @SuppressWarnings({ "unchecked" })
-    void getAllInstructorsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(instructorServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restInstructorMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(instructorServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllInstructorsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(instructorServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restInstructorMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(instructorRepositoryMock, times(1)).findAll(any(Pageable.class));
-    }
-
     @Test
     @Transactional
     void getInstructor() throws Exception {
         // Initialize the database
-        instructorRepository.saveAndFlush(instructor);
+        insertedInstructor = instructorRepository.saveAndFlush(instructor);
 
         // Get the instructor
         restInstructorMockMvc
@@ -282,9 +263,9 @@ class InstructorResourceIT {
     @Transactional
     void putExistingInstructor() throws Exception {
         // Initialize the database
-        instructorRepository.saveAndFlush(instructor);
+        insertedInstructor = instructorRepository.saveAndFlush(instructor);
 
-        int databaseSizeBeforeUpdate = instructorRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the instructor
         Instructor updatedInstructor = instructorRepository.findById(instructor.getId()).orElseThrow();
@@ -309,32 +290,19 @@ class InstructorResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, instructorDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(instructorDTO))
+                    .content(om.writeValueAsBytes(instructorDTO))
             )
             .andExpect(status().isOk());
 
         // Validate the Instructor in the database
-        List<Instructor> instructorList = instructorRepository.findAll();
-        assertThat(instructorList).hasSize(databaseSizeBeforeUpdate);
-        Instructor testInstructor = instructorList.get(instructorList.size() - 1);
-        assertThat(testInstructor.getFirstName()).isEqualTo(UPDATED_FIRST_NAME);
-        assertThat(testInstructor.getMiddleName()).isEqualTo(UPDATED_MIDDLE_NAME);
-        assertThat(testInstructor.getLastName()).isEqualTo(UPDATED_LAST_NAME);
-        assertThat(testInstructor.getEmail()).isEqualTo(UPDATED_EMAIL);
-        assertThat(testInstructor.getPhoneNumber()).isEqualTo(UPDATED_PHONE_NUMBER);
-        assertThat(testInstructor.getHireDate()).isEqualTo(UPDATED_HIRE_DATE);
-        assertThat(testInstructor.getSalary()).isEqualTo(UPDATED_SALARY);
-        assertThat(testInstructor.getCommissionPct()).isEqualTo(UPDATED_COMMISSION_PCT);
-        assertThat(testInstructor.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testInstructor.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testInstructor.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testInstructor.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertPersistedInstructorToMatchAllProperties(updatedInstructor);
     }
 
     @Test
     @Transactional
     void putNonExistingInstructor() throws Exception {
-        int databaseSizeBeforeUpdate = instructorRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         instructor.setId(longCount.incrementAndGet());
 
         // Create the Instructor
@@ -345,19 +313,18 @@ class InstructorResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, instructorDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(instructorDTO))
+                    .content(om.writeValueAsBytes(instructorDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Instructor in the database
-        List<Instructor> instructorList = instructorRepository.findAll();
-        assertThat(instructorList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithIdMismatchInstructor() throws Exception {
-        int databaseSizeBeforeUpdate = instructorRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         instructor.setId(longCount.incrementAndGet());
 
         // Create the Instructor
@@ -368,19 +335,18 @@ class InstructorResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(instructorDTO))
+                    .content(om.writeValueAsBytes(instructorDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Instructor in the database
-        List<Instructor> instructorList = instructorRepository.findAll();
-        assertThat(instructorList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithMissingIdPathParamInstructor() throws Exception {
-        int databaseSizeBeforeUpdate = instructorRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         instructor.setId(longCount.incrementAndGet());
 
         // Create the Instructor
@@ -388,67 +354,58 @@ class InstructorResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restInstructorMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(instructorDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(instructorDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Instructor in the database
-        List<Instructor> instructorList = instructorRepository.findAll();
-        assertThat(instructorList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void partialUpdateInstructorWithPatch() throws Exception {
         // Initialize the database
-        instructorRepository.saveAndFlush(instructor);
+        insertedInstructor = instructorRepository.saveAndFlush(instructor);
 
-        int databaseSizeBeforeUpdate = instructorRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the instructor using partial update
         Instructor partialUpdatedInstructor = new Instructor();
         partialUpdatedInstructor.setId(instructor.getId());
 
         partialUpdatedInstructor
+            .firstName(UPDATED_FIRST_NAME)
             .middleName(UPDATED_MIDDLE_NAME)
-            .lastName(UPDATED_LAST_NAME)
-            .email(UPDATED_EMAIL)
-            .salary(UPDATED_SALARY)
+            .phoneNumber(UPDATED_PHONE_NUMBER)
+            .hireDate(UPDATED_HIRE_DATE)
+            .commissionPct(UPDATED_COMMISSION_PCT)
             .createdBy(UPDATED_CREATED_BY)
-            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY);
+            .createdDate(UPDATED_CREATED_DATE);
 
         restInstructorMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedInstructor.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedInstructor))
+                    .content(om.writeValueAsBytes(partialUpdatedInstructor))
             )
             .andExpect(status().isOk());
 
         // Validate the Instructor in the database
-        List<Instructor> instructorList = instructorRepository.findAll();
-        assertThat(instructorList).hasSize(databaseSizeBeforeUpdate);
-        Instructor testInstructor = instructorList.get(instructorList.size() - 1);
-        assertThat(testInstructor.getFirstName()).isEqualTo(DEFAULT_FIRST_NAME);
-        assertThat(testInstructor.getMiddleName()).isEqualTo(UPDATED_MIDDLE_NAME);
-        assertThat(testInstructor.getLastName()).isEqualTo(UPDATED_LAST_NAME);
-        assertThat(testInstructor.getEmail()).isEqualTo(UPDATED_EMAIL);
-        assertThat(testInstructor.getPhoneNumber()).isEqualTo(DEFAULT_PHONE_NUMBER);
-        assertThat(testInstructor.getHireDate()).isEqualTo(DEFAULT_HIRE_DATE);
-        assertThat(testInstructor.getSalary()).isEqualTo(UPDATED_SALARY);
-        assertThat(testInstructor.getCommissionPct()).isEqualTo(DEFAULT_COMMISSION_PCT);
-        assertThat(testInstructor.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testInstructor.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
-        assertThat(testInstructor.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testInstructor.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertInstructorUpdatableFieldsEquals(
+            createUpdateProxyForBean(partialUpdatedInstructor, instructor),
+            getPersistedInstructor(instructor)
+        );
     }
 
     @Test
     @Transactional
     void fullUpdateInstructorWithPatch() throws Exception {
         // Initialize the database
-        instructorRepository.saveAndFlush(instructor);
+        insertedInstructor = instructorRepository.saveAndFlush(instructor);
 
-        int databaseSizeBeforeUpdate = instructorRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the instructor using partial update
         Instructor partialUpdatedInstructor = new Instructor();
@@ -472,32 +429,20 @@ class InstructorResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedInstructor.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedInstructor))
+                    .content(om.writeValueAsBytes(partialUpdatedInstructor))
             )
             .andExpect(status().isOk());
 
         // Validate the Instructor in the database
-        List<Instructor> instructorList = instructorRepository.findAll();
-        assertThat(instructorList).hasSize(databaseSizeBeforeUpdate);
-        Instructor testInstructor = instructorList.get(instructorList.size() - 1);
-        assertThat(testInstructor.getFirstName()).isEqualTo(UPDATED_FIRST_NAME);
-        assertThat(testInstructor.getMiddleName()).isEqualTo(UPDATED_MIDDLE_NAME);
-        assertThat(testInstructor.getLastName()).isEqualTo(UPDATED_LAST_NAME);
-        assertThat(testInstructor.getEmail()).isEqualTo(UPDATED_EMAIL);
-        assertThat(testInstructor.getPhoneNumber()).isEqualTo(UPDATED_PHONE_NUMBER);
-        assertThat(testInstructor.getHireDate()).isEqualTo(UPDATED_HIRE_DATE);
-        assertThat(testInstructor.getSalary()).isEqualTo(UPDATED_SALARY);
-        assertThat(testInstructor.getCommissionPct()).isEqualTo(UPDATED_COMMISSION_PCT);
-        assertThat(testInstructor.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testInstructor.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testInstructor.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testInstructor.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertInstructorUpdatableFieldsEquals(partialUpdatedInstructor, getPersistedInstructor(partialUpdatedInstructor));
     }
 
     @Test
     @Transactional
     void patchNonExistingInstructor() throws Exception {
-        int databaseSizeBeforeUpdate = instructorRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         instructor.setId(longCount.incrementAndGet());
 
         // Create the Instructor
@@ -508,19 +453,18 @@ class InstructorResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, instructorDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(instructorDTO))
+                    .content(om.writeValueAsBytes(instructorDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Instructor in the database
-        List<Instructor> instructorList = instructorRepository.findAll();
-        assertThat(instructorList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithIdMismatchInstructor() throws Exception {
-        int databaseSizeBeforeUpdate = instructorRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         instructor.setId(longCount.incrementAndGet());
 
         // Create the Instructor
@@ -531,19 +475,18 @@ class InstructorResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(instructorDTO))
+                    .content(om.writeValueAsBytes(instructorDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Instructor in the database
-        List<Instructor> instructorList = instructorRepository.findAll();
-        assertThat(instructorList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithMissingIdPathParamInstructor() throws Exception {
-        int databaseSizeBeforeUpdate = instructorRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         instructor.setId(longCount.incrementAndGet());
 
         // Create the Instructor
@@ -551,23 +494,20 @@ class InstructorResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restInstructorMockMvc
-            .perform(
-                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(instructorDTO))
-            )
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(instructorDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Instructor in the database
-        List<Instructor> instructorList = instructorRepository.findAll();
-        assertThat(instructorList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void deleteInstructor() throws Exception {
         // Initialize the database
-        instructorRepository.saveAndFlush(instructor);
+        insertedInstructor = instructorRepository.saveAndFlush(instructor);
 
-        int databaseSizeBeforeDelete = instructorRepository.findAll().size();
+        long databaseSizeBeforeDelete = getRepositoryCount();
 
         // Delete the instructor
         restInstructorMockMvc
@@ -575,7 +515,34 @@ class InstructorResourceIT {
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
-        List<Instructor> instructorList = instructorRepository.findAll();
-        assertThat(instructorList).hasSize(databaseSizeBeforeDelete - 1);
+        assertDecrementedRepositoryCount(databaseSizeBeforeDelete);
+    }
+
+    protected long getRepositoryCount() {
+        return instructorRepository.count();
+    }
+
+    protected void assertIncrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore + 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertDecrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore - 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertSameRepositoryCount(long countBefore) {
+        assertThat(countBefore).isEqualTo(getRepositoryCount());
+    }
+
+    protected Instructor getPersistedInstructor(Instructor instructor) {
+        return instructorRepository.findById(instructor.getId()).orElseThrow();
+    }
+
+    protected void assertPersistedInstructorToMatchAllProperties(Instructor expectedInstructor) {
+        assertInstructorAllPropertiesEquals(expectedInstructor, getPersistedInstructor(expectedInstructor));
+    }
+
+    protected void assertPersistedInstructorToMatchUpdatableProperties(Instructor expectedInstructor) {
+        assertInstructorAllUpdatablePropertiesEquals(expectedInstructor, getPersistedInstructor(expectedInstructor));
     }
 }

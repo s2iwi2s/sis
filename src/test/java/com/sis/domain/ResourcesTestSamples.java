@@ -10,19 +10,11 @@ public class ResourcesTestSamples {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     public static Resources getResourcesSample1() {
-        return new Resources()
-            .id(1L)
-            .fileName("fileName1")
-            .createdBy("createdBy1")
-            .lastModifiedBy("lastModifiedBy1");
+        return new Resources().id(1L).fileName("fileName1").createdBy("createdBy1").lastModifiedBy("lastModifiedBy1");
     }
 
     public static Resources getResourcesSample2() {
-        return new Resources()
-            .id(2L)
-            .fileName("fileName2")
-            .createdBy("createdBy2")
-            .lastModifiedBy("lastModifiedBy2");
+        return new Resources().id(2L).fileName("fileName2").createdBy("createdBy2").lastModifiedBy("lastModifiedBy2");
     }
 
     public static Resources getResourcesRandomSampleGenerator() {

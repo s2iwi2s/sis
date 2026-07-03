@@ -3,6 +3,7 @@ package com.sis.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -17,12 +18,14 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "resources")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Resources extends AbstractAuditingEntity<Long> implements Serializable {
+public class Resources implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id")
     private Long id;
 
@@ -37,14 +40,28 @@ public class Resources extends AbstractAuditingEntity<Long> implements Serializa
     @Column(name = "document_content_type")
     private String documentContentType;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "resources")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "resources", "learningCompetency" }, allowSetters = true)
-    private Set<Strategies> strategies = new HashSet<>();
+    @Size(max = 50)
+    @Column(name = "created_by", length = 50)
+    private String createdBy;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "resources")
+    @Column(name = "created_date")
+    private Instant createdDate;
+
+    @Size(max = 50)
+    @Column(name = "last_modified_by", length = 50)
+    private String lastModifiedBy;
+
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "resourceses")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "resources", "learningCompetency" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "resourceses", "learningCompetency" }, allowSetters = true)
+    private Set<Strategies> strategieses = new HashSet<>();
+
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "resourceses")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "resourceses", "learningCompetency" }, allowSetters = true)
     private Set<Assessment> assessments = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -101,9 +118,21 @@ public class Resources extends AbstractAuditingEntity<Long> implements Serializa
         this.documentContentType = documentContentType;
     }
 
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
     public Resources createdBy(String createdBy) {
         this.setCreatedBy(createdBy);
         return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return this.createdDate;
     }
 
     public Resources createdDate(Instant createdDate) {
@@ -111,9 +140,25 @@ public class Resources extends AbstractAuditingEntity<Long> implements Serializa
         return this;
     }
 
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
     public Resources lastModifiedBy(String lastModifiedBy) {
         this.setLastModifiedBy(lastModifiedBy);
         return this;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
     }
 
     public Resources lastModifiedDate(Instant lastModifiedDate) {
@@ -121,34 +166,38 @@ public class Resources extends AbstractAuditingEntity<Long> implements Serializa
         return this;
     }
 
-    public Set<Strategies> getStrategies() {
-        return this.strategies;
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
-    public void setStrategies(Set<Strategies> strategies) {
-        if (this.strategies != null) {
-            this.strategies.forEach(i -> i.removeResources(this));
-        }
-        if (strategies != null) {
-            strategies.forEach(i -> i.addResources(this));
-        }
-        this.strategies = strategies;
+    public Set<Strategies> getStrategieses() {
+        return this.strategieses;
     }
 
-    public Resources strategies(Set<Strategies> strategies) {
-        this.setStrategies(strategies);
+    public void setStrategieses(Set<Strategies> strategieses) {
+        if (this.strategieses != null) {
+            this.strategieses.forEach(i -> i.removeResources(this));
+        }
+        if (strategieses != null) {
+            strategieses.forEach(i -> i.addResources(this));
+        }
+        this.strategieses = strategieses;
+    }
+
+    public Resources strategieses(Set<Strategies> strategieses) {
+        this.setStrategieses(strategieses);
         return this;
     }
 
     public Resources addStrategies(Strategies strategies) {
-        this.strategies.add(strategies);
-        strategies.getResources().add(this);
+        this.strategieses.add(strategies);
+        strategies.getResourceses().add(this);
         return this;
     }
 
     public Resources removeStrategies(Strategies strategies) {
-        this.strategies.remove(strategies);
-        strategies.getResources().remove(this);
+        this.strategieses.remove(strategies);
+        strategies.getResourceses().remove(this);
         return this;
     }
 
@@ -173,13 +222,13 @@ public class Resources extends AbstractAuditingEntity<Long> implements Serializa
 
     public Resources addAssessment(Assessment assessment) {
         this.assessments.add(assessment);
-        assessment.getResources().add(this);
+        assessment.getResourceses().add(this);
         return this;
     }
 
     public Resources removeAssessment(Assessment assessment) {
         this.assessments.remove(assessment);
-        assessment.getResources().remove(this);
+        assessment.getResourceses().remove(this);
         return this;
     }
 
@@ -208,6 +257,7 @@ public class Resources extends AbstractAuditingEntity<Long> implements Serializa
         return "Resources{" +
             "id=" + getId() +
             ", fileName='" + getFileName() + "'" +
+            ", document='" + getDocument() + "'" +
             ", documentContentType='" + getDocumentContentType() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +

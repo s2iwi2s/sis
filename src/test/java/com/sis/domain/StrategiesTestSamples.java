@@ -10,18 +10,17 @@ public class StrategiesTestSamples {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     public static Strategies getStrategiesSample1() {
-        return new Strategies().id(1L).name("name1").description("description1").createdBy("createdBy1").lastModifiedBy("lastModifiedBy1");
+        return new Strategies().id(1L).name("name1").createdBy("createdBy1").lastModifiedBy("lastModifiedBy1");
     }
 
     public static Strategies getStrategiesSample2() {
-        return new Strategies().id(2L).name("name2").description("description2").createdBy("createdBy2").lastModifiedBy("lastModifiedBy2");
+        return new Strategies().id(2L).name("name2").createdBy("createdBy2").lastModifiedBy("lastModifiedBy2");
     }
 
     public static Strategies getStrategiesRandomSampleGenerator() {
         return new Strategies()
             .id(longCount.incrementAndGet())
             .name(UUID.randomUUID().toString())
-            .description(UUID.randomUUID().toString())
             .createdBy(UUID.randomUUID().toString())
             .lastModifiedBy(UUID.randomUUID().toString());
     }

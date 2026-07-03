@@ -1,6 +1,5 @@
 package com.sis.config.timezone;
 
-import static java.lang.String.format;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.sis.IntegrationTest;
@@ -44,7 +43,7 @@ class HibernateTimeZoneIT {
     private DateTimeFormatter dateFormatter;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         dateTimeWrapper = new DateTimeWrapper();
         dateTimeWrapper.setInstant(Instant.parse("2014-11-12T05:10:00.0Z"));
         dateTimeWrapper.setLocalDateTime(LocalDateTime.parse("2014-11-12T07:20:00.0"));
@@ -136,7 +135,7 @@ class HibernateTimeZoneIT {
             // Convert to configured timezone
             .withOffsetSameInstant(ZoneId.of(zoneId).getRules().getOffset(Instant.now()))
             // Normalize to System TimeZone.
-            // TODO this behavior looks a bug, refer to https://github.com/jhipster/generator-jhipster/issues/22579.
+            // this behavior looks a bug, refer to https://github.com/jhipster/generator-jhipster/issues/22579.
             .withOffsetSameLocal(OffsetDateTime.ofInstant(Instant.EPOCH, ZoneId.systemDefault()).getOffset())
             // Convert the normalized value to configured timezone
             .withOffsetSameInstant(ZoneId.of(zoneId).getRules().getOffset(Instant.EPOCH))
@@ -158,7 +157,7 @@ class HibernateTimeZoneIT {
     }
 
     private String generateSqlRequest(String fieldName, long id) {
-        return format("SELECT %s FROM jhi_date_time_wrapper where id=%d", fieldName, id);
+        return "SELECT %s FROM jhi_date_time_wrapper where id=%d".formatted(fieldName, id);
     }
 
     private void assertThatValueFromSqlRowSetIsEqualToExpectedValue(SqlRowSet sqlRowSet, String expectedValue) {

@@ -1,36 +1,27 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
-import { of, EMPTY, Observable } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
 
-import { IStrategies } from '../strategies.model';
+import { EMPTY, Observable, catchError, of } from 'rxjs';
+
 import { StrategiesService } from '../service/strategies.service';
+import { IStrategies } from '../strategies.model';
 
-export const strategiesResolve = (route: ActivatedRouteSnapshot): Observable<null | IStrategies> => {
-  const id = route.params['id'];
+const strategiesResolve = (route: ActivatedRouteSnapshot): Observable<null | IStrategies> => {
+  const { id } = route.params;
   if (id) {
-    return inject(StrategiesService)
-      .find(id)
-      .pipe(
-        mergeMap((strategies: HttpResponse<IStrategies>) => {
-          if (strategies.body) {
-            return of(strategies.body);
-          } else {
-            inject(Router).navigate(['404']);
-            return EMPTY;
-          }
-        }),
-      );
-  }
-  const learningCompetencyId = route.params['learningCompetencyId'];
-  if(learningCompetencyId){
-    const seqNo = route.params['seqNo'];
-    const competencyCode = route.params['competencyCode'];
-    return of({
-      id: -1,
-      learningCompetency: {id: +learningCompetencyId, seqNo: +seqNo, competencyCode: competencyCode}
-    });
+    const router = inject(Router);
+    const service = inject(StrategiesService);
+    return service.find(id).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          router.navigate(['404']);
+        } else {
+          router.navigate(['error']);
+        }
+        return EMPTY;
+      }),
+    );
   }
 
   return of(null);

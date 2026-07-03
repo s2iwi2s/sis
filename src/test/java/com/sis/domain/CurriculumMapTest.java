@@ -27,7 +27,7 @@ class CurriculumMapTest {
     }
 
     @Test
-    void learningCompetencyTest() throws Exception {
+    void learningCompetencyTest() {
         CurriculumMap curriculumMap = getCurriculumMapRandomSampleGenerator();
         LearningCompetency learningCompetencyBack = getLearningCompetencyRandomSampleGenerator();
 
@@ -49,7 +49,7 @@ class CurriculumMapTest {
     }
 
     @Test
-    void courseTest() throws Exception {
+    void courseTest() {
         CurriculumMap curriculumMap = getCurriculumMapRandomSampleGenerator();
         Course courseBack = getCourseRandomSampleGenerator();
 

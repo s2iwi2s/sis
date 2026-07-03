@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
+
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { ICurriculumMap, NewCurriculumMap } from '../curriculum-map.model';
 
@@ -48,10 +49,10 @@ export type CurriculumMapFormGroup = FormGroup<CurriculumMapFormGroupContent>;
 
 @Injectable({ providedIn: 'root' })
 export class CurriculumMapFormService {
-  createCurriculumMapFormGroup(curriculumMap: CurriculumMapFormGroupInput = { id: null }): CurriculumMapFormGroup {
+  createCurriculumMapFormGroup(curriculumMap?: CurriculumMapFormGroupInput): CurriculumMapFormGroup {
     const curriculumMapRawValue = this.convertCurriculumMapToCurriculumMapRawValue({
       ...this.getFormDefaults(),
-      ...curriculumMap,
+      ...(curriculumMap ?? { id: null }),
     });
     return new FormGroup<CurriculumMapFormGroupContent>({
       id: new FormControl(
@@ -79,17 +80,15 @@ export class CurriculumMapFormService {
   }
 
   getCurriculumMap(form: CurriculumMapFormGroup): ICurriculumMap | NewCurriculumMap {
-    return this.convertCurriculumMapRawValueToCurriculumMap(form.getRawValue() as CurriculumMapFormRawValue | NewCurriculumMapFormRawValue);
+    return this.convertCurriculumMapRawValueToCurriculumMap(form.getRawValue());
   }
 
   resetForm(form: CurriculumMapFormGroup, curriculumMap: CurriculumMapFormGroupInput): void {
     const curriculumMapRawValue = this.convertCurriculumMapToCurriculumMapRawValue({ ...this.getFormDefaults(), ...curriculumMap });
-    form.reset(
-      {
-        ...curriculumMapRawValue,
-        id: { value: curriculumMapRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
-    );
+    form.reset({
+      ...curriculumMapRawValue,
+      id: { value: curriculumMapRawValue.id, disabled: true },
+    });
   }
 
   private getFormDefaults(): CurriculumMapFormDefaults {

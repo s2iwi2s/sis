@@ -1,10 +1,10 @@
 {
   "annotations": {
-    "changelogDate": "20240104092014"
+    "changelogDate": "20260702214945",
+    "enableAudit": true
   },
   "applications": ["SchInfoSys"],
   "dto": "mapstruct",
-  "entityTableName": "curriculum_map",
   "fields": [
     {
       "fieldName": "quarterNo",

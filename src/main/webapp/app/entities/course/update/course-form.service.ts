@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
+
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { ICourse, NewCourse } from '../course.model';
 
@@ -41,17 +42,19 @@ type CourseFormGroupContent = {
   lastModifiedBy: FormControl<CourseFormRawValue['lastModifiedBy']>;
   lastModifiedDate: FormControl<CourseFormRawValue['lastModifiedDate']>;
   gradelevel: FormControl<CourseFormRawValue['gradelevel']>;
-  schYr: FormControl<CourseFormRawValue['schYr']>;
+  department: FormControl<CourseFormRawValue['department']>;
+  year: FormControl<CourseFormRawValue['year']>;
+  terms: FormControl<CourseFormRawValue['terms']>;
 };
 
 export type CourseFormGroup = FormGroup<CourseFormGroupContent>;
 
 @Injectable({ providedIn: 'root' })
 export class CourseFormService {
-  createCourseFormGroup(course: CourseFormGroupInput = { id: null }): CourseFormGroup {
+  createCourseFormGroup(course?: CourseFormGroupInput): CourseFormGroup {
     const courseRawValue = this.convertCourseToCourseRawValue({
       ...this.getFormDefaults(),
-      ...course,
+      ...(course ?? { id: null }),
     });
     return new FormGroup<CourseFormGroupContent>({
       id: new FormControl(
@@ -76,22 +79,22 @@ export class CourseFormService {
       }),
       lastModifiedDate: new FormControl(courseRawValue.lastModifiedDate),
       gradelevel: new FormControl(courseRawValue.gradelevel),
-      schYr: new FormControl(courseRawValue.schYr),
+      department: new FormControl(courseRawValue.department),
+      year: new FormControl(courseRawValue.year),
+      terms: new FormControl(courseRawValue.terms),
     });
   }
 
   getCourse(form: CourseFormGroup): ICourse | NewCourse {
-    return this.convertCourseRawValueToCourse(form.getRawValue() as CourseFormRawValue | NewCourseFormRawValue);
+    return this.convertCourseRawValueToCourse(form.getRawValue());
   }
 
   resetForm(form: CourseFormGroup, course: CourseFormGroupInput): void {
     const courseRawValue = this.convertCourseToCourseRawValue({ ...this.getFormDefaults(), ...course });
-    form.reset(
-      {
-        ...courseRawValue,
-        id: { value: courseRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
-    );
+    form.reset({
+      ...courseRawValue,
+      id: { value: courseRawValue.id, disabled: true },
+    });
   }
 
   private getFormDefaults(): CourseFormDefaults {

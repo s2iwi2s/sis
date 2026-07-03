@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
-import {DATE_FORMAT, DATE_TIME_FORMAT} from 'app/config/input.constants';
+
+import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IStudent, NewStudent } from '../student.model';
 
 /**
@@ -29,7 +30,7 @@ type StudentFormRawValue = FormValueOf<IStudent>;
 
 type NewStudentFormRawValue = FormValueOf<NewStudent>;
 
-type StudentFormDefaults = Pick<NewStudent, 'id' | 'birthDate' | 'createdDate' | 'lastModifiedDate' | 'courses'>;
+type StudentFormDefaults = Pick<NewStudent, 'id' | 'birthDate' | 'createdDate' | 'lastModifiedDate'>;
 
 type StudentFormGroupContent = {
   id: FormControl<StudentFormRawValue['id'] | NewStudent['id']>;
@@ -67,17 +68,17 @@ type StudentFormGroupContent = {
   lastModifiedBy: FormControl<StudentFormRawValue['lastModifiedBy']>;
   lastModifiedDate: FormControl<StudentFormRawValue['lastModifiedDate']>;
   gender: FormControl<StudentFormRawValue['gender']>;
-  courses: FormControl<StudentFormRawValue['courses']>;
+  user: FormControl<StudentFormRawValue['user']>;
 };
 
 export type StudentFormGroup = FormGroup<StudentFormGroupContent>;
 
 @Injectable({ providedIn: 'root' })
 export class StudentFormService {
-  createStudentFormGroup(student: StudentFormGroupInput = { id: null }): StudentFormGroup {
+  createStudentFormGroup(student?: StudentFormGroupInput): StudentFormGroup {
     const studentRawValue = this.convertStudentToStudentRawValue({
       ...this.getFormDefaults(),
-      ...student,
+      ...(student ?? { id: null }),
     });
     return new FormGroup<StudentFormGroupContent>({
       id: new FormControl(
@@ -179,22 +180,20 @@ export class StudentFormService {
       }),
       lastModifiedDate: new FormControl(studentRawValue.lastModifiedDate),
       gender: new FormControl(studentRawValue.gender),
-      courses: new FormControl(studentRawValue.courses ?? []),
+      user: new FormControl(studentRawValue.user),
     });
   }
 
   getStudent(form: StudentFormGroup): IStudent | NewStudent {
-    return this.convertStudentRawValueToStudent(form.getRawValue() as StudentFormRawValue | NewStudentFormRawValue);
+    return this.convertStudentRawValueToStudent(form.getRawValue());
   }
 
   resetForm(form: StudentFormGroup, student: StudentFormGroupInput): void {
     const studentRawValue = this.convertStudentToStudentRawValue({ ...this.getFormDefaults(), ...student });
-    form.reset(
-      {
-        ...studentRawValue,
-        id: { value: studentRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
-    );
+    form.reset({
+      ...studentRawValue,
+      id: { value: studentRawValue.id, disabled: true },
+    });
   }
 
   private getFormDefaults(): StudentFormDefaults {
@@ -205,14 +204,13 @@ export class StudentFormService {
       birthDate: currentTime,
       createdDate: currentTime,
       lastModifiedDate: currentTime,
-      courses: [],
     };
   }
 
   private convertStudentRawValueToStudent(rawStudent: StudentFormRawValue | NewStudentFormRawValue): IStudent | NewStudent {
     return {
       ...rawStudent,
-      birthDate: dayjs(rawStudent.birthDate, DATE_FORMAT),
+      birthDate: dayjs(rawStudent.birthDate, DATE_TIME_FORMAT),
       createdDate: dayjs(rawStudent.createdDate, DATE_TIME_FORMAT),
       lastModifiedDate: dayjs(rawStudent.lastModifiedDate, DATE_TIME_FORMAT),
     };
@@ -223,10 +221,9 @@ export class StudentFormService {
   ): StudentFormRawValue | PartialWithRequiredKeyOf<NewStudentFormRawValue> {
     return {
       ...student,
-      birthDate: student.birthDate ? student.birthDate.format(DATE_FORMAT) : undefined,
+      birthDate: student.birthDate ? student.birthDate.format(DATE_TIME_FORMAT) : undefined,
       createdDate: student.createdDate ? student.createdDate.format(DATE_TIME_FORMAT) : undefined,
       lastModifiedDate: student.lastModifiedDate ? student.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
-      courses: student.courses ?? [],
     };
   }
 }

@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpResponse, httpResource } from '@angular/common/http';
+import { Injectable, computed, inject, signal } from '@angular/core';
 
 import dayjs from 'dayjs/esm';
+import { Observable, map } from 'rxjs';
 
-import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
+import { isPresent } from 'app/core/util/operators';
 import { IStudent, NewStudent } from '../student.model';
 
 export type PartialUpdateStudent = Partial<IStudent> & Pick<IStudent, 'id'>;
@@ -25,54 +23,76 @@ export type NewRestStudent = RestOf<NewStudent>;
 
 export type PartialUpdateRestStudent = RestOf<PartialUpdateStudent>;
 
-export type EntityResponseType = HttpResponse<IStudent>;
-export type EntityArrayResponseType = HttpResponse<IStudent[]>;
+@Injectable()
+export class StudentsService {
+  readonly studentsParams = signal<Record<string, string | number | boolean | readonly (string | number | boolean)[]> | undefined>(
+    undefined,
+  );
+  readonly studentsResource = httpResource<RestStudent[]>(() => {
+    const params = this.studentsParams();
+    if (!params) {
+      return undefined;
+    }
+    return { url: this.resourceUrl, params };
+  });
+  /**
+   * This signal holds the list of student that have been fetched. It is updated when the studentsResource emits a new value.
+   * In case of error while fetching the students, the signal is set to an empty array.
+   */
+  readonly students = computed(() =>
+    (this.studentsResource.hasValue() ? this.studentsResource.value() : []).map(item => this.convertValueFromServer(item)),
+  );
+  protected readonly applicationConfigService = inject(ApplicationConfigService);
+  protected readonly resourceUrl = this.applicationConfigService.getEndpointFor('api/students');
+
+  protected convertValueFromServer(restStudent: RestStudent): IStudent {
+    return {
+      ...restStudent,
+      birthDate: restStudent.birthDate ? dayjs(restStudent.birthDate) : undefined,
+      createdDate: restStudent.createdDate ? dayjs(restStudent.createdDate) : undefined,
+      lastModifiedDate: restStudent.lastModifiedDate ? dayjs(restStudent.lastModifiedDate) : undefined,
+    };
+  }
+}
 
 @Injectable({ providedIn: 'root' })
-export class StudentService {
-  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/students');
+export class StudentService extends StudentsService {
+  protected readonly http = inject(HttpClient);
 
-  constructor(
-    protected http: HttpClient,
-    protected applicationConfigService: ApplicationConfigService,
-  ) {}
+  create(student: NewStudent): Observable<IStudent> {
+    const copy = this.convertValueFromClient(student);
+    return this.http.post<RestStudent>(this.resourceUrl, copy).pipe(map(res => this.convertResponseFromServer(res)));
+  }
 
-  create(student: NewStudent): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(student);
+  update(student: IStudent): Observable<IStudent> {
+    const copy = this.convertValueFromClient(student);
     return this.http
-      .post<RestStudent>(this.resourceUrl, copy, { observe: 'response' })
+      .put<RestStudent>(`${this.resourceUrl}/${encodeURIComponent(this.getStudentIdentifier(student))}`, copy)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  update(student: IStudent): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(student);
+  partialUpdate(student: PartialUpdateStudent): Observable<IStudent> {
+    const copy = this.convertValueFromClient(student);
     return this.http
-      .put<RestStudent>(`${this.resourceUrl}/${this.getStudentIdentifier(student)}`, copy, { observe: 'response' })
+      .patch<RestStudent>(`${this.resourceUrl}/${encodeURIComponent(this.getStudentIdentifier(student))}`, copy)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  partialUpdate(student: PartialUpdateStudent): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(student);
+  find(id: number): Observable<IStudent> {
     return this.http
-      .patch<RestStudent>(`${this.resourceUrl}/${this.getStudentIdentifier(student)}`, copy, { observe: 'response' })
+      .get<RestStudent>(`${this.resourceUrl}/${encodeURIComponent(id)}`)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  find(id: number): Observable<EntityResponseType> {
-    return this.http
-      .get<RestStudent>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
-  }
-
-  query(req?: any): Observable<EntityArrayResponseType> {
+  query(req?: any): Observable<HttpResponse<IStudent[]>> {
     const options = createRequestOption(req);
     return this.http
       .get<RestStudent[]>(this.resourceUrl, { params: options, observe: 'response' })
-      .pipe(map(res => this.convertResponseArrayFromServer(res)));
+      .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
   }
 
-  delete(id: number): Observable<HttpResponse<{}>> {
-    return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  delete(id: number): Observable<undefined> {
+    return this.http.delete<undefined>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
   }
 
   getStudentIdentifier(student: Pick<IStudent, 'id'>): number {
@@ -89,7 +109,7 @@ export class StudentService {
   ): Type[] {
     const students: Type[] = studentsToCheck.filter(isPresent);
     if (students.length > 0) {
-      const studentCollectionIdentifiers = studentCollection.map(studentItem => this.getStudentIdentifier(studentItem)!);
+      const studentCollectionIdentifiers = studentCollection.map(studentItem => this.getStudentIdentifier(studentItem));
       const studentsToAdd = students.filter(studentItem => {
         const studentIdentifier = this.getStudentIdentifier(studentItem);
         if (studentCollectionIdentifiers.includes(studentIdentifier)) {
@@ -103,7 +123,7 @@ export class StudentService {
     return studentCollection;
   }
 
-  protected convertDateFromClient<T extends IStudent | NewStudent | PartialUpdateStudent>(student: T): RestOf<T> {
+  protected convertValueFromClient<T extends IStudent | NewStudent | PartialUpdateStudent>(student: T): RestOf<T> {
     return {
       ...student,
       birthDate: student.birthDate?.toJSON() ?? null,
@@ -112,24 +132,11 @@ export class StudentService {
     };
   }
 
-  protected convertDateFromServer(restStudent: RestStudent): IStudent {
-    return {
-      ...restStudent,
-      birthDate: restStudent.birthDate ? dayjs(restStudent.birthDate) : undefined,
-      createdDate: restStudent.createdDate ? dayjs(restStudent.createdDate) : undefined,
-      lastModifiedDate: restStudent.lastModifiedDate ? dayjs(restStudent.lastModifiedDate) : undefined,
-    };
+  protected convertResponseFromServer(res: RestStudent): IStudent {
+    return this.convertValueFromServer(res);
   }
 
-  protected convertResponseFromServer(res: HttpResponse<RestStudent>): HttpResponse<IStudent> {
-    return res.clone({
-      body: res.body ? this.convertDateFromServer(res.body) : null,
-    });
-  }
-
-  protected convertResponseArrayFromServer(res: HttpResponse<RestStudent[]>): HttpResponse<IStudent[]> {
-    return res.clone({
-      body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
-    });
+  protected convertResponseArrayFromServer(res: RestStudent[]): IStudent[] {
+    return res.map(item => this.convertValueFromServer(item));
   }
 }

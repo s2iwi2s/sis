@@ -10,23 +10,15 @@
 # ===================================================================
 # Standard Spring Boot properties.
 # Full reference is available at:
-# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# https://docs.spring.io/spring-boot/appendix/application-properties/index.html
 # ===================================================================
 
 logging:
   level:
     ROOT: DEBUG
     tech.jhipster: DEBUG
+    org.hibernate.SQL: DEBUG
     com.sis: DEBUG
-    org.hibernate: info
-    # SQL statements and parameters
-    org.hibernate.SQL: debug
-    org.hibernate.orm.jdbc.bind: trace
-    # Statistics and slow queries
-    org.hibernate.stat: debug
-    org.hibernate.SQL_SLOW: info
-    # 2nd Level Cache
-    org.hibernate.cache: debug
 
 spring:
   devtools:
@@ -35,29 +27,21 @@ spring:
       additional-exclude: static/**
     livereload:
       enabled: false # we use Webpack dev server + BrowserSync for livereload
-  jackson:
+  jackson2:
     serialization:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://pg-db-s2iwi2s-a12a.a.aivencloud.com:14536/sis-dev-db
-    username: avnadmin
-    password: AVNS_5JL8YJgoJM5sytBHXSW
-#    url: jdbc:postgresql://ubuntu.vm:5432/SchInfoSys
-#    url: jdbc:postgresql://localhost:5432/postgres
-#    username: SchInfoSys
-#    password: sis
+    url: jdbc:postgresql://localhost:5432/SchInfoSys
     hikari:
       poolName: Hikari
       auto-commit: false
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
-    contexts: dev
+    contexts: dev, faker
   mail:
     host: localhost
     port: 25
-    username:
-    password:
   messages:
     cache-duration: PT1S # 1 second, see the ISO 8601 standard
   thymeleaf:
@@ -65,6 +49,8 @@ spring:
 
 server:
   port: 8080
+  # make sure requests the proxy uri instead of the server one
+  forward-headers-strategy: native
 
 # ===================================================================
 # JHipster specific properties
@@ -80,7 +66,7 @@ jhipster:
   # CORS is only enabled by default with the "dev" profile
   cors:
     # Allow Ionic for JHipster by default (* no longer allowed in Spring Boot 2.4+)
-    allowed-origins: 'http://localhost:8100,https://localhost:8100,http://localhost:9000,https://localhost:9000,http://localhost:4200,https://localhost:4200'
+    allowed-origins: 'http://localhost:8100,https://localhost:8100,http://localhost:4200,https://localhost:4200'
     # Enable CORS when running in GitHub Codespaces
     allowed-origin-patterns: 'https://*.githubpreview.dev'
     allowed-methods: '*'
@@ -91,8 +77,6 @@ jhipster:
   security:
     authentication:
       jwt:
-        # This token must be encoded using Base64 and be at least 256 bits long (you can type `openssl rand -base64 64` on your command line to generate a 512 bits one)
-        base64-secret: ZDJlNjc2ZDQzMjVkYzlmZjAzMjdkZDU5NDZjYjg5ODkyNjJlNjQyNzI0MWM5MjYzZmI0ZmViODM0YmJhNjJkMGRhMGZlNmE4OTMxMjViZDE5MDQyNDEwMmQ4NmY4ZjJhMTI4MmNmMTJlMzEzMWQ0ZGJlMjBkOTdhNDE5OTA4NmE=
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
+
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { ILearningCompetency, NewLearningCompetency } from '../learning-competency.model';
 
@@ -46,10 +47,10 @@ export type LearningCompetencyFormGroup = FormGroup<LearningCompetencyFormGroupC
 
 @Injectable({ providedIn: 'root' })
 export class LearningCompetencyFormService {
-  createLearningCompetencyFormGroup(learningCompetency: LearningCompetencyFormGroupInput = { id: null }): LearningCompetencyFormGroup {
+  createLearningCompetencyFormGroup(learningCompetency?: LearningCompetencyFormGroupInput): LearningCompetencyFormGroup {
     const learningCompetencyRawValue = this.convertLearningCompetencyToLearningCompetencyRawValue({
       ...this.getFormDefaults(),
-      ...learningCompetency,
+      ...(learningCompetency ?? { id: null }),
     });
     return new FormGroup<LearningCompetencyFormGroupContent>({
       id: new FormControl(
@@ -77,9 +78,7 @@ export class LearningCompetencyFormService {
   }
 
   getLearningCompetency(form: LearningCompetencyFormGroup): ILearningCompetency | NewLearningCompetency {
-    return this.convertLearningCompetencyRawValueToLearningCompetency(
-      form.getRawValue() as LearningCompetencyFormRawValue | NewLearningCompetencyFormRawValue,
-    );
+    return this.convertLearningCompetencyRawValueToLearningCompetency(form.getRawValue());
   }
 
   resetForm(form: LearningCompetencyFormGroup, learningCompetency: LearningCompetencyFormGroupInput): void {
@@ -87,12 +86,10 @@ export class LearningCompetencyFormService {
       ...this.getFormDefaults(),
       ...learningCompetency,
     });
-    form.reset(
-      {
-        ...learningCompetencyRawValue,
-        id: { value: learningCompetencyRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
-    );
+    form.reset({
+      ...learningCompetencyRawValue,
+      id: { value: learningCompetencyRawValue.id, disabled: true },
+    });
   }
 
   private getFormDefaults(): LearningCompetencyFormDefaults {
