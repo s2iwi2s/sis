@@ -22,6 +22,9 @@ export type NewRestLearningCompetency = RestOf<NewLearningCompetency>;
 
 export type PartialUpdateRestLearningCompetency = RestOf<PartialUpdateLearningCompetency>;
 
+export type EntityResponseType = HttpResponse<ILearningCompetency>;
+export type EntityArrayResponseType = HttpResponse<ILearningCompetency[]>;
+
 @Injectable()
 export class LearningCompetenciesService {
   readonly learningCompetenciesParams = signal<
@@ -97,6 +100,12 @@ export class LearningCompetencyService extends LearningCompetenciesService {
       .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
   }
 
+  queryByCourse(courseId: number): Observable<EntityArrayResponseType> {
+    return this.http
+      .get<RestLearningCompetency[]>(`${this.resourceUrl}/${courseId}/course`, { observe: 'response' })
+      .pipe(map(res => this.convertHttpResponseArrayFromServer(res)));
+  }
+
   delete(id: number): Observable<undefined> {
     return this.http.delete<undefined>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
   }
@@ -147,5 +156,11 @@ export class LearningCompetencyService extends LearningCompetenciesService {
 
   protected convertResponseArrayFromServer(res: RestLearningCompetency[]): ILearningCompetency[] {
     return res.map(item => this.convertValueFromServer(item));
+  }
+
+  protected convertHttpResponseArrayFromServer(res: HttpResponse<RestLearningCompetency[]>): HttpResponse<ILearningCompetency[]> {
+    return res.clone({
+      body: res.body ? res.body.map(item => this.convertValueFromServer(item)) : null,
+    });
   }
 }

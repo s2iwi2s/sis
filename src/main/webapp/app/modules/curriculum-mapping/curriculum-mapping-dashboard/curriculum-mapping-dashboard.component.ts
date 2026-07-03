@@ -6,7 +6,6 @@ import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators'
 import { FormsModule } from '@angular/forms';
 import { JsonPipe, KeyValuePipe } from '@angular/common';
 
-import SharedModule from '../../../shared/shared.module';
 import { ICurriculumMap } from '../../../entities/curriculum-map/curriculum-map.model';
 import { ICourse } from '../../../entities/course/course.model';
 import { CourseService } from '../../../entities/course/service/course.service';
@@ -24,7 +23,6 @@ import {
   EntityArrayResponseType as StrategiesEntityArrayResponseType,
 } from '../../../entities/strategies/service/strategies.service';
 import { IStrategies } from '../../../entities/strategies/strategies.model';
-import { HtmlUtilService } from '../../../core/util/html-util.service';
 import { IAssessment } from '../../../entities/assessment/assessment.model';
 import {
   AssessmentService,
@@ -34,12 +32,13 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CourseDetailCardComponent } from '../course-detail-card/course-detail-card.component';
 import { ScopeSeqCardComponent } from '../scope-seq-card/scope-seq-card.component';
 import { QuarterCardComponent } from '../quarter-card/quarter-card.component';
+import { Alert } from 'app/shared/alert/alert';
+import { AlertError } from 'app/shared/alert/alert-error';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'jhi-curriculum-mapping-dashboard',
-  standalone: true,
   imports: [
-    SharedModule,
     NgbTypeaheadModule,
     FormsModule,
     JsonPipe,
@@ -48,6 +47,9 @@ import { QuarterCardComponent } from '../quarter-card/quarter-card.component';
     CourseDetailCardComponent,
     ScopeSeqCardComponent,
     QuarterCardComponent,
+    FontAwesomeModule,
+    Alert,
+    AlertError,
   ],
   templateUrl: './curriculum-mapping-dashboard.component.html',
 })
@@ -73,7 +75,6 @@ export class CurriculumMappingDashboardComponent implements OnInit {
     protected learningCompetencyService: LearningCompetencyService,
     protected strategiesService: StrategiesService,
     protected assessmentService: AssessmentService,
-    protected htmlUtilService: HtmlUtilService,
   ) {}
 
   ngOnInit(): void {
@@ -95,7 +96,7 @@ export class CurriculumMappingDashboardComponent implements OnInit {
   }
 
   formatter = (course: ICourse): string =>
-    (course.subject ?? '') + ': ' + (course.gradelevel?.description ?? '') + ' ' + (course.schYr?.description ?? '');
+    (course.subject ?? '') + ': ' + (course.gradelevel?.description ?? '') + ' ' + (course.courseDescription ?? '');
 
   search: OperatorFunction<string, readonly ICourse[]> = (text$: Observable<string>) =>
     text$.pipe(
@@ -106,7 +107,7 @@ export class CurriculumMappingDashboardComponent implements OnInit {
         (this.courses ? this.courses : [])
           .filter(course =>
             new RegExp(term, 'mi').test(
-              (course.subject ?? '') + ': ' + (course.gradelevel?.description ?? '') + ' ' + (course.schYr?.description ?? ''),
+              (course.subject ?? '') + ': ' + (course.gradelevel?.description ?? '') + ' ' + (course.courseDescription ?? ''),
             ),
           )
           .slice(0, 10),

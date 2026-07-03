@@ -22,6 +22,9 @@ export type NewRestStrategies = RestOf<NewStrategies>;
 
 export type PartialUpdateRestStrategies = RestOf<PartialUpdateStrategies>;
 
+export type EntityResponseType = HttpResponse<IStrategies>;
+export type EntityArrayResponseType = HttpResponse<IStrategies[]>;
+
 @Injectable()
 export class StrategiesesService {
   readonly strategiesesParams = signal<Record<string, string | number | boolean | readonly (string | number | boolean)[]> | undefined>(
@@ -89,6 +92,12 @@ export class StrategiesService extends StrategiesesService {
       .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
   }
 
+  queryByCourse(courseId: number): Observable<EntityArrayResponseType> {
+    return this.http
+      .get<RestStrategies[]>(`${this.resourceUrl}/${courseId}/course`, { observe: 'response' })
+      .pipe(map(res => this.convertHttpResponseArrayFromServer(res)));
+  }
+
   delete(id: number): Observable<undefined> {
     return this.http.delete<undefined>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
   }
@@ -135,5 +144,11 @@ export class StrategiesService extends StrategiesesService {
 
   protected convertResponseArrayFromServer(res: RestStrategies[]): IStrategies[] {
     return res.map(item => this.convertValueFromServer(item));
+  }
+
+  protected convertHttpResponseArrayFromServer(res: HttpResponse<RestStrategies[]>): HttpResponse<IStrategies[]> {
+    return res.clone({
+      body: res.body ? res.body.map(item => this.convertValueFromServer(item)) : null,
+    });
   }
 }

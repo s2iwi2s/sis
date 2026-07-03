@@ -15,10 +15,10 @@ export interface ICourse {
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
-  gradelevel?: Pick<IAppConfig, 'id'> | null;
-  department?: Pick<IDepartments, 'id'> | null;
-  year?: Pick<IAcademicYear, 'id'> | null;
-  terms?: Pick<IAcademicTerms, 'id'> | null;
+  gradelevel?: Pick<IAppConfig, 'id' | 'description'> | null;
+  department?: Pick<IDepartments, 'id' | 'description'> | null;
+  year?: Pick<IAcademicYear, 'id' | 'name'> | null;
+  terms?: Pick<IAcademicTerms, 'id' | 'name'> | null;
 }
 
 export type NewCourse = Omit<ICourse, 'id'> & { id: null };

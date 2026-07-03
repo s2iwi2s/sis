@@ -9,6 +9,7 @@ import { translationNotFoundMessage } from 'app/config/translation.config';
  * A wrapper directive on top of the translation pipe as the inbuilt translation directive from ngx-translate is too verbose and buggy
  */
 @Directive({
+  standalone: true,
   selector: '[jhiTranslate]',
 })
 export default class TranslateDirective implements OnChanges, OnInit, OnDestroy {
