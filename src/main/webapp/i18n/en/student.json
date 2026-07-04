@@ -3,6 +3,7 @@
     "student": {
       "home": {
         "title": "Students",
+        "enrollmentTitle": "Enrollment Form",
         "refreshListLabel": "Refresh list",
         "createLabel": "Create a new Student",
         "createOrEditLabel": "Create or edit a Student",
@@ -17,6 +18,7 @@
       "detail": {
         "title": "Student"
       },
+      "filters": "Filters",
       "id": "ID",
       "lrn": "Lrn",
       "firstName": "First Name",

@@ -9,7 +9,7 @@ import { createRequestOption } from 'app/core/request/request-util';
 import { isPresent } from 'app/core/util/operators';
 import { IAppConfig, NewAppConfig } from '../app-config.model';
 
-export type PartialUpdateAppConfig = Partial<IAppConfig> & Pick<IAppConfig, 'id'>;
+export type PartialUpdateAppConfig = Partial<IAppConfig> & Pick<IAppConfig, 'id' | 'description'>;
 
 type RestOf<T extends IAppConfig | NewAppConfig> = Omit<T, 'createdDate' | 'lastModifiedDate'> & {
   createdDate?: string | null;

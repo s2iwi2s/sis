@@ -33,18 +33,18 @@ type CourseFormDefaults = Pick<NewCourse, 'id' | 'createdDate' | 'lastModifiedDa
 
 type CourseFormGroupContent = {
   id: FormControl<CourseFormRawValue['id'] | NewCourse['id']>;
-  subject: FormControl<CourseFormRawValue['subject']>;
-  hoursPerQuarter: FormControl<CourseFormRawValue['hoursPerQuarter']>;
-  courseDescription: FormControl<CourseFormRawValue['courseDescription']>;
-  courseObjectives: FormControl<CourseFormRawValue['courseObjectives']>;
-  createdBy: FormControl<CourseFormRawValue['createdBy']>;
-  createdDate: FormControl<CourseFormRawValue['createdDate']>;
-  lastModifiedBy: FormControl<CourseFormRawValue['lastModifiedBy']>;
-  lastModifiedDate: FormControl<CourseFormRawValue['lastModifiedDate']>;
-  gradelevel: FormControl<CourseFormRawValue['gradelevel']>;
-  department: FormControl<CourseFormRawValue['department']>;
-  year: FormControl<CourseFormRawValue['year']>;
-  terms: FormControl<CourseFormRawValue['terms']>;
+  subject: FormControl<CourseFormRawValue['subject'] | null>;
+  hoursPerQuarter: FormControl<CourseFormRawValue['hoursPerQuarter'] | null>;
+  courseDescription: FormControl<CourseFormRawValue['courseDescription'] | null>;
+  courseObjectives: FormControl<CourseFormRawValue['courseObjectives'] | null>;
+  createdBy: FormControl<CourseFormRawValue['createdBy'] | null>;
+  createdDate: FormControl<CourseFormRawValue['createdDate'] | null>;
+  lastModifiedBy: FormControl<CourseFormRawValue['lastModifiedBy'] | null>;
+  lastModifiedDate: FormControl<CourseFormRawValue['lastModifiedDate'] | null>;
+  gradelevel: FormControl<CourseFormRawValue['gradelevel'] | null>;
+  department: FormControl<CourseFormRawValue['department'] | null>;
+  year: FormControl<CourseFormRawValue['year'] | null>;
+  terms: FormControl<CourseFormRawValue['terms'] | null>;
 };
 
 export type CourseFormGroup = FormGroup<CourseFormGroupContent>;

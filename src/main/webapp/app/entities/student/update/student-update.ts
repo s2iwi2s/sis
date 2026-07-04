@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
-import { Observable, finalize, map } from 'rxjs';
+import { Observable, finalize, map, filter } from 'rxjs';
 
 import { IAppConfig } from 'app/entities/app-config/app-config.model';
 import { AppConfigService } from 'app/entities/app-config/service/app-config.service';
@@ -39,11 +39,16 @@ export class StudentUpdate implements OnInit {
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: StudentFormGroup = this.studentFormService.createStudentFormGroup();
+  filterForm: StudentFormGroup = this.studentFormService.createStudentFormGroup();
 
+  readonly formName: string;
   compareAppConfig = (o1: IAppConfig | null, o2: IAppConfig | null): boolean => this.appConfigService.compareAppConfig(o1, o2);
 
   compareUser = (o1: IUser | null, o2: IUser | null): boolean => this.userService.compareUser(o1, o2);
 
+  constructor() {
+    this.formName = this.activatedRoute.snapshot.paramMap.get('formName') ?? '';
+  }
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ student }) => {
       this.student = student;
@@ -59,6 +64,7 @@ export class StudentUpdate implements OnInit {
     globalThis.history.back();
   }
 
+  setFilters(): void {}
   save(): void {
     this.isSaving.set(true);
     const student = this.studentFormService.getStudent(this.editForm);
@@ -115,4 +121,6 @@ export class StudentUpdate implements OnInit {
       .pipe(map((users: IUser[]) => this.userService.addUserToCollectionIfMissing<IUser>(users, this.student?.user)))
       .subscribe((users: IUser[]) => this.usersSharedCollection.set(users));
   }
+
+  protected readonly filter = filter;
 }

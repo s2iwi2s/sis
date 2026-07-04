@@ -1,23 +1,37 @@
 <div class="d-flex justify-content-center">
   <div class="col-8">
-    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
-      <h2 id="jhi-student-heading" data-cy="StudentCreateUpdateHeading" jhiTranslate="schInfoSysApp.student.home.createOrEditLabel">
+    <h2 id="jhi-student-heading" data-cy="StudentCreateUpdateHeading">
+      @if (formName === 'enroll') {
+        Enrollment Form
+      } @else {
         Create or edit a Student
-      </h2>
+      }
+    </h2>
 
+    <jhi-alert-error />
+    <form name="filterForm" novalidate (ngSubmit)="setFilters()" [formGroup]="filterForm">
+      <div class="d-print-none shadow-sm py-2 pb-3 mb-sm-3 bg-body-tertiary rounded-4 row col-sm-6">
+        <label class="form-label col-sm-12" for="filter_field_lrn" jhiTranslate="schInfoSysApp.student.filters">filters</label>
+        <div class="input-group">
+          <input type="text" class="form-control" name="lrn" id="filter_field_lrn" data-cy="lrn" formControlName="lrn" />
+          <span class="input-group-text border-0"><fa-icon icon="search"></fa-icon></span>
+        </div>
+      </div>
+    </form>
+
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
       <div>
-        <jhi-alert-error />
-
         @if (editForm.controls.id.value !== null) {
           <div class="mb-3">
             <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
             <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
           </div>
         }
-
-        <div class="mb-3">
-          <label class="form-label" for="field_lrn" jhiTranslate="schInfoSysApp.student.lrn">Lrn</label>
-          <input type="text" class="form-control" name="lrn" id="field_lrn" data-cy="lrn" formControlName="lrn" />
+        <div class="row">
+          <div class="col-3">
+            <label class="form-label" for="field_lrn" jhiTranslate="schInfoSysApp.student.lrn">Lrn</label>
+            <input type="text" class="form-control" name="lrn" id="field_lrn" data-cy="lrn" formControlName="lrn" />
+          </div>
         </div>
 
         @let firstNameRef = editForm.get('firstName')!;

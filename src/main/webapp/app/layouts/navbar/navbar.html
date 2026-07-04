@@ -36,6 +36,77 @@
             [routerLinkActiveOptions]="{ exact: true }"
             data-cy="entity"
           >
+            <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="sis-menu">
+              <span>
+                <fa-icon icon="th-list" />
+                <span jhiTranslate="global.menu.modules.main">sis</span>
+              </span>
+            </a>
+            <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="sis-menu">
+              <li>
+                <span>
+                  <fa-icon icon="th-list"></fa-icon>
+                  <span jhiTranslate="global.menu.modules.curriculumMapping">curriculumMapping</span>
+                </span>
+              </li>
+              <li>
+                <ul>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      routerLink="/curriculum-mapping"
+                      routerLinkActive="active"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      (click)="collapseNavbar()"
+                    >
+                      <span jhiTranslate="global.menu.modules.curriculumMappingView">Curriculum Mapping View</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      routerLink="/curriculum-mapping/dashboard"
+                      routerLinkActive="active"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      (click)="collapseNavbar()"
+                    >
+                      <span jhiTranslate="global.menu.modules.curriculumMappingDashboard">Curriculum Mapping Dashboard</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li>
+                <span>
+                  <fa-icon icon="th-list"></fa-icon>
+                  <span jhiTranslate="global.menu.modules.enrollment">enrollment</span>
+                </span>
+              </li>
+              <li>
+                <ul>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      routerLink="/enrollment/new/enroll"
+                      routerLinkActive="active"
+                      [routerLinkActiveOptions]="{ exact: true }"
+                      (click)="collapseNavbar()"
+                    >
+                      <span jhiTranslate="global.menu.modules.enrollmentForm">enrollmentForm</span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <li
+            ngbDropdown
+            class="nav-item dropdown pointer"
+            display="dynamic"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            data-cy="entity"
+          >
             <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu">
               <span>
                 <fa-icon icon="th-list" />

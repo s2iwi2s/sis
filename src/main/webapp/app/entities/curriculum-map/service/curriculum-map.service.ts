@@ -22,6 +22,9 @@ export type NewRestCurriculumMap = RestOf<NewCurriculumMap>;
 
 export type PartialUpdateRestCurriculumMap = RestOf<PartialUpdateCurriculumMap>;
 
+export type EntityResponseType = HttpResponse<ICurriculumMap>;
+export type EntityArrayResponseType = HttpResponse<ICurriculumMap[]>;
+
 @Injectable()
 export class CurriculumMapsService {
   readonly curriculumMapsParams = signal<Record<string, string | number | boolean | readonly (string | number | boolean)[]> | undefined>(
@@ -89,6 +92,12 @@ export class CurriculumMapService extends CurriculumMapsService {
       .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
   }
 
+  queryByCourse(courseId: number): Observable<EntityArrayResponseType> {
+    return this.http
+      .get<RestCurriculumMap[]>(`${this.resourceUrl}/${courseId}/course`, { observe: 'response' })
+      .pipe(map(res => this.convertHttpResponseArrayFromServer(res)));
+  }
+
   delete(id: number): Observable<undefined> {
     return this.http.delete<undefined>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
   }
@@ -137,5 +146,11 @@ export class CurriculumMapService extends CurriculumMapsService {
 
   protected convertResponseArrayFromServer(res: RestCurriculumMap[]): ICurriculumMap[] {
     return res.map(item => this.convertValueFromServer(item));
+  }
+
+  protected convertHttpResponseArrayFromServer(res: HttpResponse<RestCurriculumMap[]>): HttpResponse<ICurriculumMap[]> {
+    return res.clone({
+      body: res.body ? res.body.map(item => this.convertValueFromServer(item)) : null,
+    });
   }
 }
