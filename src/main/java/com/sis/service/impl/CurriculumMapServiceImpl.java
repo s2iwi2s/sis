@@ -1,13 +1,10 @@
 package com.sis.service.impl;
 
 import com.sis.domain.CurriculumMap;
-import com.sis.repository.CourseRepository;
 import com.sis.repository.CurriculumMapRepository;
-import com.sis.service.CourseService;
 import com.sis.service.CurriculumMapService;
 import com.sis.service.dto.CurriculumMapDTO;
 import com.sis.service.mapper.CurriculumMapMapper;
-import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,27 +20,20 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class CurriculumMapServiceImpl implements CurriculumMapService {
 
-    private final Logger log = LoggerFactory.getLogger(CurriculumMapServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CurriculumMapServiceImpl.class);
 
     private final CurriculumMapRepository curriculumMapRepository;
 
     private final CurriculumMapMapper curriculumMapMapper;
 
-    private final CourseRepository courseRepository;
-
-    public CurriculumMapServiceImpl(
-        CurriculumMapRepository curriculumMapRepository,
-        CurriculumMapMapper curriculumMapMapper,
-        CourseRepository courseRepository
-    ) {
+    public CurriculumMapServiceImpl(CurriculumMapRepository curriculumMapRepository, CurriculumMapMapper curriculumMapMapper) {
         this.curriculumMapRepository = curriculumMapRepository;
         this.curriculumMapMapper = curriculumMapMapper;
-        this.courseRepository = courseRepository;
     }
 
     @Override
     public CurriculumMapDTO save(CurriculumMapDTO curriculumMapDTO) {
-        log.debug("Request to save CurriculumMap : {}", curriculumMapDTO);
+        LOG.debug("Request to save CurriculumMap : {}", curriculumMapDTO);
         CurriculumMap curriculumMap = curriculumMapMapper.toEntity(curriculumMapDTO);
         curriculumMap = curriculumMapRepository.save(curriculumMap);
         return curriculumMapMapper.toDto(curriculumMap);
@@ -51,7 +41,7 @@ public class CurriculumMapServiceImpl implements CurriculumMapService {
 
     @Override
     public CurriculumMapDTO update(CurriculumMapDTO curriculumMapDTO) {
-        log.debug("Request to update CurriculumMap : {}", curriculumMapDTO);
+        LOG.debug("Request to update CurriculumMap : {}", curriculumMapDTO);
         CurriculumMap curriculumMap = curriculumMapMapper.toEntity(curriculumMapDTO);
         curriculumMap = curriculumMapRepository.save(curriculumMap);
         return curriculumMapMapper.toDto(curriculumMap);
@@ -59,7 +49,7 @@ public class CurriculumMapServiceImpl implements CurriculumMapService {
 
     @Override
     public Optional<CurriculumMapDTO> partialUpdate(CurriculumMapDTO curriculumMapDTO) {
-        log.debug("Request to partially update CurriculumMap : {}", curriculumMapDTO);
+        LOG.debug("Request to partially update CurriculumMap : {}", curriculumMapDTO);
 
         return curriculumMapRepository
             .findById(curriculumMapDTO.getId())
@@ -75,29 +65,20 @@ public class CurriculumMapServiceImpl implements CurriculumMapService {
     @Override
     @Transactional(readOnly = true)
     public Page<CurriculumMapDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all CurriculumMaps");
+        LOG.debug("Request to get all CurriculumMaps");
         return curriculumMapRepository.findAll(pageable).map(curriculumMapMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<CurriculumMapDTO> findOne(Long id) {
-        log.debug("Request to get CurriculumMap : {}", id);
+        LOG.debug("Request to get CurriculumMap : {}", id);
         return curriculumMapRepository.findById(id).map(curriculumMapMapper::toDto);
     }
 
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete CurriculumMap : {}", id);
+        LOG.debug("Request to delete CurriculumMap : {}", id);
         curriculumMapRepository.deleteById(id);
-    }
-
-    @Override
-    public List<CurriculumMapDTO> findByCourse(Long courseId) {
-        return courseRepository
-            .findById(courseId)
-            .map(curriculumMapRepository::findByCourseOrderByQuarterNoAscWeekNoAsc)
-            .map(curriculumMapMapper::toDto)
-            .orElseThrow();
     }
 }

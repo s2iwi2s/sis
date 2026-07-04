@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+    <!--
+        Added the constraints for entity Course.
+    -->
+    <changeSet id="20260704155035-2" author="jhipster">
+
+        <addForeignKeyConstraint baseColumnNames="gradelevel_id"
+                                 baseTableName="course"
+                                 constraintName="fk_course__gradelevel_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="app_config"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="department_id"
+                                 baseTableName="course"
+                                 constraintName="fk_course__department_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="departments"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="year_id"
+                                 baseTableName="course"
+                                 constraintName="fk_course__year_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="academic_year"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="terms_id"
+                                 baseTableName="course"
+                                 constraintName="fk_course__terms_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="academic_terms"
+                                 />
+    </changeSet>
+</databaseChangeLog>

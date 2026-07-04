@@ -27,46 +27,46 @@ class ResourcesTest {
     }
 
     @Test
-    void strategiesTest() throws Exception {
+    void strategiesTest() {
         Resources resources = getResourcesRandomSampleGenerator();
         Strategies strategiesBack = getStrategiesRandomSampleGenerator();
 
         resources.addStrategies(strategiesBack);
-        assertThat(resources.getStrategies()).containsOnly(strategiesBack);
-        assertThat(strategiesBack.getResources()).containsOnly(resources);
+        assertThat(resources.getStrategieses()).containsOnly(strategiesBack);
+        assertThat(strategiesBack.getResourceses()).containsOnly(resources);
 
         resources.removeStrategies(strategiesBack);
-        assertThat(resources.getStrategies()).doesNotContain(strategiesBack);
-        assertThat(strategiesBack.getResources()).doesNotContain(resources);
+        assertThat(resources.getStrategieses()).doesNotContain(strategiesBack);
+        assertThat(strategiesBack.getResourceses()).doesNotContain(resources);
 
-        resources.strategies(new HashSet<>(Set.of(strategiesBack)));
-        assertThat(resources.getStrategies()).containsOnly(strategiesBack);
-        assertThat(strategiesBack.getResources()).containsOnly(resources);
+        resources.strategieses(new HashSet<>(Set.of(strategiesBack)));
+        assertThat(resources.getStrategieses()).containsOnly(strategiesBack);
+        assertThat(strategiesBack.getResourceses()).containsOnly(resources);
 
-        resources.setStrategies(new HashSet<>());
-        assertThat(resources.getStrategies()).doesNotContain(strategiesBack);
-        assertThat(strategiesBack.getResources()).doesNotContain(resources);
+        resources.setStrategieses(new HashSet<>());
+        assertThat(resources.getStrategieses()).doesNotContain(strategiesBack);
+        assertThat(strategiesBack.getResourceses()).doesNotContain(resources);
     }
 
     @Test
-    void assessmentTest() throws Exception {
+    void assessmentTest() {
         Resources resources = getResourcesRandomSampleGenerator();
         Assessment assessmentBack = getAssessmentRandomSampleGenerator();
 
         resources.addAssessment(assessmentBack);
         assertThat(resources.getAssessments()).containsOnly(assessmentBack);
-        assertThat(assessmentBack.getResources()).containsOnly(resources);
+        assertThat(assessmentBack.getResourceses()).containsOnly(resources);
 
         resources.removeAssessment(assessmentBack);
         assertThat(resources.getAssessments()).doesNotContain(assessmentBack);
-        assertThat(assessmentBack.getResources()).doesNotContain(resources);
+        assertThat(assessmentBack.getResourceses()).doesNotContain(resources);
 
         resources.assessments(new HashSet<>(Set.of(assessmentBack)));
         assertThat(resources.getAssessments()).containsOnly(assessmentBack);
-        assertThat(assessmentBack.getResources()).containsOnly(resources);
+        assertThat(assessmentBack.getResourceses()).containsOnly(resources);
 
         resources.setAssessments(new HashSet<>());
         assertThat(resources.getAssessments()).doesNotContain(assessmentBack);
-        assertThat(assessmentBack.getResources()).doesNotContain(resources);
+        assertThat(assessmentBack.getResourceses()).doesNotContain(resources);
     }
 }

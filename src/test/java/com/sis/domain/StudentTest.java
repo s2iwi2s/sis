@@ -1,7 +1,7 @@
 package com.sis.domain;
 
 import static com.sis.domain.AppConfigTestSamples.*;
-import static com.sis.domain.CourseTestSamples.*;
+import static com.sis.domain.CourseScheduleTestSamples.*;
 import static com.sis.domain.StudentTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,7 +27,7 @@ class StudentTest {
     }
 
     @Test
-    void genderTest() throws Exception {
+    void genderTest() {
         Student student = getStudentRandomSampleGenerator();
         AppConfig appConfigBack = getAppConfigRandomSampleGenerator();
 
@@ -39,20 +39,24 @@ class StudentTest {
     }
 
     @Test
-    void courseTest() throws Exception {
+    void courseScheduleTest() {
         Student student = getStudentRandomSampleGenerator();
-        Course courseBack = getCourseRandomSampleGenerator();
+        CourseSchedule courseScheduleBack = getCourseScheduleRandomSampleGenerator();
 
-        student.addCourse(courseBack);
-        assertThat(student.getCourses()).containsOnly(courseBack);
+        student.addCourseSchedule(courseScheduleBack);
+        assertThat(student.getCourseSchedules()).containsOnly(courseScheduleBack);
+        assertThat(courseScheduleBack.getStudent()).isEqualTo(student);
 
-        student.removeCourse(courseBack);
-        assertThat(student.getCourses()).doesNotContain(courseBack);
+        student.removeCourseSchedule(courseScheduleBack);
+        assertThat(student.getCourseSchedules()).doesNotContain(courseScheduleBack);
+        assertThat(courseScheduleBack.getStudent()).isNull();
 
-        student.courses(new HashSet<>(Set.of(courseBack)));
-        assertThat(student.getCourses()).containsOnly(courseBack);
+        student.courseSchedules(new HashSet<>(Set.of(courseScheduleBack)));
+        assertThat(student.getCourseSchedules()).containsOnly(courseScheduleBack);
+        assertThat(courseScheduleBack.getStudent()).isEqualTo(student);
 
-        student.setCourses(new HashSet<>());
-        assertThat(student.getCourses()).doesNotContain(courseBack);
+        student.setCourseSchedules(new HashSet<>());
+        assertThat(student.getCourseSchedules()).doesNotContain(courseScheduleBack);
+        assertThat(courseScheduleBack.getStudent()).isNull();
     }
 }

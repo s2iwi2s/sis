@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class InstructorServiceImpl implements InstructorService {
 
-    private final Logger log = LoggerFactory.getLogger(InstructorServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(InstructorServiceImpl.class);
 
     private final InstructorRepository instructorRepository;
 
@@ -33,7 +33,7 @@ public class InstructorServiceImpl implements InstructorService {
 
     @Override
     public InstructorDTO save(InstructorDTO instructorDTO) {
-        log.debug("Request to save Instructor : {}", instructorDTO);
+        LOG.debug("Request to save Instructor : {}", instructorDTO);
         Instructor instructor = instructorMapper.toEntity(instructorDTO);
         instructor = instructorRepository.save(instructor);
         return instructorMapper.toDto(instructor);
@@ -41,7 +41,7 @@ public class InstructorServiceImpl implements InstructorService {
 
     @Override
     public InstructorDTO update(InstructorDTO instructorDTO) {
-        log.debug("Request to update Instructor : {}", instructorDTO);
+        LOG.debug("Request to update Instructor : {}", instructorDTO);
         Instructor instructor = instructorMapper.toEntity(instructorDTO);
         instructor = instructorRepository.save(instructor);
         return instructorMapper.toDto(instructor);
@@ -49,7 +49,7 @@ public class InstructorServiceImpl implements InstructorService {
 
     @Override
     public Optional<InstructorDTO> partialUpdate(InstructorDTO instructorDTO) {
-        log.debug("Request to partially update Instructor : {}", instructorDTO);
+        LOG.debug("Request to partially update Instructor : {}", instructorDTO);
 
         return instructorRepository
             .findById(instructorDTO.getId())
@@ -65,24 +65,20 @@ public class InstructorServiceImpl implements InstructorService {
     @Override
     @Transactional(readOnly = true)
     public Page<InstructorDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all Instructors");
+        LOG.debug("Request to get all Instructors");
         return instructorRepository.findAll(pageable).map(instructorMapper::toDto);
-    }
-
-    public Page<InstructorDTO> findAllWithEagerRelationships(Pageable pageable) {
-        return instructorRepository.findAllWithEagerRelationships(pageable).map(instructorMapper::toDto);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<InstructorDTO> findOne(Long id) {
-        log.debug("Request to get Instructor : {}", id);
-        return instructorRepository.findOneWithEagerRelationships(id).map(instructorMapper::toDto);
+        LOG.debug("Request to get Instructor : {}", id);
+        return instructorRepository.findById(id).map(instructorMapper::toDto);
     }
 
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Instructor : {}", id);
+        LOG.debug("Request to delete Instructor : {}", id);
         instructorRepository.deleteById(id);
     }
 }

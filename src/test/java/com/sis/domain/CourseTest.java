@@ -1,10 +1,11 @@
 package com.sis.domain;
 
+import static com.sis.domain.AcademicTermsTestSamples.*;
+import static com.sis.domain.AcademicYearTestSamples.*;
 import static com.sis.domain.AppConfigTestSamples.*;
 import static com.sis.domain.CourseTestSamples.*;
 import static com.sis.domain.CurriculumMapTestSamples.*;
-import static com.sis.domain.InstructorTestSamples.*;
-import static com.sis.domain.StudentTestSamples.*;
+import static com.sis.domain.DepartmentsTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.sis.web.rest.TestUtil;
@@ -29,7 +30,7 @@ class CourseTest {
     }
 
     @Test
-    void gradelevelTest() throws Exception {
+    void gradelevelTest() {
         Course course = getCourseRandomSampleGenerator();
         AppConfig appConfigBack = getAppConfigRandomSampleGenerator();
 
@@ -41,7 +42,19 @@ class CourseTest {
     }
 
     @Test
-    void curriculumMapTest() throws Exception {
+    void departmentTest() {
+        Course course = getCourseRandomSampleGenerator();
+        Departments departmentsBack = getDepartmentsRandomSampleGenerator();
+
+        course.setDepartment(departmentsBack);
+        assertThat(course.getDepartment()).isEqualTo(departmentsBack);
+
+        course.department(null);
+        assertThat(course.getDepartment()).isNull();
+    }
+
+    @Test
+    void curriculumMapTest() {
         Course course = getCourseRandomSampleGenerator();
         CurriculumMap curriculumMapBack = getCurriculumMapRandomSampleGenerator();
 
@@ -63,46 +76,26 @@ class CourseTest {
     }
 
     @Test
-    void instructorTest() throws Exception {
+    void yearTest() {
         Course course = getCourseRandomSampleGenerator();
-        Instructor instructorBack = getInstructorRandomSampleGenerator();
+        AcademicYear academicYearBack = getAcademicYearRandomSampleGenerator();
 
-//        course.addInstructor(instructorBack);
-//        assertThat(course.getInstructors()).containsOnly(instructorBack);
-//        assertThat(instructorBack.getCourses()).containsOnly(course);
-//
-//        course.removeInstructor(instructorBack);
-//        assertThat(course.getInstructors()).doesNotContain(instructorBack);
-//        assertThat(instructorBack.getCourses()).doesNotContain(course);
-//
-//        course.instructors(new HashSet<>(Set.of(instructorBack)));
-//        assertThat(course.getInstructors()).containsOnly(instructorBack);
-//        assertThat(instructorBack.getCourses()).containsOnly(course);
-//
-//        course.setInstructors(new HashSet<>());
-//        assertThat(course.getInstructors()).doesNotContain(instructorBack);
-//        assertThat(instructorBack.getCourses()).doesNotContain(course);
+        course.setYear(academicYearBack);
+        assertThat(course.getYear()).isEqualTo(academicYearBack);
+
+        course.year(null);
+        assertThat(course.getYear()).isNull();
     }
 
     @Test
-    void studentTest() throws Exception {
+    void termsTest() {
         Course course = getCourseRandomSampleGenerator();
-        Student studentBack = getStudentRandomSampleGenerator();
+        AcademicTerms academicTermsBack = getAcademicTermsRandomSampleGenerator();
 
-//        course.addStudent(studentBack);
-//        assertThat(course.getStudents()).containsOnly(studentBack);
-//        assertThat(studentBack.getCourses()).containsOnly(course);
-//
-//        course.removeStudent(studentBack);
-//        assertThat(course.getStudents()).doesNotContain(studentBack);
-//        assertThat(studentBack.getCourses()).doesNotContain(course);
-//
-//        course.students(new HashSet<>(Set.of(studentBack)));
-//        assertThat(course.getStudents()).containsOnly(studentBack);
-//        assertThat(studentBack.getCourses()).containsOnly(course);
-//
-//        course.setStudents(new HashSet<>());
-//        assertThat(course.getStudents()).doesNotContain(studentBack);
-//        assertThat(studentBack.getCourses()).doesNotContain(course);
+        course.setTerms(academicTermsBack);
+        assertThat(course.getTerms()).isEqualTo(academicTermsBack);
+
+        course.terms(null);
+        assertThat(course.getTerms()).isNull();
     }
 }

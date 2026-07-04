@@ -3,29 +3,27 @@ import dayjs from 'dayjs/esm';
 import { ICurriculumMap, NewCurriculumMap } from './curriculum-map.model';
 
 export const sampleWithRequiredData: ICurriculumMap = {
-  id: 25507,
+  id: 29680,
 };
 
 export const sampleWithPartialData: ICurriculumMap = {
-  id: 18399,
-  topic: 'mmm phony',
-  contentStandards: 'supposing since regal',
-  performanceStandards: 'thoughtfully',
-  createdDate: dayjs('2024-01-04T07:52'),
-  lastModifiedBy: 'quizzically',
+  id: 18600,
+  quarterNo: 1047,
+  performanceStandards: 'barracks geez zowie',
+  createdDate: dayjs('2026-07-04T11:34'),
 };
 
 export const sampleWithFullData: ICurriculumMap = {
-  id: 25187,
-  quarterNo: 25266,
-  weekNo: 75,
-  topic: 'while',
-  contentStandards: 'truthfully',
-  performanceStandards: 'bust absent creaking',
-  createdBy: 'hmph temptation honorable',
-  createdDate: dayjs('2024-01-03T21:46'),
-  lastModifiedBy: 'provided carefully near',
-  lastModifiedDate: dayjs('2024-01-03T22:57'),
+  id: 2944,
+  quarterNo: 16482,
+  weekNo: 20615,
+  topic: 'the glorious long',
+  contentStandards: 'firsthand boohoo',
+  performanceStandards: 'vastly ethyl',
+  createdBy: 'vengeful riser noted',
+  createdDate: dayjs('2026-07-04T10:07'),
+  lastModifiedBy: 'over',
+  lastModifiedDate: dayjs('2026-07-04T13:57'),
 };
 
 export const sampleWithNewData: NewCurriculumMap = {

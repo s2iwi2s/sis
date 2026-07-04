@@ -5,11 +5,7 @@ import com.sis.repository.AssessmentRepository;
 import com.sis.service.AssessmentService;
 import com.sis.service.dto.AssessmentDTO;
 import com.sis.service.mapper.AssessmentMapper;
-
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -24,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class AssessmentServiceImpl implements AssessmentService {
 
-    private final Logger log = LoggerFactory.getLogger(AssessmentServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AssessmentServiceImpl.class);
 
     private final AssessmentRepository assessmentRepository;
 
@@ -37,7 +33,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public AssessmentDTO save(AssessmentDTO assessmentDTO) {
-        log.debug("Request to save Assessment : {}", assessmentDTO);
+        LOG.debug("Request to save Assessment : {}", assessmentDTO);
         Assessment assessment = assessmentMapper.toEntity(assessmentDTO);
         assessment = assessmentRepository.save(assessment);
         return assessmentMapper.toDto(assessment);
@@ -45,7 +41,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public AssessmentDTO update(AssessmentDTO assessmentDTO) {
-        log.debug("Request to update Assessment : {}", assessmentDTO);
+        LOG.debug("Request to update Assessment : {}", assessmentDTO);
         Assessment assessment = assessmentMapper.toEntity(assessmentDTO);
         assessment = assessmentRepository.save(assessment);
         return assessmentMapper.toDto(assessment);
@@ -53,7 +49,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public Optional<AssessmentDTO> partialUpdate(AssessmentDTO assessmentDTO) {
-        log.debug("Request to partially update Assessment : {}", assessmentDTO);
+        LOG.debug("Request to partially update Assessment : {}", assessmentDTO);
 
         return assessmentRepository
             .findById(assessmentDTO.getId())
@@ -69,7 +65,7 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Override
     @Transactional(readOnly = true)
     public Page<AssessmentDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all Assessments");
+        LOG.debug("Request to get all Assessments");
         return assessmentRepository.findAll(pageable).map(assessmentMapper::toDto);
     }
 
@@ -80,31 +76,13 @@ public class AssessmentServiceImpl implements AssessmentService {
     @Override
     @Transactional(readOnly = true)
     public Optional<AssessmentDTO> findOne(Long id) {
-        log.debug("Request to get Assessment : {}", id);
+        LOG.debug("Request to get Assessment : {}", id);
         return assessmentRepository.findOneWithEagerRelationships(id).map(assessmentMapper::toDto);
     }
 
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Assessment : {}", id);
+        LOG.debug("Request to delete Assessment : {}", id);
         assessmentRepository.deleteById(id);
-    }
-
-    @Override
-    public void delete(Long id, Long resourcesId) {
-        assessmentRepository
-            .findById(id)
-            .ifPresent(a -> this.deleteResource(a, resourcesId));
-    }
-
-    @Override
-    public List<AssessmentDTO> findAllByCourse(Long courseId) {
-        return assessmentRepository.findAllByCourseId(courseId)
-            .stream().map(assessmentMapper::toDto).collect(Collectors.toList());
-    }
-
-    private void deleteResource(Assessment a, Long resourcesId) {
-        Assessment assessment = a.removeResources(resourcesId);
-        this.assessmentRepository.save(assessment);
     }
 }

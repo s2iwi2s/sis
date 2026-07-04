@@ -3,30 +3,28 @@ import dayjs from 'dayjs/esm';
 import { IAppConfig, NewAppConfig } from './app-config.model';
 
 export const sampleWithRequiredData: IAppConfig = {
-  id: 4221,
+  id: 9401,
 };
 
 export const sampleWithPartialData: IAppConfig = {
-  id: 29222,
-  value: 'hence',
-  json: '../fake-data/blob/hipster.txt',
-  priority: 9075,
-  createdBy: 'phooey',
-  lastModifiedBy: 'feud apropos',
-  lastModifiedDate: dayjs('2024-01-03T15:32'),
+  id: 13419,
+  code: 'pupil toady',
+  value: 'aha',
+  description: 'nor',
+  createdBy: 'about despite',
 };
 
 export const sampleWithFullData: IAppConfig = {
-  id: 19118,
-  code: 'damage',
-  value: 'aw',
-  description: 'what',
+  id: 11442,
+  code: 'inspect because',
+  value: 'whenever',
+  description: 'cake',
   json: '../fake-data/blob/hipster.txt',
-  priority: 20008,
-  createdBy: 'teem mostly phooey',
-  createdDate: dayjs('2024-01-03T21:37'),
-  lastModifiedBy: 'husky',
-  lastModifiedDate: dayjs('2024-01-03T16:20'),
+  priority: 10825,
+  createdBy: 'our for however',
+  createdDate: dayjs('2026-07-04T08:28'),
+  lastModifiedBy: 'athletic charter about',
+  lastModifiedDate: dayjs('2026-07-04T05:37'),
 };
 
 export const sampleWithNewData: NewAppConfig = {

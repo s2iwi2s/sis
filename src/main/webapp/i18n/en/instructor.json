@@ -22,7 +22,7 @@
       "middleName": "Middle Name",
       "lastName": "Last Name",
       "email": "Email",
-      "phoneNumber": "Phone No",
+      "phoneNumber": "Phone Number",
       "hireDate": "Hire Date",
       "salary": "Salary",
       "commissionPct": "Commission Pct",
@@ -31,8 +31,8 @@
       "lastModifiedBy": "Last Modified By",
       "lastModifiedDate": "Last Modified Date",
       "gender": "Gender",
-      "course": "Course",
-      "courses": "Courses"
+      "user": "User",
+      "courseSchedule": "Course Schedule"
     }
   }
 }

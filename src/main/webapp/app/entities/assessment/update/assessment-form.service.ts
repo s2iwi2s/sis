@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
+
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IAssessment, NewAssessment } from '../assessment.model';
 
@@ -28,7 +29,7 @@ type AssessmentFormRawValue = FormValueOf<IAssessment>;
 
 type NewAssessmentFormRawValue = FormValueOf<NewAssessment>;
 
-type AssessmentFormDefaults = Pick<NewAssessment, 'id' | 'createdDate' | 'lastModifiedDate' | 'resources'>;
+type AssessmentFormDefaults = Pick<NewAssessment, 'id' | 'createdDate' | 'lastModifiedDate' | 'resourceses'>;
 
 type AssessmentFormGroupContent = {
   id: FormControl<AssessmentFormRawValue['id'] | NewAssessment['id']>;
@@ -39,7 +40,7 @@ type AssessmentFormGroupContent = {
   createdDate: FormControl<AssessmentFormRawValue['createdDate']>;
   lastModifiedBy: FormControl<AssessmentFormRawValue['lastModifiedBy']>;
   lastModifiedDate: FormControl<AssessmentFormRawValue['lastModifiedDate']>;
-  resources: FormControl<AssessmentFormRawValue['resources']>;
+  resourceses: FormControl<AssessmentFormRawValue['resourceses']>;
   learningCompetency: FormControl<AssessmentFormRawValue['learningCompetency']>;
 };
 
@@ -47,10 +48,10 @@ export type AssessmentFormGroup = FormGroup<AssessmentFormGroupContent>;
 
 @Injectable({ providedIn: 'root' })
 export class AssessmentFormService {
-  createAssessmentFormGroup(assessment: AssessmentFormGroupInput = { id: null }): AssessmentFormGroup {
+  createAssessmentFormGroup(assessment?: AssessmentFormGroupInput): AssessmentFormGroup {
     const assessmentRawValue = this.convertAssessmentToAssessmentRawValue({
       ...this.getFormDefaults(),
-      ...assessment,
+      ...(assessment ?? { id: null }),
     });
     return new FormGroup<AssessmentFormGroupContent>({
       id: new FormControl(
@@ -71,23 +72,21 @@ export class AssessmentFormService {
         validators: [Validators.maxLength(50)],
       }),
       lastModifiedDate: new FormControl(assessmentRawValue.lastModifiedDate),
-      resources: new FormControl(assessmentRawValue.resources ?? []),
+      resourceses: new FormControl(assessmentRawValue.resourceses ?? []),
       learningCompetency: new FormControl(assessmentRawValue.learningCompetency),
     });
   }
 
   getAssessment(form: AssessmentFormGroup): IAssessment | NewAssessment {
-    return this.convertAssessmentRawValueToAssessment(form.getRawValue() as AssessmentFormRawValue | NewAssessmentFormRawValue);
+    return this.convertAssessmentRawValueToAssessment(form.getRawValue());
   }
 
   resetForm(form: AssessmentFormGroup, assessment: AssessmentFormGroupInput): void {
     const assessmentRawValue = this.convertAssessmentToAssessmentRawValue({ ...this.getFormDefaults(), ...assessment });
-    form.reset(
-      {
-        ...assessmentRawValue,
-        id: { value: assessmentRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
-    );
+    form.reset({
+      ...assessmentRawValue,
+      id: { value: assessmentRawValue.id, disabled: true },
+    });
   }
 
   private getFormDefaults(): AssessmentFormDefaults {
@@ -97,7 +96,7 @@ export class AssessmentFormService {
       id: null,
       createdDate: currentTime,
       lastModifiedDate: currentTime,
-      resources: [],
+      resourceses: [],
     };
   }
 
@@ -118,7 +117,7 @@ export class AssessmentFormService {
       ...assessment,
       createdDate: assessment.createdDate ? assessment.createdDate.format(DATE_TIME_FORMAT) : undefined,
       lastModifiedDate: assessment.lastModifiedDate ? assessment.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
-      resources: assessment.resources ?? [],
+      resourceses: assessment.resourceses ?? [],
     };
   }
 }

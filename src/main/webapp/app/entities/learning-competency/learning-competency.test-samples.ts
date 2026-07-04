@@ -3,23 +3,26 @@ import dayjs from 'dayjs/esm';
 import { ILearningCompetency, NewLearningCompetency } from './learning-competency.model';
 
 export const sampleWithRequiredData: ILearningCompetency = {
-  id: 15527,
+  id: 4120,
 };
 
 export const sampleWithPartialData: ILearningCompetency = {
-  id: 1115,
-  createdDate: dayjs('2024-01-04T03:35'),
+  id: 15074,
+  description: 'ah amidst',
+  createdBy: 'furiously ah',
+  createdDate: dayjs('2026-07-04T07:51'),
+  lastModifiedDate: dayjs('2026-07-04T10:51'),
 };
 
 export const sampleWithFullData: ILearningCompetency = {
-  id: 30946,
-  seqNo: 13563,
-  competencyCode: 'after underline',
-  description: 'soupy',
-  createdBy: 'whirlwind reassign than',
-  createdDate: dayjs('2024-01-03T19:21'),
-  lastModifiedBy: 'shimmer',
-  lastModifiedDate: dayjs('2024-01-03T20:23'),
+  id: 18941,
+  seqNo: 22983,
+  competencyCode: 'boastfully consequently lobster',
+  description: 'uh-huh',
+  createdBy: 'across vain consequently',
+  createdDate: dayjs('2026-07-04T02:26'),
+  lastModifiedBy: 'sate long',
+  lastModifiedDate: dayjs('2026-07-04T02:30'),
 };
 
 export const sampleWithNewData: NewLearningCompetency = {

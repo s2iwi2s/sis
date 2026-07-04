@@ -1,0 +1,100 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (courseSchedule(); as courseScheduleRef) {
+      <div>
+        <h2 data-cy="courseScheduleDetailsHeading">
+          <span jhiTranslate="schInfoSysApp.courseSchedule.detail.title">Course Schedule</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ courseScheduleRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.courseSchedule.room">Room</span></dt>
+          <dd>
+            <span>{{ courseScheduleRef.room }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.courseSchedule.weekDay">Week Day</span></dt>
+          <dd>
+            <span>{{ courseScheduleRef.weekDay }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.courseSchedule.startTime">Start Time</span></dt>
+          <dd>
+            <span>{{ courseScheduleRef.startTime | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.courseSchedule.endTime">End Time</span></dt>
+          <dd>
+            <span>{{ courseScheduleRef.endTime | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.courseSchedule.description">Description</span></dt>
+          <dd>
+            <span>{{ courseScheduleRef.description }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.courseSchedule.createdBy">Created By</span></dt>
+          <dd>
+            <span>{{ courseScheduleRef.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.courseSchedule.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ courseScheduleRef.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.courseSchedule.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ courseScheduleRef.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.courseSchedule.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ courseScheduleRef.lastModifiedDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.courseSchedule.terms">Terms</span></dt>
+          <dd>
+            @if (courseSchedule()!.terms) {
+              <div>
+                <a [routerLink]="['/academic-terms', courseSchedule()!.terms?.id, 'view']">{{ courseScheduleRef.terms?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.courseSchedule.year">Year</span></dt>
+          <dd>
+            @if (courseSchedule()!.year) {
+              <div>
+                <a [routerLink]="['/academic-year', courseSchedule()!.year?.id, 'view']">{{ courseScheduleRef.year?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.courseSchedule.instructor">Instructor</span></dt>
+          <dd>
+            @if (courseSchedule()!.instructor) {
+              <div>
+                <a [routerLink]="['/instructor', courseSchedule()!.instructor?.id, 'view']">{{ courseScheduleRef.instructor?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.courseSchedule.student">Student</span></dt>
+          <dd>
+            @if (courseSchedule()!.student) {
+              <div>
+                <a [routerLink]="['/student', courseSchedule()!.student?.id, 'view']">{{ courseScheduleRef.student?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/course-schedule', courseScheduleRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

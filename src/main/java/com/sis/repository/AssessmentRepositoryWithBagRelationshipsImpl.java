@@ -3,7 +3,6 @@ package com.sis.repository;
 import com.sis.domain.Assessment;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -16,12 +15,15 @@ import org.springframework.data.domain.PageImpl;
  */
 public class AssessmentRepositoryWithBagRelationshipsImpl implements AssessmentRepositoryWithBagRelationships {
 
+    private static final String ID_PARAMETER = "id";
+    private static final String ASSESSMENTS_PARAMETER = "assessments";
+
     @PersistenceContext
     private EntityManager entityManager;
 
     @Override
     public Optional<Assessment> fetchBagRelationships(Optional<Assessment> assessment) {
-        return assessment.map(this::fetchResources);
+        return assessment.map(this::fetchResourceses);
     }
 
     @Override
@@ -31,30 +33,30 @@ public class AssessmentRepositoryWithBagRelationshipsImpl implements AssessmentR
 
     @Override
     public List<Assessment> fetchBagRelationships(List<Assessment> assessments) {
-        return Optional.of(assessments).map(this::fetchResources).orElse(Collections.emptyList());
+        return Optional.of(assessments).map(this::fetchResourceses).orElse(List.of());
     }
 
-    Assessment fetchResources(Assessment result) {
+    Assessment fetchResourceses(Assessment result) {
         return entityManager
             .createQuery(
-                "select assessment from Assessment assessment left join fetch assessment.resources where assessment.id = :id",
+                "select assessment from Assessment assessment left join fetch assessment.resourceses where assessment.id = :id",
                 Assessment.class
             )
-            .setParameter("id", result.getId())
+            .setParameter(ID_PARAMETER, result.getId())
             .getSingleResult();
     }
 
-    List<Assessment> fetchResources(List<Assessment> assessments) {
+    List<Assessment> fetchResourceses(List<Assessment> assessments) {
         HashMap<Object, Integer> order = new HashMap<>();
         IntStream.range(0, assessments.size()).forEach(index -> order.put(assessments.get(index).getId(), index));
         List<Assessment> result = entityManager
             .createQuery(
-                "select assessment from Assessment assessment left join fetch assessment.resources where assessment in :assessments",
+                "select assessment from Assessment assessment left join fetch assessment.resourceses where assessment in :assessments",
                 Assessment.class
             )
-            .setParameter("assessments", assessments)
+            .setParameter(ASSESSMENTS_PARAMETER, assessments)
             .getResultList();
-        Collections.sort(result, (o1, o2) -> Integer.compare(order.get(o1.getId()), order.get(o2.getId())));
+        result.sort((o1, o2) -> Integer.compare(order.get(o1.getId()), order.get(o2.getId())));
         return result;
     }
 }

@@ -1,0 +1,94 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (course(); as courseRef) {
+      <div>
+        <h2 data-cy="courseDetailsHeading"><span jhiTranslate="schInfoSysApp.course.detail.title">Course</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ courseRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.subject">Subject</span></dt>
+          <dd>
+            <span>{{ courseRef.subject }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.hoursPerQuarter">Hours Per Quarter</span></dt>
+          <dd>
+            <span>{{ courseRef.hoursPerQuarter }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.courseDescription">Course Description</span></dt>
+          <dd>
+            <span>{{ courseRef.courseDescription }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.courseObjectives">Course Objectives</span></dt>
+          <dd>
+            <span>{{ courseRef.courseObjectives }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.createdBy">Created By</span></dt>
+          <dd>
+            <span>{{ courseRef.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ courseRef.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ courseRef.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ courseRef.lastModifiedDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.gradelevel">Gradelevel</span></dt>
+          <dd>
+            @if (course()!.gradelevel) {
+              <div>
+                <a [routerLink]="['/app-config', course()!.gradelevel?.id, 'view']">{{ courseRef.gradelevel?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.department">Department</span></dt>
+          <dd>
+            @if (course()!.department) {
+              <div>
+                <a [routerLink]="['/departments', course()!.department?.id, 'view']">{{ courseRef.department?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.year">Year</span></dt>
+          <dd>
+            @if (course()!.year) {
+              <div>
+                <a [routerLink]="['/academic-year', course()!.year?.id, 'view']">{{ courseRef.year?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.course.terms">Terms</span></dt>
+          <dd>
+            @if (course()!.terms) {
+              <div>
+                <a [routerLink]="['/academic-terms', course()!.terms?.id, 'view']">{{ courseRef.terms?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/course', courseRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

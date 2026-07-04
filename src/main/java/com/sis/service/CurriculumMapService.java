@@ -1,8 +1,6 @@
 package com.sis.service;
 
 import com.sis.service.dto.CurriculumMapDTO;
-
-import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,6 +55,4 @@ public interface CurriculumMapService {
      * @param id the id of the entity.
      */
     void delete(Long id);
-
-    List<CurriculumMapDTO> findByCourse(Long courseId);
 }

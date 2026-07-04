@@ -1,0 +1,74 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (curriculumMap(); as curriculumMapRef) {
+      <div>
+        <h2 data-cy="curriculumMapDetailsHeading"><span jhiTranslate="schInfoSysApp.curriculumMap.detail.title">Curriculum Map</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ curriculumMapRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.curriculumMap.quarterNo">Quarter No</span></dt>
+          <dd>
+            <span>{{ curriculumMapRef.quarterNo }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.curriculumMap.weekNo">Week No</span></dt>
+          <dd>
+            <span>{{ curriculumMapRef.weekNo }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.curriculumMap.topic">Topic</span></dt>
+          <dd>
+            <span>{{ curriculumMapRef.topic }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.curriculumMap.contentStandards">Content Standards</span></dt>
+          <dd>
+            <span>{{ curriculumMapRef.contentStandards }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.curriculumMap.performanceStandards">Performance Standards</span></dt>
+          <dd>
+            <span>{{ curriculumMapRef.performanceStandards }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.curriculumMap.createdBy">Created By</span></dt>
+          <dd>
+            <span>{{ curriculumMapRef.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.curriculumMap.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ curriculumMapRef.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.curriculumMap.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ curriculumMapRef.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.curriculumMap.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ curriculumMapRef.lastModifiedDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.curriculumMap.course">Course</span></dt>
+          <dd>
+            @if (curriculumMap()!.course) {
+              <div>
+                <a [routerLink]="['/course', curriculumMap()!.course?.id, 'view']">{{ curriculumMapRef.course?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/curriculum-map', curriculumMapRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

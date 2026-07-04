@@ -1,12 +1,7 @@
 package com.sis.service;
 
 import com.sis.service.dto.ResourcesDTO;
-
-import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -20,7 +15,7 @@ public interface ResourcesService {
      * @param resourcesDTO the entity to save.
      * @return the persisted entity.
      */
-    ResourcesDTO save(ResourcesDTO resourcesDTO) throws IOException;
+    ResourcesDTO save(ResourcesDTO resourcesDTO);
 
     /**
      * Updates a resources.
@@ -39,7 +34,7 @@ public interface ResourcesService {
     Optional<ResourcesDTO> partialUpdate(ResourcesDTO resourcesDTO);
 
     /**
-     * Get all the resources.
+     * Get all the resourceses.
      *
      * @param pageable the pagination information.
      * @return the list of entities.
@@ -60,8 +55,4 @@ public interface ResourcesService {
      * @param id the id of the entity.
      */
     void delete(Long id);
-
-    Set<ResourcesDTO> findResourcesByAssessments(Long assessmentId);
-
-    Set<ResourcesDTO> findResourcesByStrategies(Long strategiesId);
 }

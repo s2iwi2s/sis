@@ -1,6 +1,7 @@
 import dayjs from 'dayjs/esm';
+
 import { IAppConfig } from 'app/entities/app-config/app-config.model';
-import { ICourse } from 'app/entities/course/course.model';
+import { IUser } from 'app/entities/user/user.model';
 
 export interface IInstructor {
   id: number;
@@ -16,8 +17,8 @@ export interface IInstructor {
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
-  gender?: Pick<IAppConfig, 'id'|'description'> | null;
-  courses?: Pick<ICourse, 'id'>[] | null;
+  gender?: Pick<IAppConfig, 'id'> | null;
+  user?: Pick<IUser, 'id'> | null;
 }
 
 export type NewInstructor = Omit<IInstructor, 'id'> & { id: null };

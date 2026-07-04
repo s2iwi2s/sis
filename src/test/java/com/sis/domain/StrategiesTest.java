@@ -27,25 +27,25 @@ class StrategiesTest {
     }
 
     @Test
-    void resourcesTest() throws Exception {
+    void resourcesTest() {
         Strategies strategies = getStrategiesRandomSampleGenerator();
         Resources resourcesBack = getResourcesRandomSampleGenerator();
 
         strategies.addResources(resourcesBack);
-        assertThat(strategies.getResources()).containsOnly(resourcesBack);
+        assertThat(strategies.getResourceses()).containsOnly(resourcesBack);
 
         strategies.removeResources(resourcesBack);
-        assertThat(strategies.getResources()).doesNotContain(resourcesBack);
+        assertThat(strategies.getResourceses()).doesNotContain(resourcesBack);
 
-        strategies.resources(new HashSet<>(Set.of(resourcesBack)));
-        assertThat(strategies.getResources()).containsOnly(resourcesBack);
+        strategies.resourceses(new HashSet<>(Set.of(resourcesBack)));
+        assertThat(strategies.getResourceses()).containsOnly(resourcesBack);
 
-        strategies.setResources(new HashSet<>());
-        assertThat(strategies.getResources()).doesNotContain(resourcesBack);
+        strategies.setResourceses(new HashSet<>());
+        assertThat(strategies.getResourceses()).doesNotContain(resourcesBack);
     }
 
     @Test
-    void learningCompetencyTest() throws Exception {
+    void learningCompetencyTest() {
         Strategies strategies = getStrategiesRandomSampleGenerator();
         LearningCompetency learningCompetencyBack = getLearningCompetencyRandomSampleGenerator();
 

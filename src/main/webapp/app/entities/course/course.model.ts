@@ -1,8 +1,9 @@
 import dayjs from 'dayjs/esm';
+
+import { IAcademicTerms } from 'app/entities/academic-terms/academic-terms.model';
+import { IAcademicYear } from 'app/entities/academic-year/academic-year.model';
 import { IAppConfig } from 'app/entities/app-config/app-config.model';
-import { ICurriculumMap } from 'app/entities/curriculum-map/curriculum-map.model';
-import { IInstructor } from 'app/entities/instructor/instructor.model';
-import { IStudent } from 'app/entities/student/student.model';
+import { IDepartments } from 'app/entities/departments/departments.model';
 
 export interface ICourse {
   id: number;
@@ -14,11 +15,10 @@ export interface ICourse {
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
-  gradelevel?: Pick<IAppConfig, 'id'|'description'> | null;
-  schYr?: Pick<IAppConfig, 'id'|'description'> | null;
-  curriculumMaps?: Pick<ICurriculumMap, 'id'>[] | null;
-  instructors?: Pick<IInstructor, 'id'>[] | null;
-  students?: Pick<IStudent, 'id'>[] | null;
+  gradelevel?: Pick<IAppConfig, 'id'> | null;
+  department?: Pick<IDepartments, 'id'> | null;
+  year?: Pick<IAcademicYear, 'id'> | null;
+  terms?: Pick<IAcademicTerms, 'id'> | null;
 }
 
 export type NewCourse = Omit<ICourse, 'id'> & { id: null };

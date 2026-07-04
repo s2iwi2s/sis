@@ -31,11 +31,11 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/curriculum-maps")
 public class CurriculumMapResource {
 
-    private final Logger log = LoggerFactory.getLogger(CurriculumMapResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CurriculumMapResource.class);
 
     private static final String ENTITY_NAME = "curriculumMap";
 
-    @Value("${jhipster.clientApp.name}")
+    @Value("${jhipster.clientApp.name:schInfoSys}")
     private String applicationName;
 
     private final CurriculumMapService curriculumMapService;
@@ -57,15 +57,14 @@ public class CurriculumMapResource {
     @PostMapping("")
     public ResponseEntity<CurriculumMapDTO> createCurriculumMap(@Valid @RequestBody CurriculumMapDTO curriculumMapDTO)
         throws URISyntaxException {
-        log.debug("REST request to save CurriculumMap : {}", curriculumMapDTO);
+        LOG.debug("REST request to save CurriculumMap : {}", curriculumMapDTO);
         if (curriculumMapDTO.getId() != null) {
             throw new BadRequestAlertException("A new curriculumMap cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        CurriculumMapDTO result = curriculumMapService.save(curriculumMapDTO);
-        return ResponseEntity
-            .created(new URI("/api/curriculum-maps/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        curriculumMapDTO = curriculumMapService.save(curriculumMapDTO);
+        return ResponseEntity.created(new URI("/api/curriculum-maps/" + curriculumMapDTO.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, curriculumMapDTO.getId().toString()))
+            .body(curriculumMapDTO);
     }
 
     /**
@@ -83,7 +82,7 @@ public class CurriculumMapResource {
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody CurriculumMapDTO curriculumMapDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update CurriculumMap : {}, {}", id, curriculumMapDTO);
+        LOG.debug("REST request to update CurriculumMap : {}, {}", id, curriculumMapDTO);
         if (curriculumMapDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -95,11 +94,10 @@ public class CurriculumMapResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        CurriculumMapDTO result = curriculumMapService.update(curriculumMapDTO);
-        return ResponseEntity
-            .ok()
+        curriculumMapDTO = curriculumMapService.update(curriculumMapDTO);
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, curriculumMapDTO.getId().toString()))
-            .body(result);
+            .body(curriculumMapDTO);
     }
 
     /**
@@ -118,7 +116,7 @@ public class CurriculumMapResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody CurriculumMapDTO curriculumMapDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update CurriculumMap partially : {}, {}", id, curriculumMapDTO);
+        LOG.debug("REST request to partial update CurriculumMap partially : {}, {}", id, curriculumMapDTO);
         if (curriculumMapDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -139,14 +137,14 @@ public class CurriculumMapResource {
     }
 
     /**
-     * {@code GET  /curriculum-maps} : get all the curriculumMaps.
+     * {@code GET  /curriculum-maps} : get all the Curriculum Maps.
      *
      * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of curriculumMaps in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Curriculum Maps in body.
      */
     @GetMapping("")
     public ResponseEntity<List<CurriculumMapDTO>> getAllCurriculumMaps(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
-        log.debug("REST request to get a page of CurriculumMaps");
+        LOG.debug("REST request to get a page of CurriculumMaps");
         Page<CurriculumMapDTO> page = curriculumMapService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -160,7 +158,7 @@ public class CurriculumMapResource {
      */
     @GetMapping("/{id}")
     public ResponseEntity<CurriculumMapDTO> getCurriculumMap(@PathVariable("id") Long id) {
-        log.debug("REST request to get CurriculumMap : {}", id);
+        LOG.debug("REST request to get CurriculumMap : {}", id);
         Optional<CurriculumMapDTO> curriculumMapDTO = curriculumMapService.findOne(id);
         return ResponseUtil.wrapOrNotFound(curriculumMapDTO);
     }
@@ -173,17 +171,10 @@ public class CurriculumMapResource {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCurriculumMap(@PathVariable("id") Long id) {
-        log.debug("REST request to delete CurriculumMap : {}", id);
+        LOG.debug("REST request to delete CurriculumMap : {}", id);
         curriculumMapService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
-    }
-    @GetMapping("/{id}/course")
-    public ResponseEntity<List<CurriculumMapDTO>> getCurriculumMapByCourse(@PathVariable("id") Long courseId) {
-        log.debug("REST request to get CurriculumMap By Course: {}", courseId);
-        List<CurriculumMapDTO> curriculumMapDTOs = curriculumMapService.findByCourse(courseId);
-        return ResponseEntity.ok(curriculumMapDTOs);
     }
 }

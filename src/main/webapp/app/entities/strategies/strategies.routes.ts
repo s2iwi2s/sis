@@ -1,24 +1,22 @@
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 import { ASC } from 'app/config/navigation.constants';
-import { StrategiesComponent } from './list/strategies.component';
-import { StrategiesDetailComponent } from './detail/strategies-detail.component';
-import { StrategiesUpdateComponent } from './update/strategies-update.component';
+import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+
 import StrategiesResolve from './route/strategies-routing-resolve.service';
 
 const strategiesRoute: Routes = [
   {
     path: '',
-    component: StrategiesComponent,
+    loadComponent: () => import('./list/strategies').then(m => m.Strategies),
     data: {
-      defaultSort: 'id,' + ASC,
+      defaultSort: `id,${ASC}`,
     },
     canActivate: [UserRouteAccessService],
   },
   {
     path: ':id/view',
-    component: StrategiesDetailComponent,
+    loadComponent: () => import('./detail/strategies-detail').then(m => m.StrategiesDetail),
     resolve: {
       strategies: StrategiesResolve,
     },
@@ -26,15 +24,7 @@ const strategiesRoute: Routes = [
   },
   {
     path: 'new',
-    component: StrategiesUpdateComponent,
-    resolve: {
-      strategies: StrategiesResolve,
-    },
-    canActivate: [UserRouteAccessService],
-  },
-  {
-    path: ':learningCompetencyId/:seqNo/:competencyCode/new',
-    component: StrategiesUpdateComponent,
+    loadComponent: () => import('./update/strategies-update').then(m => m.StrategiesUpdate),
     resolve: {
       strategies: StrategiesResolve,
     },
@@ -42,7 +32,7 @@ const strategiesRoute: Routes = [
   },
   {
     path: ':id/edit',
-    component: StrategiesUpdateComponent,
+    loadComponent: () => import('./update/strategies-update').then(m => m.StrategiesUpdate),
     resolve: {
       strategies: StrategiesResolve,
     },

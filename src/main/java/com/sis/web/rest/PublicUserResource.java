@@ -3,7 +3,6 @@ package com.sis.web.rest;
 import com.sis.service.UserService;
 import com.sis.service.dto.UserDTO;
 import java.util.*;
-import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -20,11 +19,17 @@ import tech.jhipster.web.util.PaginationUtil;
 @RequestMapping("/api")
 public class PublicUserResource {
 
-    private static final List<String> ALLOWED_ORDERED_PROPERTIES = Collections.unmodifiableList(
-        Arrays.asList("id", "login", "firstName", "lastName", "email", "activated", "langKey")
+    private static final List<String> ALLOWED_ORDERED_PROPERTIES = List.of(
+        "id",
+        "login",
+        "firstName",
+        "lastName",
+        "email",
+        "activated",
+        "langKey"
     );
 
-    private final Logger log = LoggerFactory.getLogger(PublicUserResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PublicUserResource.class);
 
     private final UserService userService;
 
@@ -40,7 +45,7 @@ public class PublicUserResource {
      */
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAllPublicUsers(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
-        log.debug("REST request to get all public User names");
+        LOG.debug("REST request to get all public User names");
         if (!onlyContainsAllowedProperties(pageable)) {
             return ResponseEntity.badRequest().build();
         }
@@ -52,14 +57,5 @@ public class PublicUserResource {
 
     private boolean onlyContainsAllowedProperties(Pageable pageable) {
         return pageable.getSort().stream().map(Sort.Order::getProperty).allMatch(ALLOWED_ORDERED_PROPERTIES::contains);
-    }
-
-    /**
-     * Gets a list of all roles.
-     * @return a string list of all roles.
-     */
-    @GetMapping("/authorities")
-    public List<String> getAuthorities() {
-        return userService.getAuthorities();
     }
 }

@@ -1,0 +1,174 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (student(); as studentRef) {
+      <div>
+        <h2 data-cy="studentDetailsHeading"><span jhiTranslate="schInfoSysApp.student.detail.title">Student</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ studentRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.lrn">Lrn</span></dt>
+          <dd>
+            <span>{{ studentRef.lrn }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.firstName">First Name</span></dt>
+          <dd>
+            <span>{{ studentRef.firstName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.middleName">Middle Name</span></dt>
+          <dd>
+            <span>{{ studentRef.middleName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.lastName">Last Name</span></dt>
+          <dd>
+            <span>{{ studentRef.lastName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.extName">Ext Name</span></dt>
+          <dd>
+            <span>{{ studentRef.extName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.birthDate">Birth Date</span></dt>
+          <dd>
+            <span>{{ studentRef.birthDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.birthPlace">Birth Place</span></dt>
+          <dd>
+            <span>{{ studentRef.birthPlace }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.contactNo">Contact No</span></dt>
+          <dd>
+            <span>{{ studentRef.contactNo }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.address1">Address 1</span></dt>
+          <dd>
+            <span>{{ studentRef.address1 }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.address2">Address 2</span></dt>
+          <dd>
+            <span>{{ studentRef.address2 }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.city">City</span></dt>
+          <dd>
+            <span>{{ studentRef.city }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.zipCode">Zip Code</span></dt>
+          <dd>
+            <span>{{ studentRef.zipCode }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.country">Country</span></dt>
+          <dd>
+            <span>{{ studentRef.country }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.nationality">Nationality</span></dt>
+          <dd>
+            <span>{{ studentRef.nationality }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.motherTongue">Mother Tongue</span></dt>
+          <dd>
+            <span>{{ studentRef.motherTongue }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.religion">Religion</span></dt>
+          <dd>
+            <span>{{ studentRef.religion }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.fathersLastName">Fathers Last Name</span></dt>
+          <dd>
+            <span>{{ studentRef.fathersLastName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.fathersMiddleName">Fathers Middle Name</span></dt>
+          <dd>
+            <span>{{ studentRef.fathersMiddleName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.fathersFirstName">Fathers First Name</span></dt>
+          <dd>
+            <span>{{ studentRef.fathersFirstName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.fathersExtName">Fathers Ext Name</span></dt>
+          <dd>
+            <span>{{ studentRef.fathersExtName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.fathersOccupation">Fathers Occupation</span></dt>
+          <dd>
+            <span>{{ studentRef.fathersOccupation }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.fathersContacts">Fathers Contacts</span></dt>
+          <dd>
+            <span>{{ studentRef.fathersContacts }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.mothersLastName">Mothers Last Name</span></dt>
+          <dd>
+            <span>{{ studentRef.mothersLastName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.mothersMiddleName">Mothers Middle Name</span></dt>
+          <dd>
+            <span>{{ studentRef.mothersMiddleName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.mothersFirstName">Mothers First Name</span></dt>
+          <dd>
+            <span>{{ studentRef.mothersFirstName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.mothersOccupation">Mothers Occupation</span></dt>
+          <dd>
+            <span>{{ studentRef.mothersOccupation }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.mothersContacts">Mothers Contacts</span></dt>
+          <dd>
+            <span>{{ studentRef.mothersContacts }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.guardianFullName">Guardian Full Name</span></dt>
+          <dd>
+            <span>{{ studentRef.guardianFullName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.guardianContacts">Guardian Contacts</span></dt>
+          <dd>
+            <span>{{ studentRef.guardianContacts }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.createdBy">Created By</span></dt>
+          <dd>
+            <span>{{ studentRef.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ studentRef.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ studentRef.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ studentRef.lastModifiedDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.gender">Gender</span></dt>
+          <dd>
+            @if (student()!.gender) {
+              <div>
+                <a [routerLink]="['/app-config', student()!.gender?.id, 'view']">{{ studentRef.gender?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.user">User</span></dt>
+          <dd>
+            <span>{{ studentRef.user?.id }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/student', studentRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

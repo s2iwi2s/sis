@@ -1,6 +1,7 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 
-import { sampleWithRequiredData, sampleWithNewData } from '../curriculum-map.test-samples';
+import { sampleWithNewData, sampleWithRequiredData } from '../curriculum-map.test-samples';
 
 import { CurriculumMapFormService } from './curriculum-map-form.service';
 
@@ -8,7 +9,6 @@ describe('CurriculumMap Form Service', () => {
   let service: CurriculumMapFormService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
     service = TestBed.inject(CurriculumMapFormService);
   });
 
@@ -59,7 +59,7 @@ describe('CurriculumMap Form Service', () => {
       it('should return NewCurriculumMap for default CurriculumMap initial value', () => {
         const formGroup = service.createCurriculumMapFormGroup(sampleWithNewData);
 
-        const curriculumMap = service.getCurriculumMap(formGroup) as any;
+        const curriculumMap = service.getCurriculumMap(formGroup);
 
         expect(curriculumMap).toMatchObject(sampleWithNewData);
       });
@@ -67,7 +67,7 @@ describe('CurriculumMap Form Service', () => {
       it('should return NewCurriculumMap for empty CurriculumMap initial value', () => {
         const formGroup = service.createCurriculumMapFormGroup();
 
-        const curriculumMap = service.getCurriculumMap(formGroup) as any;
+        const curriculumMap = service.getCurriculumMap(formGroup);
 
         expect(curriculumMap).toMatchObject({});
       });
@@ -75,7 +75,7 @@ describe('CurriculumMap Form Service', () => {
       it('should return ICurriculumMap', () => {
         const formGroup = service.createCurriculumMapFormGroup(sampleWithRequiredData);
 
-        const curriculumMap = service.getCurriculumMap(formGroup) as any;
+        const curriculumMap = service.getCurriculumMap(formGroup);
 
         expect(curriculumMap).toMatchObject(sampleWithRequiredData);
       });

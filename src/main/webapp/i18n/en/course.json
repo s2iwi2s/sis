@@ -19,7 +19,7 @@
       },
       "id": "ID",
       "subject": "Subject",
-      "hoursPerQuarter": "Hrs/Qtr",
+      "hoursPerQuarter": "Hours Per Quarter",
       "courseDescription": "Course Description",
       "courseObjectives": "Course Objectives",
       "createdBy": "Created By",
@@ -27,10 +27,10 @@
       "lastModifiedBy": "Last Modified By",
       "lastModifiedDate": "Last Modified Date",
       "gradelevel": "Gradelevel",
-      "schYr": "School Yr",
+      "department": "Department",
       "curriculumMap": "Curriculum Map",
-      "instructor": "Instructor",
-      "student": "Student"
+      "year": "Year",
+      "terms": "Terms"
     }
   }
 }

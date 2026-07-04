@@ -31,11 +31,11 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/learning-competencies")
 public class LearningCompetencyResource {
 
-    private final Logger log = LoggerFactory.getLogger(LearningCompetencyResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LearningCompetencyResource.class);
 
     private static final String ENTITY_NAME = "learningCompetency";
 
-    @Value("${jhipster.clientApp.name}")
+    @Value("${jhipster.clientApp.name:schInfoSys}")
     private String applicationName;
 
     private final LearningCompetencyService learningCompetencyService;
@@ -60,15 +60,14 @@ public class LearningCompetencyResource {
     @PostMapping("")
     public ResponseEntity<LearningCompetencyDTO> createLearningCompetency(@Valid @RequestBody LearningCompetencyDTO learningCompetencyDTO)
         throws URISyntaxException {
-        log.debug("REST request to save LearningCompetency : {}", learningCompetencyDTO);
+        LOG.debug("REST request to save LearningCompetency : {}", learningCompetencyDTO);
         if (learningCompetencyDTO.getId() != null) {
             throw new BadRequestAlertException("A new learningCompetency cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        LearningCompetencyDTO result = learningCompetencyService.save(learningCompetencyDTO);
-        return ResponseEntity
-            .created(new URI("/api/learning-competencies/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        learningCompetencyDTO = learningCompetencyService.save(learningCompetencyDTO);
+        return ResponseEntity.created(new URI("/api/learning-competencies/" + learningCompetencyDTO.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, learningCompetencyDTO.getId().toString()))
+            .body(learningCompetencyDTO);
     }
 
     /**
@@ -86,7 +85,7 @@ public class LearningCompetencyResource {
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody LearningCompetencyDTO learningCompetencyDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update LearningCompetency : {}, {}", id, learningCompetencyDTO);
+        LOG.debug("REST request to update LearningCompetency : {}, {}", id, learningCompetencyDTO);
         if (learningCompetencyDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -98,11 +97,10 @@ public class LearningCompetencyResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        LearningCompetencyDTO result = learningCompetencyService.update(learningCompetencyDTO);
-        return ResponseEntity
-            .ok()
+        learningCompetencyDTO = learningCompetencyService.update(learningCompetencyDTO);
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, learningCompetencyDTO.getId().toString()))
-            .body(result);
+            .body(learningCompetencyDTO);
     }
 
     /**
@@ -121,7 +119,7 @@ public class LearningCompetencyResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody LearningCompetencyDTO learningCompetencyDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update LearningCompetency partially : {}, {}", id, learningCompetencyDTO);
+        LOG.debug("REST request to partial update LearningCompetency partially : {}, {}", id, learningCompetencyDTO);
         if (learningCompetencyDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -142,16 +140,16 @@ public class LearningCompetencyResource {
     }
 
     /**
-     * {@code GET  /learning-competencies} : get all the learningCompetencies.
+     * {@code GET  /learning-competencies} : get all the Learning Competencies.
      *
      * @param pageable the pagination information.
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of learningCompetencies in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Learning Competencies in body.
      */
     @GetMapping("")
     public ResponseEntity<List<LearningCompetencyDTO>> getAllLearningCompetencies(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable
     ) {
-        log.debug("REST request to get a page of LearningCompetencies");
+        LOG.debug("REST request to get a page of LearningCompetencies");
         Page<LearningCompetencyDTO> page = learningCompetencyService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
@@ -165,7 +163,7 @@ public class LearningCompetencyResource {
      */
     @GetMapping("/{id}")
     public ResponseEntity<LearningCompetencyDTO> getLearningCompetency(@PathVariable("id") Long id) {
-        log.debug("REST request to get LearningCompetency : {}", id);
+        LOG.debug("REST request to get LearningCompetency : {}", id);
         Optional<LearningCompetencyDTO> learningCompetencyDTO = learningCompetencyService.findOne(id);
         return ResponseUtil.wrapOrNotFound(learningCompetencyDTO);
     }
@@ -178,18 +176,10 @@ public class LearningCompetencyResource {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLearningCompetency(@PathVariable("id") Long id) {
-        log.debug("REST request to delete LearningCompetency : {}", id);
+        LOG.debug("REST request to delete LearningCompetency : {}", id);
         learningCompetencyService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
-    }
-
-    @GetMapping("/{id}/course")
-    public ResponseEntity<List<LearningCompetencyDTO>> getAllLearningCompetenciesByCourse(@PathVariable("id") Long courseId) {
-        log.debug("REST request to get a page of LearningCompetencies");
-        List<LearningCompetencyDTO> list =  learningCompetencyService.findAllByCourse(courseId);
-        return ResponseEntity.ok(list);
     }
 }

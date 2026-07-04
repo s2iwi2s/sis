@@ -1,6 +1,7 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 
-import { sampleWithRequiredData, sampleWithNewData } from '../course.test-samples';
+import { sampleWithNewData, sampleWithRequiredData } from '../course.test-samples';
 
 import { CourseFormService } from './course-form.service';
 
@@ -8,7 +9,6 @@ describe('Course Form Service', () => {
   let service: CourseFormService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
     service = TestBed.inject(CourseFormService);
   });
 
@@ -29,6 +29,9 @@ describe('Course Form Service', () => {
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
             gradelevel: expect.any(Object),
+            department: expect.any(Object),
+            year: expect.any(Object),
+            terms: expect.any(Object),
           }),
         );
       });
@@ -48,6 +51,9 @@ describe('Course Form Service', () => {
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
             gradelevel: expect.any(Object),
+            department: expect.any(Object),
+            year: expect.any(Object),
+            terms: expect.any(Object),
           }),
         );
       });
@@ -57,7 +63,7 @@ describe('Course Form Service', () => {
       it('should return NewCourse for default Course initial value', () => {
         const formGroup = service.createCourseFormGroup(sampleWithNewData);
 
-        const course = service.getCourse(formGroup) as any;
+        const course = service.getCourse(formGroup);
 
         expect(course).toMatchObject(sampleWithNewData);
       });
@@ -65,7 +71,7 @@ describe('Course Form Service', () => {
       it('should return NewCourse for empty Course initial value', () => {
         const formGroup = service.createCourseFormGroup();
 
-        const course = service.getCourse(formGroup) as any;
+        const course = service.getCourse(formGroup);
 
         expect(course).toMatchObject({});
       });
@@ -73,7 +79,7 @@ describe('Course Form Service', () => {
       it('should return ICourse', () => {
         const formGroup = service.createCourseFormGroup(sampleWithRequiredData);
 
-        const course = service.getCourse(formGroup) as any;
+        const course = service.getCourse(formGroup);
 
         expect(course).toMatchObject(sampleWithRequiredData);
       });

@@ -2,13 +2,14 @@ package com.sis.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
+import jakarta.validation.constraints.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Strategies.
@@ -17,12 +18,14 @@ import java.util.Set;
 @Table(name = "strategies")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Strategies extends AbstractAuditingEntity<Long> implements Serializable {
+public class Strategies implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id")
     private Long id;
 
@@ -33,6 +36,20 @@ public class Strategies extends AbstractAuditingEntity<Long> implements Serializ
     @Column(name = "description")
     private String description;
 
+    @Size(max = 50)
+    @Column(name = "created_by", length = 50)
+    private String createdBy;
+
+    @Column(name = "created_date")
+    private Instant createdDate;
+
+    @Size(max = 50)
+    @Column(name = "last_modified_by", length = 50)
+    private String lastModifiedBy;
+
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "rel_strategies__resources",
@@ -40,27 +57,19 @@ public class Strategies extends AbstractAuditingEntity<Long> implements Serializ
         inverseJoinColumns = @JoinColumn(name = "resources_id")
     )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "strategies", "assessments" }, allowSetters = true)
-    private Set<Resources> resources = new HashSet<>();
+    @JsonIgnoreProperties(value = { "strategieses", "assessments" }, allowSetters = true)
+    private Set<Resources> resourceses = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnoreProperties(value = { "strategies", "assessments", "curriculumMap" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "strategieses", "assessments", "curriculumMap" }, allowSetters = true)
     private LearningCompetency learningCompetency;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
-    public Strategies() {
-        super();
-    }
-
-    public Strategies(Long id) {
-        super();
-        this.setId(id);
-    }
-
     public Long getId() {
         return this.id;
     }
+
     public Strategies id(Long id) {
         this.setId(id);
         return this;
@@ -96,9 +105,21 @@ public class Strategies extends AbstractAuditingEntity<Long> implements Serializ
         this.description = description;
     }
 
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
     public Strategies createdBy(String createdBy) {
         this.setCreatedBy(createdBy);
         return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return this.createdDate;
     }
 
     public Strategies createdDate(Instant createdDate) {
@@ -106,9 +127,25 @@ public class Strategies extends AbstractAuditingEntity<Long> implements Serializ
         return this;
     }
 
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
     public Strategies lastModifiedBy(String lastModifiedBy) {
         this.setLastModifiedBy(lastModifiedBy);
         return this;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
     }
 
     public Strategies lastModifiedDate(Instant lastModifiedDate) {
@@ -116,33 +153,30 @@ public class Strategies extends AbstractAuditingEntity<Long> implements Serializ
         return this;
     }
 
-    public Set<Resources> getResources() {
-        return this.resources;
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
-    public void setResources(Set<Resources> resources) {
-        this.resources = resources;
+    public Set<Resources> getResourceses() {
+        return this.resourceses;
     }
 
-    public Strategies resources(Set<Resources> resources) {
-        this.setResources(resources);
+    public void setResourceses(Set<Resources> resourceses) {
+        this.resourceses = resourceses;
+    }
+
+    public Strategies resourceses(Set<Resources> resourceses) {
+        this.setResourceses(resourceses);
         return this;
     }
 
     public Strategies addResources(Resources resources) {
-        this.resources.add(resources);
+        this.resourceses.add(resources);
         return this;
     }
 
     public Strategies removeResources(Resources resources) {
-        this.resources.remove(resources);
-        return this;
-    }
-    public Strategies removeResources(Long resourceId) {
-        this.resources
-            .stream()
-            .filter(r -> r.getId().longValue() == resourceId.longValue())
-            .findFirst().map(r -> this.resources.remove(r));
+        this.resourceses.remove(resources);
         return this;
     }
 

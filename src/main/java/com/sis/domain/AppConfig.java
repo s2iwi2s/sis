@@ -3,6 +3,7 @@ package com.sis.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import org.hibernate.annotations.Cache;
@@ -15,12 +16,14 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "app_config")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class AppConfig extends AbstractAuditingEntity<Long> implements Serializable {
+public class AppConfig implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id")
     private Long id;
 
@@ -40,6 +43,31 @@ public class AppConfig extends AbstractAuditingEntity<Long> implements Serializa
     @Column(name = "priority")
     private Integer priority;
 
+    @Size(max = 50)
+    @Column(name = "created_by", length = 50)
+    private String createdBy;
+
+    @Column(name = "created_date")
+    private Instant createdDate;
+
+    @Size(max = 50)
+    @Column(name = "last_modified_by", length = 50)
+    private String lastModifiedBy;
+
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
+
+    @JsonIgnoreProperties(value = { "gender", "user", "courseSchedules" }, allowSetters = true)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "gender")
+    private Instructor instructor;
+
+    @JsonIgnoreProperties(value = { "gender", "user", "courseSchedules" }, allowSetters = true)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "gender")
+    private Student student;
+
+    @JsonIgnoreProperties(value = { "gradelevel", "department", "curriculumMaps", "year", "terms" }, allowSetters = true)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "gradelevel")
+    private Course course;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -121,9 +149,21 @@ public class AppConfig extends AbstractAuditingEntity<Long> implements Serializa
         this.priority = priority;
     }
 
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
     public AppConfig createdBy(String createdBy) {
         this.setCreatedBy(createdBy);
         return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return this.createdDate;
     }
 
     public AppConfig createdDate(Instant createdDate) {
@@ -131,13 +171,90 @@ public class AppConfig extends AbstractAuditingEntity<Long> implements Serializa
         return this;
     }
 
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
     public AppConfig lastModifiedBy(String lastModifiedBy) {
         this.setLastModifiedBy(lastModifiedBy);
         return this;
     }
 
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
     public AppConfig lastModifiedDate(Instant lastModifiedDate) {
         this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+    public Instructor getInstructor() {
+        return this.instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        if (this.instructor != null) {
+            this.instructor.setGender(null);
+        }
+        if (instructor != null) {
+            instructor.setGender(this);
+        }
+        this.instructor = instructor;
+    }
+
+    public AppConfig instructor(Instructor instructor) {
+        this.setInstructor(instructor);
+        return this;
+    }
+
+    public Student getStudent() {
+        return this.student;
+    }
+
+    public void setStudent(Student student) {
+        if (this.student != null) {
+            this.student.setGender(null);
+        }
+        if (student != null) {
+            student.setGender(this);
+        }
+        this.student = student;
+    }
+
+    public AppConfig student(Student student) {
+        this.setStudent(student);
+        return this;
+    }
+
+    public Course getCourse() {
+        return this.course;
+    }
+
+    public void setCourse(Course course) {
+        if (this.course != null) {
+            this.course.setGradelevel(null);
+        }
+        if (course != null) {
+            course.setGradelevel(this);
+        }
+        this.course = course;
+    }
+
+    public AppConfig course(Course course) {
+        this.setCourse(course);
         return this;
     }
 

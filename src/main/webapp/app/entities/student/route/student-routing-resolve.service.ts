@@ -1,28 +1,29 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
-import { of, EMPTY, Observable } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
 
-import { IStudent } from '../student.model';
+import { EMPTY, Observable, catchError, of } from 'rxjs';
+
 import { StudentService } from '../service/student.service';
+import { IStudent } from '../student.model';
 
-export const studentResolve = (route: ActivatedRouteSnapshot): Observable<null | IStudent> => {
-  const id = route.params['id'];
+const studentResolve = (route: ActivatedRouteSnapshot): Observable<null | IStudent> => {
+  const { id } = route.params;
   if (id) {
-    return inject(StudentService)
-      .find(id)
-      .pipe(
-        mergeMap((student: HttpResponse<IStudent>) => {
-          if (student.body) {
-            return of(student.body);
-          } else {
-            inject(Router).navigate(['404']);
-            return EMPTY;
-          }
-        }),
-      );
+    const router = inject(Router);
+    const service = inject(StudentService);
+    return service.find(id).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          router.navigate(['404']);
+        } else {
+          router.navigate(['error']);
+        }
+        return EMPTY;
+      }),
+    );
   }
+
   return of(null);
 };
 

@@ -28,29 +28,29 @@ class LearningCompetencyTest {
     }
 
     @Test
-    void strategiesTest() throws Exception {
+    void strategiesTest() {
         LearningCompetency learningCompetency = getLearningCompetencyRandomSampleGenerator();
         Strategies strategiesBack = getStrategiesRandomSampleGenerator();
 
         learningCompetency.addStrategies(strategiesBack);
-        assertThat(learningCompetency.getStrategies()).containsOnly(strategiesBack);
+        assertThat(learningCompetency.getStrategieses()).containsOnly(strategiesBack);
         assertThat(strategiesBack.getLearningCompetency()).isEqualTo(learningCompetency);
 
         learningCompetency.removeStrategies(strategiesBack);
-        assertThat(learningCompetency.getStrategies()).doesNotContain(strategiesBack);
+        assertThat(learningCompetency.getStrategieses()).doesNotContain(strategiesBack);
         assertThat(strategiesBack.getLearningCompetency()).isNull();
 
-        learningCompetency.strategies(new HashSet<>(Set.of(strategiesBack)));
-        assertThat(learningCompetency.getStrategies()).containsOnly(strategiesBack);
+        learningCompetency.strategieses(new HashSet<>(Set.of(strategiesBack)));
+        assertThat(learningCompetency.getStrategieses()).containsOnly(strategiesBack);
         assertThat(strategiesBack.getLearningCompetency()).isEqualTo(learningCompetency);
 
-        learningCompetency.setStrategies(new HashSet<>());
-        assertThat(learningCompetency.getStrategies()).doesNotContain(strategiesBack);
+        learningCompetency.setStrategieses(new HashSet<>());
+        assertThat(learningCompetency.getStrategieses()).doesNotContain(strategiesBack);
         assertThat(strategiesBack.getLearningCompetency()).isNull();
     }
 
     @Test
-    void assessmentTest() throws Exception {
+    void assessmentTest() {
         LearningCompetency learningCompetency = getLearningCompetencyRandomSampleGenerator();
         Assessment assessmentBack = getAssessmentRandomSampleGenerator();
 
@@ -72,7 +72,7 @@ class LearningCompetencyTest {
     }
 
     @Test
-    void curriculumMapTest() throws Exception {
+    void curriculumMapTest() {
         LearningCompetency learningCompetency = getLearningCompetencyRandomSampleGenerator();
         CurriculumMap curriculumMapBack = getCurriculumMapRandomSampleGenerator();
 

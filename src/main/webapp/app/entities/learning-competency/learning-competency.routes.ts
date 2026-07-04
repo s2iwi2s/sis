@@ -1,24 +1,22 @@
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 import { ASC } from 'app/config/navigation.constants';
-import { LearningCompetencyComponent } from './list/learning-competency.component';
-import { LearningCompetencyDetailComponent } from './detail/learning-competency-detail.component';
-import { LearningCompetencyUpdateComponent } from './update/learning-competency-update.component';
+import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+
 import LearningCompetencyResolve from './route/learning-competency-routing-resolve.service';
 
 const learningCompetencyRoute: Routes = [
   {
     path: '',
-    component: LearningCompetencyComponent,
+    loadComponent: () => import('./list/learning-competency').then(m => m.LearningCompetency),
     data: {
-      defaultSort: 'id,' + ASC,
+      defaultSort: `id,${ASC}`,
     },
     canActivate: [UserRouteAccessService],
   },
   {
     path: ':id/view',
-    component: LearningCompetencyDetailComponent,
+    loadComponent: () => import('./detail/learning-competency-detail').then(m => m.LearningCompetencyDetail),
     resolve: {
       learningCompetency: LearningCompetencyResolve,
     },
@@ -26,15 +24,7 @@ const learningCompetencyRoute: Routes = [
   },
   {
     path: 'new',
-    component: LearningCompetencyUpdateComponent,
-    resolve: {
-      learningCompetency: LearningCompetencyResolve,
-    },
-    canActivate: [UserRouteAccessService],
-  },
-  {
-    path: ':curriculumMapId/new',
-    component: LearningCompetencyUpdateComponent,
+    loadComponent: () => import('./update/learning-competency-update').then(m => m.LearningCompetencyUpdate),
     resolve: {
       learningCompetency: LearningCompetencyResolve,
     },
@@ -42,7 +32,7 @@ const learningCompetencyRoute: Routes = [
   },
   {
     path: ':id/edit',
-    component: LearningCompetencyUpdateComponent,
+    loadComponent: () => import('./update/learning-competency-update').then(m => m.LearningCompetencyUpdate),
     resolve: {
       learningCompetency: LearningCompetencyResolve,
     },

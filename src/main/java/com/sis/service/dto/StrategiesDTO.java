@@ -1,5 +1,6 @@
 package com.sis.service.dto;
 
+import jakarta.persistence.Lob;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
@@ -17,6 +18,7 @@ public class StrategiesDTO implements Serializable {
 
     private String name;
 
+    @Lob
     private String description;
 
     @Size(max = 50)
@@ -29,7 +31,7 @@ public class StrategiesDTO implements Serializable {
 
     private Instant lastModifiedDate;
 
-    private Set<ResourcesDTO> resources = new HashSet<>();
+    private Set<ResourcesDTO> resourceses = new HashSet<>();
 
     private LearningCompetencyDTO learningCompetency;
 
@@ -89,12 +91,12 @@ public class StrategiesDTO implements Serializable {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public Set<ResourcesDTO> getResources() {
-        return resources;
+    public Set<ResourcesDTO> getResourceses() {
+        return resourceses;
     }
 
-    public void setResources(Set<ResourcesDTO> resources) {
-        this.resources = resources;
+    public void setResourceses(Set<ResourcesDTO> resourceses) {
+        this.resourceses = resourceses;
     }
 
     public LearningCompetencyDTO getLearningCompetency() {
@@ -110,10 +112,11 @@ public class StrategiesDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof StrategiesDTO strategiesDTO)) {
+        if (!(o instanceof StrategiesDTO)) {
             return false;
         }
 
+        StrategiesDTO strategiesDTO = (StrategiesDTO) o;
         if (this.id == null) {
             return false;
         }
@@ -136,7 +139,7 @@ public class StrategiesDTO implements Serializable {
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
-            ", resources=" + getResources() +
+            ", resourceses=" + getResourceses() +
             ", learningCompetency=" + getLearningCompetency() +
             "}";
     }

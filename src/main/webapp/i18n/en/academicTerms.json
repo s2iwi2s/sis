@@ -1,0 +1,33 @@
+{
+  "schInfoSysApp": {
+    "academicTerms": {
+      "home": {
+        "title": "Academic Terms",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Academic Terms",
+        "createOrEditLabel": "Create or edit a Academic Terms",
+        "notFound": "No Academic Terms found"
+      },
+      "created": "A new Academic Terms is created with identifier {{ param }}",
+      "updated": "A Academic Terms is updated with identifier {{ param }}",
+      "deleted": "A Academic Terms is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Academic Terms {{ id }}?"
+      },
+      "detail": {
+        "title": "Academic Terms"
+      },
+      "id": "ID",
+      "name": "Name",
+      "code": "Code",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "current": "Current",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
+      "year": "Year"
+    }
+  }
+}

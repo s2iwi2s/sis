@@ -1,0 +1,62 @@
+{
+  "annotations": {
+    "changelogDate": "20260704160035",
+    "enableAudit": true
+  },
+  "applications": ["SchInfoSys"],
+  "dto": "mapstruct",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "code",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "startDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "endDate",
+      "fieldType": "LocalDate"
+    },
+    {
+      "fieldName": "current",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "createdBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "createdDate",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "lastModifiedBy",
+      "fieldType": "String",
+      "fieldValidateRules": ["maxlength"],
+      "fieldValidateRulesMaxlength": "50"
+    },
+    {
+      "fieldName": "lastModifiedDate",
+      "fieldType": "Instant"
+    }
+  ],
+  "name": "AcademicTerms",
+  "pagination": "pagination",
+  "relationships": [
+    {
+      "otherEntityName": "academicYear",
+      "relationshipName": "year",
+      "relationshipSide": "left",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "searchEngine": "no",
+  "service": "serviceImpl"
+}

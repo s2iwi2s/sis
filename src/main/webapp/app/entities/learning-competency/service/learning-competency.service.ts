@@ -1,14 +1,12 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
-import { map } from 'rxjs/operators';
+import { HttpClient, HttpResponse, httpResource } from '@angular/common/http';
+import { Injectable, computed, inject, signal } from '@angular/core';
 
 import dayjs from 'dayjs/esm';
+import { Observable, map } from 'rxjs';
 
-import { isPresent } from 'app/core/util/operators';
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
+import { isPresent } from 'app/core/util/operators';
 import { ILearningCompetency, NewLearningCompetency } from '../learning-competency.model';
 
 export type PartialUpdateLearningCompetency = Partial<ILearningCompetency> & Pick<ILearningCompetency, 'id'>;
@@ -24,64 +22,83 @@ export type NewRestLearningCompetency = RestOf<NewLearningCompetency>;
 
 export type PartialUpdateRestLearningCompetency = RestOf<PartialUpdateLearningCompetency>;
 
-export type EntityResponseType = HttpResponse<ILearningCompetency>;
-export type EntityArrayResponseType = HttpResponse<ILearningCompetency[]>;
+@Injectable()
+export class LearningCompetenciesService {
+  readonly learningCompetenciesParams = signal<
+    Record<string, string | number | boolean | readonly (string | number | boolean)[]> | undefined
+  >(undefined);
+  readonly learningCompetenciesResource = httpResource<RestLearningCompetency[]>(() => {
+    const params = this.learningCompetenciesParams();
+    if (!params) {
+      return undefined;
+    }
+    return { url: this.resourceUrl, params };
+  });
+  /**
+   * This signal holds the list of learningCompetency that have been fetched. It is updated when the learningCompetenciesResource emits a new value.
+   * In case of error while fetching the learningCompetencies, the signal is set to an empty array.
+   */
+  readonly learningCompetencies = computed(() =>
+    (this.learningCompetenciesResource.hasValue() ? this.learningCompetenciesResource.value() : []).map(item =>
+      this.convertValueFromServer(item),
+    ),
+  );
+  protected readonly applicationConfigService = inject(ApplicationConfigService);
+  protected readonly resourceUrl = this.applicationConfigService.getEndpointFor('api/learning-competencies');
+
+  protected convertValueFromServer(restLearningCompetency: RestLearningCompetency): ILearningCompetency {
+    return {
+      ...restLearningCompetency,
+      createdDate: restLearningCompetency.createdDate ? dayjs(restLearningCompetency.createdDate) : undefined,
+      lastModifiedDate: restLearningCompetency.lastModifiedDate ? dayjs(restLearningCompetency.lastModifiedDate) : undefined,
+    };
+  }
+}
 
 @Injectable({ providedIn: 'root' })
-export class LearningCompetencyService {
-  protected resourceUrl = this.applicationConfigService.getEndpointFor('api/learning-competencies');
+export class LearningCompetencyService extends LearningCompetenciesService {
+  protected readonly http = inject(HttpClient);
 
-  constructor(
-    protected http: HttpClient,
-    protected applicationConfigService: ApplicationConfigService,
-  ) {}
+  create(learningCompetency: NewLearningCompetency): Observable<ILearningCompetency> {
+    const copy = this.convertValueFromClient(learningCompetency);
+    return this.http.post<RestLearningCompetency>(this.resourceUrl, copy).pipe(map(res => this.convertResponseFromServer(res)));
+  }
 
-  create(learningCompetency: NewLearningCompetency): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(learningCompetency);
+  update(learningCompetency: ILearningCompetency): Observable<ILearningCompetency> {
+    const copy = this.convertValueFromClient(learningCompetency);
     return this.http
-      .post<RestLearningCompetency>(this.resourceUrl, copy, { observe: 'response' })
+      .put<RestLearningCompetency>(
+        `${this.resourceUrl}/${encodeURIComponent(this.getLearningCompetencyIdentifier(learningCompetency))}`,
+        copy,
+      )
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  update(learningCompetency: ILearningCompetency): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(learningCompetency);
+  partialUpdate(learningCompetency: PartialUpdateLearningCompetency): Observable<ILearningCompetency> {
+    const copy = this.convertValueFromClient(learningCompetency);
     return this.http
-      .put<RestLearningCompetency>(`${this.resourceUrl}/${this.getLearningCompetencyIdentifier(learningCompetency)}`, copy, {
-        observe: 'response',
-      })
+      .patch<RestLearningCompetency>(
+        `${this.resourceUrl}/${encodeURIComponent(this.getLearningCompetencyIdentifier(learningCompetency))}`,
+        copy,
+      )
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  partialUpdate(learningCompetency: PartialUpdateLearningCompetency): Observable<EntityResponseType> {
-    const copy = this.convertDateFromClient(learningCompetency);
+  find(id: number): Observable<ILearningCompetency> {
     return this.http
-      .patch<RestLearningCompetency>(`${this.resourceUrl}/${this.getLearningCompetencyIdentifier(learningCompetency)}`, copy, {
-        observe: 'response',
-      })
+      .get<RestLearningCompetency>(`${this.resourceUrl}/${encodeURIComponent(id)}`)
       .pipe(map(res => this.convertResponseFromServer(res)));
   }
 
-  find(id: number): Observable<EntityResponseType> {
-    return this.http
-      .get<RestLearningCompetency>(`${this.resourceUrl}/${id}`, { observe: 'response' })
-      .pipe(map(res => this.convertResponseFromServer(res)));
-  }
-
-  query(req?: any): Observable<EntityArrayResponseType> {
+  query(req?: any): Observable<HttpResponse<ILearningCompetency[]>> {
     const options = createRequestOption(req);
     return this.http
       .get<RestLearningCompetency[]>(this.resourceUrl, { params: options, observe: 'response' })
-      .pipe(map(res => this.convertResponseArrayFromServer(res)));
+      .pipe(map(res => res.clone({ body: this.convertResponseArrayFromServer(res.body!) })));
   }
 
-  queryByCourse(courseId: number): Observable<EntityArrayResponseType> {
-    return this.http
-      .get<RestLearningCompetency[]>(`${this.resourceUrl}/${courseId}/course`, { observe: 'response' })
-      .pipe(map(res => this.convertResponseArrayFromServer(res)));
-  }
-
-  delete(id: number): Observable<HttpResponse<{}>> {
-    return this.http.delete(`${this.resourceUrl}/${id}`, { observe: 'response' });
+  delete(id: number): Observable<undefined> {
+    return this.http.delete<undefined>(`${this.resourceUrl}/${encodeURIComponent(id)}`);
   }
 
   getLearningCompetencyIdentifier(learningCompetency: Pick<ILearningCompetency, 'id'>): number {
@@ -98,8 +115,8 @@ export class LearningCompetencyService {
   ): Type[] {
     const learningCompetencies: Type[] = learningCompetenciesToCheck.filter(isPresent);
     if (learningCompetencies.length > 0) {
-      const learningCompetencyCollectionIdentifiers = learningCompetencyCollection.map(
-        learningCompetencyItem => this.getLearningCompetencyIdentifier(learningCompetencyItem)!,
+      const learningCompetencyCollectionIdentifiers = learningCompetencyCollection.map(learningCompetencyItem =>
+        this.getLearningCompetencyIdentifier(learningCompetencyItem),
       );
       const learningCompetenciesToAdd = learningCompetencies.filter(learningCompetencyItem => {
         const learningCompetencyIdentifier = this.getLearningCompetencyIdentifier(learningCompetencyItem);
@@ -114,7 +131,7 @@ export class LearningCompetencyService {
     return learningCompetencyCollection;
   }
 
-  protected convertDateFromClient<T extends ILearningCompetency | NewLearningCompetency | PartialUpdateLearningCompetency>(
+  protected convertValueFromClient<T extends ILearningCompetency | NewLearningCompetency | PartialUpdateLearningCompetency>(
     learningCompetency: T,
   ): RestOf<T> {
     return {
@@ -124,23 +141,11 @@ export class LearningCompetencyService {
     };
   }
 
-  protected convertDateFromServer(restLearningCompetency: RestLearningCompetency): ILearningCompetency {
-    return {
-      ...restLearningCompetency,
-      createdDate: restLearningCompetency.createdDate ? dayjs(restLearningCompetency.createdDate) : undefined,
-      lastModifiedDate: restLearningCompetency.lastModifiedDate ? dayjs(restLearningCompetency.lastModifiedDate) : undefined,
-    };
+  protected convertResponseFromServer(res: RestLearningCompetency): ILearningCompetency {
+    return this.convertValueFromServer(res);
   }
 
-  protected convertResponseFromServer(res: HttpResponse<RestLearningCompetency>): HttpResponse<ILearningCompetency> {
-    return res.clone({
-      body: res.body ? this.convertDateFromServer(res.body) : null,
-    });
-  }
-
-  protected convertResponseArrayFromServer(res: HttpResponse<RestLearningCompetency[]>): HttpResponse<ILearningCompetency[]> {
-    return res.clone({
-      body: res.body ? res.body.map(item => this.convertDateFromServer(item)) : null,
-    });
+  protected convertResponseArrayFromServer(res: RestLearningCompetency[]): ILearningCompetency[] {
+    return res.map(item => this.convertValueFromServer(item));
   }
 }

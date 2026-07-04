@@ -5,11 +5,7 @@ import com.sis.repository.StrategiesRepository;
 import com.sis.service.StrategiesService;
 import com.sis.service.dto.StrategiesDTO;
 import com.sis.service.mapper.StrategiesMapper;
-
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -24,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class StrategiesServiceImpl implements StrategiesService {
 
-    private final Logger log = LoggerFactory.getLogger(StrategiesServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StrategiesServiceImpl.class);
 
     private final StrategiesRepository strategiesRepository;
 
@@ -37,7 +33,7 @@ public class StrategiesServiceImpl implements StrategiesService {
 
     @Override
     public StrategiesDTO save(StrategiesDTO strategiesDTO) {
-        log.debug("Request to save Strategies : {}", strategiesDTO);
+        LOG.debug("Request to save Strategies : {}", strategiesDTO);
         Strategies strategies = strategiesMapper.toEntity(strategiesDTO);
         strategies = strategiesRepository.save(strategies);
         return strategiesMapper.toDto(strategies);
@@ -45,7 +41,7 @@ public class StrategiesServiceImpl implements StrategiesService {
 
     @Override
     public StrategiesDTO update(StrategiesDTO strategiesDTO) {
-        log.debug("Request to update Strategies : {}", strategiesDTO);
+        LOG.debug("Request to update Strategies : {}", strategiesDTO);
         Strategies strategies = strategiesMapper.toEntity(strategiesDTO);
         strategies = strategiesRepository.save(strategies);
         return strategiesMapper.toDto(strategies);
@@ -53,7 +49,7 @@ public class StrategiesServiceImpl implements StrategiesService {
 
     @Override
     public Optional<StrategiesDTO> partialUpdate(StrategiesDTO strategiesDTO) {
-        log.debug("Request to partially update Strategies : {}", strategiesDTO);
+        LOG.debug("Request to partially update Strategies : {}", strategiesDTO);
 
         return strategiesRepository
             .findById(strategiesDTO.getId())
@@ -69,7 +65,7 @@ public class StrategiesServiceImpl implements StrategiesService {
     @Override
     @Transactional(readOnly = true)
     public Page<StrategiesDTO> findAll(Pageable pageable) {
-        log.debug("Request to get all Strategies");
+        LOG.debug("Request to get all Strategieses");
         return strategiesRepository.findAll(pageable).map(strategiesMapper::toDto);
     }
 
@@ -80,19 +76,13 @@ public class StrategiesServiceImpl implements StrategiesService {
     @Override
     @Transactional(readOnly = true)
     public Optional<StrategiesDTO> findOne(Long id) {
-        log.debug("Request to get Strategies : {}", id);
+        LOG.debug("Request to get Strategies : {}", id);
         return strategiesRepository.findOneWithEagerRelationships(id).map(strategiesMapper::toDto);
     }
 
     @Override
     public void delete(Long id) {
-        log.debug("Request to delete Strategies : {}", id);
+        LOG.debug("Request to delete Strategies : {}", id);
         strategiesRepository.deleteById(id);
-    }
-
-    @Override
-    public List<StrategiesDTO> findAllByCourse(Long courseId) {
-        return strategiesRepository.findAllByCourseId(courseId)
-            .stream().map(strategiesMapper::toDto).collect(Collectors.toList());
     }
 }

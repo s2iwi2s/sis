@@ -1,10 +1,10 @@
 {
   "annotations": {
-    "changelogDate": "20240104092414"
+    "changelogDate": "20260704155835",
+    "enableAudit": true
   },
   "applications": ["SchInfoSys"],
   "dto": "mapstruct",
-  "entityTableName": "resources",
   "fields": [
     {
       "fieldName": "fileName",
@@ -14,8 +14,7 @@
     },
     {
       "fieldName": "document",
-      "fieldType": "byte[]",
-      "fieldTypeBlobContent": "any"
+      "fieldType": "AnyBlob"
     },
     {
       "fieldName": "createdBy",

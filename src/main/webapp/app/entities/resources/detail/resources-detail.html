@@ -1,0 +1,77 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (resources(); as resourcesRef) {
+      <div>
+        <h2 data-cy="resourcesDetailsHeading"><span jhiTranslate="schInfoSysApp.resources.detail.title">Resources</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ resourcesRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.resources.fileName">File Name</span></dt>
+          <dd>
+            <span>{{ resourcesRef.fileName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.resources.document">Document</span></dt>
+          <dd>
+            @if (resourcesRef.document) {
+              <div>
+                <a (click)="openFile(resourcesRef.document, resourcesRef.documentContentType)" jhiTranslate="entity.action.open">Open</a>
+                {{ resourcesRef.documentContentType }}, {{ byteSize(resourcesRef.document) }}
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.resources.createdBy">Created By</span></dt>
+          <dd>
+            <span>{{ resourcesRef.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.resources.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ resourcesRef.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.resources.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ resourcesRef.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.resources.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ resourcesRef.lastModifiedDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.resources.strategies">Strategies</span></dt>
+          <dd>
+            @for (strategies of resourcesRef.strategieses; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/strategies', strategies.id, 'view']">{{ strategies?.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.resources.assessment">Assessment</span></dt>
+          <dd>
+            @for (assessment of resourcesRef.assessments; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/assessment', assessment.id, 'view']">{{ assessment?.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/resources', resourcesRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

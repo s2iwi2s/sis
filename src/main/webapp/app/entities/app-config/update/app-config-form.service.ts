@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
+
 import { DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IAppConfig, NewAppConfig } from '../app-config.model';
 
@@ -47,10 +48,10 @@ export type AppConfigFormGroup = FormGroup<AppConfigFormGroupContent>;
 
 @Injectable({ providedIn: 'root' })
 export class AppConfigFormService {
-  createAppConfigFormGroup(appConfig: AppConfigFormGroupInput = { id: null }): AppConfigFormGroup {
+  createAppConfigFormGroup(appConfig?: AppConfigFormGroupInput): AppConfigFormGroup {
     const appConfigRawValue = this.convertAppConfigToAppConfigRawValue({
       ...this.getFormDefaults(),
-      ...appConfig,
+      ...(appConfig ?? { id: null }),
     });
     return new FormGroup<AppConfigFormGroupContent>({
       id: new FormControl(
@@ -77,17 +78,15 @@ export class AppConfigFormService {
   }
 
   getAppConfig(form: AppConfigFormGroup): IAppConfig | NewAppConfig {
-    return this.convertAppConfigRawValueToAppConfig(form.getRawValue() as AppConfigFormRawValue | NewAppConfigFormRawValue);
+    return this.convertAppConfigRawValueToAppConfig(form.getRawValue());
   }
 
   resetForm(form: AppConfigFormGroup, appConfig: AppConfigFormGroupInput): void {
     const appConfigRawValue = this.convertAppConfigToAppConfigRawValue({ ...this.getFormDefaults(), ...appConfig });
-    form.reset(
-      {
-        ...appConfigRawValue,
-        id: { value: appConfigRawValue.id, disabled: true },
-      } as any /* cast to workaround https://github.com/angular/angular/issues/46458 */,
-    );
+    form.reset({
+      ...appConfigRawValue,
+      id: { value: appConfigRawValue.id, disabled: true },
+    });
   }
 
   private getFormDefaults(): AppConfigFormDefaults {

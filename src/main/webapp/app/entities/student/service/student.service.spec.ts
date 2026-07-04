@@ -1,10 +1,11 @@
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { IStudent } from '../student.model';
-import { sampleWithRequiredData, sampleWithNewData, sampleWithPartialData, sampleWithFullData } from '../student.test-samples';
+import { sampleWithFullData, sampleWithNewData, sampleWithPartialData, sampleWithRequiredData } from '../student.test-samples';
 
-import { StudentService, RestStudent } from './student.service';
+import { RestStudent, StudentService } from './student.service';
 
 const requireRestSample: RestStudent = {
   ...sampleWithRequiredData,
@@ -20,7 +21,7 @@ describe('Student Service', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
+      providers: [provideHttpClientTesting()],
     });
     expectedResult = null;
     service = TestBed.inject(StudentService);
@@ -32,7 +33,7 @@ describe('Student Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.find(123).subscribe(resp => (expectedResult = resp.body));
+      service.find(123).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'GET' });
       req.flush(returnedFromService);
@@ -44,7 +45,7 @@ describe('Student Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.create(student).subscribe(resp => (expectedResult = resp.body));
+      service.create(student).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'POST' });
       req.flush(returnedFromService);
@@ -56,7 +57,7 @@ describe('Student Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.update(student).subscribe(resp => (expectedResult = resp.body));
+      service.update(student).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'PUT' });
       req.flush(returnedFromService);
@@ -68,7 +69,7 @@ describe('Student Service', () => {
       const returnedFromService = { ...requireRestSample };
       const expected = { ...sampleWithRequiredData };
 
-      service.partialUpdate(patchObject).subscribe(resp => (expectedResult = resp.body));
+      service.partialUpdate(patchObject).subscribe(resp => (expectedResult = resp));
 
       const req = httpMock.expectOne({ method: 'PATCH' });
       req.flush(returnedFromService);
@@ -89,21 +90,17 @@ describe('Student Service', () => {
     });
 
     it('should delete a Student', () => {
-      const expected = true;
+      service.delete(123).subscribe();
 
-      service.delete(123).subscribe(resp => (expectedResult = resp.ok));
-
-      const req = httpMock.expectOne({ method: 'DELETE' });
-      req.flush({ status: 200 });
-      expect(expectedResult).toBe(expected);
+      const requests = httpMock.match({ method: 'DELETE' });
+      expect(requests.length).toBe(1);
     });
 
     describe('addStudentToCollectionIfMissing', () => {
       it('should add a Student to an empty array', () => {
         const student: IStudent = sampleWithRequiredData;
         expectedResult = service.addStudentToCollectionIfMissing([], student);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(student);
+        expect(expectedResult).toEqual([student]);
       });
 
       it('should not add a Student to an array that contains it', () => {
@@ -137,16 +134,13 @@ describe('Student Service', () => {
         const student: IStudent = sampleWithRequiredData;
         const student2: IStudent = sampleWithPartialData;
         expectedResult = service.addStudentToCollectionIfMissing([], student, student2);
-        expect(expectedResult).toHaveLength(2);
-        expect(expectedResult).toContain(student);
-        expect(expectedResult).toContain(student2);
+        expect(expectedResult).toEqual([student, student2]);
       });
 
       it('should accept null and undefined values', () => {
         const student: IStudent = sampleWithRequiredData;
         expectedResult = service.addStudentToCollectionIfMissing([], null, student, undefined);
-        expect(expectedResult).toHaveLength(1);
-        expect(expectedResult).toContain(student);
+        expect(expectedResult).toEqual([student]);
       });
 
       it('should return initial array if no Student is added', () => {
@@ -157,7 +151,7 @@ describe('Student Service', () => {
     });
 
     describe('compareStudent', () => {
-      it('Should return true if both entities are null', () => {
+      it('should return true if both entities are null', () => {
         const entity1 = null;
         const entity2 = null;
 
@@ -166,8 +160,8 @@ describe('Student Service', () => {
         expect(compareResult).toEqual(true);
       });
 
-      it('Should return false if one entity is null', () => {
-        const entity1 = { id: 123 };
+      it('should return false if one entity is null', () => {
+        const entity1 = { id: 9978 };
         const entity2 = null;
 
         const compareResult1 = service.compareStudent(entity1, entity2);
@@ -177,9 +171,9 @@ describe('Student Service', () => {
         expect(compareResult2).toEqual(false);
       });
 
-      it('Should return false if primaryKey differs', () => {
-        const entity1 = { id: 123 };
-        const entity2 = { id: 456 };
+      it('should return false if primaryKey differs', () => {
+        const entity1 = { id: 9978 };
+        const entity2 = { id: 22718 };
 
         const compareResult1 = service.compareStudent(entity1, entity2);
         const compareResult2 = service.compareStudent(entity2, entity1);
@@ -188,9 +182,9 @@ describe('Student Service', () => {
         expect(compareResult2).toEqual(false);
       });
 
-      it('Should return false if primaryKey matches', () => {
-        const entity1 = { id: 123 };
-        const entity2 = { id: 123 };
+      it('should return false if primaryKey matches', () => {
+        const entity1 = { id: 9978 };
+        const entity2 = { id: 9978 };
 
         const compareResult1 = service.compareStudent(entity1, entity2);
         const compareResult2 = service.compareStudent(entity2, entity1);

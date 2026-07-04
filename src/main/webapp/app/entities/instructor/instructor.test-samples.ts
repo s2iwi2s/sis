@@ -3,32 +3,32 @@ import dayjs from 'dayjs/esm';
 import { IInstructor, NewInstructor } from './instructor.model';
 
 export const sampleWithRequiredData: IInstructor = {
-  id: 24112,
+  id: 8088,
 };
 
 export const sampleWithPartialData: IInstructor = {
-  id: 1863,
-  middleName: 'smart midst',
-  phoneNumber: 'fine omission',
-  hireDate: dayjs('2024-01-03T15:42'),
-  createdBy: 'fathom',
-  lastModifiedDate: dayjs('2024-01-04T00:15'),
+  id: 23554,
+  firstName: 'Jermey',
+  lastName: 'Torphy',
+  createdDate: dayjs('2026-07-03T20:41'),
+  lastModifiedBy: 'oh fabricate same',
+  lastModifiedDate: dayjs('2026-07-03T22:34'),
 };
 
 export const sampleWithFullData: IInstructor = {
-  id: 30096,
-  firstName: 'Jarred',
-  middleName: 'relaunch moonwalk',
-  lastName: 'Stanton',
-  email: 'Art.Feest38@hotmail.com',
-  phoneNumber: 'defense',
-  hireDate: dayjs('2024-01-04T05:36'),
-  salary: 5181,
-  commissionPct: 9738,
-  createdBy: 'although shrilly',
-  createdDate: dayjs('2024-01-03T16:34'),
-  lastModifiedBy: 'heckle absentmindedly warmhearted',
-  lastModifiedDate: dayjs('2024-01-04T05:55'),
+  id: 11749,
+  firstName: 'Lana',
+  middleName: 'other',
+  lastName: 'Lind',
+  email: 'Lambert.Bode42@gmail.com',
+  phoneNumber: 'skateboard',
+  hireDate: dayjs('2026-07-04T14:39'),
+  salary: 6108,
+  commissionPct: 554,
+  createdBy: 'mean',
+  createdDate: dayjs('2026-07-04T03:36'),
+  lastModifiedBy: 'forsaken',
+  lastModifiedDate: dayjs('2026-07-04T12:55'),
 };
 
 export const sampleWithNewData: NewInstructor = {

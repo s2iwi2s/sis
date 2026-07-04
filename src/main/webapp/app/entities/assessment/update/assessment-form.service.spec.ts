@@ -1,6 +1,7 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 
-import { sampleWithRequiredData, sampleWithNewData } from '../assessment.test-samples';
+import { sampleWithNewData, sampleWithRequiredData } from '../assessment.test-samples';
 
 import { AssessmentFormService } from './assessment-form.service';
 
@@ -8,7 +9,6 @@ describe('Assessment Form Service', () => {
   let service: AssessmentFormService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
     service = TestBed.inject(AssessmentFormService);
   });
 
@@ -27,7 +27,7 @@ describe('Assessment Form Service', () => {
             createdDate: expect.any(Object),
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
-            resources: expect.any(Object),
+            resourceses: expect.any(Object),
             learningCompetency: expect.any(Object),
           }),
         );
@@ -46,7 +46,7 @@ describe('Assessment Form Service', () => {
             createdDate: expect.any(Object),
             lastModifiedBy: expect.any(Object),
             lastModifiedDate: expect.any(Object),
-            resources: expect.any(Object),
+            resourceses: expect.any(Object),
             learningCompetency: expect.any(Object),
           }),
         );
@@ -57,7 +57,7 @@ describe('Assessment Form Service', () => {
       it('should return NewAssessment for default Assessment initial value', () => {
         const formGroup = service.createAssessmentFormGroup(sampleWithNewData);
 
-        const assessment = service.getAssessment(formGroup) as any;
+        const assessment = service.getAssessment(formGroup);
 
         expect(assessment).toMatchObject(sampleWithNewData);
       });
@@ -65,7 +65,7 @@ describe('Assessment Form Service', () => {
       it('should return NewAssessment for empty Assessment initial value', () => {
         const formGroup = service.createAssessmentFormGroup();
 
-        const assessment = service.getAssessment(formGroup) as any;
+        const assessment = service.getAssessment(formGroup);
 
         expect(assessment).toMatchObject({});
       });
@@ -73,7 +73,7 @@ describe('Assessment Form Service', () => {
       it('should return IAssessment', () => {
         const formGroup = service.createAssessmentFormGroup(sampleWithRequiredData);
 
-        const assessment = service.getAssessment(formGroup) as any;
+        const assessment = service.getAssessment(formGroup);
 
         expect(assessment).toMatchObject(sampleWithRequiredData);
       });

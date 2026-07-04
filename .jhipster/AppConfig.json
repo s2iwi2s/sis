@@ -1,10 +1,10 @@
 {
   "annotations": {
-    "changelogDate": "20240104091914"
+    "changelogDate": "20260704155335",
+    "enableAudit": true
   },
   "applications": ["SchInfoSys"],
   "dto": "mapstruct",
-  "entityTableName": "app_config",
   "fields": [
     {
       "fieldName": "code",
@@ -20,8 +20,7 @@
     },
     {
       "fieldName": "json",
-      "fieldType": "byte[]",
-      "fieldTypeBlobContent": "text"
+      "fieldType": "TextBlob"
     },
     {
       "fieldName": "priority",

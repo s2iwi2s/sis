@@ -3,7 +3,6 @@ package com.sis.domain;
 import static com.sis.domain.AppConfigTestSamples.*;
 import static com.sis.domain.CourseTestSamples.*;
 import static com.sis.domain.InstructorTestSamples.*;
-import static com.sis.domain.OrgTestSamples.*;
 import static com.sis.domain.StudentTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,5 +23,47 @@ class AppConfigTest {
 
         appConfig2 = getAppConfigSample2();
         assertThat(appConfig1).isNotEqualTo(appConfig2);
+    }
+
+    @Test
+    void instructorTest() {
+        AppConfig appConfig = getAppConfigRandomSampleGenerator();
+        Instructor instructorBack = getInstructorRandomSampleGenerator();
+
+        appConfig.setInstructor(instructorBack);
+        assertThat(appConfig.getInstructor()).isEqualTo(instructorBack);
+        assertThat(instructorBack.getGender()).isEqualTo(appConfig);
+
+        appConfig.instructor(null);
+        assertThat(appConfig.getInstructor()).isNull();
+        assertThat(instructorBack.getGender()).isNull();
+    }
+
+    @Test
+    void studentTest() {
+        AppConfig appConfig = getAppConfigRandomSampleGenerator();
+        Student studentBack = getStudentRandomSampleGenerator();
+
+        appConfig.setStudent(studentBack);
+        assertThat(appConfig.getStudent()).isEqualTo(studentBack);
+        assertThat(studentBack.getGender()).isEqualTo(appConfig);
+
+        appConfig.student(null);
+        assertThat(appConfig.getStudent()).isNull();
+        assertThat(studentBack.getGender()).isNull();
+    }
+
+    @Test
+    void courseTest() {
+        AppConfig appConfig = getAppConfigRandomSampleGenerator();
+        Course courseBack = getCourseRandomSampleGenerator();
+
+        appConfig.setCourse(courseBack);
+        assertThat(appConfig.getCourse()).isEqualTo(courseBack);
+        assertThat(courseBack.getGradelevel()).isEqualTo(appConfig);
+
+        appConfig.course(null);
+        assertThat(appConfig.getCourse()).isNull();
+        assertThat(courseBack.getGradelevel()).isNull();
     }
 }

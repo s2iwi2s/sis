@@ -31,11 +31,11 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/students")
 public class StudentResource {
 
-    private final Logger log = LoggerFactory.getLogger(StudentResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StudentResource.class);
 
     private static final String ENTITY_NAME = "student";
 
-    @Value("${jhipster.clientApp.name}")
+    @Value("${jhipster.clientApp.name:schInfoSys}")
     private String applicationName;
 
     private final StudentService studentService;
@@ -56,15 +56,14 @@ public class StudentResource {
      */
     @PostMapping("")
     public ResponseEntity<StudentDTO> createStudent(@Valid @RequestBody StudentDTO studentDTO) throws URISyntaxException {
-        log.debug("REST request to save Student : {}", studentDTO);
+        LOG.debug("REST request to save Student : {}", studentDTO);
         if (studentDTO.getId() != null) {
             throw new BadRequestAlertException("A new student cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        StudentDTO result = studentService.save(studentDTO);
-        return ResponseEntity
-            .created(new URI("/api/students/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        studentDTO = studentService.save(studentDTO);
+        return ResponseEntity.created(new URI("/api/students/" + studentDTO.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, studentDTO.getId().toString()))
+            .body(studentDTO);
     }
 
     /**
@@ -82,7 +81,7 @@ public class StudentResource {
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody StudentDTO studentDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update Student : {}, {}", id, studentDTO);
+        LOG.debug("REST request to update Student : {}, {}", id, studentDTO);
         if (studentDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -94,11 +93,10 @@ public class StudentResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        StudentDTO result = studentService.update(studentDTO);
-        return ResponseEntity
-            .ok()
+        studentDTO = studentService.update(studentDTO);
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, studentDTO.getId().toString()))
-            .body(result);
+            .body(studentDTO);
     }
 
     /**
@@ -117,7 +115,7 @@ public class StudentResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody StudentDTO studentDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Student partially : {}, {}", id, studentDTO);
+        LOG.debug("REST request to partial update Student partially : {}, {}", id, studentDTO);
         if (studentDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -138,24 +136,15 @@ public class StudentResource {
     }
 
     /**
-     * {@code GET  /students} : get all the students.
+     * {@code GET  /students} : get all the Students.
      *
      * @param pageable the pagination information.
-     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of students in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Students in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<StudentDTO>> getAllStudents(
-        @org.springdoc.core.annotations.ParameterObject Pageable pageable,
-        @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
-    ) {
-        log.debug("REST request to get a page of Students");
-        Page<StudentDTO> page;
-        if (eagerload) {
-            page = studentService.findAllWithEagerRelationships(pageable);
-        } else {
-            page = studentService.findAll(pageable);
-        }
+    public ResponseEntity<List<StudentDTO>> getAllStudents(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
+        LOG.debug("REST request to get a page of Students");
+        Page<StudentDTO> page = studentService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -168,7 +157,7 @@ public class StudentResource {
      */
     @GetMapping("/{id}")
     public ResponseEntity<StudentDTO> getStudent(@PathVariable("id") Long id) {
-        log.debug("REST request to get Student : {}", id);
+        LOG.debug("REST request to get Student : {}", id);
         Optional<StudentDTO> studentDTO = studentService.findOne(id);
         return ResponseUtil.wrapOrNotFound(studentDTO);
     }
@@ -181,10 +170,9 @@ public class StudentResource {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable("id") Long id) {
-        log.debug("REST request to delete Student : {}", id);
+        LOG.debug("REST request to delete Student : {}", id);
         studentService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }

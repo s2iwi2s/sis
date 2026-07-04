@@ -27,25 +27,25 @@ class AssessmentTest {
     }
 
     @Test
-    void resourcesTest() throws Exception {
+    void resourcesTest() {
         Assessment assessment = getAssessmentRandomSampleGenerator();
         Resources resourcesBack = getResourcesRandomSampleGenerator();
 
         assessment.addResources(resourcesBack);
-        assertThat(assessment.getResources()).containsOnly(resourcesBack);
+        assertThat(assessment.getResourceses()).containsOnly(resourcesBack);
 
         assessment.removeResources(resourcesBack);
-        assertThat(assessment.getResources()).doesNotContain(resourcesBack);
+        assertThat(assessment.getResourceses()).doesNotContain(resourcesBack);
 
-        assessment.resources(new HashSet<>(Set.of(resourcesBack)));
-        assertThat(assessment.getResources()).containsOnly(resourcesBack);
+        assessment.resourceses(new HashSet<>(Set.of(resourcesBack)));
+        assertThat(assessment.getResourceses()).containsOnly(resourcesBack);
 
-        assessment.setResources(new HashSet<>());
-        assertThat(assessment.getResources()).doesNotContain(resourcesBack);
+        assessment.setResourceses(new HashSet<>());
+        assertThat(assessment.getResourceses()).doesNotContain(resourcesBack);
     }
 
     @Test
-    void learningCompetencyTest() throws Exception {
+    void learningCompetencyTest() {
         Assessment assessment = getAssessmentRandomSampleGenerator();
         LearningCompetency learningCompetencyBack = getLearningCompetencyRandomSampleGenerator();
 

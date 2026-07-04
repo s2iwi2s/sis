@@ -1,10 +1,13 @@
 package com.sis.web.rest;
 
+import static com.sis.domain.ResourcesAsserts.*;
+import static com.sis.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sis.IntegrationTest;
 import com.sis.domain.Resources;
 import com.sis.repository.ResourcesRepository;
@@ -14,13 +17,13 @@ import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -36,7 +39,6 @@ class ResourcesResourceIT {
 
     private static final String DEFAULT_FILE_NAME = "AAAAAAAAAA";
     private static final String UPDATED_FILE_NAME = "BBBBBBBBBB";
-    private static final String UPDATED_FILE_NAME_ON_SERVER = "BBBBBBBBBB";
 
     private static final byte[] DEFAULT_DOCUMENT = TestUtil.createByteArray(1, "0");
     private static final byte[] UPDATED_DOCUMENT = TestUtil.createByteArray(1, "1");
@@ -62,6 +64,9 @@ class ResourcesResourceIT {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
+    private ObjectMapper om;
+
+    @Autowired
     private ResourcesRepository resourcesRepository;
 
     @Autowired
@@ -75,14 +80,16 @@ class ResourcesResourceIT {
 
     private Resources resources;
 
+    private Resources insertedResources;
+
     /**
      * Create an entity for this test.
      *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Resources createEntity(EntityManager em) {
-        Resources resources = new Resources()
+    public static Resources createEntity() {
+        return new Resources()
             .fileName(DEFAULT_FILE_NAME)
             .document(DEFAULT_DOCUMENT)
             .documentContentType(DEFAULT_DOCUMENT_CONTENT_TYPE)
@@ -90,7 +97,6 @@ class ResourcesResourceIT {
             .createdDate(DEFAULT_CREATED_DATE)
             .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
             .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
-        return resources;
     }
 
     /**
@@ -99,8 +105,8 @@ class ResourcesResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Resources createUpdatedEntity(EntityManager em) {
-        Resources resources = new Resources()
+    public static Resources createUpdatedEntity() {
+        return new Resources()
             .fileName(UPDATED_FILE_NAME)
             .document(UPDATED_DOCUMENT)
             .documentContentType(UPDATED_DOCUMENT_CONTENT_TYPE)
@@ -108,35 +114,43 @@ class ResourcesResourceIT {
             .createdDate(UPDATED_CREATED_DATE)
             .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
             .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
-        return resources;
     }
 
     @BeforeEach
-    public void initTest() {
-        resources = createEntity(em);
+    void initTest() {
+        resources = createEntity();
+    }
+
+    @AfterEach
+    void cleanup() {
+        if (insertedResources != null) {
+            resourcesRepository.delete(insertedResources);
+            insertedResources = null;
+        }
     }
 
     @Test
     @Transactional
     void createResources() throws Exception {
-        int databaseSizeBeforeCreate = resourcesRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Resources
         ResourcesDTO resourcesDTO = resourcesMapper.toDto(resources);
-        restResourcesMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(resourcesDTO)))
-            .andExpect(status().isCreated());
+        var returnedResourcesDTO = om.readValue(
+            restResourcesMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(resourcesDTO)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            ResourcesDTO.class
+        );
 
         // Validate the Resources in the database
-        List<Resources> resourcesList = resourcesRepository.findAll();
-        assertThat(resourcesList).hasSize(databaseSizeBeforeCreate + 1);
-        Resources testResources = resourcesList.get(resourcesList.size() - 1);
-        assertThat(testResources.getFileName()).isEqualTo(DEFAULT_FILE_NAME);
-        assertThat(testResources.getDocument()).isEqualTo(DEFAULT_DOCUMENT);
-        assertThat(testResources.getDocumentContentType()).isEqualTo(DEFAULT_DOCUMENT_CONTENT_TYPE);
-        assertThat(testResources.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
-        assertThat(testResources.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
-        assertThat(testResources.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
-        assertThat(testResources.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
+        assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedResources = resourcesMapper.toEntity(returnedResourcesDTO);
+        assertResourcesUpdatableFieldsEquals(returnedResources, getPersistedResources(returnedResources));
+
+        insertedResources = returnedResources;
     }
 
     @Test
@@ -146,23 +160,22 @@ class ResourcesResourceIT {
         resources.setId(1L);
         ResourcesDTO resourcesDTO = resourcesMapper.toDto(resources);
 
-        int databaseSizeBeforeCreate = resourcesRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restResourcesMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(resourcesDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(resourcesDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Resources in the database
-        List<Resources> resourcesList = resourcesRepository.findAll();
-        assertThat(resourcesList).hasSize(databaseSizeBeforeCreate);
+        assertSameRepositoryCount(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
-    void getAllResources() throws Exception {
+    void getAllResourceses() throws Exception {
         // Initialize the database
-        resourcesRepository.saveAndFlush(resources);
+        insertedResources = resourcesRepository.saveAndFlush(resources);
 
         // Get all the resourcesList
         restResourcesMockMvc
@@ -183,7 +196,7 @@ class ResourcesResourceIT {
     @Transactional
     void getResources() throws Exception {
         // Initialize the database
-        resourcesRepository.saveAndFlush(resources);
+        insertedResources = resourcesRepository.saveAndFlush(resources);
 
         // Get the resources
         restResourcesMockMvc
@@ -211,9 +224,9 @@ class ResourcesResourceIT {
     @Transactional
     void putExistingResources() throws Exception {
         // Initialize the database
-        resourcesRepository.saveAndFlush(resources);
+        insertedResources = resourcesRepository.saveAndFlush(resources);
 
-        int databaseSizeBeforeUpdate = resourcesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the resources
         Resources updatedResources = resourcesRepository.findById(resources.getId()).orElseThrow();
@@ -233,27 +246,19 @@ class ResourcesResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, resourcesDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(resourcesDTO))
+                    .content(om.writeValueAsBytes(resourcesDTO))
             )
             .andExpect(status().isOk());
 
         // Validate the Resources in the database
-        List<Resources> resourcesList = resourcesRepository.findAll();
-        assertThat(resourcesList).hasSize(databaseSizeBeforeUpdate);
-        Resources testResources = resourcesList.get(resourcesList.size() - 1);
-        assertThat(testResources.getFileName()).isEqualTo(UPDATED_FILE_NAME);
-        assertThat(testResources.getDocument()).isEqualTo(UPDATED_DOCUMENT);
-        assertThat(testResources.getDocumentContentType()).isEqualTo(UPDATED_DOCUMENT_CONTENT_TYPE);
-        assertThat(testResources.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testResources.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testResources.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testResources.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertPersistedResourcesToMatchAllProperties(updatedResources);
     }
 
     @Test
     @Transactional
     void putNonExistingResources() throws Exception {
-        int databaseSizeBeforeUpdate = resourcesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         resources.setId(longCount.incrementAndGet());
 
         // Create the Resources
@@ -264,19 +269,18 @@ class ResourcesResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, resourcesDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(resourcesDTO))
+                    .content(om.writeValueAsBytes(resourcesDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Resources in the database
-        List<Resources> resourcesList = resourcesRepository.findAll();
-        assertThat(resourcesList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithIdMismatchResources() throws Exception {
-        int databaseSizeBeforeUpdate = resourcesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         resources.setId(longCount.incrementAndGet());
 
         // Create the Resources
@@ -287,19 +291,18 @@ class ResourcesResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(resourcesDTO))
+                    .content(om.writeValueAsBytes(resourcesDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Resources in the database
-        List<Resources> resourcesList = resourcesRepository.findAll();
-        assertThat(resourcesList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithMissingIdPathParamResources() throws Exception {
-        int databaseSizeBeforeUpdate = resourcesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         resources.setId(longCount.incrementAndGet());
 
         // Create the Resources
@@ -307,56 +310,51 @@ class ResourcesResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restResourcesMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(resourcesDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(resourcesDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Resources in the database
-        List<Resources> resourcesList = resourcesRepository.findAll();
-        assertThat(resourcesList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void partialUpdateResourcesWithPatch() throws Exception {
         // Initialize the database
-        resourcesRepository.saveAndFlush(resources);
+        insertedResources = resourcesRepository.saveAndFlush(resources);
 
-        int databaseSizeBeforeUpdate = resourcesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the resources using partial update
         Resources partialUpdatedResources = new Resources();
         partialUpdatedResources.setId(resources.getId());
 
-        partialUpdatedResources.createdDate(UPDATED_CREATED_DATE).lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
+        partialUpdatedResources.lastModifiedBy(UPDATED_LAST_MODIFIED_BY);
 
         restResourcesMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedResources.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedResources))
+                    .content(om.writeValueAsBytes(partialUpdatedResources))
             )
             .andExpect(status().isOk());
 
         // Validate the Resources in the database
-        List<Resources> resourcesList = resourcesRepository.findAll();
-        assertThat(resourcesList).hasSize(databaseSizeBeforeUpdate);
-        Resources testResources = resourcesList.get(resourcesList.size() - 1);
-        assertThat(testResources.getFileName()).isEqualTo(DEFAULT_FILE_NAME);
-        assertThat(testResources.getDocument()).isEqualTo(DEFAULT_DOCUMENT);
-        assertThat(testResources.getDocumentContentType()).isEqualTo(DEFAULT_DOCUMENT_CONTENT_TYPE);
-        assertThat(testResources.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
-        assertThat(testResources.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testResources.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
-        assertThat(testResources.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertResourcesUpdatableFieldsEquals(
+            createUpdateProxyForBean(partialUpdatedResources, resources),
+            getPersistedResources(resources)
+        );
     }
 
     @Test
     @Transactional
     void fullUpdateResourcesWithPatch() throws Exception {
         // Initialize the database
-        resourcesRepository.saveAndFlush(resources);
+        insertedResources = resourcesRepository.saveAndFlush(resources);
 
-        int databaseSizeBeforeUpdate = resourcesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the resources using partial update
         Resources partialUpdatedResources = new Resources();
@@ -375,27 +373,20 @@ class ResourcesResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedResources.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedResources))
+                    .content(om.writeValueAsBytes(partialUpdatedResources))
             )
             .andExpect(status().isOk());
 
         // Validate the Resources in the database
-        List<Resources> resourcesList = resourcesRepository.findAll();
-        assertThat(resourcesList).hasSize(databaseSizeBeforeUpdate);
-        Resources testResources = resourcesList.get(resourcesList.size() - 1);
-        assertThat(testResources.getFileName()).isEqualTo(UPDATED_FILE_NAME);
-        assertThat(testResources.getDocument()).isEqualTo(UPDATED_DOCUMENT);
-        assertThat(testResources.getDocumentContentType()).isEqualTo(UPDATED_DOCUMENT_CONTENT_TYPE);
-        assertThat(testResources.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testResources.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testResources.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testResources.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertResourcesUpdatableFieldsEquals(partialUpdatedResources, getPersistedResources(partialUpdatedResources));
     }
 
     @Test
     @Transactional
     void patchNonExistingResources() throws Exception {
-        int databaseSizeBeforeUpdate = resourcesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         resources.setId(longCount.incrementAndGet());
 
         // Create the Resources
@@ -406,19 +397,18 @@ class ResourcesResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, resourcesDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(resourcesDTO))
+                    .content(om.writeValueAsBytes(resourcesDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Resources in the database
-        List<Resources> resourcesList = resourcesRepository.findAll();
-        assertThat(resourcesList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithIdMismatchResources() throws Exception {
-        int databaseSizeBeforeUpdate = resourcesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         resources.setId(longCount.incrementAndGet());
 
         // Create the Resources
@@ -429,19 +419,18 @@ class ResourcesResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(resourcesDTO))
+                    .content(om.writeValueAsBytes(resourcesDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Resources in the database
-        List<Resources> resourcesList = resourcesRepository.findAll();
-        assertThat(resourcesList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithMissingIdPathParamResources() throws Exception {
-        int databaseSizeBeforeUpdate = resourcesRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         resources.setId(longCount.incrementAndGet());
 
         // Create the Resources
@@ -449,23 +438,20 @@ class ResourcesResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restResourcesMockMvc
-            .perform(
-                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(resourcesDTO))
-            )
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(resourcesDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Resources in the database
-        List<Resources> resourcesList = resourcesRepository.findAll();
-        assertThat(resourcesList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void deleteResources() throws Exception {
         // Initialize the database
-        resourcesRepository.saveAndFlush(resources);
+        insertedResources = resourcesRepository.saveAndFlush(resources);
 
-        int databaseSizeBeforeDelete = resourcesRepository.findAll().size();
+        long databaseSizeBeforeDelete = getRepositoryCount();
 
         // Delete the resources
         restResourcesMockMvc
@@ -473,7 +459,34 @@ class ResourcesResourceIT {
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
-        List<Resources> resourcesList = resourcesRepository.findAll();
-        assertThat(resourcesList).hasSize(databaseSizeBeforeDelete - 1);
+        assertDecrementedRepositoryCount(databaseSizeBeforeDelete);
+    }
+
+    protected long getRepositoryCount() {
+        return resourcesRepository.count();
+    }
+
+    protected void assertIncrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore + 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertDecrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore - 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertSameRepositoryCount(long countBefore) {
+        assertThat(countBefore).isEqualTo(getRepositoryCount());
+    }
+
+    protected Resources getPersistedResources(Resources resources) {
+        return resourcesRepository.findById(resources.getId()).orElseThrow();
+    }
+
+    protected void assertPersistedResourcesToMatchAllProperties(Resources expectedResources) {
+        assertResourcesAllPropertiesEquals(expectedResources, getPersistedResources(expectedResources));
+    }
+
+    protected void assertPersistedResourcesToMatchUpdatableProperties(Resources expectedResources) {
+        assertResourcesAllUpdatablePropertiesEquals(expectedResources, getPersistedResources(expectedResources));
     }
 }

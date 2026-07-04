@@ -1,33 +1,29 @@
 package com.sis.web.rest;
 
+import static com.sis.domain.StudentAsserts.*;
+import static com.sis.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sis.IntegrationTest;
 import com.sis.domain.Student;
 import com.sis.repository.StudentRepository;
-import com.sis.service.StudentService;
+import com.sis.repository.UserRepository;
 import com.sis.service.dto.StudentDTO;
 import com.sis.service.mapper.StudentMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -37,7 +33,6 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link StudentResource} REST controller.
  */
 @IntegrationTest
-@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class StudentResourceIT {
@@ -148,16 +143,16 @@ class StudentResourceIT {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
+    private ObjectMapper om;
+
+    @Autowired
     private StudentRepository studentRepository;
 
-    @Mock
-    private StudentRepository studentRepositoryMock;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private StudentMapper studentMapper;
-
-    @Mock
-    private StudentService studentServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -167,14 +162,16 @@ class StudentResourceIT {
 
     private Student student;
 
+    private Student insertedStudent;
+
     /**
      * Create an entity for this test.
      *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Student createEntity(EntityManager em) {
-        Student student = new Student()
+    public static Student createEntity() {
+        return new Student()
             .lrn(DEFAULT_LRN)
             .firstName(DEFAULT_FIRST_NAME)
             .middleName(DEFAULT_MIDDLE_NAME)
@@ -208,7 +205,6 @@ class StudentResourceIT {
             .createdDate(DEFAULT_CREATED_DATE)
             .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
             .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
-        return student;
     }
 
     /**
@@ -217,8 +213,8 @@ class StudentResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Student createUpdatedEntity(EntityManager em) {
-        Student student = new Student()
+    public static Student createUpdatedEntity() {
+        return new Student()
             .lrn(UPDATED_LRN)
             .firstName(UPDATED_FIRST_NAME)
             .middleName(UPDATED_MIDDLE_NAME)
@@ -252,61 +248,43 @@ class StudentResourceIT {
             .createdDate(UPDATED_CREATED_DATE)
             .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
             .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
-        return student;
     }
 
     @BeforeEach
-    public void initTest() {
-        student = createEntity(em);
+    void initTest() {
+        student = createEntity();
+    }
+
+    @AfterEach
+    void cleanup() {
+        if (insertedStudent != null) {
+            studentRepository.delete(insertedStudent);
+            insertedStudent = null;
+        }
     }
 
     @Test
     @Transactional
     void createStudent() throws Exception {
-        int databaseSizeBeforeCreate = studentRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Student
         StudentDTO studentDTO = studentMapper.toDto(student);
-        restStudentMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(studentDTO)))
-            .andExpect(status().isCreated());
+        var returnedStudentDTO = om.readValue(
+            restStudentMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(studentDTO)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            StudentDTO.class
+        );
 
         // Validate the Student in the database
-        List<Student> studentList = studentRepository.findAll();
-        assertThat(studentList).hasSize(databaseSizeBeforeCreate + 1);
-        Student testStudent = studentList.get(studentList.size() - 1);
-        assertThat(testStudent.getLrn()).isEqualTo(DEFAULT_LRN);
-        assertThat(testStudent.getFirstName()).isEqualTo(DEFAULT_FIRST_NAME);
-        assertThat(testStudent.getMiddleName()).isEqualTo(DEFAULT_MIDDLE_NAME);
-        assertThat(testStudent.getLastName()).isEqualTo(DEFAULT_LAST_NAME);
-        assertThat(testStudent.getExtName()).isEqualTo(DEFAULT_EXT_NAME);
-        assertThat(testStudent.getBirthDate()).isEqualTo(DEFAULT_BIRTH_DATE);
-        assertThat(testStudent.getBirthPlace()).isEqualTo(DEFAULT_BIRTH_PLACE);
-        assertThat(testStudent.getContactNo()).isEqualTo(DEFAULT_CONTACT_NO);
-        assertThat(testStudent.getAddress1()).isEqualTo(DEFAULT_ADDRESS_1);
-        assertThat(testStudent.getAddress2()).isEqualTo(DEFAULT_ADDRESS_2);
-        assertThat(testStudent.getCity()).isEqualTo(DEFAULT_CITY);
-        assertThat(testStudent.getZipCode()).isEqualTo(DEFAULT_ZIP_CODE);
-        assertThat(testStudent.getCountry()).isEqualTo(DEFAULT_COUNTRY);
-        assertThat(testStudent.getNationality()).isEqualTo(DEFAULT_NATIONALITY);
-        assertThat(testStudent.getMotherTongue()).isEqualTo(DEFAULT_MOTHER_TONGUE);
-        assertThat(testStudent.getReligion()).isEqualTo(DEFAULT_RELIGION);
-        assertThat(testStudent.getFathersLastName()).isEqualTo(DEFAULT_FATHERS_LAST_NAME);
-        assertThat(testStudent.getFathersMiddleName()).isEqualTo(DEFAULT_FATHERS_MIDDLE_NAME);
-        assertThat(testStudent.getFathersFirstName()).isEqualTo(DEFAULT_FATHERS_FIRST_NAME);
-        assertThat(testStudent.getFathersExtName()).isEqualTo(DEFAULT_FATHERS_EXT_NAME);
-        assertThat(testStudent.getFathersOccupation()).isEqualTo(DEFAULT_FATHERS_OCCUPATION);
-        assertThat(testStudent.getFathersContacts()).isEqualTo(DEFAULT_FATHERS_CONTACTS);
-        assertThat(testStudent.getMothersLastName()).isEqualTo(DEFAULT_MOTHERS_LAST_NAME);
-        assertThat(testStudent.getMothersMiddleName()).isEqualTo(DEFAULT_MOTHERS_MIDDLE_NAME);
-        assertThat(testStudent.getMothersFirstName()).isEqualTo(DEFAULT_MOTHERS_FIRST_NAME);
-        assertThat(testStudent.getMothersOccupation()).isEqualTo(DEFAULT_MOTHERS_OCCUPATION);
-        assertThat(testStudent.getMothersContacts()).isEqualTo(DEFAULT_MOTHERS_CONTACTS);
-        assertThat(testStudent.getGuardianFullName()).isEqualTo(DEFAULT_GUARDIAN_FULL_NAME);
-        assertThat(testStudent.getGuardianContacts()).isEqualTo(DEFAULT_GUARDIAN_CONTACTS);
-        assertThat(testStudent.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
-        assertThat(testStudent.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
-        assertThat(testStudent.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
-        assertThat(testStudent.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
+        assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedStudent = studentMapper.toEntity(returnedStudentDTO);
+        assertStudentUpdatableFieldsEquals(returnedStudent, getPersistedStudent(returnedStudent));
+
+        insertedStudent = returnedStudent;
     }
 
     @Test
@@ -316,23 +294,22 @@ class StudentResourceIT {
         student.setId(1L);
         StudentDTO studentDTO = studentMapper.toDto(student);
 
-        int databaseSizeBeforeCreate = studentRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restStudentMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(studentDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(studentDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Student in the database
-        List<Student> studentList = studentRepository.findAll();
-        assertThat(studentList).hasSize(databaseSizeBeforeCreate);
+        assertSameRepositoryCount(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     void getAllStudents() throws Exception {
         // Initialize the database
-        studentRepository.saveAndFlush(student);
+        insertedStudent = studentRepository.saveAndFlush(student);
 
         // Get all the studentList
         restStudentMockMvc
@@ -375,28 +352,11 @@ class StudentResourceIT {
             .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
     }
 
-    @SuppressWarnings({ "unchecked" })
-    void getAllStudentsWithEagerRelationshipsIsEnabled() throws Exception {
-        when(studentServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restStudentMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
-
-        verify(studentServiceMock, times(1)).findAllWithEagerRelationships(any());
-    }
-
-    @SuppressWarnings({ "unchecked" })
-    void getAllStudentsWithEagerRelationshipsIsNotEnabled() throws Exception {
-        when(studentServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
-
-        restStudentMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
-        verify(studentRepositoryMock, times(1)).findAll(any(Pageable.class));
-    }
-
     @Test
     @Transactional
     void getStudent() throws Exception {
         // Initialize the database
-        studentRepository.saveAndFlush(student);
+        insertedStudent = studentRepository.saveAndFlush(student);
 
         // Get the student
         restStudentMockMvc
@@ -450,9 +410,9 @@ class StudentResourceIT {
     @Transactional
     void putExistingStudent() throws Exception {
         // Initialize the database
-        studentRepository.saveAndFlush(student);
+        insertedStudent = studentRepository.saveAndFlush(student);
 
-        int databaseSizeBeforeUpdate = studentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the student
         Student updatedStudent = studentRepository.findById(student.getId()).orElseThrow();
@@ -496,55 +456,19 @@ class StudentResourceIT {
 
         restStudentMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, studentDTO.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(studentDTO))
+                put(ENTITY_API_URL_ID, studentDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(studentDTO))
             )
             .andExpect(status().isOk());
 
         // Validate the Student in the database
-        List<Student> studentList = studentRepository.findAll();
-        assertThat(studentList).hasSize(databaseSizeBeforeUpdate);
-        Student testStudent = studentList.get(studentList.size() - 1);
-        assertThat(testStudent.getLrn()).isEqualTo(UPDATED_LRN);
-        assertThat(testStudent.getFirstName()).isEqualTo(UPDATED_FIRST_NAME);
-        assertThat(testStudent.getMiddleName()).isEqualTo(UPDATED_MIDDLE_NAME);
-        assertThat(testStudent.getLastName()).isEqualTo(UPDATED_LAST_NAME);
-        assertThat(testStudent.getExtName()).isEqualTo(UPDATED_EXT_NAME);
-        assertThat(testStudent.getBirthDate()).isEqualTo(UPDATED_BIRTH_DATE);
-        assertThat(testStudent.getBirthPlace()).isEqualTo(UPDATED_BIRTH_PLACE);
-        assertThat(testStudent.getContactNo()).isEqualTo(UPDATED_CONTACT_NO);
-        assertThat(testStudent.getAddress1()).isEqualTo(UPDATED_ADDRESS_1);
-        assertThat(testStudent.getAddress2()).isEqualTo(UPDATED_ADDRESS_2);
-        assertThat(testStudent.getCity()).isEqualTo(UPDATED_CITY);
-        assertThat(testStudent.getZipCode()).isEqualTo(UPDATED_ZIP_CODE);
-        assertThat(testStudent.getCountry()).isEqualTo(UPDATED_COUNTRY);
-        assertThat(testStudent.getNationality()).isEqualTo(UPDATED_NATIONALITY);
-        assertThat(testStudent.getMotherTongue()).isEqualTo(UPDATED_MOTHER_TONGUE);
-        assertThat(testStudent.getReligion()).isEqualTo(UPDATED_RELIGION);
-        assertThat(testStudent.getFathersLastName()).isEqualTo(UPDATED_FATHERS_LAST_NAME);
-        assertThat(testStudent.getFathersMiddleName()).isEqualTo(UPDATED_FATHERS_MIDDLE_NAME);
-        assertThat(testStudent.getFathersFirstName()).isEqualTo(UPDATED_FATHERS_FIRST_NAME);
-        assertThat(testStudent.getFathersExtName()).isEqualTo(UPDATED_FATHERS_EXT_NAME);
-        assertThat(testStudent.getFathersOccupation()).isEqualTo(UPDATED_FATHERS_OCCUPATION);
-        assertThat(testStudent.getFathersContacts()).isEqualTo(UPDATED_FATHERS_CONTACTS);
-        assertThat(testStudent.getMothersLastName()).isEqualTo(UPDATED_MOTHERS_LAST_NAME);
-        assertThat(testStudent.getMothersMiddleName()).isEqualTo(UPDATED_MOTHERS_MIDDLE_NAME);
-        assertThat(testStudent.getMothersFirstName()).isEqualTo(UPDATED_MOTHERS_FIRST_NAME);
-        assertThat(testStudent.getMothersOccupation()).isEqualTo(UPDATED_MOTHERS_OCCUPATION);
-        assertThat(testStudent.getMothersContacts()).isEqualTo(UPDATED_MOTHERS_CONTACTS);
-        assertThat(testStudent.getGuardianFullName()).isEqualTo(UPDATED_GUARDIAN_FULL_NAME);
-        assertThat(testStudent.getGuardianContacts()).isEqualTo(UPDATED_GUARDIAN_CONTACTS);
-        assertThat(testStudent.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testStudent.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testStudent.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testStudent.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertPersistedStudentToMatchAllProperties(updatedStudent);
     }
 
     @Test
     @Transactional
     void putNonExistingStudent() throws Exception {
-        int databaseSizeBeforeUpdate = studentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         student.setId(longCount.incrementAndGet());
 
         // Create the Student
@@ -553,21 +477,18 @@ class StudentResourceIT {
         // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restStudentMockMvc
             .perform(
-                put(ENTITY_API_URL_ID, studentDTO.getId())
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(studentDTO))
+                put(ENTITY_API_URL_ID, studentDTO.getId()).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(studentDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Student in the database
-        List<Student> studentList = studentRepository.findAll();
-        assertThat(studentList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithIdMismatchStudent() throws Exception {
-        int databaseSizeBeforeUpdate = studentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         student.setId(longCount.incrementAndGet());
 
         // Create the Student
@@ -578,19 +499,18 @@ class StudentResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(studentDTO))
+                    .content(om.writeValueAsBytes(studentDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Student in the database
-        List<Student> studentList = studentRepository.findAll();
-        assertThat(studentList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithMissingIdPathParamStudent() throws Exception {
-        int databaseSizeBeforeUpdate = studentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         student.setId(longCount.incrementAndGet());
 
         // Create the Student
@@ -598,41 +518,41 @@ class StudentResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restStudentMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(studentDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(studentDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Student in the database
-        List<Student> studentList = studentRepository.findAll();
-        assertThat(studentList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void partialUpdateStudentWithPatch() throws Exception {
         // Initialize the database
-        studentRepository.saveAndFlush(student);
+        insertedStudent = studentRepository.saveAndFlush(student);
 
-        int databaseSizeBeforeUpdate = studentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the student using partial update
         Student partialUpdatedStudent = new Student();
         partialUpdatedStudent.setId(student.getId());
 
         partialUpdatedStudent
-            .lrn(UPDATED_LRN)
+            .firstName(UPDATED_FIRST_NAME)
+            .middleName(UPDATED_MIDDLE_NAME)
+            .extName(UPDATED_EXT_NAME)
             .birthDate(UPDATED_BIRTH_DATE)
             .city(UPDATED_CITY)
-            .country(UPDATED_COUNTRY)
+            .zipCode(UPDATED_ZIP_CODE)
+            .nationality(UPDATED_NATIONALITY)
+            .motherTongue(UPDATED_MOTHER_TONGUE)
+            .religion(UPDATED_RELIGION)
+            .fathersLastName(UPDATED_FATHERS_LAST_NAME)
             .fathersFirstName(UPDATED_FATHERS_FIRST_NAME)
             .fathersExtName(UPDATED_FATHERS_EXT_NAME)
             .fathersOccupation(UPDATED_FATHERS_OCCUPATION)
-            .fathersContacts(UPDATED_FATHERS_CONTACTS)
-            .mothersLastName(UPDATED_MOTHERS_LAST_NAME)
-            .mothersOccupation(UPDATED_MOTHERS_OCCUPATION)
-            .mothersContacts(UPDATED_MOTHERS_CONTACTS)
+            .mothersMiddleName(UPDATED_MOTHERS_MIDDLE_NAME)
             .guardianFullName(UPDATED_GUARDIAN_FULL_NAME)
-            .createdBy(UPDATED_CREATED_BY)
-            .createdDate(UPDATED_CREATED_DATE)
             .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
             .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
@@ -640,56 +560,23 @@ class StudentResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedStudent.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedStudent))
+                    .content(om.writeValueAsBytes(partialUpdatedStudent))
             )
             .andExpect(status().isOk());
 
         // Validate the Student in the database
-        List<Student> studentList = studentRepository.findAll();
-        assertThat(studentList).hasSize(databaseSizeBeforeUpdate);
-        Student testStudent = studentList.get(studentList.size() - 1);
-        assertThat(testStudent.getLrn()).isEqualTo(UPDATED_LRN);
-        assertThat(testStudent.getFirstName()).isEqualTo(DEFAULT_FIRST_NAME);
-        assertThat(testStudent.getMiddleName()).isEqualTo(DEFAULT_MIDDLE_NAME);
-        assertThat(testStudent.getLastName()).isEqualTo(DEFAULT_LAST_NAME);
-        assertThat(testStudent.getExtName()).isEqualTo(DEFAULT_EXT_NAME);
-        assertThat(testStudent.getBirthDate()).isEqualTo(UPDATED_BIRTH_DATE);
-        assertThat(testStudent.getBirthPlace()).isEqualTo(DEFAULT_BIRTH_PLACE);
-        assertThat(testStudent.getContactNo()).isEqualTo(DEFAULT_CONTACT_NO);
-        assertThat(testStudent.getAddress1()).isEqualTo(DEFAULT_ADDRESS_1);
-        assertThat(testStudent.getAddress2()).isEqualTo(DEFAULT_ADDRESS_2);
-        assertThat(testStudent.getCity()).isEqualTo(UPDATED_CITY);
-        assertThat(testStudent.getZipCode()).isEqualTo(DEFAULT_ZIP_CODE);
-        assertThat(testStudent.getCountry()).isEqualTo(UPDATED_COUNTRY);
-        assertThat(testStudent.getNationality()).isEqualTo(DEFAULT_NATIONALITY);
-        assertThat(testStudent.getMotherTongue()).isEqualTo(DEFAULT_MOTHER_TONGUE);
-        assertThat(testStudent.getReligion()).isEqualTo(DEFAULT_RELIGION);
-        assertThat(testStudent.getFathersLastName()).isEqualTo(DEFAULT_FATHERS_LAST_NAME);
-        assertThat(testStudent.getFathersMiddleName()).isEqualTo(DEFAULT_FATHERS_MIDDLE_NAME);
-        assertThat(testStudent.getFathersFirstName()).isEqualTo(UPDATED_FATHERS_FIRST_NAME);
-        assertThat(testStudent.getFathersExtName()).isEqualTo(UPDATED_FATHERS_EXT_NAME);
-        assertThat(testStudent.getFathersOccupation()).isEqualTo(UPDATED_FATHERS_OCCUPATION);
-        assertThat(testStudent.getFathersContacts()).isEqualTo(UPDATED_FATHERS_CONTACTS);
-        assertThat(testStudent.getMothersLastName()).isEqualTo(UPDATED_MOTHERS_LAST_NAME);
-        assertThat(testStudent.getMothersMiddleName()).isEqualTo(DEFAULT_MOTHERS_MIDDLE_NAME);
-        assertThat(testStudent.getMothersFirstName()).isEqualTo(DEFAULT_MOTHERS_FIRST_NAME);
-        assertThat(testStudent.getMothersOccupation()).isEqualTo(UPDATED_MOTHERS_OCCUPATION);
-        assertThat(testStudent.getMothersContacts()).isEqualTo(UPDATED_MOTHERS_CONTACTS);
-        assertThat(testStudent.getGuardianFullName()).isEqualTo(UPDATED_GUARDIAN_FULL_NAME);
-        assertThat(testStudent.getGuardianContacts()).isEqualTo(DEFAULT_GUARDIAN_CONTACTS);
-        assertThat(testStudent.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testStudent.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testStudent.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testStudent.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertStudentUpdatableFieldsEquals(createUpdateProxyForBean(partialUpdatedStudent, student), getPersistedStudent(student));
     }
 
     @Test
     @Transactional
     void fullUpdateStudentWithPatch() throws Exception {
         // Initialize the database
-        studentRepository.saveAndFlush(student);
+        insertedStudent = studentRepository.saveAndFlush(student);
 
-        int databaseSizeBeforeUpdate = studentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the student using partial update
         Student partialUpdatedStudent = new Student();
@@ -734,53 +621,20 @@ class StudentResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedStudent.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedStudent))
+                    .content(om.writeValueAsBytes(partialUpdatedStudent))
             )
             .andExpect(status().isOk());
 
         // Validate the Student in the database
-        List<Student> studentList = studentRepository.findAll();
-        assertThat(studentList).hasSize(databaseSizeBeforeUpdate);
-        Student testStudent = studentList.get(studentList.size() - 1);
-        assertThat(testStudent.getLrn()).isEqualTo(UPDATED_LRN);
-        assertThat(testStudent.getFirstName()).isEqualTo(UPDATED_FIRST_NAME);
-        assertThat(testStudent.getMiddleName()).isEqualTo(UPDATED_MIDDLE_NAME);
-        assertThat(testStudent.getLastName()).isEqualTo(UPDATED_LAST_NAME);
-        assertThat(testStudent.getExtName()).isEqualTo(UPDATED_EXT_NAME);
-        assertThat(testStudent.getBirthDate()).isEqualTo(UPDATED_BIRTH_DATE);
-        assertThat(testStudent.getBirthPlace()).isEqualTo(UPDATED_BIRTH_PLACE);
-        assertThat(testStudent.getContactNo()).isEqualTo(UPDATED_CONTACT_NO);
-        assertThat(testStudent.getAddress1()).isEqualTo(UPDATED_ADDRESS_1);
-        assertThat(testStudent.getAddress2()).isEqualTo(UPDATED_ADDRESS_2);
-        assertThat(testStudent.getCity()).isEqualTo(UPDATED_CITY);
-        assertThat(testStudent.getZipCode()).isEqualTo(UPDATED_ZIP_CODE);
-        assertThat(testStudent.getCountry()).isEqualTo(UPDATED_COUNTRY);
-        assertThat(testStudent.getNationality()).isEqualTo(UPDATED_NATIONALITY);
-        assertThat(testStudent.getMotherTongue()).isEqualTo(UPDATED_MOTHER_TONGUE);
-        assertThat(testStudent.getReligion()).isEqualTo(UPDATED_RELIGION);
-        assertThat(testStudent.getFathersLastName()).isEqualTo(UPDATED_FATHERS_LAST_NAME);
-        assertThat(testStudent.getFathersMiddleName()).isEqualTo(UPDATED_FATHERS_MIDDLE_NAME);
-        assertThat(testStudent.getFathersFirstName()).isEqualTo(UPDATED_FATHERS_FIRST_NAME);
-        assertThat(testStudent.getFathersExtName()).isEqualTo(UPDATED_FATHERS_EXT_NAME);
-        assertThat(testStudent.getFathersOccupation()).isEqualTo(UPDATED_FATHERS_OCCUPATION);
-        assertThat(testStudent.getFathersContacts()).isEqualTo(UPDATED_FATHERS_CONTACTS);
-        assertThat(testStudent.getMothersLastName()).isEqualTo(UPDATED_MOTHERS_LAST_NAME);
-        assertThat(testStudent.getMothersMiddleName()).isEqualTo(UPDATED_MOTHERS_MIDDLE_NAME);
-        assertThat(testStudent.getMothersFirstName()).isEqualTo(UPDATED_MOTHERS_FIRST_NAME);
-        assertThat(testStudent.getMothersOccupation()).isEqualTo(UPDATED_MOTHERS_OCCUPATION);
-        assertThat(testStudent.getMothersContacts()).isEqualTo(UPDATED_MOTHERS_CONTACTS);
-        assertThat(testStudent.getGuardianFullName()).isEqualTo(UPDATED_GUARDIAN_FULL_NAME);
-        assertThat(testStudent.getGuardianContacts()).isEqualTo(UPDATED_GUARDIAN_CONTACTS);
-        assertThat(testStudent.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testStudent.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testStudent.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testStudent.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertStudentUpdatableFieldsEquals(partialUpdatedStudent, getPersistedStudent(partialUpdatedStudent));
     }
 
     @Test
     @Transactional
     void patchNonExistingStudent() throws Exception {
-        int databaseSizeBeforeUpdate = studentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         student.setId(longCount.incrementAndGet());
 
         // Create the Student
@@ -791,19 +645,18 @@ class StudentResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, studentDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(studentDTO))
+                    .content(om.writeValueAsBytes(studentDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Student in the database
-        List<Student> studentList = studentRepository.findAll();
-        assertThat(studentList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithIdMismatchStudent() throws Exception {
-        int databaseSizeBeforeUpdate = studentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         student.setId(longCount.incrementAndGet());
 
         // Create the Student
@@ -814,19 +667,18 @@ class StudentResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(studentDTO))
+                    .content(om.writeValueAsBytes(studentDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Student in the database
-        List<Student> studentList = studentRepository.findAll();
-        assertThat(studentList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithMissingIdPathParamStudent() throws Exception {
-        int databaseSizeBeforeUpdate = studentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         student.setId(longCount.incrementAndGet());
 
         // Create the Student
@@ -834,23 +686,20 @@ class StudentResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restStudentMockMvc
-            .perform(
-                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(studentDTO))
-            )
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(studentDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Student in the database
-        List<Student> studentList = studentRepository.findAll();
-        assertThat(studentList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void deleteStudent() throws Exception {
         // Initialize the database
-        studentRepository.saveAndFlush(student);
+        insertedStudent = studentRepository.saveAndFlush(student);
 
-        int databaseSizeBeforeDelete = studentRepository.findAll().size();
+        long databaseSizeBeforeDelete = getRepositoryCount();
 
         // Delete the student
         restStudentMockMvc
@@ -858,7 +707,34 @@ class StudentResourceIT {
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
-        List<Student> studentList = studentRepository.findAll();
-        assertThat(studentList).hasSize(databaseSizeBeforeDelete - 1);
+        assertDecrementedRepositoryCount(databaseSizeBeforeDelete);
+    }
+
+    protected long getRepositoryCount() {
+        return studentRepository.count();
+    }
+
+    protected void assertIncrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore + 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertDecrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore - 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertSameRepositoryCount(long countBefore) {
+        assertThat(countBefore).isEqualTo(getRepositoryCount());
+    }
+
+    protected Student getPersistedStudent(Student student) {
+        return studentRepository.findById(student.getId()).orElseThrow();
+    }
+
+    protected void assertPersistedStudentToMatchAllProperties(Student expectedStudent) {
+        assertStudentAllPropertiesEquals(expectedStudent, getPersistedStudent(expectedStudent));
+    }
+
+    protected void assertPersistedStudentToMatchUpdatableProperties(Student expectedStudent) {
+        assertStudentAllUpdatablePropertiesEquals(expectedStudent, getPersistedStudent(expectedStudent));
     }
 }

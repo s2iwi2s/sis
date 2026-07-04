@@ -1,0 +1,66 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (appConfig(); as appConfigRef) {
+      <div>
+        <h2 data-cy="appConfigDetailsHeading"><span jhiTranslate="schInfoSysApp.appConfig.detail.title">App Config</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ appConfigRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.appConfig.code">Code</span></dt>
+          <dd>
+            <span>{{ appConfigRef.code }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.appConfig.value">Value</span></dt>
+          <dd>
+            <span>{{ appConfigRef.value }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.appConfig.description">Description</span></dt>
+          <dd>
+            <span>{{ appConfigRef.description }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.appConfig.json">Json</span></dt>
+          <dd>
+            <span>{{ appConfigRef.json }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.appConfig.priority">Priority</span></dt>
+          <dd>
+            <span>{{ appConfigRef.priority }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.appConfig.createdBy">Created By</span></dt>
+          <dd>
+            <span>{{ appConfigRef.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.appConfig.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ appConfigRef.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.appConfig.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ appConfigRef.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.appConfig.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ appConfigRef.lastModifiedDate | formatMediumDatetime }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/app-config', appConfigRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

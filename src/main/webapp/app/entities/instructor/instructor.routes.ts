@@ -1,24 +1,22 @@
 import { Routes } from '@angular/router';
 
-import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
 import { ASC } from 'app/config/navigation.constants';
-import { InstructorComponent } from './list/instructor.component';
-import { InstructorDetailComponent } from './detail/instructor-detail.component';
-import { InstructorUpdateComponent } from './update/instructor-update.component';
+import { UserRouteAccessService } from 'app/core/auth/user-route-access.service';
+
 import InstructorResolve from './route/instructor-routing-resolve.service';
 
 const instructorRoute: Routes = [
   {
     path: '',
-    component: InstructorComponent,
+    loadComponent: () => import('./list/instructor').then(m => m.Instructor),
     data: {
-      defaultSort: 'id,' + ASC,
+      defaultSort: `id,${ASC}`,
     },
     canActivate: [UserRouteAccessService],
   },
   {
     path: ':id/view',
-    component: InstructorDetailComponent,
+    loadComponent: () => import('./detail/instructor-detail').then(m => m.InstructorDetail),
     resolve: {
       instructor: InstructorResolve,
     },
@@ -26,7 +24,7 @@ const instructorRoute: Routes = [
   },
   {
     path: 'new',
-    component: InstructorUpdateComponent,
+    loadComponent: () => import('./update/instructor-update').then(m => m.InstructorUpdate),
     resolve: {
       instructor: InstructorResolve,
     },
@@ -34,7 +32,7 @@ const instructorRoute: Routes = [
   },
   {
     path: ':id/edit',
-    component: InstructorUpdateComponent,
+    loadComponent: () => import('./update/instructor-update').then(m => m.InstructorUpdate),
     resolve: {
       instructor: InstructorResolve,
     },

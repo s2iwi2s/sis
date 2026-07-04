@@ -1,12 +1,14 @@
 package com.sis.web.rest;
 
-import static com.sis.security.SecurityUtils.AUTHORITIES_KEY;
+import static com.sis.security.SecurityUtils.AUTHORITIES_CLAIM;
 import static com.sis.security.SecurityUtils.JWT_ALGORITHM;
+import static com.sis.security.SecurityUtils.USER_ID_CLAIM;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sis.security.DomainUserDetailsService.UserWithId;
 import com.sis.web.rest.vm.LoginVM;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import java.security.Principal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.stream.Collectors;
@@ -34,7 +36,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class AuthenticateController {
 
-    private final Logger log = LoggerFactory.getLogger(AuthenticateController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AuthenticateController.class);
 
     private final JwtEncoder jwtEncoder;
 
@@ -53,35 +55,32 @@ public class AuthenticateController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<JWTToken> authorize(@Valid @RequestBody LoginVM loginVM) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-            loginVM.getUsername(),
-            loginVM.getPassword()
-        );
+        var authenticationToken = new UsernamePasswordAuthenticationToken(loginVM.getUsername(), loginVM.getPassword());
 
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        var authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = this.createToken(authentication, loginVM.isRememberMe());
-        HttpHeaders httpHeaders = new HttpHeaders();
+        var httpHeaders = new HttpHeaders();
         httpHeaders.setBearerAuth(jwt);
         return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
     }
 
     /**
-     * {@code GET /authenticate} : check if the user is authenticated, and return its login.
+     * {@code GET /authenticate} : check if the user is authenticated.
      *
-     * @param request the HTTP request.
-     * @return the login if the user is authenticated.
+     * @return the {@link ResponseEntity} with status {@code 204 (No Content)},
+     * or with status {@code 401 (Unauthorized)} if not authenticated.
      */
     @GetMapping("/authenticate")
-    public String isAuthenticated(HttpServletRequest request) {
-        log.debug("REST request to check if the current user is authenticated");
-        return request.getRemoteUser();
+    public ResponseEntity<Void> isAuthenticated(Principal principal) {
+        LOG.debug("REST request to check if the current user is authenticated");
+        return ResponseEntity.status(principal == null ? HttpStatus.UNAUTHORIZED : HttpStatus.NO_CONTENT).build();
     }
 
     public String createToken(Authentication authentication, boolean rememberMe) {
         String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
 
-        Instant now = Instant.now();
+        var now = Instant.now();
         Instant validity;
         if (rememberMe) {
             validity = now.plus(this.tokenValidityInSecondsForRememberMe, ChronoUnit.SECONDS);
@@ -90,15 +89,17 @@ public class AuthenticateController {
         }
 
         // @formatter:off
-        JwtClaimsSet claims = JwtClaimsSet.builder()
+        JwtClaimsSet.Builder builder = JwtClaimsSet.builder()
             .issuedAt(now)
             .expiresAt(validity)
             .subject(authentication.getName())
-            .claim(AUTHORITIES_KEY, authorities)
-            .build();
+            .claim(AUTHORITIES_CLAIM, authorities);
+        if (authentication.getPrincipal() instanceof UserWithId user) {
+            builder.claim(USER_ID_CLAIM, user.getId());
+        }
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
-        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
+        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, builder.build())).getTokenValue();
     }
 
     /**

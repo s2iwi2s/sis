@@ -1,3 +1,3 @@
 module.exports = {
-  '{,**/}*.{md,json,yml,html,cjs,mjs,js,ts,tsx,css,scss,java}': ['prettier --write'],
+  '{,.blueprint/**/,src/**/,build-plugins/**/}*.{md,json,yml,js,cjs,mjs,ts,cts,mts,java,html,css,scss}': ['prettier --write'],
 };

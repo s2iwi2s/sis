@@ -1,10 +1,13 @@
 package com.sis.web.rest;
 
+import static com.sis.domain.LearningCompetencyAsserts.*;
+import static com.sis.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sis.IntegrationTest;
 import com.sis.domain.LearningCompetency;
 import com.sis.repository.LearningCompetencyRepository;
@@ -13,13 +16,13 @@ import com.sis.service.mapper.LearningCompetencyMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -61,6 +64,9 @@ class LearningCompetencyResourceIT {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
+    private ObjectMapper om;
+
+    @Autowired
     private LearningCompetencyRepository learningCompetencyRepository;
 
     @Autowired
@@ -74,14 +80,16 @@ class LearningCompetencyResourceIT {
 
     private LearningCompetency learningCompetency;
 
+    private LearningCompetency insertedLearningCompetency;
+
     /**
      * Create an entity for this test.
      *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static LearningCompetency createEntity(EntityManager em) {
-        LearningCompetency learningCompetency = new LearningCompetency()
+    public static LearningCompetency createEntity() {
+        return new LearningCompetency()
             .seqNo(DEFAULT_SEQ_NO)
             .competencyCode(DEFAULT_COMPETENCY_CODE)
             .description(DEFAULT_DESCRIPTION)
@@ -89,7 +97,6 @@ class LearningCompetencyResourceIT {
             .createdDate(DEFAULT_CREATED_DATE)
             .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
             .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
-        return learningCompetency;
     }
 
     /**
@@ -98,8 +105,8 @@ class LearningCompetencyResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static LearningCompetency createUpdatedEntity(EntityManager em) {
-        LearningCompetency learningCompetency = new LearningCompetency()
+    public static LearningCompetency createUpdatedEntity() {
+        return new LearningCompetency()
             .seqNo(UPDATED_SEQ_NO)
             .competencyCode(UPDATED_COMPETENCY_CODE)
             .description(UPDATED_DESCRIPTION)
@@ -107,39 +114,46 @@ class LearningCompetencyResourceIT {
             .createdDate(UPDATED_CREATED_DATE)
             .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
             .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
-        return learningCompetency;
     }
 
     @BeforeEach
-    public void initTest() {
-        learningCompetency = createEntity(em);
+    void initTest() {
+        learningCompetency = createEntity();
+    }
+
+    @AfterEach
+    void cleanup() {
+        if (insertedLearningCompetency != null) {
+            learningCompetencyRepository.delete(insertedLearningCompetency);
+            insertedLearningCompetency = null;
+        }
     }
 
     @Test
     @Transactional
     void createLearningCompetency() throws Exception {
-        int databaseSizeBeforeCreate = learningCompetencyRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the LearningCompetency
         LearningCompetencyDTO learningCompetencyDTO = learningCompetencyMapper.toDto(learningCompetency);
-        restLearningCompetencyMockMvc
-            .perform(
-                post(ENTITY_API_URL)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(learningCompetencyDTO))
-            )
-            .andExpect(status().isCreated());
+        var returnedLearningCompetencyDTO = om.readValue(
+            restLearningCompetencyMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(learningCompetencyDTO)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            LearningCompetencyDTO.class
+        );
 
         // Validate the LearningCompetency in the database
-        List<LearningCompetency> learningCompetencyList = learningCompetencyRepository.findAll();
-        assertThat(learningCompetencyList).hasSize(databaseSizeBeforeCreate + 1);
-        LearningCompetency testLearningCompetency = learningCompetencyList.get(learningCompetencyList.size() - 1);
-        assertThat(testLearningCompetency.getSeqNo()).isEqualTo(DEFAULT_SEQ_NO);
-        assertThat(testLearningCompetency.getCompetencyCode()).isEqualTo(DEFAULT_COMPETENCY_CODE);
-        assertThat(testLearningCompetency.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
-        assertThat(testLearningCompetency.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
-        assertThat(testLearningCompetency.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
-        assertThat(testLearningCompetency.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
-        assertThat(testLearningCompetency.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
+        assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedLearningCompetency = learningCompetencyMapper.toEntity(returnedLearningCompetencyDTO);
+        assertLearningCompetencyUpdatableFieldsEquals(
+            returnedLearningCompetency,
+            getPersistedLearningCompetency(returnedLearningCompetency)
+        );
+
+        insertedLearningCompetency = returnedLearningCompetency;
     }
 
     @Test
@@ -149,27 +163,22 @@ class LearningCompetencyResourceIT {
         learningCompetency.setId(1L);
         LearningCompetencyDTO learningCompetencyDTO = learningCompetencyMapper.toDto(learningCompetency);
 
-        int databaseSizeBeforeCreate = learningCompetencyRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restLearningCompetencyMockMvc
-            .perform(
-                post(ENTITY_API_URL)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(learningCompetencyDTO))
-            )
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(learningCompetencyDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the LearningCompetency in the database
-        List<LearningCompetency> learningCompetencyList = learningCompetencyRepository.findAll();
-        assertThat(learningCompetencyList).hasSize(databaseSizeBeforeCreate);
+        assertSameRepositoryCount(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     void getAllLearningCompetencies() throws Exception {
         // Initialize the database
-        learningCompetencyRepository.saveAndFlush(learningCompetency);
+        insertedLearningCompetency = learningCompetencyRepository.saveAndFlush(learningCompetency);
 
         // Get all the learningCompetencyList
         restLearningCompetencyMockMvc
@@ -190,7 +199,7 @@ class LearningCompetencyResourceIT {
     @Transactional
     void getLearningCompetency() throws Exception {
         // Initialize the database
-        learningCompetencyRepository.saveAndFlush(learningCompetency);
+        insertedLearningCompetency = learningCompetencyRepository.saveAndFlush(learningCompetency);
 
         // Get the learningCompetency
         restLearningCompetencyMockMvc
@@ -218,9 +227,9 @@ class LearningCompetencyResourceIT {
     @Transactional
     void putExistingLearningCompetency() throws Exception {
         // Initialize the database
-        learningCompetencyRepository.saveAndFlush(learningCompetency);
+        insertedLearningCompetency = learningCompetencyRepository.saveAndFlush(learningCompetency);
 
-        int databaseSizeBeforeUpdate = learningCompetencyRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the learningCompetency
         LearningCompetency updatedLearningCompetency = learningCompetencyRepository.findById(learningCompetency.getId()).orElseThrow();
@@ -240,27 +249,19 @@ class LearningCompetencyResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, learningCompetencyDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(learningCompetencyDTO))
+                    .content(om.writeValueAsBytes(learningCompetencyDTO))
             )
             .andExpect(status().isOk());
 
         // Validate the LearningCompetency in the database
-        List<LearningCompetency> learningCompetencyList = learningCompetencyRepository.findAll();
-        assertThat(learningCompetencyList).hasSize(databaseSizeBeforeUpdate);
-        LearningCompetency testLearningCompetency = learningCompetencyList.get(learningCompetencyList.size() - 1);
-        assertThat(testLearningCompetency.getSeqNo()).isEqualTo(UPDATED_SEQ_NO);
-        assertThat(testLearningCompetency.getCompetencyCode()).isEqualTo(UPDATED_COMPETENCY_CODE);
-        assertThat(testLearningCompetency.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testLearningCompetency.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testLearningCompetency.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testLearningCompetency.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testLearningCompetency.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertPersistedLearningCompetencyToMatchAllProperties(updatedLearningCompetency);
     }
 
     @Test
     @Transactional
     void putNonExistingLearningCompetency() throws Exception {
-        int databaseSizeBeforeUpdate = learningCompetencyRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         learningCompetency.setId(longCount.incrementAndGet());
 
         // Create the LearningCompetency
@@ -271,19 +272,18 @@ class LearningCompetencyResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, learningCompetencyDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(learningCompetencyDTO))
+                    .content(om.writeValueAsBytes(learningCompetencyDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the LearningCompetency in the database
-        List<LearningCompetency> learningCompetencyList = learningCompetencyRepository.findAll();
-        assertThat(learningCompetencyList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithIdMismatchLearningCompetency() throws Exception {
-        int databaseSizeBeforeUpdate = learningCompetencyRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         learningCompetency.setId(longCount.incrementAndGet());
 
         // Create the LearningCompetency
@@ -294,19 +294,18 @@ class LearningCompetencyResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(learningCompetencyDTO))
+                    .content(om.writeValueAsBytes(learningCompetencyDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the LearningCompetency in the database
-        List<LearningCompetency> learningCompetencyList = learningCompetencyRepository.findAll();
-        assertThat(learningCompetencyList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithMissingIdPathParamLearningCompetency() throws Exception {
-        int databaseSizeBeforeUpdate = learningCompetencyRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         learningCompetency.setId(longCount.incrementAndGet());
 
         // Create the LearningCompetency
@@ -314,32 +313,28 @@ class LearningCompetencyResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restLearningCompetencyMockMvc
-            .perform(
-                put(ENTITY_API_URL)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(learningCompetencyDTO))
-            )
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(learningCompetencyDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the LearningCompetency in the database
-        List<LearningCompetency> learningCompetencyList = learningCompetencyRepository.findAll();
-        assertThat(learningCompetencyList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void partialUpdateLearningCompetencyWithPatch() throws Exception {
         // Initialize the database
-        learningCompetencyRepository.saveAndFlush(learningCompetency);
+        insertedLearningCompetency = learningCompetencyRepository.saveAndFlush(learningCompetency);
 
-        int databaseSizeBeforeUpdate = learningCompetencyRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the learningCompetency using partial update
         LearningCompetency partialUpdatedLearningCompetency = new LearningCompetency();
         partialUpdatedLearningCompetency.setId(learningCompetency.getId());
 
         partialUpdatedLearningCompetency
-            .seqNo(UPDATED_SEQ_NO)
+            .competencyCode(UPDATED_COMPETENCY_CODE)
+            .createdBy(UPDATED_CREATED_BY)
             .createdDate(UPDATED_CREATED_DATE)
             .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
             .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
@@ -348,30 +343,26 @@ class LearningCompetencyResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedLearningCompetency.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedLearningCompetency))
+                    .content(om.writeValueAsBytes(partialUpdatedLearningCompetency))
             )
             .andExpect(status().isOk());
 
         // Validate the LearningCompetency in the database
-        List<LearningCompetency> learningCompetencyList = learningCompetencyRepository.findAll();
-        assertThat(learningCompetencyList).hasSize(databaseSizeBeforeUpdate);
-        LearningCompetency testLearningCompetency = learningCompetencyList.get(learningCompetencyList.size() - 1);
-        assertThat(testLearningCompetency.getSeqNo()).isEqualTo(UPDATED_SEQ_NO);
-        assertThat(testLearningCompetency.getCompetencyCode()).isEqualTo(DEFAULT_COMPETENCY_CODE);
-        assertThat(testLearningCompetency.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
-        assertThat(testLearningCompetency.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
-        assertThat(testLearningCompetency.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testLearningCompetency.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testLearningCompetency.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertLearningCompetencyUpdatableFieldsEquals(
+            createUpdateProxyForBean(partialUpdatedLearningCompetency, learningCompetency),
+            getPersistedLearningCompetency(learningCompetency)
+        );
     }
 
     @Test
     @Transactional
     void fullUpdateLearningCompetencyWithPatch() throws Exception {
         // Initialize the database
-        learningCompetencyRepository.saveAndFlush(learningCompetency);
+        insertedLearningCompetency = learningCompetencyRepository.saveAndFlush(learningCompetency);
 
-        int databaseSizeBeforeUpdate = learningCompetencyRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the learningCompetency using partial update
         LearningCompetency partialUpdatedLearningCompetency = new LearningCompetency();
@@ -390,27 +381,23 @@ class LearningCompetencyResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedLearningCompetency.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedLearningCompetency))
+                    .content(om.writeValueAsBytes(partialUpdatedLearningCompetency))
             )
             .andExpect(status().isOk());
 
         // Validate the LearningCompetency in the database
-        List<LearningCompetency> learningCompetencyList = learningCompetencyRepository.findAll();
-        assertThat(learningCompetencyList).hasSize(databaseSizeBeforeUpdate);
-        LearningCompetency testLearningCompetency = learningCompetencyList.get(learningCompetencyList.size() - 1);
-        assertThat(testLearningCompetency.getSeqNo()).isEqualTo(UPDATED_SEQ_NO);
-        assertThat(testLearningCompetency.getCompetencyCode()).isEqualTo(UPDATED_COMPETENCY_CODE);
-        assertThat(testLearningCompetency.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
-        assertThat(testLearningCompetency.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testLearningCompetency.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testLearningCompetency.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testLearningCompetency.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertLearningCompetencyUpdatableFieldsEquals(
+            partialUpdatedLearningCompetency,
+            getPersistedLearningCompetency(partialUpdatedLearningCompetency)
+        );
     }
 
     @Test
     @Transactional
     void patchNonExistingLearningCompetency() throws Exception {
-        int databaseSizeBeforeUpdate = learningCompetencyRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         learningCompetency.setId(longCount.incrementAndGet());
 
         // Create the LearningCompetency
@@ -421,19 +408,18 @@ class LearningCompetencyResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, learningCompetencyDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(learningCompetencyDTO))
+                    .content(om.writeValueAsBytes(learningCompetencyDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the LearningCompetency in the database
-        List<LearningCompetency> learningCompetencyList = learningCompetencyRepository.findAll();
-        assertThat(learningCompetencyList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithIdMismatchLearningCompetency() throws Exception {
-        int databaseSizeBeforeUpdate = learningCompetencyRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         learningCompetency.setId(longCount.incrementAndGet());
 
         // Create the LearningCompetency
@@ -444,19 +430,18 @@ class LearningCompetencyResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(learningCompetencyDTO))
+                    .content(om.writeValueAsBytes(learningCompetencyDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the LearningCompetency in the database
-        List<LearningCompetency> learningCompetencyList = learningCompetencyRepository.findAll();
-        assertThat(learningCompetencyList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithMissingIdPathParamLearningCompetency() throws Exception {
-        int databaseSizeBeforeUpdate = learningCompetencyRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         learningCompetency.setId(longCount.incrementAndGet());
 
         // Create the LearningCompetency
@@ -464,25 +449,20 @@ class LearningCompetencyResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restLearningCompetencyMockMvc
-            .perform(
-                patch(ENTITY_API_URL)
-                    .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(learningCompetencyDTO))
-            )
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(learningCompetencyDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the LearningCompetency in the database
-        List<LearningCompetency> learningCompetencyList = learningCompetencyRepository.findAll();
-        assertThat(learningCompetencyList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void deleteLearningCompetency() throws Exception {
         // Initialize the database
-        learningCompetencyRepository.saveAndFlush(learningCompetency);
+        insertedLearningCompetency = learningCompetencyRepository.saveAndFlush(learningCompetency);
 
-        int databaseSizeBeforeDelete = learningCompetencyRepository.findAll().size();
+        long databaseSizeBeforeDelete = getRepositoryCount();
 
         // Delete the learningCompetency
         restLearningCompetencyMockMvc
@@ -490,7 +470,37 @@ class LearningCompetencyResourceIT {
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
-        List<LearningCompetency> learningCompetencyList = learningCompetencyRepository.findAll();
-        assertThat(learningCompetencyList).hasSize(databaseSizeBeforeDelete - 1);
+        assertDecrementedRepositoryCount(databaseSizeBeforeDelete);
+    }
+
+    protected long getRepositoryCount() {
+        return learningCompetencyRepository.count();
+    }
+
+    protected void assertIncrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore + 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertDecrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore - 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertSameRepositoryCount(long countBefore) {
+        assertThat(countBefore).isEqualTo(getRepositoryCount());
+    }
+
+    protected LearningCompetency getPersistedLearningCompetency(LearningCompetency learningCompetency) {
+        return learningCompetencyRepository.findById(learningCompetency.getId()).orElseThrow();
+    }
+
+    protected void assertPersistedLearningCompetencyToMatchAllProperties(LearningCompetency expectedLearningCompetency) {
+        assertLearningCompetencyAllPropertiesEquals(expectedLearningCompetency, getPersistedLearningCompetency(expectedLearningCompetency));
+    }
+
+    protected void assertPersistedLearningCompetencyToMatchUpdatableProperties(LearningCompetency expectedLearningCompetency) {
+        assertLearningCompetencyAllUpdatablePropertiesEquals(
+            expectedLearningCompetency,
+            getPersistedLearningCompetency(expectedLearningCompetency)
+        );
     }
 }

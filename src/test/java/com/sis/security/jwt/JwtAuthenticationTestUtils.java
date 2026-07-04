@@ -1,6 +1,7 @@
 package com.sis.security.jwt;
 
-import static com.sis.security.SecurityUtils.AUTHORITIES_KEY;
+import static com.sis.security.AuthoritiesConstants.ADMIN;
+import static com.sis.security.SecurityUtils.AUTHORITIES_CLAIM;
 import static com.sis.security.SecurityUtils.JWT_ALGORITHM;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
@@ -8,7 +9,7 @@ import com.nimbusds.jose.util.Base64;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import java.time.Instant;
-import java.util.Collections;
+import java.util.List;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -19,16 +20,10 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
-import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 public class JwtAuthenticationTestUtils {
 
     public static final String BEARER = "Bearer ";
-
-    @Bean
-    private HandlerMappingIntrospector mvcHandlerMappingIntrospector() {
-        return new HandlerMappingIntrospector();
-    }
 
     @Bean
     private MeterRegistry meterRegistry() {
@@ -44,12 +39,11 @@ public class JwtAuthenticationTestUtils {
 
         var now = Instant.now();
 
-        JwtClaimsSet claims = JwtClaimsSet
-            .builder()
+        JwtClaimsSet claims = JwtClaimsSet.builder()
             .issuedAt(now)
             .expiresAt(now.plusSeconds(60))
             .subject(user)
-            .claims(customClain -> customClain.put(AUTHORITIES_KEY, Collections.singletonList("ROLE_ADMIN")))
+            .claims(customClaim -> customClaim.put(AUTHORITIES_CLAIM, List.of(ADMIN)))
             .build();
 
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
@@ -80,7 +74,7 @@ public class JwtAuthenticationTestUtils {
         return encoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue();
     }
 
-    public static String createInvalidToken(String jwtKey) throws Exception {
+    public static String createInvalidToken(String jwtKey) {
         return createValidToken(jwtKey).substring(1);
     }
 

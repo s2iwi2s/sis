@@ -1,32 +1,31 @@
 {
   "generator-jhipster": {
-    "applicationIndex": 0,
     "applicationType": "monolith",
     "authenticationType": "jwt",
     "baseName": "SchInfoSys",
     "buildTool": "maven",
     "clientFramework": "angular",
-    "creationTimestamp": 1705417491846,
     "devDatabaseType": "postgresql",
-    "devServerPort": 4200,
     "entities": [
-      "Org",
       "Instructor",
       "Student",
       "Course",
+      "CourseSchedule",
+      "Departments",
       "AppConfig",
       "CurriculumMap",
       "LearningCompetency",
       "Strategies",
       "Assessment",
-      "Resources"
+      "Resources",
+      "AcademicYear",
+      "AcademicTerms"
     ],
-    "jhipsterVersion": "8.1.0",
-    "jwtSecretKey": "ZDJlNjc2ZDQzMjVkYzlmZjAzMjdkZDU5NDZjYjg5ODkyNjJlNjQyNzI0MWM5MjYzZmI0ZmViODM0YmJhNjJkMGRhMGZlNmE4OTMxMjViZDE5MDQyNDEwMmQ4NmY4ZjJhMTI4MmNmMTJlMzEzMWQ0ZGJlMjBkOTdhNDE5OTA4NmE=",
+    "jhipsterVersion": "9.1.0",
+    "jwtSecretKey": "MDk3MjY0NjJhZTljNWNjNTQ1MzI5MzIxYzRlMDhjZDNjMzZiOWRjZmJjYmY1MTA3MjYwODU1MDQ4ZDRjODQ2N2Y2OGUzMjBjMzEwNDM5MmExMWRlODI5ODY0ZWUwYWM4YTQ4YWM5NTg3YmVkMzZkMzc3NzAxNTIyZTk4Y2I3ZGU=",
     "languages": ["en"],
-    "lastLiquibaseTimestamp": 1704360254000,
+    "lastLiquibaseTimestamp": 1783180835000,
     "nativeLanguage": "en",
-    "packageFolder": "com/sis",
     "packageName": "com.sis",
     "prodDatabaseType": "postgresql"
   }

@@ -1,0 +1,209 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-instructor-heading"
+        data-cy="InstructorCreateUpdateHeading"
+        jhiTranslate="schInfoSysApp.instructor.home.createOrEditLabel"
+      >
+        Create or edit a Instructor
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_firstName" jhiTranslate="schInfoSysApp.instructor.firstName">First Name</label>
+          <input type="text" class="form-control" name="firstName" id="field_firstName" data-cy="firstName" formControlName="firstName" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_middleName" jhiTranslate="schInfoSysApp.instructor.middleName">Middle Name</label>
+          <input
+            type="text"
+            class="form-control"
+            name="middleName"
+            id="field_middleName"
+            data-cy="middleName"
+            formControlName="middleName"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_lastName" jhiTranslate="schInfoSysApp.instructor.lastName">Last Name</label>
+          <input type="text" class="form-control" name="lastName" id="field_lastName" data-cy="lastName" formControlName="lastName" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_email" jhiTranslate="schInfoSysApp.instructor.email">Email</label>
+          <input type="text" class="form-control" name="email" id="field_email" data-cy="email" formControlName="email" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_phoneNumber" jhiTranslate="schInfoSysApp.instructor.phoneNumber">Phone Number</label>
+          <input
+            type="text"
+            class="form-control"
+            name="phoneNumber"
+            id="field_phoneNumber"
+            data-cy="phoneNumber"
+            formControlName="phoneNumber"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_hireDate" jhiTranslate="schInfoSysApp.instructor.hireDate">Hire Date</label>
+          <div class="d-flex">
+            <input
+              id="field_hireDate"
+              data-cy="hireDate"
+              type="datetime-local"
+              class="form-control"
+              name="hireDate"
+              formControlName="hireDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_salary" jhiTranslate="schInfoSysApp.instructor.salary">Salary</label>
+          <input type="number" class="form-control" name="salary" id="field_salary" data-cy="salary" formControlName="salary" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_commissionPct" jhiTranslate="schInfoSysApp.instructor.commissionPct">Commission Pct</label>
+          <input
+            type="number"
+            class="form-control"
+            name="commissionPct"
+            id="field_commissionPct"
+            data-cy="commissionPct"
+            formControlName="commissionPct"
+          />
+        </div>
+
+        @let createdByRef = editForm.get('createdBy')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_createdBy" jhiTranslate="schInfoSysApp.instructor.createdBy">Created By</label>
+          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" />
+          @if (createdByRef.invalid && (createdByRef.dirty || createdByRef.touched)) {
+            <div>
+              @if (editForm.get('createdBy')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_createdDate" jhiTranslate="schInfoSysApp.instructor.createdDate">Created Date</label>
+          <div class="d-flex">
+            <input
+              id="field_createdDate"
+              data-cy="createdDate"
+              type="datetime-local"
+              class="form-control"
+              name="createdDate"
+              formControlName="createdDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        @let lastModifiedByRef = editForm.get('lastModifiedBy')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_lastModifiedBy" jhiTranslate="schInfoSysApp.instructor.lastModifiedBy"
+            >Last Modified By</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="lastModifiedBy"
+            id="field_lastModifiedBy"
+            data-cy="lastModifiedBy"
+            formControlName="lastModifiedBy"
+          />
+          @if (lastModifiedByRef.invalid && (lastModifiedByRef.dirty || lastModifiedByRef.touched)) {
+            <div>
+              @if (editForm.get('lastModifiedBy')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_lastModifiedDate" jhiTranslate="schInfoSysApp.instructor.lastModifiedDate"
+            >Last Modified Date</label
+          >
+          <div class="d-flex">
+            <input
+              id="field_lastModifiedDate"
+              data-cy="lastModifiedDate"
+              type="datetime-local"
+              class="form-control"
+              name="lastModifiedDate"
+              formControlName="lastModifiedDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_gender" jhiTranslate="schInfoSysApp.instructor.gender">Gender</label>
+          <select
+            class="form-control"
+            id="field_gender"
+            data-cy="gender"
+            name="gender"
+            formControlName="gender"
+            [compareWith]="compareAppConfig"
+          >
+            <option [ngValue]="null"></option>
+            @for (appConfigOption of gendersCollection(); track $index) {
+              <option [ngValue]="appConfigOption">{{ appConfigOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_user" jhiTranslate="schInfoSysApp.instructor.user">User</label>
+          <select class="form-control" id="field_user" data-cy="user" name="user" formControlName="user" [compareWith]="compareUser">
+            <option [ngValue]="null"></option>
+            @for (userOption of usersSharedCollection(); track $index) {
+              <option [ngValue]="userOption">{{ userOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

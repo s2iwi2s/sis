@@ -1,7 +1,6 @@
 package com.sis.repository;
 
 import com.sis.domain.LearningCompetency;
-import java.util.List;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +9,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface LearningCompetencyRepository extends JpaRepository<LearningCompetency, Long> {
-    List<LearningCompetency> findLearningCompetenciesByCurriculumMap_Course_IdOrderBySeqNoAsc(Long id);
-}
+public interface LearningCompetencyRepository extends JpaRepository<LearningCompetency, Long> {}

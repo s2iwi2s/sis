@@ -1,0 +1,381 @@
+<div>
+  <h2 id="page-heading" data-cy="StudentHeading">
+    <span jhiTranslate="schInfoSysApp.student.home.title">Students</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="schInfoSysApp.student.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-student"
+        [routerLink]="['/student/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="schInfoSysApp.student.home.createLabel">Create a new Student</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (students().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="schInfoSysApp.student.home.notFound">No Students found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lrn">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.lrn">Lrn</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="firstName">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.firstName">First Name</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="middleName">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.middleName">Middle Name</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastName">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.lastName">Last Name</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="extName">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.extName">Ext Name</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="birthDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.birthDate">Birth Date</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="birthPlace">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.birthPlace">Birth Place</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="contactNo">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.contactNo">Contact No</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="address1">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.address1">Address 1</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="address2">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.address2">Address 2</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="city">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.city">City</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="zipCode">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.zipCode">Zip Code</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="country">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.country">Country</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="nationality">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.nationality">Nationality</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="motherTongue">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.motherTongue">Mother Tongue</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="religion">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.religion">Religion</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="fathersLastName">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.fathersLastName">Fathers Last Name</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="fathersMiddleName">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.fathersMiddleName">Fathers Middle Name</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="fathersFirstName">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.fathersFirstName">Fathers First Name</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="fathersExtName">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.fathersExtName">Fathers Ext Name</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="fathersOccupation">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.fathersOccupation">Fathers Occupation</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="fathersContacts">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.fathersContacts">Fathers Contacts</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="mothersLastName">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.mothersLastName">Mothers Last Name</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="mothersMiddleName">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.mothersMiddleName">Mothers Middle Name</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="mothersFirstName">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.mothersFirstName">Mothers First Name</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="mothersOccupation">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.mothersOccupation">Mothers Occupation</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="mothersContacts">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.mothersContacts">Mothers Contacts</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="guardianFullName">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.guardianFullName">Guardian Full Name</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="guardianContacts">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.guardianContacts">Guardian Contacts</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.createdBy">Created By</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.lastModifiedBy">Last Modified By</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.lastModifiedDate">Last Modified Date</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="gender.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.gender">Gender</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="user.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.user">User</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (student of students(); track trackId(student)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/student', student.id, 'view']">{{ student.id }}</a>
+              </td>
+              <td>{{ student.lrn }}</td>
+              <td>{{ student.firstName }}</td>
+              <td>{{ student.middleName }}</td>
+              <td>{{ student.lastName }}</td>
+              <td>{{ student.extName }}</td>
+              <td>{{ student.birthDate | formatMediumDatetime }}</td>
+              <td>{{ student.birthPlace }}</td>
+              <td>{{ student.contactNo }}</td>
+              <td>{{ student.address1 }}</td>
+              <td>{{ student.address2 }}</td>
+              <td>{{ student.city }}</td>
+              <td>{{ student.zipCode }}</td>
+              <td>{{ student.country }}</td>
+              <td>{{ student.nationality }}</td>
+              <td>{{ student.motherTongue }}</td>
+              <td>{{ student.religion }}</td>
+              <td>{{ student.fathersLastName }}</td>
+              <td>{{ student.fathersMiddleName }}</td>
+              <td>{{ student.fathersFirstName }}</td>
+              <td>{{ student.fathersExtName }}</td>
+              <td>{{ student.fathersOccupation }}</td>
+              <td>{{ student.fathersContacts }}</td>
+              <td>{{ student.mothersLastName }}</td>
+              <td>{{ student.mothersMiddleName }}</td>
+              <td>{{ student.mothersFirstName }}</td>
+              <td>{{ student.mothersOccupation }}</td>
+              <td>{{ student.mothersContacts }}</td>
+              <td>{{ student.guardianFullName }}</td>
+              <td>{{ student.guardianContacts }}</td>
+              <td>{{ student.createdBy }}</td>
+              <td>{{ student.createdDate | formatMediumDatetime }}</td>
+              <td>{{ student.lastModifiedBy }}</td>
+              <td>{{ student.lastModifiedDate | formatMediumDatetime }}</td>
+              <td>
+                @if (student.gender) {
+                  <div>
+                    <a [routerLink]="['/app-config', student.gender.id, 'view']">{{ student.gender.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                {{ student.user?.id }}
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/student', student.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                  </a>
+
+                  <a [routerLink]="['/student', student.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(student)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (students().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems()"
+          [page]="page()"
+          [pageSize]="itemsPerPage()"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        />
+      </div>
+    </div>
+  }
+</div>

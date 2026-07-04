@@ -1,0 +1,700 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-student-heading" data-cy="StudentCreateUpdateHeading" jhiTranslate="schInfoSysApp.student.home.createOrEditLabel">
+        Create or edit a Student
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_lrn" jhiTranslate="schInfoSysApp.student.lrn">Lrn</label>
+          <input type="text" class="form-control" name="lrn" id="field_lrn" data-cy="lrn" formControlName="lrn" />
+        </div>
+
+        @let firstNameRef = editForm.get('firstName')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_firstName" jhiTranslate="schInfoSysApp.student.firstName">First Name</label>
+          <input type="text" class="form-control" name="firstName" id="field_firstName" data-cy="firstName" formControlName="firstName" />
+          @if (firstNameRef.invalid && (firstNameRef.dirty || firstNameRef.touched)) {
+            <div>
+              @if (editForm.get('firstName')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let middleNameRef = editForm.get('middleName')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_middleName" jhiTranslate="schInfoSysApp.student.middleName">Middle Name</label>
+          <input
+            type="text"
+            class="form-control"
+            name="middleName"
+            id="field_middleName"
+            data-cy="middleName"
+            formControlName="middleName"
+          />
+          @if (middleNameRef.invalid && (middleNameRef.dirty || middleNameRef.touched)) {
+            <div>
+              @if (editForm.get('middleName')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let lastNameRef = editForm.get('lastName')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_lastName" jhiTranslate="schInfoSysApp.student.lastName">Last Name</label>
+          <input type="text" class="form-control" name="lastName" id="field_lastName" data-cy="lastName" formControlName="lastName" />
+          @if (lastNameRef.invalid && (lastNameRef.dirty || lastNameRef.touched)) {
+            <div>
+              @if (editForm.get('lastName')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let extNameRef = editForm.get('extName')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_extName" jhiTranslate="schInfoSysApp.student.extName">Ext Name</label>
+          <input type="text" class="form-control" name="extName" id="field_extName" data-cy="extName" formControlName="extName" />
+          @if (extNameRef.invalid && (extNameRef.dirty || extNameRef.touched)) {
+            <div>
+              @if (editForm.get('extName')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '10' }"
+                  >This field cannot be longer than 10 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_birthDate" jhiTranslate="schInfoSysApp.student.birthDate">Birth Date</label>
+          <div class="d-flex">
+            <input
+              id="field_birthDate"
+              data-cy="birthDate"
+              type="datetime-local"
+              class="form-control"
+              name="birthDate"
+              formControlName="birthDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        @let birthPlaceRef = editForm.get('birthPlace')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_birthPlace" jhiTranslate="schInfoSysApp.student.birthPlace">Birth Place</label>
+          <input
+            type="text"
+            class="form-control"
+            name="birthPlace"
+            id="field_birthPlace"
+            data-cy="birthPlace"
+            formControlName="birthPlace"
+          />
+          @if (birthPlaceRef.invalid && (birthPlaceRef.dirty || birthPlaceRef.touched)) {
+            <div>
+              @if (editForm.get('birthPlace')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let contactNoRef = editForm.get('contactNo')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_contactNo" jhiTranslate="schInfoSysApp.student.contactNo">Contact No</label>
+          <input type="text" class="form-control" name="contactNo" id="field_contactNo" data-cy="contactNo" formControlName="contactNo" />
+          @if (contactNoRef.invalid && (contactNoRef.dirty || contactNoRef.touched)) {
+            <div>
+              @if (editForm.get('contactNo')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '12' }"
+                  >This field cannot be longer than 12 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let address1Ref = editForm.get('address1')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_address1" jhiTranslate="schInfoSysApp.student.address1">Address 1</label>
+          <input type="text" class="form-control" name="address1" id="field_address1" data-cy="address1" formControlName="address1" />
+          @if (address1Ref.invalid && (address1Ref.dirty || address1Ref.touched)) {
+            <div>
+              @if (editForm.get('address1')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '200' }"
+                  >This field cannot be longer than 200 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let address2Ref = editForm.get('address2')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_address2" jhiTranslate="schInfoSysApp.student.address2">Address 2</label>
+          <input type="text" class="form-control" name="address2" id="field_address2" data-cy="address2" formControlName="address2" />
+          @if (address2Ref.invalid && (address2Ref.dirty || address2Ref.touched)) {
+            <div>
+              @if (editForm.get('address2')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '200' }"
+                  >This field cannot be longer than 200 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let cityRef = editForm.get('city')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_city" jhiTranslate="schInfoSysApp.student.city">City</label>
+          <input type="text" class="form-control" name="city" id="field_city" data-cy="city" formControlName="city" />
+          @if (cityRef.invalid && (cityRef.dirty || cityRef.touched)) {
+            <div>
+              @if (editForm.get('city')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let zipCodeRef = editForm.get('zipCode')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_zipCode" jhiTranslate="schInfoSysApp.student.zipCode">Zip Code</label>
+          <input type="text" class="form-control" name="zipCode" id="field_zipCode" data-cy="zipCode" formControlName="zipCode" />
+          @if (zipCodeRef.invalid && (zipCodeRef.dirty || zipCodeRef.touched)) {
+            <div>
+              @if (editForm.get('zipCode')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '10' }"
+                  >This field cannot be longer than 10 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let countryRef = editForm.get('country')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_country" jhiTranslate="schInfoSysApp.student.country">Country</label>
+          <input type="text" class="form-control" name="country" id="field_country" data-cy="country" formControlName="country" />
+          @if (countryRef.invalid && (countryRef.dirty || countryRef.touched)) {
+            <div>
+              @if (editForm.get('country')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let nationalityRef = editForm.get('nationality')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_nationality" jhiTranslate="schInfoSysApp.student.nationality">Nationality</label>
+          <input
+            type="text"
+            class="form-control"
+            name="nationality"
+            id="field_nationality"
+            data-cy="nationality"
+            formControlName="nationality"
+          />
+          @if (nationalityRef.invalid && (nationalityRef.dirty || nationalityRef.touched)) {
+            <div>
+              @if (editForm.get('nationality')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '100' }"
+                  >This field cannot be longer than 100 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let motherTongueRef = editForm.get('motherTongue')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_motherTongue" jhiTranslate="schInfoSysApp.student.motherTongue">Mother Tongue</label>
+          <input
+            type="text"
+            class="form-control"
+            name="motherTongue"
+            id="field_motherTongue"
+            data-cy="motherTongue"
+            formControlName="motherTongue"
+          />
+          @if (motherTongueRef.invalid && (motherTongueRef.dirty || motherTongueRef.touched)) {
+            <div>
+              @if (editForm.get('motherTongue')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let religionRef = editForm.get('religion')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_religion" jhiTranslate="schInfoSysApp.student.religion">Religion</label>
+          <input type="text" class="form-control" name="religion" id="field_religion" data-cy="religion" formControlName="religion" />
+          @if (religionRef.invalid && (religionRef.dirty || religionRef.touched)) {
+            <div>
+              @if (editForm.get('religion')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '100' }"
+                  >This field cannot be longer than 100 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let fathersLastNameRef = editForm.get('fathersLastName')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_fathersLastName" jhiTranslate="schInfoSysApp.student.fathersLastName"
+            >Fathers Last Name</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="fathersLastName"
+            id="field_fathersLastName"
+            data-cy="fathersLastName"
+            formControlName="fathersLastName"
+          />
+          @if (fathersLastNameRef.invalid && (fathersLastNameRef.dirty || fathersLastNameRef.touched)) {
+            <div>
+              @if (editForm.get('fathersLastName')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let fathersMiddleNameRef = editForm.get('fathersMiddleName')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_fathersMiddleName" jhiTranslate="schInfoSysApp.student.fathersMiddleName"
+            >Fathers Middle Name</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="fathersMiddleName"
+            id="field_fathersMiddleName"
+            data-cy="fathersMiddleName"
+            formControlName="fathersMiddleName"
+          />
+          @if (fathersMiddleNameRef.invalid && (fathersMiddleNameRef.dirty || fathersMiddleNameRef.touched)) {
+            <div>
+              @if (editForm.get('fathersMiddleName')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let fathersFirstNameRef = editForm.get('fathersFirstName')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_fathersFirstName" jhiTranslate="schInfoSysApp.student.fathersFirstName"
+            >Fathers First Name</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="fathersFirstName"
+            id="field_fathersFirstName"
+            data-cy="fathersFirstName"
+            formControlName="fathersFirstName"
+          />
+          @if (fathersFirstNameRef.invalid && (fathersFirstNameRef.dirty || fathersFirstNameRef.touched)) {
+            <div>
+              @if (editForm.get('fathersFirstName')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let fathersExtNameRef = editForm.get('fathersExtName')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_fathersExtName" jhiTranslate="schInfoSysApp.student.fathersExtName">Fathers Ext Name</label>
+          <input
+            type="text"
+            class="form-control"
+            name="fathersExtName"
+            id="field_fathersExtName"
+            data-cy="fathersExtName"
+            formControlName="fathersExtName"
+          />
+          @if (fathersExtNameRef.invalid && (fathersExtNameRef.dirty || fathersExtNameRef.touched)) {
+            <div>
+              @if (editForm.get('fathersExtName')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let fathersOccupationRef = editForm.get('fathersOccupation')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_fathersOccupation" jhiTranslate="schInfoSysApp.student.fathersOccupation"
+            >Fathers Occupation</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="fathersOccupation"
+            id="field_fathersOccupation"
+            data-cy="fathersOccupation"
+            formControlName="fathersOccupation"
+          />
+          @if (fathersOccupationRef.invalid && (fathersOccupationRef.dirty || fathersOccupationRef.touched)) {
+            <div>
+              @if (editForm.get('fathersOccupation')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let fathersContactsRef = editForm.get('fathersContacts')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_fathersContacts" jhiTranslate="schInfoSysApp.student.fathersContacts"
+            >Fathers Contacts</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="fathersContacts"
+            id="field_fathersContacts"
+            data-cy="fathersContacts"
+            formControlName="fathersContacts"
+          />
+          @if (fathersContactsRef.invalid && (fathersContactsRef.dirty || fathersContactsRef.touched)) {
+            <div>
+              @if (editForm.get('fathersContacts')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let mothersLastNameRef = editForm.get('mothersLastName')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_mothersLastName" jhiTranslate="schInfoSysApp.student.mothersLastName"
+            >Mothers Last Name</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="mothersLastName"
+            id="field_mothersLastName"
+            data-cy="mothersLastName"
+            formControlName="mothersLastName"
+          />
+          @if (mothersLastNameRef.invalid && (mothersLastNameRef.dirty || mothersLastNameRef.touched)) {
+            <div>
+              @if (editForm.get('mothersLastName')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let mothersMiddleNameRef = editForm.get('mothersMiddleName')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_mothersMiddleName" jhiTranslate="schInfoSysApp.student.mothersMiddleName"
+            >Mothers Middle Name</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="mothersMiddleName"
+            id="field_mothersMiddleName"
+            data-cy="mothersMiddleName"
+            formControlName="mothersMiddleName"
+          />
+          @if (mothersMiddleNameRef.invalid && (mothersMiddleNameRef.dirty || mothersMiddleNameRef.touched)) {
+            <div>
+              @if (editForm.get('mothersMiddleName')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let mothersFirstNameRef = editForm.get('mothersFirstName')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_mothersFirstName" jhiTranslate="schInfoSysApp.student.mothersFirstName"
+            >Mothers First Name</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="mothersFirstName"
+            id="field_mothersFirstName"
+            data-cy="mothersFirstName"
+            formControlName="mothersFirstName"
+          />
+          @if (mothersFirstNameRef.invalid && (mothersFirstNameRef.dirty || mothersFirstNameRef.touched)) {
+            <div>
+              @if (editForm.get('mothersFirstName')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let mothersOccupationRef = editForm.get('mothersOccupation')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_mothersOccupation" jhiTranslate="schInfoSysApp.student.mothersOccupation"
+            >Mothers Occupation</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="mothersOccupation"
+            id="field_mothersOccupation"
+            data-cy="mothersOccupation"
+            formControlName="mothersOccupation"
+          />
+          @if (mothersOccupationRef.invalid && (mothersOccupationRef.dirty || mothersOccupationRef.touched)) {
+            <div>
+              @if (editForm.get('mothersOccupation')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let mothersContactsRef = editForm.get('mothersContacts')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_mothersContacts" jhiTranslate="schInfoSysApp.student.mothersContacts"
+            >Mothers Contacts</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="mothersContacts"
+            id="field_mothersContacts"
+            data-cy="mothersContacts"
+            formControlName="mothersContacts"
+          />
+          @if (mothersContactsRef.invalid && (mothersContactsRef.dirty || mothersContactsRef.touched)) {
+            <div>
+              @if (editForm.get('mothersContacts')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let guardianFullNameRef = editForm.get('guardianFullName')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_guardianFullName" jhiTranslate="schInfoSysApp.student.guardianFullName"
+            >Guardian Full Name</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="guardianFullName"
+            id="field_guardianFullName"
+            data-cy="guardianFullName"
+            formControlName="guardianFullName"
+          />
+          @if (guardianFullNameRef.invalid && (guardianFullNameRef.dirty || guardianFullNameRef.touched)) {
+            <div>
+              @if (editForm.get('guardianFullName')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let guardianContactsRef = editForm.get('guardianContacts')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_guardianContacts" jhiTranslate="schInfoSysApp.student.guardianContacts"
+            >Guardian Contacts</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="guardianContacts"
+            id="field_guardianContacts"
+            data-cy="guardianContacts"
+            formControlName="guardianContacts"
+          />
+          @if (guardianContactsRef.invalid && (guardianContactsRef.dirty || guardianContactsRef.touched)) {
+            <div>
+              @if (editForm.get('guardianContacts')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let createdByRef = editForm.get('createdBy')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_createdBy" jhiTranslate="schInfoSysApp.student.createdBy">Created By</label>
+          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" />
+          @if (createdByRef.invalid && (createdByRef.dirty || createdByRef.touched)) {
+            <div>
+              @if (editForm.get('createdBy')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_createdDate" jhiTranslate="schInfoSysApp.student.createdDate">Created Date</label>
+          <div class="d-flex">
+            <input
+              id="field_createdDate"
+              data-cy="createdDate"
+              type="datetime-local"
+              class="form-control"
+              name="createdDate"
+              formControlName="createdDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        @let lastModifiedByRef = editForm.get('lastModifiedBy')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_lastModifiedBy" jhiTranslate="schInfoSysApp.student.lastModifiedBy">Last Modified By</label>
+          <input
+            type="text"
+            class="form-control"
+            name="lastModifiedBy"
+            id="field_lastModifiedBy"
+            data-cy="lastModifiedBy"
+            formControlName="lastModifiedBy"
+          />
+          @if (lastModifiedByRef.invalid && (lastModifiedByRef.dirty || lastModifiedByRef.touched)) {
+            <div>
+              @if (editForm.get('lastModifiedBy')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_lastModifiedDate" jhiTranslate="schInfoSysApp.student.lastModifiedDate"
+            >Last Modified Date</label
+          >
+          <div class="d-flex">
+            <input
+              id="field_lastModifiedDate"
+              data-cy="lastModifiedDate"
+              type="datetime-local"
+              class="form-control"
+              name="lastModifiedDate"
+              formControlName="lastModifiedDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_gender" jhiTranslate="schInfoSysApp.student.gender">Gender</label>
+          <select
+            class="form-control"
+            id="field_gender"
+            data-cy="gender"
+            name="gender"
+            formControlName="gender"
+            [compareWith]="compareAppConfig"
+          >
+            <option [ngValue]="null"></option>
+            @for (appConfigOption of gendersCollection(); track $index) {
+              <option [ngValue]="appConfigOption">{{ appConfigOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_user" jhiTranslate="schInfoSysApp.student.user">User</label>
+          <select class="form-control" id="field_user" data-cy="user" name="user" formControlName="user" [compareWith]="compareUser">
+            <option [ngValue]="null"></option>
+            @for (userOption of usersSharedCollection(); track $index) {
+              <option [ngValue]="userOption">{{ userOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

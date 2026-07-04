@@ -17,7 +17,7 @@
   <body>
     <!--[if lt IE 9]>
       <p class="browserupgrade">
-        You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve
+        You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve
         your experience.
       </p>
     <![endif]-->
@@ -57,7 +57,7 @@
             </li>
           </ol>
           <h2>Building the client side code again</h2>
-          <p>If you want to go fast, run <code style="color: red">./mvnw</code> to build and run everything.</p>
+          <p>If you want to go fast, run <code style="color: red">./npmw run app:start</code> to build and run everything.</p>
           <p>If you want to have more control, so you can debug your issue more easily, you should follow the following steps:</p>
           <ol>
             <li>Install npm dependencies with the command <code style="color: red">npm install</code></li>
@@ -65,7 +65,7 @@
               Build the client with the command <code style="color: red">npm run webapp:build</code> or
               <code style="color: red">npm start</code>
             </li>
-            <li>Start the server with <code style="color: red">./mvnw</code> or using your IDE</li>
+            <li>Start the server with <code style="color: red">./npmw run app:start</code> or using your IDE</li>
           </ol>
 
           <h2>Getting more help</h2>
@@ -109,19 +109,11 @@
         setTimeout(showError, 4000);
       };
       function showError() {
-        var errorElm = document.getElementById('jhipster-error');
+        const errorElm = document.getElementById('jhipster-error');
         if (errorElm?.style) {
           errorElm.style.display = 'block';
         }
       }
     </script>
-    <!-- Google Analytics: uncomment and change both instances of UA-XXXXX-X to be your site's ID.
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXX-X"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'UA-XXXXX-X');
-    </script>-->
   </body>
 </html>

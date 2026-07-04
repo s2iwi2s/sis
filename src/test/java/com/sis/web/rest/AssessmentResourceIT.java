@@ -1,11 +1,14 @@
 package com.sis.web.rest;
 
+import static com.sis.domain.AssessmentAsserts.*;
+import static com.sis.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sis.IntegrationTest;
 import com.sis.domain.Assessment;
 import com.sis.repository.AssessmentRepository;
@@ -16,16 +19,16 @@ import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
@@ -70,6 +73,9 @@ class AssessmentResourceIT {
     private static final AtomicLong longCount = new AtomicLong(random.nextInt() + (2L * Integer.MAX_VALUE));
 
     @Autowired
+    private ObjectMapper om;
+
+    @Autowired
     private AssessmentRepository assessmentRepository;
 
     @Mock
@@ -89,14 +95,16 @@ class AssessmentResourceIT {
 
     private Assessment assessment;
 
+    private Assessment insertedAssessment;
+
     /**
      * Create an entity for this test.
      *
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Assessment createEntity(EntityManager em) {
-        Assessment assessment = new Assessment()
+    public static Assessment createEntity() {
+        return new Assessment()
             .name(DEFAULT_NAME)
             .instruction(DEFAULT_INSTRUCTION)
             .markScheme(DEFAULT_MARK_SCHEME)
@@ -104,7 +112,6 @@ class AssessmentResourceIT {
             .createdDate(DEFAULT_CREATED_DATE)
             .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
             .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
-        return assessment;
     }
 
     /**
@@ -113,8 +120,8 @@ class AssessmentResourceIT {
      * This is a static method, as tests for other entities might also need it,
      * if they test an entity which requires the current entity.
      */
-    public static Assessment createUpdatedEntity(EntityManager em) {
-        Assessment assessment = new Assessment()
+    public static Assessment createUpdatedEntity() {
+        return new Assessment()
             .name(UPDATED_NAME)
             .instruction(UPDATED_INSTRUCTION)
             .markScheme(UPDATED_MARK_SCHEME)
@@ -122,35 +129,43 @@ class AssessmentResourceIT {
             .createdDate(UPDATED_CREATED_DATE)
             .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
             .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
-        return assessment;
     }
 
     @BeforeEach
-    public void initTest() {
-        assessment = createEntity(em);
+    void initTest() {
+        assessment = createEntity();
+    }
+
+    @AfterEach
+    void cleanup() {
+        if (insertedAssessment != null) {
+            assessmentRepository.delete(insertedAssessment);
+            insertedAssessment = null;
+        }
     }
 
     @Test
     @Transactional
     void createAssessment() throws Exception {
-        int databaseSizeBeforeCreate = assessmentRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
         // Create the Assessment
         AssessmentDTO assessmentDTO = assessmentMapper.toDto(assessment);
-        restAssessmentMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(assessmentDTO)))
-            .andExpect(status().isCreated());
+        var returnedAssessmentDTO = om.readValue(
+            restAssessmentMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(assessmentDTO)))
+                .andExpect(status().isCreated())
+                .andReturn()
+                .getResponse()
+                .getContentAsString(),
+            AssessmentDTO.class
+        );
 
         // Validate the Assessment in the database
-        List<Assessment> assessmentList = assessmentRepository.findAll();
-        assertThat(assessmentList).hasSize(databaseSizeBeforeCreate + 1);
-        Assessment testAssessment = assessmentList.get(assessmentList.size() - 1);
-        assertThat(testAssessment.getName()).isEqualTo(DEFAULT_NAME);
-        assertThat(testAssessment.getInstruction()).isEqualTo(DEFAULT_INSTRUCTION);
-        assertThat(testAssessment.getMarkScheme()).isEqualTo(DEFAULT_MARK_SCHEME);
-        assertThat(testAssessment.getCreatedBy()).isEqualTo(DEFAULT_CREATED_BY);
-        assertThat(testAssessment.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
-        assertThat(testAssessment.getLastModifiedBy()).isEqualTo(DEFAULT_LAST_MODIFIED_BY);
-        assertThat(testAssessment.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
+        assertIncrementedRepositoryCount(databaseSizeBeforeCreate);
+        var returnedAssessment = assessmentMapper.toEntity(returnedAssessmentDTO);
+        assertAssessmentUpdatableFieldsEquals(returnedAssessment, getPersistedAssessment(returnedAssessment));
+
+        insertedAssessment = returnedAssessment;
     }
 
     @Test
@@ -160,23 +175,22 @@ class AssessmentResourceIT {
         assessment.setId(1L);
         AssessmentDTO assessmentDTO = assessmentMapper.toDto(assessment);
 
-        int databaseSizeBeforeCreate = assessmentRepository.findAll().size();
+        long databaseSizeBeforeCreate = getRepositoryCount();
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restAssessmentMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(assessmentDTO)))
+            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(assessmentDTO)))
             .andExpect(status().isBadRequest());
 
         // Validate the Assessment in the database
-        List<Assessment> assessmentList = assessmentRepository.findAll();
-        assertThat(assessmentList).hasSize(databaseSizeBeforeCreate);
+        assertSameRepositoryCount(databaseSizeBeforeCreate);
     }
 
     @Test
     @Transactional
     void getAllAssessments() throws Exception {
         // Initialize the database
-        assessmentRepository.saveAndFlush(assessment);
+        insertedAssessment = assessmentRepository.saveAndFlush(assessment);
 
         // Get all the assessmentList
         restAssessmentMockMvc
@@ -214,7 +228,7 @@ class AssessmentResourceIT {
     @Transactional
     void getAssessment() throws Exception {
         // Initialize the database
-        assessmentRepository.saveAndFlush(assessment);
+        insertedAssessment = assessmentRepository.saveAndFlush(assessment);
 
         // Get the assessment
         restAssessmentMockMvc
@@ -242,9 +256,9 @@ class AssessmentResourceIT {
     @Transactional
     void putExistingAssessment() throws Exception {
         // Initialize the database
-        assessmentRepository.saveAndFlush(assessment);
+        insertedAssessment = assessmentRepository.saveAndFlush(assessment);
 
-        int databaseSizeBeforeUpdate = assessmentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the assessment
         Assessment updatedAssessment = assessmentRepository.findById(assessment.getId()).orElseThrow();
@@ -264,27 +278,19 @@ class AssessmentResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, assessmentDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(assessmentDTO))
+                    .content(om.writeValueAsBytes(assessmentDTO))
             )
             .andExpect(status().isOk());
 
         // Validate the Assessment in the database
-        List<Assessment> assessmentList = assessmentRepository.findAll();
-        assertThat(assessmentList).hasSize(databaseSizeBeforeUpdate);
-        Assessment testAssessment = assessmentList.get(assessmentList.size() - 1);
-        assertThat(testAssessment.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testAssessment.getInstruction()).isEqualTo(UPDATED_INSTRUCTION);
-        assertThat(testAssessment.getMarkScheme()).isEqualTo(UPDATED_MARK_SCHEME);
-        assertThat(testAssessment.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testAssessment.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testAssessment.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testAssessment.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertPersistedAssessmentToMatchAllProperties(updatedAssessment);
     }
 
     @Test
     @Transactional
     void putNonExistingAssessment() throws Exception {
-        int databaseSizeBeforeUpdate = assessmentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         assessment.setId(longCount.incrementAndGet());
 
         // Create the Assessment
@@ -295,19 +301,18 @@ class AssessmentResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, assessmentDTO.getId())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(assessmentDTO))
+                    .content(om.writeValueAsBytes(assessmentDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Assessment in the database
-        List<Assessment> assessmentList = assessmentRepository.findAll();
-        assertThat(assessmentList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithIdMismatchAssessment() throws Exception {
-        int databaseSizeBeforeUpdate = assessmentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         assessment.setId(longCount.incrementAndGet());
 
         // Create the Assessment
@@ -318,19 +323,18 @@ class AssessmentResourceIT {
             .perform(
                 put(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(TestUtil.convertObjectToJsonBytes(assessmentDTO))
+                    .content(om.writeValueAsBytes(assessmentDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Assessment in the database
-        List<Assessment> assessmentList = assessmentRepository.findAll();
-        assertThat(assessmentList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void putWithMissingIdPathParamAssessment() throws Exception {
-        int databaseSizeBeforeUpdate = assessmentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         assessment.setId(longCount.incrementAndGet());
 
         // Create the Assessment
@@ -338,61 +342,54 @@ class AssessmentResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restAssessmentMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(assessmentDTO)))
+            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsBytes(assessmentDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Assessment in the database
-        List<Assessment> assessmentList = assessmentRepository.findAll();
-        assertThat(assessmentList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void partialUpdateAssessmentWithPatch() throws Exception {
         // Initialize the database
-        assessmentRepository.saveAndFlush(assessment);
+        insertedAssessment = assessmentRepository.saveAndFlush(assessment);
 
-        int databaseSizeBeforeUpdate = assessmentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the assessment using partial update
         Assessment partialUpdatedAssessment = new Assessment();
         partialUpdatedAssessment.setId(assessment.getId());
 
         partialUpdatedAssessment
-            .name(UPDATED_NAME)
             .instruction(UPDATED_INSTRUCTION)
-            .markScheme(UPDATED_MARK_SCHEME)
             .createdBy(UPDATED_CREATED_BY)
-            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY);
+            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
         restAssessmentMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedAssessment.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedAssessment))
+                    .content(om.writeValueAsBytes(partialUpdatedAssessment))
             )
             .andExpect(status().isOk());
 
         // Validate the Assessment in the database
-        List<Assessment> assessmentList = assessmentRepository.findAll();
-        assertThat(assessmentList).hasSize(databaseSizeBeforeUpdate);
-        Assessment testAssessment = assessmentList.get(assessmentList.size() - 1);
-        assertThat(testAssessment.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testAssessment.getInstruction()).isEqualTo(UPDATED_INSTRUCTION);
-        assertThat(testAssessment.getMarkScheme()).isEqualTo(UPDATED_MARK_SCHEME);
-        assertThat(testAssessment.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testAssessment.getCreatedDate()).isEqualTo(DEFAULT_CREATED_DATE);
-        assertThat(testAssessment.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testAssessment.getLastModifiedDate()).isEqualTo(DEFAULT_LAST_MODIFIED_DATE);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertAssessmentUpdatableFieldsEquals(
+            createUpdateProxyForBean(partialUpdatedAssessment, assessment),
+            getPersistedAssessment(assessment)
+        );
     }
 
     @Test
     @Transactional
     void fullUpdateAssessmentWithPatch() throws Exception {
         // Initialize the database
-        assessmentRepository.saveAndFlush(assessment);
+        insertedAssessment = assessmentRepository.saveAndFlush(assessment);
 
-        int databaseSizeBeforeUpdate = assessmentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
 
         // Update the assessment using partial update
         Assessment partialUpdatedAssessment = new Assessment();
@@ -411,27 +408,20 @@ class AssessmentResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedAssessment.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(partialUpdatedAssessment))
+                    .content(om.writeValueAsBytes(partialUpdatedAssessment))
             )
             .andExpect(status().isOk());
 
         // Validate the Assessment in the database
-        List<Assessment> assessmentList = assessmentRepository.findAll();
-        assertThat(assessmentList).hasSize(databaseSizeBeforeUpdate);
-        Assessment testAssessment = assessmentList.get(assessmentList.size() - 1);
-        assertThat(testAssessment.getName()).isEqualTo(UPDATED_NAME);
-        assertThat(testAssessment.getInstruction()).isEqualTo(UPDATED_INSTRUCTION);
-        assertThat(testAssessment.getMarkScheme()).isEqualTo(UPDATED_MARK_SCHEME);
-        assertThat(testAssessment.getCreatedBy()).isEqualTo(UPDATED_CREATED_BY);
-        assertThat(testAssessment.getCreatedDate()).isEqualTo(UPDATED_CREATED_DATE);
-        assertThat(testAssessment.getLastModifiedBy()).isEqualTo(UPDATED_LAST_MODIFIED_BY);
-        assertThat(testAssessment.getLastModifiedDate()).isEqualTo(UPDATED_LAST_MODIFIED_DATE);
+
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
+        assertAssessmentUpdatableFieldsEquals(partialUpdatedAssessment, getPersistedAssessment(partialUpdatedAssessment));
     }
 
     @Test
     @Transactional
     void patchNonExistingAssessment() throws Exception {
-        int databaseSizeBeforeUpdate = assessmentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         assessment.setId(longCount.incrementAndGet());
 
         // Create the Assessment
@@ -442,19 +432,18 @@ class AssessmentResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, assessmentDTO.getId())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(assessmentDTO))
+                    .content(om.writeValueAsBytes(assessmentDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Assessment in the database
-        List<Assessment> assessmentList = assessmentRepository.findAll();
-        assertThat(assessmentList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithIdMismatchAssessment() throws Exception {
-        int databaseSizeBeforeUpdate = assessmentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         assessment.setId(longCount.incrementAndGet());
 
         // Create the Assessment
@@ -465,19 +454,18 @@ class AssessmentResourceIT {
             .perform(
                 patch(ENTITY_API_URL_ID, longCount.incrementAndGet())
                     .contentType("application/merge-patch+json")
-                    .content(TestUtil.convertObjectToJsonBytes(assessmentDTO))
+                    .content(om.writeValueAsBytes(assessmentDTO))
             )
             .andExpect(status().isBadRequest());
 
         // Validate the Assessment in the database
-        List<Assessment> assessmentList = assessmentRepository.findAll();
-        assertThat(assessmentList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void patchWithMissingIdPathParamAssessment() throws Exception {
-        int databaseSizeBeforeUpdate = assessmentRepository.findAll().size();
+        long databaseSizeBeforeUpdate = getRepositoryCount();
         assessment.setId(longCount.incrementAndGet());
 
         // Create the Assessment
@@ -485,23 +473,20 @@ class AssessmentResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restAssessmentMockMvc
-            .perform(
-                patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(assessmentDTO))
-            )
+            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(om.writeValueAsBytes(assessmentDTO)))
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Assessment in the database
-        List<Assessment> assessmentList = assessmentRepository.findAll();
-        assertThat(assessmentList).hasSize(databaseSizeBeforeUpdate);
+        assertSameRepositoryCount(databaseSizeBeforeUpdate);
     }
 
     @Test
     @Transactional
     void deleteAssessment() throws Exception {
         // Initialize the database
-        assessmentRepository.saveAndFlush(assessment);
+        insertedAssessment = assessmentRepository.saveAndFlush(assessment);
 
-        int databaseSizeBeforeDelete = assessmentRepository.findAll().size();
+        long databaseSizeBeforeDelete = getRepositoryCount();
 
         // Delete the assessment
         restAssessmentMockMvc
@@ -509,7 +494,34 @@ class AssessmentResourceIT {
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
-        List<Assessment> assessmentList = assessmentRepository.findAll();
-        assertThat(assessmentList).hasSize(databaseSizeBeforeDelete - 1);
+        assertDecrementedRepositoryCount(databaseSizeBeforeDelete);
+    }
+
+    protected long getRepositoryCount() {
+        return assessmentRepository.count();
+    }
+
+    protected void assertIncrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore + 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertDecrementedRepositoryCount(long countBefore) {
+        assertThat(countBefore - 1).isEqualTo(getRepositoryCount());
+    }
+
+    protected void assertSameRepositoryCount(long countBefore) {
+        assertThat(countBefore).isEqualTo(getRepositoryCount());
+    }
+
+    protected Assessment getPersistedAssessment(Assessment assessment) {
+        return assessmentRepository.findById(assessment.getId()).orElseThrow();
+    }
+
+    protected void assertPersistedAssessmentToMatchAllProperties(Assessment expectedAssessment) {
+        assertAssessmentAllPropertiesEquals(expectedAssessment, getPersistedAssessment(expectedAssessment));
+    }
+
+    protected void assertPersistedAssessmentToMatchUpdatableProperties(Assessment expectedAssessment) {
+        assertAssessmentAllUpdatablePropertiesEquals(expectedAssessment, getPersistedAssessment(expectedAssessment));
     }
 }

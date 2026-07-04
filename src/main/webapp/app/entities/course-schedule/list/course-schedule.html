@@ -1,0 +1,227 @@
+<div>
+  <h2 id="page-heading" data-cy="CourseScheduleHeading">
+    <span jhiTranslate="schInfoSysApp.courseSchedule.home.title">Course Schedules</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="schInfoSysApp.courseSchedule.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-course-schedule"
+        [routerLink]="['/course-schedule/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="schInfoSysApp.courseSchedule.home.createLabel">Create a new Course Schedule</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (courseSchedules().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="schInfoSysApp.courseSchedule.home.notFound">No Course Schedules found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="room">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.courseSchedule.room">Room</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="weekDay">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.courseSchedule.weekDay">Week Day</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="startTime">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.courseSchedule.startTime">Start Time</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="endTime">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.courseSchedule.endTime">End Time</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="description">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.courseSchedule.description">Description</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.courseSchedule.createdBy">Created By</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.courseSchedule.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.courseSchedule.lastModifiedBy">Last Modified By</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.courseSchedule.lastModifiedDate">Last Modified Date</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="terms.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.courseSchedule.terms">Terms</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="year.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.courseSchedule.year">Year</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="instructor.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.courseSchedule.instructor">Instructor</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="student.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.courseSchedule.student">Student</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (courseSchedule of courseSchedules(); track trackId(courseSchedule)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/course-schedule', courseSchedule.id, 'view']">{{ courseSchedule.id }}</a>
+              </td>
+              <td>{{ courseSchedule.room }}</td>
+              <td>{{ courseSchedule.weekDay }}</td>
+              <td>{{ courseSchedule.startTime | formatMediumDatetime }}</td>
+              <td>{{ courseSchedule.endTime | formatMediumDatetime }}</td>
+              <td>{{ courseSchedule.description }}</td>
+              <td>{{ courseSchedule.createdBy }}</td>
+              <td>{{ courseSchedule.createdDate | formatMediumDatetime }}</td>
+              <td>{{ courseSchedule.lastModifiedBy }}</td>
+              <td>{{ courseSchedule.lastModifiedDate | formatMediumDatetime }}</td>
+              <td>
+                @if (courseSchedule.terms) {
+                  <div>
+                    <a [routerLink]="['/academic-terms', courseSchedule.terms.id, 'view']">{{ courseSchedule.terms.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (courseSchedule.year) {
+                  <div>
+                    <a [routerLink]="['/academic-year', courseSchedule.year.id, 'view']">{{ courseSchedule.year.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (courseSchedule.instructor) {
+                  <div>
+                    <a [routerLink]="['/instructor', courseSchedule.instructor.id, 'view']">{{ courseSchedule.instructor.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (courseSchedule.student) {
+                  <div>
+                    <a [routerLink]="['/student', courseSchedule.student.id, 'view']">{{ courseSchedule.student.id }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a
+                    [routerLink]="['/course-schedule', courseSchedule.id, 'view']"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                  </a>
+
+                  <a
+                    [routerLink]="['/course-schedule', courseSchedule.id, 'edit']"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton"
+                  >
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(courseSchedule)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (courseSchedules().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems()"
+          [page]="page()"
+          [pageSize]="itemsPerPage()"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        />
+      </div>
+    </div>
+  }
+</div>

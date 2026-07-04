@@ -3,6 +3,7 @@ package com.sis.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -17,12 +18,14 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "course")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Course extends AbstractAuditingEntity<Long> implements Serializable {
+public class Course implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id")
     private Long id;
 
@@ -33,35 +36,49 @@ public class Course extends AbstractAuditingEntity<Long> implements Serializable
     @Column(name = "hours_per_quarter")
     private Long hoursPerQuarter;
 
+    @Lob
     @Column(name = "course_description")
     private String courseDescription;
 
+    @Lob
     @Column(name = "course_objectives")
     private String courseObjectives;
 
+    @Size(max = 50)
+    @Column(name = "created_by", length = 50)
+    private String createdBy;
 
-    @JsonIgnoreProperties(value = { "user", "org", "instructor", "student", "course" }, allowSetters = true)
-    @OneToOne(fetch = FetchType.LAZY)
-    private AppConfig schYr;
+    @Column(name = "created_date")
+    private Instant createdDate;
 
-    @JsonIgnoreProperties(value = { "org", "instructor", "student", "course" }, allowSetters = true)
+    @Size(max = 50)
+    @Column(name = "last_modified_by", length = 50)
+    private String lastModifiedBy;
+
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
+
+    @JsonIgnoreProperties(value = { "instructor", "student", "course" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(unique = true)
     private AppConfig gradelevel;
+
+    @JsonIgnoreProperties(value = { "course" }, allowSetters = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(unique = true)
+    private Departments department;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "course")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "learningCompetencies", "course" }, allowSetters = true)
     private Set<CurriculumMap> curriculumMaps = new HashSet<>();
 
-    /*@ManyToMany(fetch = FetchType.LAZY, mappedBy = "courses")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "gender", "courses" }, allowSetters = true)
-    private Set<Instructor> instructors = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    private AcademicYear year;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "courses")
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "gender", "courses" }, allowSetters = true)
-    private Set<Student> students = new HashSet<>();*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties(value = { "year" }, allowSetters = true)
+    private AcademicTerms terms;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -130,17 +147,8 @@ public class Course extends AbstractAuditingEntity<Long> implements Serializable
         this.courseObjectives = courseObjectives;
     }
 
-    public AppConfig getSchYr() {
-        return this.schYr;
-    }
-
-    public void setSchYr(AppConfig appConfig) {
-        this.schYr = appConfig;
-    }
-
-    public Course schYr(AppConfig appConfig) {
-        this.setSchYr(appConfig);
-        return this;
+    public String getCreatedBy() {
+        return this.createdBy;
     }
 
     public Course createdBy(String createdBy) {
@@ -148,9 +156,25 @@ public class Course extends AbstractAuditingEntity<Long> implements Serializable
         return this;
     }
 
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return this.createdDate;
+    }
+
     public Course createdDate(Instant createdDate) {
         this.setCreatedDate(createdDate);
         return this;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
     }
 
     public Course lastModifiedBy(String lastModifiedBy) {
@@ -158,9 +182,21 @@ public class Course extends AbstractAuditingEntity<Long> implements Serializable
         return this;
     }
 
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
     public Course lastModifiedDate(Instant lastModifiedDate) {
         this.setLastModifiedDate(lastModifiedDate);
         return this;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public AppConfig getGradelevel() {
@@ -173,6 +209,19 @@ public class Course extends AbstractAuditingEntity<Long> implements Serializable
 
     public Course gradelevel(AppConfig appConfig) {
         this.setGradelevel(appConfig);
+        return this;
+    }
+
+    public Departments getDepartment() {
+        return this.department;
+    }
+
+    public void setDepartment(Departments departments) {
+        this.department = departments;
+    }
+
+    public Course department(Departments departments) {
+        this.setDepartment(departments);
         return this;
     }
 
@@ -207,67 +256,31 @@ public class Course extends AbstractAuditingEntity<Long> implements Serializable
         return this;
     }
 
-    /*public Set<Instructor> getInstructors() {
-        return this.instructors;
+    public AcademicYear getYear() {
+        return this.year;
     }
 
-    public void setInstructors(Set<Instructor> instructors) {
-        if (this.instructors != null) {
-            this.instructors.forEach(i -> i.removeCourse(this));
-        }
-        if (instructors != null) {
-            instructors.forEach(i -> i.addCourse(this));
-        }
-        this.instructors = instructors;
+    public void setYear(AcademicYear academicYear) {
+        this.year = academicYear;
     }
 
-    public Course instructors(Set<Instructor> instructors) {
-        this.setInstructors(instructors);
+    public Course year(AcademicYear academicYear) {
+        this.setYear(academicYear);
         return this;
     }
 
-    public Course addInstructor(Instructor instructor) {
-        this.instructors.add(instructor);
-        instructor.getCourses().add(this);
+    public AcademicTerms getTerms() {
+        return this.terms;
+    }
+
+    public void setTerms(AcademicTerms academicTerms) {
+        this.terms = academicTerms;
+    }
+
+    public Course terms(AcademicTerms academicTerms) {
+        this.setTerms(academicTerms);
         return this;
     }
-
-    public Course removeInstructor(Instructor instructor) {
-        this.instructors.remove(instructor);
-        instructor.getCourses().remove(this);
-        return this;
-    }
-
-    public Set<Student> getStudents() {
-        return this.students;
-    }
-
-    public void setStudents(Set<Student> students) {
-        if (this.students != null) {
-            this.students.forEach(i -> i.removeCourse(this));
-        }
-        if (students != null) {
-            students.forEach(i -> i.addCourse(this));
-        }
-        this.students = students;
-    }
-
-    public Course students(Set<Student> students) {
-        this.setStudents(students);
-        return this;
-    }
-
-    public Course addStudent(Student student) {
-        this.students.add(student);
-        student.getCourses().add(this);
-        return this;
-    }
-
-    public Course removeStudent(Student student) {
-        this.students.remove(student);
-        student.getCourses().remove(this);
-        return this;
-    }*/
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here
 

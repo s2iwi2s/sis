@@ -1,0 +1,90 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (instructor(); as instructorRef) {
+      <div>
+        <h2 data-cy="instructorDetailsHeading"><span jhiTranslate="schInfoSysApp.instructor.detail.title">Instructor</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ instructorRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.firstName">First Name</span></dt>
+          <dd>
+            <span>{{ instructorRef.firstName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.middleName">Middle Name</span></dt>
+          <dd>
+            <span>{{ instructorRef.middleName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.lastName">Last Name</span></dt>
+          <dd>
+            <span>{{ instructorRef.lastName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.email">Email</span></dt>
+          <dd>
+            <span>{{ instructorRef.email }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.phoneNumber">Phone Number</span></dt>
+          <dd>
+            <span>{{ instructorRef.phoneNumber }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.hireDate">Hire Date</span></dt>
+          <dd>
+            <span>{{ instructorRef.hireDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.salary">Salary</span></dt>
+          <dd>
+            <span>{{ instructorRef.salary }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.commissionPct">Commission Pct</span></dt>
+          <dd>
+            <span>{{ instructorRef.commissionPct }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.createdBy">Created By</span></dt>
+          <dd>
+            <span>{{ instructorRef.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ instructorRef.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ instructorRef.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ instructorRef.lastModifiedDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.gender">Gender</span></dt>
+          <dd>
+            @if (instructor()!.gender) {
+              <div>
+                <a [routerLink]="['/app-config', instructor()!.gender?.id, 'view']">{{ instructorRef.gender?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.user">User</span></dt>
+          <dd>
+            <span>{{ instructorRef.user?.id }}</span>
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/instructor', instructorRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

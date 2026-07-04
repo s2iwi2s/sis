@@ -1,0 +1,171 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-curriculum-map-heading"
+        data-cy="CurriculumMapCreateUpdateHeading"
+        jhiTranslate="schInfoSysApp.curriculumMap.home.createOrEditLabel"
+      >
+        Create or edit a Curriculum Map
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_quarterNo" jhiTranslate="schInfoSysApp.curriculumMap.quarterNo">Quarter No</label>
+          <input type="number" class="form-control" name="quarterNo" id="field_quarterNo" data-cy="quarterNo" formControlName="quarterNo" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_weekNo" jhiTranslate="schInfoSysApp.curriculumMap.weekNo">Week No</label>
+          <input type="number" class="form-control" name="weekNo" id="field_weekNo" data-cy="weekNo" formControlName="weekNo" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_topic" jhiTranslate="schInfoSysApp.curriculumMap.topic">Topic</label>
+          <input type="text" class="form-control" name="topic" id="field_topic" data-cy="topic" formControlName="topic" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_contentStandards" jhiTranslate="schInfoSysApp.curriculumMap.contentStandards"
+            >Content Standards</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="contentStandards"
+            id="field_contentStandards"
+            data-cy="contentStandards"
+            formControlName="contentStandards"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_performanceStandards" jhiTranslate="schInfoSysApp.curriculumMap.performanceStandards"
+            >Performance Standards</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="performanceStandards"
+            id="field_performanceStandards"
+            data-cy="performanceStandards"
+            formControlName="performanceStandards"
+          />
+        </div>
+
+        @let createdByRef = editForm.get('createdBy')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_createdBy" jhiTranslate="schInfoSysApp.curriculumMap.createdBy">Created By</label>
+          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" />
+          @if (createdByRef.invalid && (createdByRef.dirty || createdByRef.touched)) {
+            <div>
+              @if (editForm.get('createdBy')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_createdDate" jhiTranslate="schInfoSysApp.curriculumMap.createdDate">Created Date</label>
+          <div class="d-flex">
+            <input
+              id="field_createdDate"
+              data-cy="createdDate"
+              type="datetime-local"
+              class="form-control"
+              name="createdDate"
+              formControlName="createdDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        @let lastModifiedByRef = editForm.get('lastModifiedBy')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_lastModifiedBy" jhiTranslate="schInfoSysApp.curriculumMap.lastModifiedBy"
+            >Last Modified By</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="lastModifiedBy"
+            id="field_lastModifiedBy"
+            data-cy="lastModifiedBy"
+            formControlName="lastModifiedBy"
+          />
+          @if (lastModifiedByRef.invalid && (lastModifiedByRef.dirty || lastModifiedByRef.touched)) {
+            <div>
+              @if (editForm.get('lastModifiedBy')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_lastModifiedDate" jhiTranslate="schInfoSysApp.curriculumMap.lastModifiedDate"
+            >Last Modified Date</label
+          >
+          <div class="d-flex">
+            <input
+              id="field_lastModifiedDate"
+              data-cy="lastModifiedDate"
+              type="datetime-local"
+              class="form-control"
+              name="lastModifiedDate"
+              formControlName="lastModifiedDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_course" jhiTranslate="schInfoSysApp.curriculumMap.course">Course</label>
+          <select
+            class="form-control"
+            id="field_course"
+            data-cy="course"
+            name="course"
+            formControlName="course"
+            [compareWith]="compareCourse"
+          >
+            <option [ngValue]="null"></option>
+            @for (courseOption of coursesSharedCollection(); track $index) {
+              <option [ngValue]="courseOption">{{ courseOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

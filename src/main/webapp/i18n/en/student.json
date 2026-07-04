@@ -18,7 +18,7 @@
         "title": "Student"
       },
       "id": "ID",
-      "lrn": "LRN",
+      "lrn": "Lrn",
       "firstName": "First Name",
       "middleName": "Middle Name",
       "lastName": "Last Name",
@@ -52,8 +52,8 @@
       "lastModifiedBy": "Last Modified By",
       "lastModifiedDate": "Last Modified Date",
       "gender": "Gender",
-      "course": "Course",
-      "courses": "Courses"
+      "user": "User",
+      "courseSchedule": "Course Schedule"
     }
   }
 }

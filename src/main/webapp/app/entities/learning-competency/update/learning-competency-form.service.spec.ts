@@ -1,6 +1,7 @@
+import { beforeEach, describe, expect, it } from 'vitest';
 import { TestBed } from '@angular/core/testing';
 
-import { sampleWithRequiredData, sampleWithNewData } from '../learning-competency.test-samples';
+import { sampleWithNewData, sampleWithRequiredData } from '../learning-competency.test-samples';
 
 import { LearningCompetencyFormService } from './learning-competency-form.service';
 
@@ -8,7 +9,6 @@ describe('LearningCompetency Form Service', () => {
   let service: LearningCompetencyFormService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
     service = TestBed.inject(LearningCompetencyFormService);
   });
 
@@ -55,7 +55,7 @@ describe('LearningCompetency Form Service', () => {
       it('should return NewLearningCompetency for default LearningCompetency initial value', () => {
         const formGroup = service.createLearningCompetencyFormGroup(sampleWithNewData);
 
-        const learningCompetency = service.getLearningCompetency(formGroup) as any;
+        const learningCompetency = service.getLearningCompetency(formGroup);
 
         expect(learningCompetency).toMatchObject(sampleWithNewData);
       });
@@ -63,7 +63,7 @@ describe('LearningCompetency Form Service', () => {
       it('should return NewLearningCompetency for empty LearningCompetency initial value', () => {
         const formGroup = service.createLearningCompetencyFormGroup();
 
-        const learningCompetency = service.getLearningCompetency(formGroup) as any;
+        const learningCompetency = service.getLearningCompetency(formGroup);
 
         expect(learningCompetency).toMatchObject({});
       });
@@ -71,7 +71,7 @@ describe('LearningCompetency Form Service', () => {
       it('should return ILearningCompetency', () => {
         const formGroup = service.createLearningCompetencyFormGroup(sampleWithRequiredData);
 
-        const learningCompetency = service.getLearningCompetency(formGroup) as any;
+        const learningCompetency = service.getLearningCompetency(formGroup);
 
         expect(learningCompetency).toMatchObject(sampleWithRequiredData);
       });

@@ -3,6 +3,7 @@ package com.sis.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -17,12 +18,14 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Table(name = "instructor")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @SuppressWarnings("common-java:DuplicatedBlocks")
-public class Instructor extends AbstractAuditingEntity<Long> implements Serializable {
+public class Instructor implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
+    @SequenceGenerator(name = "sequenceGenerator")
     @Column(name = "id")
     private Long id;
 
@@ -50,20 +53,33 @@ public class Instructor extends AbstractAuditingEntity<Long> implements Serializ
     @Column(name = "commission_pct")
     private Long commissionPct;
 
-    @JsonIgnoreProperties(value = { "org", "instructor", "student", "course" }, allowSetters = true)
+    @Size(max = 50)
+    @Column(name = "created_by", length = 50)
+    private String createdBy;
+
+    @Column(name = "created_date")
+    private Instant createdDate;
+
+    @Size(max = 50)
+    @Column(name = "last_modified_by", length = 50)
+    private String lastModifiedBy;
+
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
+
+    @JsonIgnoreProperties(value = { "instructor", "student", "course" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private AppConfig gender;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "rel_instructor__course",
-        joinColumns = @JoinColumn(name = "instructor_id"),
-        inverseJoinColumns = @JoinColumn(name = "course_id")
-    )
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(unique = true)
+    private User user;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "instructor")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "gradelevel", "curriculumMaps", "instructors", "students" }, allowSetters = true)
-    private Set<Course> courses = new HashSet<>();
+    @JsonIgnoreProperties(value = { "terms", "year", "instructor", "student" }, allowSetters = true)
+    private Set<CourseSchedule> courseSchedules = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -184,9 +200,21 @@ public class Instructor extends AbstractAuditingEntity<Long> implements Serializ
         this.commissionPct = commissionPct;
     }
 
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
     public Instructor createdBy(String createdBy) {
         this.setCreatedBy(createdBy);
         return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return this.createdDate;
     }
 
     public Instructor createdDate(Instant createdDate) {
@@ -194,14 +222,34 @@ public class Instructor extends AbstractAuditingEntity<Long> implements Serializ
         return this;
     }
 
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
     public Instructor lastModifiedBy(String lastModifiedBy) {
         this.setLastModifiedBy(lastModifiedBy);
         return this;
     }
 
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
     public Instructor lastModifiedDate(Instant lastModifiedDate) {
         this.setLastModifiedDate(lastModifiedDate);
         return this;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
     }
 
     public AppConfig getGender() {
@@ -217,26 +265,47 @@ public class Instructor extends AbstractAuditingEntity<Long> implements Serializ
         return this;
     }
 
-    public Set<Course> getCourses() {
-        return this.courses;
+    public User getUser() {
+        return this.user;
     }
 
-    public void setCourses(Set<Course> courses) {
-        this.courses = courses;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public Instructor courses(Set<Course> courses) {
-        this.setCourses(courses);
+    public Instructor user(User user) {
+        this.setUser(user);
         return this;
     }
 
-    public Instructor addCourse(Course course) {
-        this.courses.add(course);
+    public Set<CourseSchedule> getCourseSchedules() {
+        return this.courseSchedules;
+    }
+
+    public void setCourseSchedules(Set<CourseSchedule> courseSchedules) {
+        if (this.courseSchedules != null) {
+            this.courseSchedules.forEach(i -> i.setInstructor(null));
+        }
+        if (courseSchedules != null) {
+            courseSchedules.forEach(i -> i.setInstructor(this));
+        }
+        this.courseSchedules = courseSchedules;
+    }
+
+    public Instructor courseSchedules(Set<CourseSchedule> courseSchedules) {
+        this.setCourseSchedules(courseSchedules);
         return this;
     }
 
-    public Instructor removeCourse(Course course) {
-        this.courses.remove(course);
+    public Instructor addCourseSchedule(CourseSchedule courseSchedule) {
+        this.courseSchedules.add(courseSchedule);
+        courseSchedule.setInstructor(this);
+        return this;
+    }
+
+    public Instructor removeCourseSchedule(CourseSchedule courseSchedule) {
+        this.courseSchedules.remove(courseSchedule);
+        courseSchedule.setInstructor(null);
         return this;
     }
 

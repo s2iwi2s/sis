@@ -1,0 +1,196 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2 id="jhi-resources-heading" data-cy="ResourcesCreateUpdateHeading" jhiTranslate="schInfoSysApp.resources.home.createOrEditLabel">
+        Create or edit a Resources
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        @let fileNameRef = editForm.get('fileName')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_fileName" jhiTranslate="schInfoSysApp.resources.fileName">File Name</label>
+          <input type="text" class="form-control" name="fileName" id="field_fileName" data-cy="fileName" formControlName="fileName" />
+          @if (fileNameRef.invalid && (fileNameRef.dirty || fileNameRef.touched)) {
+            <div>
+              @if (editForm.get('fileName')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let documentRef = editForm.get('document')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_document" jhiTranslate="schInfoSysApp.resources.document">Document</label>
+          <div>
+            @if (documentRef.value) {
+              <div class="form-text text-danger clearfix">
+                <a
+                  class="pull-start"
+                  (click)="openFile(documentRef.value!, editForm.get('documentContentType')!.value!)"
+                  jhiTranslate="entity.action.open"
+                  >Open</a
+                ><br />
+                <span class="pull-start">{{ editForm.get('documentContentType')!.value }}, {{ byteSize(documentRef.value!) }}</span>
+                <button
+                  type="button"
+                  (click)="editForm.patchValue({ document: undefined, documentContentType: undefined })"
+                  class="btn btn-secondary btn-xs pull-end"
+                >
+                  <fa-icon icon="times" />
+                </button>
+              </div>
+            }
+            <input
+              type="file"
+              id="file_document"
+              data-cy="document"
+              (change)="setFileData($event, 'document', false)"
+              jhiTranslate="entity.action.addblob"
+            />
+          </div>
+          <input type="hidden" class="form-control" name="document" id="field_document" data-cy="document" formControlName="document" />
+          <input
+            type="hidden"
+            class="form-control"
+            name="documentContentType"
+            id="field_documentContentType"
+            formControlName="documentContentType"
+          />
+        </div>
+
+        @let createdByRef = editForm.get('createdBy')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_createdBy" jhiTranslate="schInfoSysApp.resources.createdBy">Created By</label>
+          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" />
+          @if (createdByRef.invalid && (createdByRef.dirty || createdByRef.touched)) {
+            <div>
+              @if (editForm.get('createdBy')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_createdDate" jhiTranslate="schInfoSysApp.resources.createdDate">Created Date</label>
+          <div class="d-flex">
+            <input
+              id="field_createdDate"
+              data-cy="createdDate"
+              type="datetime-local"
+              class="form-control"
+              name="createdDate"
+              formControlName="createdDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        @let lastModifiedByRef = editForm.get('lastModifiedBy')!;
+        <div class="mb-3">
+          <label class="form-label" for="field_lastModifiedBy" jhiTranslate="schInfoSysApp.resources.lastModifiedBy"
+            >Last Modified By</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="lastModifiedBy"
+            id="field_lastModifiedBy"
+            data-cy="lastModifiedBy"
+            formControlName="lastModifiedBy"
+          />
+          @if (lastModifiedByRef.invalid && (lastModifiedByRef.dirty || lastModifiedByRef.touched)) {
+            <div>
+              @if (editForm.get('lastModifiedBy')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
+                  >This field cannot be longer than 50 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_lastModifiedDate" jhiTranslate="schInfoSysApp.resources.lastModifiedDate"
+            >Last Modified Date</label
+          >
+          <div class="d-flex">
+            <input
+              id="field_lastModifiedDate"
+              data-cy="lastModifiedDate"
+              type="datetime-local"
+              class="form-control"
+              name="lastModifiedDate"
+              formControlName="lastModifiedDate"
+              placeholder="YYYY-MM-DD HH:mm"
+            />
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="field_strategieses" jhiTranslate="schInfoSysApp.resources.strategies">Strategies</label>
+          <select
+            class="form-control"
+            id="field_strategieses"
+            data-cy="strategies"
+            multiple
+            name="strategieses"
+            formControlName="strategieses"
+            [compareWith]="compareStrategies"
+          >
+            @for (strategiesOption of strategiesesSharedCollection(); track $index) {
+              <option [ngValue]="strategiesOption">{{ strategiesOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="field_assessments" jhiTranslate="schInfoSysApp.resources.assessment">Assessment</label>
+          <select
+            class="form-control"
+            id="field_assessments"
+            data-cy="assessment"
+            multiple
+            name="assessments"
+            formControlName="assessments"
+            [compareWith]="compareAssessment"
+          >
+            @for (assessmentOption of assessmentsSharedCollection(); track $index) {
+              <option [ngValue]="assessmentOption">{{ assessmentOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

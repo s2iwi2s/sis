@@ -1,28 +1,29 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { HttpResponse } from '@angular/common/http';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
-import { of, EMPTY, Observable } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
+
+import { EMPTY, Observable, catchError, of } from 'rxjs';
 
 import { IResources } from '../resources.model';
 import { ResourcesService } from '../service/resources.service';
 
-export const resourcesResolve = (route: ActivatedRouteSnapshot): Observable<null | IResources> => {
-  const id = route.params['id'];
+const resourcesResolve = (route: ActivatedRouteSnapshot): Observable<null | IResources> => {
+  const { id } = route.params;
   if (id) {
-    return inject(ResourcesService)
-      .find(id)
-      .pipe(
-        mergeMap((resources: HttpResponse<IResources>) => {
-          if (resources.body) {
-            return of(resources.body);
-          } else {
-            inject(Router).navigate(['404']);
-            return EMPTY;
-          }
-        }),
-      );
+    const router = inject(Router);
+    const service = inject(ResourcesService);
+    return service.find(id).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 404) {
+          router.navigate(['404']);
+        } else {
+          router.navigate(['error']);
+        }
+        return EMPTY;
+      }),
+    );
   }
+
   return of(null);
 };
 

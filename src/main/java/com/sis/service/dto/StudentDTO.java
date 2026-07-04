@@ -3,9 +3,7 @@ package com.sis.service.dto;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * A DTO for the {@link com.sis.domain.Student} entity.
@@ -112,7 +110,7 @@ public class StudentDTO implements Serializable {
 
     private AppConfigDTO gender;
 
-    private Set<CourseDTO> courses = new HashSet<>();
+    private UserDTO user;
 
     public Long getId() {
         return id;
@@ -394,12 +392,12 @@ public class StudentDTO implements Serializable {
         this.gender = gender;
     }
 
-    public Set<CourseDTO> getCourses() {
-        return courses;
+    public UserDTO getUser() {
+        return user;
     }
 
-    public void setCourses(Set<CourseDTO> courses) {
-        this.courses = courses;
+    public void setUser(UserDTO user) {
+        this.user = user;
     }
 
     @Override
@@ -407,10 +405,11 @@ public class StudentDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof StudentDTO studentDTO)) {
+        if (!(o instanceof StudentDTO)) {
             return false;
         }
 
+        StudentDTO studentDTO = (StudentDTO) o;
         if (this.id == null) {
             return false;
         }
@@ -461,7 +460,7 @@ public class StudentDTO implements Serializable {
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", gender=" + getGender() +
-            ", courses=" + getCourses() +
+            ", user=" + getUser() +
             "}";
     }
 }

@@ -11,7 +11,7 @@
 # ===================================================================
 # Standard Spring Boot properties.
 # Full reference is available at:
-# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# https://docs.spring.io/spring-boot/appendix/application-properties/index.html
 # ===================================================================
 
 ---
@@ -54,7 +54,7 @@ management:
         readiness:
           include: readinessState,db
     jhimetrics:
-      enabled: true
+      access: read-only
   info:
     git:
       mode: full
@@ -87,18 +87,25 @@ management:
       repository:
         autotime:
           enabled: true
+    tags:
+      application: ${spring.application.name}
 
 spring:
   application:
     name: SchInfoSys
+  docker:
+    compose:
+      enabled: true
+      lifecycle-management: start-only
+      file: src/main/docker/services.yml
   profiles:
     # The commented value for `active` can be replaced with valid Spring profiles to load.
     # Otherwise, it will be filled in by maven when building the JAR file
     # Either way, it can be overridden by `--spring.profiles.active` value passed in the commandline or `-Dspring.profiles.active` set in `JAVA_OPTS`
-    active: #spring.profiles.active#
+    active: '@spring.profiles.active@'
     group:
       dev:
-        - dev
+        - secret-samples
         - api-docs
         # Uncomment to activate TLS for the dev profile
         #- tls
@@ -129,7 +136,7 @@ spring:
       ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
-        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        implicit-strategy: org.springframework.boot.hibernate.SpringImplicitNamingStrategy
   messages:
     basename: i18n/messages
   main:
@@ -137,6 +144,12 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          authority-prefix: ''
+          authorities-claim-name: auth
   task:
     execution:
       thread-name-prefix: sch-info-sys-task-
@@ -201,6 +214,10 @@ jhipster:
     license-url:
   security:
     content-security-policy: "default-src 'self'; frame-src 'self' data:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://storage.googleapis.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:"
+
+
+# jhipster-needle-add-application-yaml-document
+---
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class

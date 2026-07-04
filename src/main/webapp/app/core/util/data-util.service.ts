@@ -1,9 +1,9 @@
-import { Buffer } from 'buffer';
 import { Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+
 import { Observable, Observer } from 'rxjs';
-import {ResourcesFormGroup} from "../../entities/resources/update/resources-form.service";
-import {IResources} from "../../entities/resources/resources.model";
+
+import { byteSize, openFile, toBase64 } from 'app/shared/jhipster/data-utils';
 
 export type FileLoadErrorType = 'not.image' | 'could.not.extract';
 
@@ -14,7 +14,7 @@ export interface FileLoadError {
 }
 
 /**
- * An utility service for data.
+ * A utility service for data.
  */
 @Injectable({
   providedIn: 'root',
@@ -24,29 +24,14 @@ export class DataUtils {
    * Method to find the byte size of the string provides
    */
   byteSize(base64String: string): string {
-    return this.formatAsBytes(this.size(base64String));
+    return byteSize(base64String);
   }
 
   /**
    * Method to open file
    */
   openFile(data: string, contentType: string | null | undefined): void {
-    contentType = contentType ?? '';
-
-    const byteCharacters = Buffer.from(data, 'base64').toString('binary');
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], {
-      type: contentType,
-    });
-    const fileURL = window.URL.createObjectURL(blob);
-    const win = window.open(fileURL);
-    win!.onload = function () {
-      URL.revokeObjectURL(fileURL);
-    };
+    openFile(data, contentType);
   }
 
   /**
@@ -65,7 +50,6 @@ export class DataUtils {
       const eventTarget: HTMLInputElement | null = event.target as HTMLInputElement | null;
       if (eventTarget?.files?.[0]) {
         const file: File = eventTarget.files[0];
-        editForm.patchValue({fileName: file.name});
         if (isImage && !file.type.startsWith('image/')) {
           const error: FileLoadError = {
             message: `File was expected to be an image but was found to be '${file.type}'`,
@@ -74,8 +58,8 @@ export class DataUtils {
           };
           observer.error(error);
         } else {
-          const fieldContentType: string = field + 'ContentType';
-          this.toBase64(file, (base64Data: string) => {
+          const fieldContentType = `${field}ContentType`;
+          toBase64(file, (base64Data: string) => {
             editForm.patchValue({
               [field]: base64Data,
               [fieldContentType]: file.type,
@@ -93,57 +77,5 @@ export class DataUtils {
         observer.error(error);
       }
     });
-  }
-
-  /**
-   * Method to convert the file to base64
-   */
-  toBase64(file: File, callback: (base64Data: string) => void): void {
-    const fileReader: FileReader = new FileReader();
-    fileReader.onload = (e: ProgressEvent<FileReader>) => {
-      if (typeof e.target?.result === 'string') {
-        const base64Data: string = e.target.result.substring(e.target.result.indexOf('base64,') + 'base64,'.length);
-        callback(base64Data);
-      }
-    };
-    fileReader.readAsDataURL(file);
-  }
-
-  fileToResource(file: File): Observable<IResources> {
-    return new Observable((observer: Observer<IResources>) =>{
-      let resource: IResources = {id: 0};
-      this.toBase64(file, (base64Data: string) => {
-        resource = {
-          ...resource,
-          fileName: file.name,
-          document: base64Data,
-          documentContentType: file.type
-        };
-        observer.next(resource);
-        observer.complete();
-      });
-    });
-  }
-
-  private endsWith(suffix: string, str: string): boolean {
-    return str.includes(suffix, str.length - suffix.length);
-  }
-
-  private paddingSize(value: string): number {
-    if (this.endsWith('==', value)) {
-      return 2;
-    }
-    if (this.endsWith('=', value)) {
-      return 1;
-    }
-    return 0;
-  }
-
-  private size(value: string): number {
-    return (value.length / 4) * 3 - this.paddingSize(value);
-  }
-
-  private formatAsBytes(size: number): string {
-    return size.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' bytes'; // NOSONAR
   }
 }

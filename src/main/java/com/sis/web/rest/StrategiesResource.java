@@ -31,11 +31,11 @@ import tech.jhipster.web.util.ResponseUtil;
 @RequestMapping("/api/strategies")
 public class StrategiesResource {
 
-    private final Logger log = LoggerFactory.getLogger(StrategiesResource.class);
+    private static final Logger LOG = LoggerFactory.getLogger(StrategiesResource.class);
 
     private static final String ENTITY_NAME = "strategies";
 
-    @Value("${jhipster.clientApp.name}")
+    @Value("${jhipster.clientApp.name:schInfoSys}")
     private String applicationName;
 
     private final StrategiesService strategiesService;
@@ -56,15 +56,14 @@ public class StrategiesResource {
      */
     @PostMapping("")
     public ResponseEntity<StrategiesDTO> createStrategies(@Valid @RequestBody StrategiesDTO strategiesDTO) throws URISyntaxException {
-        log.debug("REST request to save Strategies : {}", strategiesDTO);
+        LOG.debug("REST request to save Strategies : {}", strategiesDTO);
         if (strategiesDTO.getId() != null) {
             throw new BadRequestAlertException("A new strategies cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        StrategiesDTO result = strategiesService.save(strategiesDTO);
-        return ResponseEntity
-            .created(new URI("/api/strategies/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
+        strategiesDTO = strategiesService.save(strategiesDTO);
+        return ResponseEntity.created(new URI("/api/strategies/" + strategiesDTO.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, strategiesDTO.getId().toString()))
+            .body(strategiesDTO);
     }
 
     /**
@@ -82,7 +81,7 @@ public class StrategiesResource {
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody StrategiesDTO strategiesDTO
     ) throws URISyntaxException {
-        log.debug("REST request to update Strategies : {}, {}", id, strategiesDTO);
+        LOG.debug("REST request to update Strategies : {}, {}", id, strategiesDTO);
         if (strategiesDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -94,11 +93,10 @@ public class StrategiesResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        StrategiesDTO result = strategiesService.update(strategiesDTO);
-        return ResponseEntity
-            .ok()
+        strategiesDTO = strategiesService.update(strategiesDTO);
+        return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, strategiesDTO.getId().toString()))
-            .body(result);
+            .body(strategiesDTO);
     }
 
     /**
@@ -117,7 +115,7 @@ public class StrategiesResource {
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody StrategiesDTO strategiesDTO
     ) throws URISyntaxException {
-        log.debug("REST request to partial update Strategies partially : {}, {}", id, strategiesDTO);
+        LOG.debug("REST request to partial update Strategies partially : {}, {}", id, strategiesDTO);
         if (strategiesDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
@@ -138,18 +136,18 @@ public class StrategiesResource {
     }
 
     /**
-     * {@code GET  /strategies} : get all the strategies.
+     * {@code GET  /strategies} : get all the Strategies.
      *
      * @param pageable the pagination information.
      * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
-     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of strategies in body.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Strategies in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<StrategiesDTO>> getAllStrategies(
+    public ResponseEntity<List<StrategiesDTO>> getAllStrategieses(
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
         @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
     ) {
-        log.debug("REST request to get a page of Strategies");
+        LOG.debug("REST request to get a page of Strategieses");
         Page<StrategiesDTO> page;
         if (eagerload) {
             page = strategiesService.findAllWithEagerRelationships(pageable);
@@ -168,7 +166,7 @@ public class StrategiesResource {
      */
     @GetMapping("/{id}")
     public ResponseEntity<StrategiesDTO> getStrategies(@PathVariable("id") Long id) {
-        log.debug("REST request to get Strategies : {}", id);
+        LOG.debug("REST request to get Strategies : {}", id);
         Optional<StrategiesDTO> strategiesDTO = strategiesService.findOne(id);
         return ResponseUtil.wrapOrNotFound(strategiesDTO);
     }
@@ -181,18 +179,10 @@ public class StrategiesResource {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStrategies(@PathVariable("id") Long id) {
-        log.debug("REST request to delete Strategies : {}", id);
+        LOG.debug("REST request to delete Strategies : {}", id);
         strategiesService.delete(id);
-        return ResponseEntity
-            .noContent()
+        return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
-    }
-
-    @GetMapping("/{id}/course")
-    public ResponseEntity<List<StrategiesDTO>> getAllStrategiesByCourse(@PathVariable("id") Long courseId) {
-        log.debug("REST request to get a page of Strategies by Course {}", courseId);
-        List<StrategiesDTO> list = strategiesService.findAllByCourse(courseId);
-        return ResponseEntity.ok(list);
     }
 }
