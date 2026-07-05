@@ -29,6 +29,9 @@
             <column name="ext_name" type="varchar(10)">
                 <constraints nullable="true" />
             </column>
+            <column name="enrollment_date" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
             <column name="birth_date" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
@@ -149,6 +152,7 @@
             <column name="middle_name" type="string"/>
             <column name="last_name" type="string"/>
             <column name="ext_name" type="string"/>
+            <column name="enrollment_date" type="date"/>
             <column name="birth_date" type="date"/>
             <column name="birth_place" type="string"/>
             <column name="contact_no" type="string"/>
