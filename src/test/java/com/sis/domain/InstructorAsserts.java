@@ -70,6 +70,7 @@ public class InstructorAsserts {
     public static void assertInstructorUpdatableRelationshipsEquals(Instructor expected, Instructor actual) {
         assertThat(actual)
             .as("Verify Instructor relationships")
-            .satisfies(a -> assertThat(a.getGender()).as("check gender").isEqualTo(expected.getGender()));
+            .satisfies(a -> assertThat(a.getGender()).as("check gender").isEqualTo(expected.getGender()))
+            .satisfies(a -> assertThat(a.getCourseSchedules()).as("check courseSchedules").isEqualTo(expected.getCourseSchedules()));
     }
 }

@@ -51,6 +51,8 @@ public class CacheConfiguration {
             createCache(cm, com.sis.domain.Course.class.getName());
             createCache(cm, com.sis.domain.Course.class.getName() + ".curriculumMaps");
             createCache(cm, com.sis.domain.CourseSchedule.class.getName());
+            createCache(cm, com.sis.domain.CourseSchedule.class.getName() + ".instructors");
+            createCache(cm, com.sis.domain.CourseSchedule.class.getName() + ".students");
             createCache(cm, com.sis.domain.Departments.class.getName());
             createCache(cm, com.sis.domain.AppConfig.class.getName());
             createCache(cm, com.sis.domain.CurriculumMap.class.getName());

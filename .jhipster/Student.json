@@ -35,6 +35,10 @@
       "fieldValidateRulesMaxlength": "10"
     },
     {
+      "fieldName": "enrollmentDate",
+      "fieldType": "Instant"
+    },
+    {
       "fieldName": "birthDate",
       "fieldType": "Instant"
     },
@@ -218,7 +222,7 @@
       "otherEntityName": "courseSchedule",
       "relationshipName": "courseSchedule",
       "relationshipSide": "left",
-      "relationshipType": "one-to-many"
+      "relationshipType": "many-to-many"
     }
   ],
   "searchEngine": "no",

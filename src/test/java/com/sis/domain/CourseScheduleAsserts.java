@@ -69,7 +69,7 @@ public class CourseScheduleAsserts {
             .as("Verify CourseSchedule relationships")
             .satisfies(a -> assertThat(a.getTerms()).as("check terms").isEqualTo(expected.getTerms()))
             .satisfies(a -> assertThat(a.getYear()).as("check year").isEqualTo(expected.getYear()))
-            .satisfies(a -> assertThat(a.getInstructor()).as("check instructor").isEqualTo(expected.getInstructor()))
-            .satisfies(a -> assertThat(a.getStudent()).as("check student").isEqualTo(expected.getStudent()));
+            .satisfies(a -> assertThat(a.getInstructors()).as("check instructors").isEqualTo(expected.getInstructors()))
+            .satisfies(a -> assertThat(a.getStudents()).as("check students").isEqualTo(expected.getStudents()));
     }
 }

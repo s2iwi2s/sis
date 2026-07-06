@@ -76,9 +76,14 @@ public class Instructor implements Serializable {
     @JoinColumn(unique = true)
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "instructor")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "rel_instructor__course_schedule",
+        joinColumns = @JoinColumn(name = "instructor_id"),
+        inverseJoinColumns = @JoinColumn(name = "course_schedule_id")
+    )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "terms", "year", "instructor", "student" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "terms", "year", "instructors", "students" }, allowSetters = true)
     private Set<CourseSchedule> courseSchedules = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -283,12 +288,6 @@ public class Instructor implements Serializable {
     }
 
     public void setCourseSchedules(Set<CourseSchedule> courseSchedules) {
-        if (this.courseSchedules != null) {
-            this.courseSchedules.forEach(i -> i.setInstructor(null));
-        }
-        if (courseSchedules != null) {
-            courseSchedules.forEach(i -> i.setInstructor(this));
-        }
         this.courseSchedules = courseSchedules;
     }
 
@@ -299,13 +298,11 @@ public class Instructor implements Serializable {
 
     public Instructor addCourseSchedule(CourseSchedule courseSchedule) {
         this.courseSchedules.add(courseSchedule);
-        courseSchedule.setInstructor(this);
         return this;
     }
 
     public Instructor removeCourseSchedule(CourseSchedule courseSchedule) {
         this.courseSchedules.remove(courseSchedule);
-        courseSchedule.setInstructor(null);
         return this;
     }
 

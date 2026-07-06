@@ -3,7 +3,9 @@ package com.sis.service.dto;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A DTO for the {@link com.sis.domain.CourseSchedule} entity.
@@ -39,9 +41,9 @@ public class CourseScheduleDTO implements Serializable {
 
     private AcademicYearDTO year;
 
-    private InstructorDTO instructor;
+    private Set<InstructorDTO> instructors = new HashSet<>();
 
-    private StudentDTO student;
+    private Set<StudentDTO> students = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -139,20 +141,20 @@ public class CourseScheduleDTO implements Serializable {
         this.year = year;
     }
 
-    public InstructorDTO getInstructor() {
-        return instructor;
+    public Set<InstructorDTO> getInstructors() {
+        return instructors;
     }
 
-    public void setInstructor(InstructorDTO instructor) {
-        this.instructor = instructor;
+    public void setInstructors(Set<InstructorDTO> instructors) {
+        this.instructors = instructors;
     }
 
-    public StudentDTO getStudent() {
-        return student;
+    public Set<StudentDTO> getStudents() {
+        return students;
     }
 
-    public void setStudent(StudentDTO student) {
-        this.student = student;
+    public void setStudents(Set<StudentDTO> students) {
+        this.students = students;
     }
 
     @Override
@@ -192,8 +194,8 @@ public class CourseScheduleDTO implements Serializable {
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", terms=" + getTerms() +
             ", year=" + getYear() +
-            ", instructor=" + getInstructor() +
-            ", student=" + getStudent() +
+            ", instructors=" + getInstructors() +
+            ", students=" + getStudents() +
             "}";
     }
 }

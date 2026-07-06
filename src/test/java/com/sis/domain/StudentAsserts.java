@@ -52,6 +52,7 @@ public class StudentAsserts {
             .satisfies(a -> assertThat(a.getMiddleName()).as("check middleName").isEqualTo(expected.getMiddleName()))
             .satisfies(a -> assertThat(a.getLastName()).as("check lastName").isEqualTo(expected.getLastName()))
             .satisfies(a -> assertThat(a.getExtName()).as("check extName").isEqualTo(expected.getExtName()))
+            .satisfies(a -> assertThat(a.getEnrollmentDate()).as("check enrollmentDate").isEqualTo(expected.getEnrollmentDate()))
             .satisfies(a -> assertThat(a.getBirthDate()).as("check birthDate").isEqualTo(expected.getBirthDate()))
             .satisfies(a -> assertThat(a.getBirthPlace()).as("check birthPlace").isEqualTo(expected.getBirthPlace()))
             .satisfies(a -> assertThat(a.getContactNo()).as("check contactNo").isEqualTo(expected.getContactNo()))
@@ -91,6 +92,7 @@ public class StudentAsserts {
     public static void assertStudentUpdatableRelationshipsEquals(Student expected, Student actual) {
         assertThat(actual)
             .as("Verify Student relationships")
-            .satisfies(a -> assertThat(a.getGender()).as("check gender").isEqualTo(expected.getGender()));
+            .satisfies(a -> assertThat(a.getGender()).as("check gender").isEqualTo(expected.getGender()))
+            .satisfies(a -> assertThat(a.getCourseSchedules()).as("check courseSchedules").isEqualTo(expected.getCourseSchedules()));
     }
 }

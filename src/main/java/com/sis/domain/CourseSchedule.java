@@ -6,6 +6,8 @@ import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -65,13 +67,15 @@ public class CourseSchedule implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private AcademicYear year;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "courseSchedules")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "gender", "user", "courseSchedules" }, allowSetters = true)
-    private Instructor instructor;
+    private Set<Instructor> instructors = new HashSet<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "courseSchedules")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "gender", "user", "courseSchedules" }, allowSetters = true)
-    private Student student;
+    private Set<Student> students = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -231,29 +235,65 @@ public class CourseSchedule implements Serializable {
         return this;
     }
 
-    public Instructor getInstructor() {
-        return this.instructor;
+    public Set<Instructor> getInstructors() {
+        return this.instructors;
     }
 
-    public void setInstructor(Instructor instructor) {
-        this.instructor = instructor;
+    public void setInstructors(Set<Instructor> instructors) {
+        if (this.instructors != null) {
+            this.instructors.forEach(i -> i.removeCourseSchedule(this));
+        }
+        if (instructors != null) {
+            instructors.forEach(i -> i.addCourseSchedule(this));
+        }
+        this.instructors = instructors;
     }
 
-    public CourseSchedule instructor(Instructor instructor) {
-        this.setInstructor(instructor);
+    public CourseSchedule instructors(Set<Instructor> instructors) {
+        this.setInstructors(instructors);
         return this;
     }
 
-    public Student getStudent() {
-        return this.student;
+    public CourseSchedule addInstructor(Instructor instructor) {
+        this.instructors.add(instructor);
+        instructor.getCourseSchedules().add(this);
+        return this;
     }
 
-    public void setStudent(Student student) {
-        this.student = student;
+    public CourseSchedule removeInstructor(Instructor instructor) {
+        this.instructors.remove(instructor);
+        instructor.getCourseSchedules().remove(this);
+        return this;
     }
 
-    public CourseSchedule student(Student student) {
-        this.setStudent(student);
+    public Set<Student> getStudents() {
+        return this.students;
+    }
+
+    public void setStudents(Set<Student> students) {
+        if (this.students != null) {
+            this.students.forEach(i -> i.removeCourseSchedule(this));
+        }
+        if (students != null) {
+            students.forEach(i -> i.addCourseSchedule(this));
+        }
+        this.students = students;
+    }
+
+    public CourseSchedule students(Set<Student> students) {
+        this.setStudents(students);
+        return this;
+    }
+
+    public CourseSchedule addStudent(Student student) {
+        this.students.add(student);
+        student.getCourseSchedules().add(this);
+        return this;
+    }
+
+    public CourseSchedule removeStudent(Student student) {
+        this.students.remove(student);
+        student.getCourseSchedules().remove(this);
         return this;
     }
 

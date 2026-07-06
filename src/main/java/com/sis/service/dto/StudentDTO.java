@@ -3,7 +3,9 @@ package com.sis.service.dto;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A DTO for the {@link com.sis.domain.Student} entity.
@@ -26,6 +28,8 @@ public class StudentDTO implements Serializable {
 
     @Size(max = 10)
     private String extName;
+
+    private Instant enrollmentDate;
 
     private Instant birthDate;
 
@@ -112,6 +116,8 @@ public class StudentDTO implements Serializable {
 
     private UserDTO user;
 
+    private Set<CourseScheduleDTO> courseSchedules = new HashSet<>();
+
     public Long getId() {
         return id;
     }
@@ -158,6 +164,14 @@ public class StudentDTO implements Serializable {
 
     public void setExtName(String extName) {
         this.extName = extName;
+    }
+
+    public Instant getEnrollmentDate() {
+        return enrollmentDate;
+    }
+
+    public void setEnrollmentDate(Instant enrollmentDate) {
+        this.enrollmentDate = enrollmentDate;
     }
 
     public Instant getBirthDate() {
@@ -400,6 +414,14 @@ public class StudentDTO implements Serializable {
         this.user = user;
     }
 
+    public Set<CourseScheduleDTO> getCourseSchedules() {
+        return courseSchedules;
+    }
+
+    public void setCourseSchedules(Set<CourseScheduleDTO> courseSchedules) {
+        this.courseSchedules = courseSchedules;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -431,6 +453,7 @@ public class StudentDTO implements Serializable {
             ", middleName='" + getMiddleName() + "'" +
             ", lastName='" + getLastName() + "'" +
             ", extName='" + getExtName() + "'" +
+            ", enrollmentDate='" + getEnrollmentDate() + "'" +
             ", birthDate='" + getBirthDate() + "'" +
             ", birthPlace='" + getBirthPlace() + "'" +
             ", contactNo='" + getContactNo() + "'" +
@@ -461,6 +484,7 @@ public class StudentDTO implements Serializable {
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", gender=" + getGender() +
             ", user=" + getUser() +
+            ", courseSchedules=" + getCourseSchedules() +
             "}";
     }
 }

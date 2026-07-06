@@ -8,6 +8,8 @@ import static com.sis.domain.StudentTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.sis.web.rest.TestUtil;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 class CourseScheduleTest {
@@ -55,11 +57,21 @@ class CourseScheduleTest {
         CourseSchedule courseSchedule = getCourseScheduleRandomSampleGenerator();
         Instructor instructorBack = getInstructorRandomSampleGenerator();
 
-        courseSchedule.setInstructor(instructorBack);
-        assertThat(courseSchedule.getInstructor()).isEqualTo(instructorBack);
+        courseSchedule.addInstructor(instructorBack);
+        assertThat(courseSchedule.getInstructors()).containsOnly(instructorBack);
+        assertThat(instructorBack.getCourseSchedules()).containsOnly(courseSchedule);
 
-        courseSchedule.instructor(null);
-        assertThat(courseSchedule.getInstructor()).isNull();
+        courseSchedule.removeInstructor(instructorBack);
+        assertThat(courseSchedule.getInstructors()).doesNotContain(instructorBack);
+        assertThat(instructorBack.getCourseSchedules()).doesNotContain(courseSchedule);
+
+        courseSchedule.instructors(new HashSet<>(Set.of(instructorBack)));
+        assertThat(courseSchedule.getInstructors()).containsOnly(instructorBack);
+        assertThat(instructorBack.getCourseSchedules()).containsOnly(courseSchedule);
+
+        courseSchedule.setInstructors(new HashSet<>());
+        assertThat(courseSchedule.getInstructors()).doesNotContain(instructorBack);
+        assertThat(instructorBack.getCourseSchedules()).doesNotContain(courseSchedule);
     }
 
     @Test
@@ -67,10 +79,20 @@ class CourseScheduleTest {
         CourseSchedule courseSchedule = getCourseScheduleRandomSampleGenerator();
         Student studentBack = getStudentRandomSampleGenerator();
 
-        courseSchedule.setStudent(studentBack);
-        assertThat(courseSchedule.getStudent()).isEqualTo(studentBack);
+        courseSchedule.addStudent(studentBack);
+        assertThat(courseSchedule.getStudents()).containsOnly(studentBack);
+        assertThat(studentBack.getCourseSchedules()).containsOnly(courseSchedule);
 
-        courseSchedule.student(null);
-        assertThat(courseSchedule.getStudent()).isNull();
+        courseSchedule.removeStudent(studentBack);
+        assertThat(courseSchedule.getStudents()).doesNotContain(studentBack);
+        assertThat(studentBack.getCourseSchedules()).doesNotContain(courseSchedule);
+
+        courseSchedule.students(new HashSet<>(Set.of(studentBack)));
+        assertThat(courseSchedule.getStudents()).containsOnly(studentBack);
+        assertThat(studentBack.getCourseSchedules()).containsOnly(courseSchedule);
+
+        courseSchedule.setStudents(new HashSet<>());
+        assertThat(courseSchedule.getStudents()).doesNotContain(studentBack);
+        assertThat(studentBack.getCourseSchedules()).doesNotContain(courseSchedule);
     }
 }

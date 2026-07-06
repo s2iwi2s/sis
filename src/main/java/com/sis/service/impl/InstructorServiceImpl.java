@@ -69,11 +69,15 @@ public class InstructorServiceImpl implements InstructorService {
         return instructorRepository.findAll(pageable).map(instructorMapper::toDto);
     }
 
+    public Page<InstructorDTO> findAllWithEagerRelationships(Pageable pageable) {
+        return instructorRepository.findAllWithEagerRelationships(pageable).map(instructorMapper::toDto);
+    }
+
     @Override
     @Transactional(readOnly = true)
     public Optional<InstructorDTO> findOne(Long id) {
         LOG.debug("Request to get Instructor : {}", id);
-        return instructorRepository.findById(id).map(instructorMapper::toDto);
+        return instructorRepository.findOneWithEagerRelationships(id).map(instructorMapper::toDto);
     }
 
     @Override

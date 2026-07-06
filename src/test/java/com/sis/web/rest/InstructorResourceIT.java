@@ -4,6 +4,7 @@ import static com.sis.domain.InstructorAsserts.*;
 import static com.sis.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -12,18 +13,25 @@ import com.sis.IntegrationTest;
 import com.sis.domain.Instructor;
 import com.sis.repository.InstructorRepository;
 import com.sis.repository.UserRepository;
+import com.sis.service.InstructorService;
 import com.sis.service.dto.InstructorDTO;
 import com.sis.service.mapper.InstructorMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link InstructorResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class InstructorResourceIT {
@@ -88,8 +97,14 @@ class InstructorResourceIT {
     @Autowired
     private UserRepository userRepository;
 
+    @Mock
+    private InstructorRepository instructorRepositoryMock;
+
     @Autowired
     private InstructorMapper instructorMapper;
+
+    @Mock
+    private InstructorService instructorServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -224,6 +239,23 @@ class InstructorResourceIT {
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
             .andExpect(jsonPath("$.[*].lastModifiedBy").value(hasItem(DEFAULT_LAST_MODIFIED_BY)))
             .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllInstructorsWithEagerRelationshipsIsEnabled() throws Exception {
+        when(instructorServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restInstructorMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(instructorServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllInstructorsWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(instructorServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restInstructorMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
+        verify(instructorRepositoryMock, times(1)).findAll(any(Pageable.class));
     }
 
     @Test

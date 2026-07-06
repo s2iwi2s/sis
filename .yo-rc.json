@@ -5,6 +5,8 @@
     "baseName": "SchInfoSys",
     "buildTool": "maven",
     "clientFramework": "angular",
+    "creationTimestamp": 1783201090136,
+    "defaultCommand": "app",
     "devDatabaseType": "postgresql",
     "entities": [
       "Instructor",

@@ -4,6 +4,7 @@ import static com.sis.domain.StudentAsserts.*;
 import static com.sis.web.rest.TestUtil.createUpdateProxyForBean;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -12,18 +13,25 @@ import com.sis.IntegrationTest;
 import com.sis.domain.Student;
 import com.sis.repository.StudentRepository;
 import com.sis.repository.UserRepository;
+import com.sis.service.StudentService;
 import com.sis.service.dto.StudentDTO;
 import com.sis.service.mapper.StudentMapper;
 import jakarta.persistence.EntityManager;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Integration tests for the {@link StudentResource} REST controller.
  */
 @IntegrationTest
+@ExtendWith(MockitoExtension.class)
 @AutoConfigureMockMvc
 @WithMockUser
 class StudentResourceIT {
@@ -51,6 +60,9 @@ class StudentResourceIT {
 
     private static final String DEFAULT_EXT_NAME = "AAAAAAAAAA";
     private static final String UPDATED_EXT_NAME = "BBBBBBBBBB";
+
+    private static final Instant DEFAULT_ENROLLMENT_DATE = Instant.ofEpochMilli(0L);
+    private static final Instant UPDATED_ENROLLMENT_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
 
     private static final Instant DEFAULT_BIRTH_DATE = Instant.ofEpochMilli(0L);
     private static final Instant UPDATED_BIRTH_DATE = Instant.now().truncatedTo(ChronoUnit.MILLIS);
@@ -151,8 +163,14 @@ class StudentResourceIT {
     @Autowired
     private UserRepository userRepository;
 
+    @Mock
+    private StudentRepository studentRepositoryMock;
+
     @Autowired
     private StudentMapper studentMapper;
+
+    @Mock
+    private StudentService studentServiceMock;
 
     @Autowired
     private EntityManager em;
@@ -177,6 +195,7 @@ class StudentResourceIT {
             .middleName(DEFAULT_MIDDLE_NAME)
             .lastName(DEFAULT_LAST_NAME)
             .extName(DEFAULT_EXT_NAME)
+            .enrollmentDate(DEFAULT_ENROLLMENT_DATE)
             .birthDate(DEFAULT_BIRTH_DATE)
             .birthPlace(DEFAULT_BIRTH_PLACE)
             .contactNo(DEFAULT_CONTACT_NO)
@@ -220,6 +239,7 @@ class StudentResourceIT {
             .middleName(UPDATED_MIDDLE_NAME)
             .lastName(UPDATED_LAST_NAME)
             .extName(UPDATED_EXT_NAME)
+            .enrollmentDate(UPDATED_ENROLLMENT_DATE)
             .birthDate(UPDATED_BIRTH_DATE)
             .birthPlace(UPDATED_BIRTH_PLACE)
             .contactNo(UPDATED_CONTACT_NO)
@@ -322,6 +342,7 @@ class StudentResourceIT {
             .andExpect(jsonPath("$.[*].middleName").value(hasItem(DEFAULT_MIDDLE_NAME)))
             .andExpect(jsonPath("$.[*].lastName").value(hasItem(DEFAULT_LAST_NAME)))
             .andExpect(jsonPath("$.[*].extName").value(hasItem(DEFAULT_EXT_NAME)))
+            .andExpect(jsonPath("$.[*].enrollmentDate").value(hasItem(DEFAULT_ENROLLMENT_DATE.toString())))
             .andExpect(jsonPath("$.[*].birthDate").value(hasItem(DEFAULT_BIRTH_DATE.toString())))
             .andExpect(jsonPath("$.[*].birthPlace").value(hasItem(DEFAULT_BIRTH_PLACE)))
             .andExpect(jsonPath("$.[*].contactNo").value(hasItem(DEFAULT_CONTACT_NO)))
@@ -352,6 +373,23 @@ class StudentResourceIT {
             .andExpect(jsonPath("$.[*].lastModifiedDate").value(hasItem(DEFAULT_LAST_MODIFIED_DATE.toString())));
     }
 
+    @SuppressWarnings({ "unchecked" })
+    void getAllStudentsWithEagerRelationshipsIsEnabled() throws Exception {
+        when(studentServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restStudentMockMvc.perform(get(ENTITY_API_URL + "?eagerload=true")).andExpect(status().isOk());
+
+        verify(studentServiceMock, times(1)).findAllWithEagerRelationships(any());
+    }
+
+    @SuppressWarnings({ "unchecked" })
+    void getAllStudentsWithEagerRelationshipsIsNotEnabled() throws Exception {
+        when(studentServiceMock.findAllWithEagerRelationships(any())).thenReturn(new PageImpl(new ArrayList<>()));
+
+        restStudentMockMvc.perform(get(ENTITY_API_URL + "?eagerload=false")).andExpect(status().isOk());
+        verify(studentRepositoryMock, times(1)).findAll(any(Pageable.class));
+    }
+
     @Test
     @Transactional
     void getStudent() throws Exception {
@@ -369,6 +407,7 @@ class StudentResourceIT {
             .andExpect(jsonPath("$.middleName").value(DEFAULT_MIDDLE_NAME))
             .andExpect(jsonPath("$.lastName").value(DEFAULT_LAST_NAME))
             .andExpect(jsonPath("$.extName").value(DEFAULT_EXT_NAME))
+            .andExpect(jsonPath("$.enrollmentDate").value(DEFAULT_ENROLLMENT_DATE.toString()))
             .andExpect(jsonPath("$.birthDate").value(DEFAULT_BIRTH_DATE.toString()))
             .andExpect(jsonPath("$.birthPlace").value(DEFAULT_BIRTH_PLACE))
             .andExpect(jsonPath("$.contactNo").value(DEFAULT_CONTACT_NO))
@@ -424,6 +463,7 @@ class StudentResourceIT {
             .middleName(UPDATED_MIDDLE_NAME)
             .lastName(UPDATED_LAST_NAME)
             .extName(UPDATED_EXT_NAME)
+            .enrollmentDate(UPDATED_ENROLLMENT_DATE)
             .birthDate(UPDATED_BIRTH_DATE)
             .birthPlace(UPDATED_BIRTH_PLACE)
             .contactNo(UPDATED_CONTACT_NO)
@@ -541,18 +581,19 @@ class StudentResourceIT {
             .firstName(UPDATED_FIRST_NAME)
             .middleName(UPDATED_MIDDLE_NAME)
             .extName(UPDATED_EXT_NAME)
-            .birthDate(UPDATED_BIRTH_DATE)
+            .enrollmentDate(UPDATED_ENROLLMENT_DATE)
+            .address2(UPDATED_ADDRESS_2)
             .city(UPDATED_CITY)
-            .zipCode(UPDATED_ZIP_CODE)
+            .country(UPDATED_COUNTRY)
             .nationality(UPDATED_NATIONALITY)
             .motherTongue(UPDATED_MOTHER_TONGUE)
             .religion(UPDATED_RELIGION)
-            .fathersLastName(UPDATED_FATHERS_LAST_NAME)
+            .fathersMiddleName(UPDATED_FATHERS_MIDDLE_NAME)
             .fathersFirstName(UPDATED_FATHERS_FIRST_NAME)
             .fathersExtName(UPDATED_FATHERS_EXT_NAME)
-            .fathersOccupation(UPDATED_FATHERS_OCCUPATION)
-            .mothersMiddleName(UPDATED_MOTHERS_MIDDLE_NAME)
-            .guardianFullName(UPDATED_GUARDIAN_FULL_NAME)
+            .mothersLastName(UPDATED_MOTHERS_LAST_NAME)
+            .mothersContacts(UPDATED_MOTHERS_CONTACTS)
+            .createdDate(UPDATED_CREATED_DATE)
             .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
             .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
 
@@ -588,6 +629,7 @@ class StudentResourceIT {
             .middleName(UPDATED_MIDDLE_NAME)
             .lastName(UPDATED_LAST_NAME)
             .extName(UPDATED_EXT_NAME)
+            .enrollmentDate(UPDATED_ENROLLMENT_DATE)
             .birthDate(UPDATED_BIRTH_DATE)
             .birthPlace(UPDATED_BIRTH_PLACE)
             .contactNo(UPDATED_CONTACT_NO)

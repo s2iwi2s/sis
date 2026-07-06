@@ -45,18 +45,14 @@ class StudentTest {
 
         student.addCourseSchedule(courseScheduleBack);
         assertThat(student.getCourseSchedules()).containsOnly(courseScheduleBack);
-        assertThat(courseScheduleBack.getStudent()).isEqualTo(student);
 
         student.removeCourseSchedule(courseScheduleBack);
         assertThat(student.getCourseSchedules()).doesNotContain(courseScheduleBack);
-        assertThat(courseScheduleBack.getStudent()).isNull();
 
         student.courseSchedules(new HashSet<>(Set.of(courseScheduleBack)));
         assertThat(student.getCourseSchedules()).containsOnly(courseScheduleBack);
-        assertThat(courseScheduleBack.getStudent()).isEqualTo(student);
 
         student.setCourseSchedules(new HashSet<>());
         assertThat(student.getCourseSchedules()).doesNotContain(courseScheduleBack);
-        assertThat(courseScheduleBack.getStudent()).isNull();
     }
 }

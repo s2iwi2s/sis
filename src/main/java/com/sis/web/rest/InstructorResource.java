@@ -139,12 +139,21 @@ public class InstructorResource {
      * {@code GET  /instructors} : get all the Instructors.
      *
      * @param pageable the pagination information.
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Instructors in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<InstructorDTO>> getAllInstructors(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
+    public ResponseEntity<List<InstructorDTO>> getAllInstructors(
+        @org.springdoc.core.annotations.ParameterObject Pageable pageable,
+        @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
+    ) {
         LOG.debug("REST request to get a page of Instructors");
-        Page<InstructorDTO> page = instructorService.findAll(pageable);
+        Page<InstructorDTO> page;
+        if (eagerload) {
+            page = instructorService.findAllWithEagerRelationships(pageable);
+        } else {
+            page = instructorService.findAll(pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

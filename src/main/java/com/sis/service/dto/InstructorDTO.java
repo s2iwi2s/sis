@@ -3,7 +3,9 @@ package com.sis.service.dto;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * A DTO for the {@link com.sis.domain.Instructor} entity.
@@ -42,6 +44,8 @@ public class InstructorDTO implements Serializable {
     private AppConfigDTO gender;
 
     private UserDTO user;
+
+    private Set<CourseScheduleDTO> courseSchedules = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -163,6 +167,14 @@ public class InstructorDTO implements Serializable {
         this.user = user;
     }
 
+    public Set<CourseScheduleDTO> getCourseSchedules() {
+        return courseSchedules;
+    }
+
+    public void setCourseSchedules(Set<CourseScheduleDTO> courseSchedules) {
+        this.courseSchedules = courseSchedules;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -203,6 +215,7 @@ public class InstructorDTO implements Serializable {
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", gender=" + getGender() +
             ", user=" + getUser() +
+            ", courseSchedules=" + getCourseSchedules() +
             "}";
     }
 }

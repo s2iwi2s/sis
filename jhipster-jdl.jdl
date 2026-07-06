@@ -38,6 +38,7 @@ entity Student {
     middleName String maxlength(50)
     lastName String maxlength(50)
     extName String maxlength(10)
+    enrollmentDate  Instant
     birthDate Instant
     birthPlace String maxlength(50)
     contactNo String maxlength(12)
@@ -202,6 +203,7 @@ relationship OneToOne {
   Instructor{gender} to AppConfig
   Instructor to User with builtInEntity
   Student to User with builtInEntity
+  //Course{schYr} to AppConfig
   Course{gradelevel} to AppConfig
   Course{department} to Departments
 }
@@ -209,6 +211,9 @@ relationship OneToOne {
 relationship ManyToMany {
 	Strategies{resources} to Resources
 	Assessment{resources} to Resources
+    
+    Instructor{courseSchedule} to CourseSchedule
+    Student{courseSchedule} to CourseSchedule
 }
 
 relationship OneToMany {
@@ -216,8 +221,6 @@ relationship OneToMany {
 	CurriculumMap{learningCompetency} to LearningCompetency
     LearningCompetency{strategies} to Strategies
     LearningCompetency{assessment} to Assessment
-    Instructor{courseSchedule} to CourseSchedule
-    Student{courseSchedule} to CourseSchedule
 }
 
 relationship ManyToOne{
