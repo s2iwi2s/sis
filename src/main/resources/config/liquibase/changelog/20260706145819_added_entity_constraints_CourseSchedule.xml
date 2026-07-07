@@ -8,7 +8,7 @@
     <!--
         Added the constraints for entity CourseSchedule.
     -->
-    <changeSet id="20260704155135-2" author="jhipster">
+    <changeSet id="20260706145819-2" author="jhipster">
 
         <addForeignKeyConstraint baseColumnNames="terms_id"
                                  baseTableName="course_schedule"
@@ -22,20 +22,6 @@
                                  constraintName="fk_course_schedule__year_id"
                                  referencedColumnNames="id"
                                  referencedTableName="academic_year"
-                                 />
-
-        <addForeignKeyConstraint baseColumnNames="instructor_id"
-                                 baseTableName="course_schedule"
-                                 constraintName="fk_course_schedule__instructor_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="instructor"
-                                 />
-
-        <addForeignKeyConstraint baseColumnNames="student_id"
-                                 baseTableName="course_schedule"
-                                 constraintName="fk_course_schedule__student_id"
-                                 referencedColumnNames="id"
-                                 referencedTableName="student"
                                  />
     </changeSet>
 </databaseChangeLog>

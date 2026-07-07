@@ -1,14 +1,17 @@
+/* eslint-disable no-console */
 import { HttpResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
-import { Observable, finalize, map, filter } from 'rxjs';
+import { Observable, finalize, map } from 'rxjs';
 
 import { IAppConfig } from 'app/entities/app-config/app-config.model';
 import { AppConfigService } from 'app/entities/app-config/service/app-config.service';
+import { ICourseSchedule } from 'app/entities/course-schedule/course-schedule.model';
+import { CourseScheduleService } from 'app/entities/course-schedule/service/course-schedule.service';
 import { UserService } from 'app/entities/user/service/user.service';
 import { IUser } from 'app/entities/user/user.model';
 import { AlertError } from 'app/shared/alert/alert-error';
@@ -26,31 +29,39 @@ import { StudentFormGroup, StudentFormService } from './student-form.service';
 })
 export class StudentUpdate implements OnInit {
   readonly isSaving = signal(false);
+  readonly source: string;
   student: IStudent | null = null;
 
   gendersCollection = signal<IAppConfig[]>([]);
   usersSharedCollection = signal<IUser[]>([]);
+  courseSchedulesSharedCollection = signal<ICourseSchedule[]>([]);
 
   protected studentService = inject(StudentService);
   protected studentFormService = inject(StudentFormService);
   protected appConfigService = inject(AppConfigService);
   protected userService = inject(UserService);
+  protected courseScheduleService = inject(CourseScheduleService);
   protected activatedRoute = inject(ActivatedRoute);
+  protected router = inject(Router);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: StudentFormGroup = this.studentFormService.createStudentFormGroup();
-  filterForm: StudentFormGroup = this.studentFormService.createStudentFormGroup();
 
-  readonly formName: string;
   compareAppConfig = (o1: IAppConfig | null, o2: IAppConfig | null): boolean => this.appConfigService.compareAppConfig(o1, o2);
 
   compareUser = (o1: IUser | null, o2: IUser | null): boolean => this.userService.compareUser(o1, o2);
 
+  compareCourseSchedule = (o1: ICourseSchedule | null, o2: ICourseSchedule | null): boolean =>
+    this.courseScheduleService.compareCourseSchedule(o1, o2);
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   constructor() {
-    this.formName = this.activatedRoute.snapshot.paramMap.get('formName') ?? '';
+    this.source = this.activatedRoute.snapshot.paramMap.get('source') ?? '';
   }
+
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ student }) => {
+      console.log('StudentUpdate.ngOnInit() called with student:', student);
       this.student = student;
       if (student) {
         this.updateForm(student);
@@ -64,7 +75,6 @@ export class StudentUpdate implements OnInit {
     globalThis.history.back();
   }
 
-  setFilters(): void {}
   save(): void {
     this.isSaving.set(true);
     const student = this.studentFormService.getStudent(this.editForm);
@@ -77,13 +87,17 @@ export class StudentUpdate implements OnInit {
 
   protected subscribeToSaveResponse(result: Observable<IStudent | null>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
-      next: () => this.onSaveSuccess(),
+      next: savedStudent => this.onSaveSuccess(savedStudent),
       error: () => this.onSaveError(),
     });
   }
 
-  protected onSaveSuccess(): void {
-    this.previousState();
+  protected onSaveSuccess(savedStudent: IStudent | null): void {
+    if (this.source === 'enroll') {
+      this.router.navigate(['/enrollment-form', savedStudent?.id]);
+    } else {
+      this.previousState();
+    }
   }
 
   protected onSaveError(): void {
@@ -91,6 +105,9 @@ export class StudentUpdate implements OnInit {
   }
 
   protected onSaveFinalize(): void {
+    //protected onSaveFinalize(savedStudent: IStudent | null): void {
+    // this.updateForm(savedStudent ?? this.student!);
+
     this.isSaving.set(false);
   }
 
@@ -102,6 +119,12 @@ export class StudentUpdate implements OnInit {
       this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(this.gendersCollection(), student.gender),
     );
     this.usersSharedCollection.update(users => this.userService.addUserToCollectionIfMissing<IUser>(users, student.user));
+    this.courseSchedulesSharedCollection.update(courseSchedules =>
+      this.courseScheduleService.addCourseScheduleToCollectionIfMissing<ICourseSchedule>(
+        courseSchedules,
+        ...(student.courseSchedules ?? []),
+      ),
+    );
   }
 
   protected loadRelationshipsOptions(): void {
@@ -120,7 +143,18 @@ export class StudentUpdate implements OnInit {
       .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
       .pipe(map((users: IUser[]) => this.userService.addUserToCollectionIfMissing<IUser>(users, this.student?.user)))
       .subscribe((users: IUser[]) => this.usersSharedCollection.set(users));
-  }
 
-  protected readonly filter = filter;
+    this.courseScheduleService
+      .query()
+      .pipe(map((res: HttpResponse<ICourseSchedule[]>) => res.body ?? []))
+      .pipe(
+        map((courseSchedules: ICourseSchedule[]) =>
+          this.courseScheduleService.addCourseScheduleToCollectionIfMissing<ICourseSchedule>(
+            courseSchedules,
+            ...(this.student?.courseSchedules ?? []),
+          ),
+        ),
+      )
+      .subscribe((courseSchedules: ICourseSchedule[]) => this.courseSchedulesSharedCollection.set(courseSchedules));
+  }
 }

@@ -8,7 +8,7 @@
     <!--
         Added the constraints for entity Student.
     -->
-    <changeSet id="20260704154935-2" author="jhipster">
+    <changeSet id="20260706145619-2" author="jhipster">
 
         <addForeignKeyConstraint baseColumnNames="gender_id"
                                  baseTableName="student"
@@ -22,6 +22,20 @@
                                  constraintName="fk_student__user_id"
                                  referencedColumnNames="id"
                                  referencedTableName="jhi_user"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="student_id"
+                                 baseTableName="rel_student__course_schedule"
+                                 constraintName="fk_rel_student__course_schedule__student_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="student"
+                                 />
+
+        <addForeignKeyConstraint baseColumnNames="course_schedule_id"
+                                 baseTableName="rel_student__course_schedule"
+                                 constraintName="fk_rel_student__course_schedule__course_schedule_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="course_schedule"
                                  />
     </changeSet>
 </databaseChangeLog>

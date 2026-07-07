@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { CurriculumMappingDashboardComponent } from './curriculum-mapping/curriculum-mapping-dashboard/curriculum-mapping-dashboard.component';
 import { UserRouteAccessService } from '../core/auth/user-route-access.service';
+import studentResolve from 'app/entities/student/route/student-routing-resolve.service';
 
 const routes: Routes = [
   {
@@ -9,9 +9,17 @@ const routes: Routes = [
     loadChildren: () => import('./curriculum-mapping/curriculum-mapping.routes'),
   },
   {
-    path: 'enrollment',
-    data: { pageTitle: 'schInfoSysApp.student.home.enrollmentTitle' },
-    loadChildren: () => import('../entities/student/student.routes'),
+    path: 'enrollment-form',
+    loadComponent: () => import('./enrollment/enrollment-form/enrollment-form').then(m => m.EnrollmentForm),
+    canActivate: [UserRouteAccessService],
+  },
+  {
+    path: 'enrollment-form/:id',
+    loadComponent: () => import('./enrollment/enrollment-form/enrollment-form').then(m => m.EnrollmentForm),
+    resolve: {
+      student: studentResolve,
+    },
+    canActivate: [UserRouteAccessService],
   },
 ];
 

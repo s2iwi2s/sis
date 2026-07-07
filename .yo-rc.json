@@ -5,8 +5,6 @@
     "baseName": "SchInfoSys",
     "buildTool": "maven",
     "clientFramework": "angular",
-    "creationTimestamp": 1783201090136,
-    "defaultCommand": "app",
     "devDatabaseType": "postgresql",
     "entities": [
       "Instructor",
@@ -24,9 +22,9 @@
       "AcademicTerms"
     ],
     "jhipsterVersion": "9.1.0",
-    "jwtSecretKey": "MDk3MjY0NjJhZTljNWNjNTQ1MzI5MzIxYzRlMDhjZDNjMzZiOWRjZmJjYmY1MTA3MjYwODU1MDQ4ZDRjODQ2N2Y2OGUzMjBjMzEwNDM5MmExMWRlODI5ODY0ZWUwYWM4YTQ4YWM5NTg3YmVkMzZkMzc3NzAxNTIyZTk4Y2I3ZGU=",
+    "jwtSecretKey": "MmQxM2FkNWQwNWRkYTAwZjM1YWJlYmQyNmExNmNjMGQ1ZDg2MjQwMjE4ODIxNDEwMmMxMzQ2YjJmMWUyZWExYjc4OTY2Y2U0NmM3NjY3NTdhYzYwOTg5MzhkYjZmNjVjYmY3NjIzM2I5YzFmZDI4NjBmM2RiM2I0NDQ2MzZhZDk=",
     "languages": ["en"],
-    "lastLiquibaseTimestamp": 1783180835000,
+    "lastLiquibaseTimestamp": 1783350439000,
     "nativeLanguage": "en",
     "packageName": "com.sis",
     "prodDatabaseType": "postgresql"

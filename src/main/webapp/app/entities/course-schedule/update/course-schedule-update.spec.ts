@@ -105,12 +105,12 @@ describe('CourseSchedule Management Update Component', () => {
 
     it('should call Instructor query and add missing value', () => {
       const courseSchedule: ICourseSchedule = { id: 1257 };
-      const instructor: IInstructor = { id: 14207 };
-      courseSchedule.instructor = instructor;
+      const instructors: IInstructor[] = [{ id: 14207 }];
+      courseSchedule.instructors = instructors;
 
       const instructorCollection: IInstructor[] = [{ id: 14207 }];
       vitest.spyOn(instructorService, 'query').mockReturnValue(of(new HttpResponse({ body: instructorCollection })));
-      const additionalInstructors = [instructor];
+      const additionalInstructors = [...instructors];
       const expectedCollection: IInstructor[] = [...additionalInstructors, ...instructorCollection];
       vitest.spyOn(instructorService, 'addInstructorToCollectionIfMissing').mockReturnValue(expectedCollection);
 
@@ -127,12 +127,12 @@ describe('CourseSchedule Management Update Component', () => {
 
     it('should call Student query and add missing value', () => {
       const courseSchedule: ICourseSchedule = { id: 1257 };
-      const student: IStudent = { id: 9978 };
-      courseSchedule.student = student;
+      const students: IStudent[] = [{ id: 9978 }];
+      courseSchedule.students = students;
 
       const studentCollection: IStudent[] = [{ id: 9978 }];
       vitest.spyOn(studentService, 'query').mockReturnValue(of(new HttpResponse({ body: studentCollection })));
-      const additionalStudents = [student];
+      const additionalStudents = [...students];
       const expectedCollection: IStudent[] = [...additionalStudents, ...studentCollection];
       vitest.spyOn(studentService, 'addStudentToCollectionIfMissing').mockReturnValue(expectedCollection);
 
@@ -154,9 +154,9 @@ describe('CourseSchedule Management Update Component', () => {
       const year: IAcademicYear = { id: 29518 };
       courseSchedule.year = year;
       const instructor: IInstructor = { id: 14207 };
-      courseSchedule.instructor = instructor;
+      courseSchedule.instructors = [instructor];
       const student: IStudent = { id: 9978 };
-      courseSchedule.student = student;
+      courseSchedule.students = [student];
 
       activatedRoute.data = of({ courseSchedule });
       comp.ngOnInit();

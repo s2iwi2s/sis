@@ -19,7 +19,7 @@ logging:
     tech.jhipster: DEBUG
     org.hibernate.SQL: DEBUG
     com.sis: DEBUG
-    # liquibase: DEBUG
+    org.springframework.dao: trace
 
 spring:
   devtools:
@@ -33,20 +33,12 @@ spring:
       indent-output: true
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    # url: jdbc:postgresql://photon.vm:5432/slra_dev
-    # username: sis_admin
-    # password: admin
     hikari:
       poolName: Hikari
       auto-commit: false
-  jpa:
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
   liquibase:
     # Remove 'faker' if you do not want the sample data to be loaded automatically
-    contexts: dev
+    contexts: dev, faker
   mail:
     host: localhost
     port: 25
@@ -88,7 +80,6 @@ jhipster:
         # Token is valid 24 hours
         token-validity-in-seconds: 86400
         token-validity-in-seconds-for-remember-me: 2592000
-
   mail: # specific JHipster mail property, for standard properties see MailProperties
     base-url: http://127.0.0.1:8080
   logging:

@@ -20,7 +20,8 @@ type StudentFormGroupInput = IStudent | PartialWithRequiredKeyOf<NewStudent>;
 /**
  * Type that converts some properties for forms.
  */
-type FormValueOf<T extends IStudent | NewStudent> = Omit<T, 'birthDate' | 'createdDate' | 'lastModifiedDate'> & {
+type FormValueOf<T extends IStudent | NewStudent> = Omit<T, 'enrollmentDate' | 'birthDate' | 'createdDate' | 'lastModifiedDate'> & {
+  enrollmentDate?: string | null;
   birthDate?: string | null;
   createdDate?: string | null;
   lastModifiedDate?: string | null;
@@ -30,7 +31,7 @@ type StudentFormRawValue = FormValueOf<IStudent>;
 
 type NewStudentFormRawValue = FormValueOf<NewStudent>;
 
-type StudentFormDefaults = Pick<NewStudent, 'id' | 'birthDate' | 'createdDate' | 'lastModifiedDate'>;
+type StudentFormDefaults = Pick<NewStudent, 'id' | 'enrollmentDate' | 'birthDate' | 'createdDate' | 'lastModifiedDate' | 'courseSchedules'>;
 
 type StudentFormGroupContent = {
   id: FormControl<StudentFormRawValue['id'] | NewStudent['id']>;
@@ -39,6 +40,7 @@ type StudentFormGroupContent = {
   middleName: FormControl<StudentFormRawValue['middleName']>;
   lastName: FormControl<StudentFormRawValue['lastName']>;
   extName: FormControl<StudentFormRawValue['extName']>;
+  enrollmentDate: FormControl<StudentFormRawValue['enrollmentDate']>;
   birthDate: FormControl<StudentFormRawValue['birthDate']>;
   birthPlace: FormControl<StudentFormRawValue['birthPlace']>;
   contactNo: FormControl<StudentFormRawValue['contactNo']>;
@@ -69,6 +71,7 @@ type StudentFormGroupContent = {
   lastModifiedDate: FormControl<StudentFormRawValue['lastModifiedDate']>;
   gender: FormControl<StudentFormRawValue['gender']>;
   user: FormControl<StudentFormRawValue['user']>;
+  courseSchedules: FormControl<StudentFormRawValue['courseSchedules']>;
 };
 
 export type StudentFormGroup = FormGroup<StudentFormGroupContent>;
@@ -101,6 +104,7 @@ export class StudentFormService {
       extName: new FormControl(studentRawValue.extName, {
         validators: [Validators.maxLength(10)],
       }),
+      enrollmentDate: new FormControl(studentRawValue.enrollmentDate),
       birthDate: new FormControl(studentRawValue.birthDate),
       birthPlace: new FormControl(studentRawValue.birthPlace, {
         validators: [Validators.maxLength(50)],
@@ -181,6 +185,7 @@ export class StudentFormService {
       lastModifiedDate: new FormControl(studentRawValue.lastModifiedDate),
       gender: new FormControl(studentRawValue.gender),
       user: new FormControl(studentRawValue.user),
+      courseSchedules: new FormControl(studentRawValue.courseSchedules ?? []),
     });
   }
 
@@ -201,15 +206,18 @@ export class StudentFormService {
 
     return {
       id: null,
+      // enrollmentDate: currentTime,
       birthDate: currentTime,
       createdDate: currentTime,
       lastModifiedDate: currentTime,
+      courseSchedules: [],
     };
   }
 
   private convertStudentRawValueToStudent(rawStudent: StudentFormRawValue | NewStudentFormRawValue): IStudent | NewStudent {
     return {
       ...rawStudent,
+      enrollmentDate: dayjs(rawStudent.enrollmentDate, DATE_TIME_FORMAT),
       birthDate: dayjs(rawStudent.birthDate, DATE_TIME_FORMAT),
       createdDate: dayjs(rawStudent.createdDate, DATE_TIME_FORMAT),
       lastModifiedDate: dayjs(rawStudent.lastModifiedDate, DATE_TIME_FORMAT),
@@ -221,9 +229,11 @@ export class StudentFormService {
   ): StudentFormRawValue | PartialWithRequiredKeyOf<NewStudentFormRawValue> {
     return {
       ...student,
+      enrollmentDate: student.enrollmentDate ? student.enrollmentDate.format(DATE_TIME_FORMAT) : undefined,
       birthDate: student.birthDate ? student.birthDate.format(DATE_TIME_FORMAT) : undefined,
       createdDate: student.createdDate ? student.createdDate.format(DATE_TIME_FORMAT) : undefined,
       lastModifiedDate: student.lastModifiedDate ? student.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
+      courseSchedules: student.courseSchedules ?? [],
     };
   }
 }

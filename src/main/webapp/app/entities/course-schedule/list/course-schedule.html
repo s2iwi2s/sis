@@ -115,18 +115,6 @@
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
-            <th scope="col" jhiSortBy="instructor.id">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.courseSchedule.instructor">Instructor</span>
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="student.id">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.courseSchedule.student">Student</span>
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -156,20 +144,6 @@
                 @if (courseSchedule.year) {
                   <div>
                     <a [routerLink]="['/academic-year', courseSchedule.year.id, 'view']">{{ courseSchedule.year.id }}</a>
-                  </div>
-                }
-              </td>
-              <td>
-                @if (courseSchedule.instructor) {
-                  <div>
-                    <a [routerLink]="['/instructor', courseSchedule.instructor.id, 'view']">{{ courseSchedule.instructor.id }}</a>
-                  </div>
-                }
-              </td>
-              <td>
-                @if (courseSchedule.student) {
-                  <div>
-                    <a [routerLink]="['/student', courseSchedule.student.id, 'view']">{{ courseSchedule.student.id }}</a>
                   </div>
                 }
               </td>

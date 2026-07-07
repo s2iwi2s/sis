@@ -2,9 +2,10 @@
   <div class="col-8">
     @if (student(); as studentRef) {
       <div>
-        <h2 data-cy="studentDetailsHeading"><span jhiTranslate="schInfoSysApp.student.detail.title">Student</span></h2>
-
-        <hr />
+        @if (source() !== 'enroll') {
+          <h2 data-cy="studentDetailsHeading"><span jhiTranslate="schInfoSysApp.student.detail.title">Student</span></h2>
+          <hr />
+        }
 
         <jhi-alert-error />
 
@@ -34,6 +35,10 @@
           <dt><span jhiTranslate="schInfoSysApp.student.extName">Ext Name</span></dt>
           <dd>
             <span>{{ studentRef.extName }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.enrollmentDate">Enrollment Date</span></dt>
+          <dd>
+            <span>{{ studentRef.enrollmentDate | formatMediumDatetime }}</span>
           </dd>
           <dt><span jhiTranslate="schInfoSysApp.student.birthDate">Birth Date</span></dt>
           <dd>
@@ -159,13 +164,22 @@
           <dd>
             <span>{{ studentRef.user?.id }}</span>
           </dd>
+          <dt><span jhiTranslate="schInfoSysApp.student.courseSchedule">Course Schedule</span></dt>
+          <dd>
+            @for (courseSchedule of studentRef.courseSchedules; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/course-schedule', courseSchedule.id, 'view']">{{ courseSchedule?.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
         </dl>
 
         <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
           <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
         </button>
 
-        <button type="button" [routerLink]="['/student', studentRef.id, 'edit']" class="btn btn-primary">
+        <button type="button" [routerLink]="['/student', studentRef.id, 'edit', 'view']" class="btn btn-primary">
           <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
         </button>
       </div>

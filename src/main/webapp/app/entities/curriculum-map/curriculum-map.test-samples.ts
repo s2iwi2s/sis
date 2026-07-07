@@ -10,7 +10,7 @@ export const sampleWithPartialData: ICurriculumMap = {
   id: 18600,
   quarterNo: 1047,
   performanceStandards: 'barracks geez zowie',
-  createdDate: dayjs('2026-07-04T11:34'),
+  createdDate: dayjs('2026-07-06T10:41'),
 };
 
 export const sampleWithFullData: ICurriculumMap = {
@@ -21,9 +21,9 @@ export const sampleWithFullData: ICurriculumMap = {
   contentStandards: 'firsthand boohoo',
   performanceStandards: 'vastly ethyl',
   createdBy: 'vengeful riser noted',
-  createdDate: dayjs('2026-07-04T10:07'),
+  createdDate: dayjs('2026-07-06T09:13'),
   lastModifiedBy: 'over',
-  lastModifiedDate: dayjs('2026-07-04T13:57'),
+  lastModifiedDate: dayjs('2026-07-06T13:04'),
 };
 
 export const sampleWithNewData: NewCurriculumMap = {

@@ -8,7 +8,7 @@
     <!--
         Added the constraints for entity Course.
     -->
-    <changeSet id="20260704155035-2" author="jhipster">
+    <changeSet id="20260706145719-2" author="jhipster">
 
         <addForeignKeyConstraint baseColumnNames="gradelevel_id"
                                  baseTableName="course"

@@ -31,7 +31,10 @@ type CourseScheduleFormRawValue = FormValueOf<ICourseSchedule>;
 
 type NewCourseScheduleFormRawValue = FormValueOf<NewCourseSchedule>;
 
-type CourseScheduleFormDefaults = Pick<NewCourseSchedule, 'id' | 'startTime' | 'endTime' | 'createdDate' | 'lastModifiedDate'>;
+type CourseScheduleFormDefaults = Pick<
+  NewCourseSchedule,
+  'id' | 'startTime' | 'endTime' | 'createdDate' | 'lastModifiedDate' | 'instructors' | 'students'
+>;
 
 type CourseScheduleFormGroupContent = {
   id: FormControl<CourseScheduleFormRawValue['id'] | NewCourseSchedule['id']>;
@@ -46,8 +49,8 @@ type CourseScheduleFormGroupContent = {
   lastModifiedDate: FormControl<CourseScheduleFormRawValue['lastModifiedDate']>;
   terms: FormControl<CourseScheduleFormRawValue['terms']>;
   year: FormControl<CourseScheduleFormRawValue['year']>;
-  instructor: FormControl<CourseScheduleFormRawValue['instructor']>;
-  student: FormControl<CourseScheduleFormRawValue['student']>;
+  instructors: FormControl<CourseScheduleFormRawValue['instructors']>;
+  students: FormControl<CourseScheduleFormRawValue['students']>;
 };
 
 export type CourseScheduleFormGroup = FormGroup<CourseScheduleFormGroupContent>;
@@ -86,8 +89,8 @@ export class CourseScheduleFormService {
       lastModifiedDate: new FormControl(courseScheduleRawValue.lastModifiedDate),
       terms: new FormControl(courseScheduleRawValue.terms),
       year: new FormControl(courseScheduleRawValue.year),
-      instructor: new FormControl(courseScheduleRawValue.instructor),
-      student: new FormControl(courseScheduleRawValue.student),
+      instructors: new FormControl(courseScheduleRawValue.instructors ?? []),
+      students: new FormControl(courseScheduleRawValue.students ?? []),
     });
   }
 
@@ -112,6 +115,8 @@ export class CourseScheduleFormService {
       endTime: currentTime,
       createdDate: currentTime,
       lastModifiedDate: currentTime,
+      instructors: [],
+      students: [],
     };
   }
 
@@ -136,6 +141,8 @@ export class CourseScheduleFormService {
       endTime: courseSchedule.endTime ? courseSchedule.endTime.format(DATE_TIME_FORMAT) : undefined,
       createdDate: courseSchedule.createdDate ? courseSchedule.createdDate.format(DATE_TIME_FORMAT) : undefined,
       lastModifiedDate: courseSchedule.lastModifiedDate ? courseSchedule.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
+      instructors: courseSchedule.instructors ?? [],
+      students: courseSchedule.students ?? [],
     };
   }
 }

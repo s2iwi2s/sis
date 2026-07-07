@@ -6,27 +6,27 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <!--
-        Added the constraints for entity Assessment.
+        Added the constraints for entity Strategies.
     -->
-    <changeSet id="20260704155735-2" author="jhipster">
+    <changeSet id="20260706150319-2" author="jhipster">
 
-        <addForeignKeyConstraint baseColumnNames="assessment_id"
-                                 baseTableName="rel_assessment__resources"
-                                 constraintName="fk_rel_assessment__resources__assessment_id"
+        <addForeignKeyConstraint baseColumnNames="strategies_id"
+                                 baseTableName="rel_strategies__resources"
+                                 constraintName="fk_rel_strategies__resources__strategies_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="assessment"
+                                 referencedTableName="strategies"
                                  />
 
         <addForeignKeyConstraint baseColumnNames="resources_id"
-                                 baseTableName="rel_assessment__resources"
-                                 constraintName="fk_rel_assessment__resources__resources_id"
+                                 baseTableName="rel_strategies__resources"
+                                 constraintName="fk_rel_strategies__resources__resources_id"
                                  referencedColumnNames="id"
                                  referencedTableName="resources"
                                  />
 
         <addForeignKeyConstraint baseColumnNames="learning_competency_id"
-                                 baseTableName="assessment"
-                                 constraintName="fk_assessment__learning_competency_id"
+                                 baseTableName="strategies"
+                                 constraintName="fk_strategies__learning_competency_id"
                                  referencedColumnNames="id"
                                  referencedTableName="learning_competency"
                                  />

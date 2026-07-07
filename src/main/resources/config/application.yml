@@ -105,13 +105,10 @@ spring:
     active: '@spring.profiles.active@'
     group:
       dev:
-        - application-secret-dev
+        - secret-samples
         - api-docs
         # Uncomment to activate TLS for the dev profile
         #- tls
-      prod:
-        - application-secret-prod
-        - api-docs
   jmx:
     enabled: false
   data:

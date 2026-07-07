@@ -7,17 +7,26 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <!--
-        Added the entity Strategies.
+        Added the entity AppConfig.
     -->
-    <changeSet id="20260704155635-1" author="jhipster">
-        <createTable tableName="strategies">
+    <changeSet id="20260706150019-1" author="jhipster">
+        <createTable tableName="app_config">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name" type="varchar(255)">
+            <column name="code" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="description" type="${clobType}">
+            <column name="value" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="description" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            <column name="json" type="${clobType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="priority" type="integer">
                 <constraints nullable="true" />
             </column>
             <column name="created_by" type="varchar(50)">
@@ -32,27 +41,10 @@
             <column name="last_modified_date" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
-            <column name="learning_competency_id" type="bigint">
-                <constraints nullable="true" />
-            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
-        <dropDefaultValue tableName="strategies" columnName="created_date" columnDataType="${datetimeType}"/>
-        <dropDefaultValue tableName="strategies" columnName="last_modified_date" columnDataType="${datetimeType}"/>
-    </changeSet>
-
-    <changeSet id="20260704155635-1-relations" author="jhipster">
-
-        <createTable tableName="rel_strategies__resources">
-            <column name="resources_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-            <column name="strategies_id" type="bigint">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-
-        <addPrimaryKey columnNames="strategies_id, resources_id" tableName="rel_strategies__resources"/>
+        <dropDefaultValue tableName="app_config" columnName="created_date" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="app_config" columnName="last_modified_date" columnDataType="${datetimeType}"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
@@ -65,16 +57,19 @@
           This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
           Spring Boot configuration key.
     -->
-    <changeSet id="20260704155635-1-data" author="jhipster" context="faker">
+    <changeSet id="20260706150019-1-data" author="jhipster" context="faker">
         <loadData
-                  file="../fake-data/strategies.csv"
+                  file="../fake-data/app_config.csv"
                   relativeToChangelogFile="true"
                   separator=";"
-                  tableName="strategies"
+                  tableName="app_config"
                   usePreparedStatements="true">
             <column name="id" type="numeric"/>
-            <column name="name" type="string"/>
-            <column name="description" type="clob"/>
+            <column name="code" type="string"/>
+            <column name="value" type="string"/>
+            <column name="description" type="string"/>
+            <column name="json" type="clob"/>
+            <column name="priority" type="numeric"/>
             <column name="created_by" type="string"/>
             <column name="created_date" type="date"/>
             <column name="last_modified_by" type="string"/>

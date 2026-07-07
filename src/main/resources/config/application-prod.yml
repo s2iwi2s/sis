@@ -17,7 +17,7 @@ logging:
   level:
     ROOT: INFO
     tech.jhipster: INFO
-    com.sis: DEBUG
+    com.sis: INFO
 
 management:
   prometheus:
@@ -36,15 +36,9 @@ spring:
     hikari:
       poolName: Hikari
       auto-commit: false
-    jpa:
-      show-sql: true
-      properties:
-        hibernate:
-          format_sql: true
   # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
   liquibase:
-    # Remove 'faker' if you do not want the sample data to be loaded automatically
-    contexts: prod, faker
+    contexts: prod
   mail:
     host: localhost
     port: 25

@@ -1,6 +1,7 @@
 import dayjs from 'dayjs/esm';
 
 import { IAppConfig } from 'app/entities/app-config/app-config.model';
+import { ICourseSchedule } from 'app/entities/course-schedule/course-schedule.model';
 import { IUser } from 'app/entities/user/user.model';
 
 export interface IStudent {
@@ -10,6 +11,7 @@ export interface IStudent {
   middleName?: string | null;
   lastName?: string | null;
   extName?: string | null;
+  enrollmentDate?: dayjs.Dayjs | null;
   birthDate?: dayjs.Dayjs | null;
   birthPlace?: string | null;
   contactNo?: string | null;
@@ -40,6 +42,7 @@ export interface IStudent {
   lastModifiedDate?: dayjs.Dayjs | null;
   gender?: Pick<IAppConfig, 'id'> | null;
   user?: Pick<IUser, 'id'> | null;
+  courseSchedules?: Pick<ICourseSchedule, 'id'>[] | null;
 }
 
 export type NewStudent = Omit<IStudent, 'id'> & { id: null };

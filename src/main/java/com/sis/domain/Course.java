@@ -5,11 +5,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.sql.Types;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.JdbcTypeCode;
 
 /**
  * A Course.
@@ -37,10 +39,12 @@ public class Course implements Serializable {
     private Long hoursPerQuarter;
 
     @Lob
+    @JdbcTypeCode(Types.LONGVARCHAR)
     @Column(name = "course_description")
     private String courseDescription;
 
     @Lob
+    @JdbcTypeCode(Types.LONGVARCHAR)
     @Column(name = "course_objectives")
     private String courseObjectives;
 

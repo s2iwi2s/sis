@@ -17,6 +17,7 @@ import { IStudent } from '../student.model';
   imports: [FontAwesomeModule, Alert, AlertError, TranslateDirective, TranslateModule, RouterLink, FormatMediumDatetimePipe],
 })
 export class StudentDetail {
+  readonly source = input<String | null>(null);
   readonly student = input<IStudent | null>(null);
 
   previousState(): void {

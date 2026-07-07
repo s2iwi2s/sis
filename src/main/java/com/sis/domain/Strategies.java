@@ -5,11 +5,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.sql.Types;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.JdbcTypeCode;
 
 /**
  * A Strategies.
@@ -33,6 +35,7 @@ public class Strategies implements Serializable {
     private String name;
 
     @Lob
+    @JdbcTypeCode(Types.LONGVARCHAR)
     @Column(name = "description")
     private String description;
 

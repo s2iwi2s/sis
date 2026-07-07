@@ -197,16 +197,16 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="field_instructor" jhiTranslate="schInfoSysApp.courseSchedule.instructor">Instructor</label>
+          <label for="field_instructors" jhiTranslate="schInfoSysApp.courseSchedule.instructor">Instructor</label>
           <select
             class="form-control"
-            id="field_instructor"
+            id="field_instructors"
             data-cy="instructor"
-            name="instructor"
-            formControlName="instructor"
+            multiple
+            name="instructors"
+            formControlName="instructors"
             [compareWith]="compareInstructor"
           >
-            <option [ngValue]="null"></option>
             @for (instructorOption of instructorsSharedCollection(); track $index) {
               <option [ngValue]="instructorOption">{{ instructorOption.id }}</option>
             }
@@ -214,16 +214,16 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label" for="field_student" jhiTranslate="schInfoSysApp.courseSchedule.student">Student</label>
+          <label for="field_students" jhiTranslate="schInfoSysApp.courseSchedule.student">Student</label>
           <select
             class="form-control"
-            id="field_student"
+            id="field_students"
             data-cy="student"
-            name="student"
-            formControlName="student"
+            multiple
+            name="students"
+            formControlName="students"
             [compareWith]="compareStudent"
           >
-            <option [ngValue]="null"></option>
             @for (studentOption of studentsSharedCollection(); track $index) {
               <option [ngValue]="studentOption">{{ studentOption.id }}</option>
             }

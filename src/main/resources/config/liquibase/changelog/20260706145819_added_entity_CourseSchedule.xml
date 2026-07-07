@@ -7,26 +7,26 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <!--
-        Added the entity CurriculumMap.
+        Added the entity CourseSchedule.
     -->
-    <changeSet id="20260704155435-1" author="jhipster">
-        <createTable tableName="curriculum_map">
+    <changeSet id="20260706145819-1" author="jhipster">
+        <createTable tableName="course_schedule">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="quarter_no" type="integer">
+            <column name="room" type="varchar(50)">
                 <constraints nullable="true" />
             </column>
-            <column name="week_no" type="integer">
+            <column name="week_day" type="integer">
                 <constraints nullable="true" />
             </column>
-            <column name="topic" type="varchar(255)">
+            <column name="start_time" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
-            <column name="content_standards" type="varchar(255)">
+            <column name="end_time" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
-            <column name="performance_standards" type="varchar(255)">
+            <column name="description" type="varchar(250)">
                 <constraints nullable="true" />
             </column>
             <column name="created_by" type="varchar(50)">
@@ -41,13 +41,18 @@
             <column name="last_modified_date" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
-            <column name="course_id" type="bigint">
+            <column name="terms_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="year_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
-        <dropDefaultValue tableName="curriculum_map" columnName="created_date" columnDataType="${datetimeType}"/>
-        <dropDefaultValue tableName="curriculum_map" columnName="last_modified_date" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="course_schedule" columnName="start_time" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="course_schedule" columnName="end_time" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="course_schedule" columnName="created_date" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="course_schedule" columnName="last_modified_date" columnDataType="${datetimeType}"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
@@ -60,19 +65,19 @@
           This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
           Spring Boot configuration key.
     -->
-    <changeSet id="20260704155435-1-data" author="jhipster" context="faker">
+    <changeSet id="20260706145819-1-data" author="jhipster" context="faker">
         <loadData
-                  file="../fake-data/curriculum_map.csv"
+                  file="../fake-data/course_schedule.csv"
                   relativeToChangelogFile="true"
                   separator=";"
-                  tableName="curriculum_map"
+                  tableName="course_schedule"
                   usePreparedStatements="true">
             <column name="id" type="numeric"/>
-            <column name="quarter_no" type="numeric"/>
-            <column name="week_no" type="numeric"/>
-            <column name="topic" type="string"/>
-            <column name="content_standards" type="string"/>
-            <column name="performance_standards" type="string"/>
+            <column name="room" type="string"/>
+            <column name="week_day" type="numeric"/>
+            <column name="start_time" type="date"/>
+            <column name="end_time" type="date"/>
+            <column name="description" type="string"/>
             <column name="created_by" type="string"/>
             <column name="created_date" type="date"/>
             <column name="last_modified_by" type="string"/>

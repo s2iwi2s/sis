@@ -6,15 +6,15 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
     <!--
-        Added the constraints for entity CurriculumMap.
+        Added the constraints for entity AcademicTerms.
     -->
-    <changeSet id="20260704155435-2" author="jhipster">
+    <changeSet id="20260706150719-2" author="jhipster">
 
-        <addForeignKeyConstraint baseColumnNames="course_id"
-                                 baseTableName="curriculum_map"
-                                 constraintName="fk_curriculum_map__course_id"
+        <addForeignKeyConstraint baseColumnNames="year_id"
+                                 baseTableName="academic_terms"
+                                 constraintName="fk_academic_terms__year_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="course"
+                                 referencedTableName="academic_year"
                                  />
     </changeSet>
 </databaseChangeLog>

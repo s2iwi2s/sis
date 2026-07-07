@@ -34,6 +34,7 @@ describe('Instructor Form Service', () => {
             lastModifiedDate: expect.any(Object),
             gender: expect.any(Object),
             user: expect.any(Object),
+            courseSchedules: expect.any(Object),
           }),
         );
       });
@@ -58,6 +59,7 @@ describe('Instructor Form Service', () => {
             lastModifiedDate: expect.any(Object),
             gender: expect.any(Object),
             user: expect.any(Object),
+            courseSchedules: expect.any(Object),
           }),
         );
       });

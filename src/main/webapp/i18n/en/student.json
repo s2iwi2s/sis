@@ -2,29 +2,31 @@
   "schInfoSysApp": {
     "student": {
       "home": {
-        "title": "Students",
+        "title": "Learners",
         "enrollmentTitle": "Enrollment Form",
         "refreshListLabel": "Refresh list",
-        "createLabel": "Create a new Student",
-        "createOrEditLabel": "Create or edit a Student",
-        "notFound": "No Students found"
+        "createLabel": "Registration Form",
+        "createOrEditLabel": "Create or edit a Learner",
+        "notFound": "No Learners found"
       },
-      "created": "A new Student is created with identifier {{ param }}",
-      "updated": "A Student is updated with identifier {{ param }}",
-      "deleted": "A Student is deleted with identifier {{ param }}",
+      "created": "A new Learner is created with identifier {{ param }}",
+      "updated": "A Learner is updated with identifier {{ param }}",
+      "deleted": "A Learner is deleted with identifier {{ param }}",
       "delete": {
-        "question": "Are you sure you want to delete Student {{ id }}?"
+        "question": "Are you sure you want to delete Learner {{ id }}?"
       },
       "detail": {
-        "title": "Student"
+        "title": "Learner"
       },
       "filters": "Filters",
+      "search": "Search",
       "id": "ID",
       "lrn": "Lrn",
       "firstName": "First Name",
       "middleName": "Middle Name",
       "lastName": "Last Name",
       "extName": "Ext Name",
+      "enrollmentDate": "Enrollment Date",
       "birthDate": "Birth Date",
       "birthPlace": "Birth Place",
       "contactNo": "Contact No",

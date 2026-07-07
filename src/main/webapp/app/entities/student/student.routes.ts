@@ -23,7 +23,7 @@ const studentRoute: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
-    path: 'new/:formName',
+    path: 'new/:source',
     loadComponent: () => import('./update/student-update').then(m => m.StudentUpdate),
     resolve: {
       student: StudentResolve,
@@ -31,7 +31,7 @@ const studentRoute: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
-    path: ':id/edit/:formName',
+    path: ':id/edit/:source',
     loadComponent: () => import('./update/student-update').then(m => m.StudentUpdate),
     resolve: {
       student: StudentResolve,

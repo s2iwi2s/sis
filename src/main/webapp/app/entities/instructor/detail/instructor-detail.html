@@ -75,6 +75,15 @@
           <dd>
             <span>{{ instructorRef.user?.id }}</span>
           </dd>
+          <dt><span jhiTranslate="schInfoSysApp.instructor.courseSchedule">Course Schedule</span></dt>
+          <dd>
+            @for (courseSchedule of instructorRef.courseSchedules; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/course-schedule', courseSchedule.id, 'view']">{{ courseSchedule?.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
         </dl>
 
         <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

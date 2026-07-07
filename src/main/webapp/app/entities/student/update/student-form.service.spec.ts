@@ -25,6 +25,7 @@ describe('Student Form Service', () => {
             middleName: expect.any(Object),
             lastName: expect.any(Object),
             extName: expect.any(Object),
+            enrollmentDate: expect.any(Object),
             birthDate: expect.any(Object),
             birthPlace: expect.any(Object),
             contactNo: expect.any(Object),
@@ -55,6 +56,7 @@ describe('Student Form Service', () => {
             lastModifiedDate: expect.any(Object),
             gender: expect.any(Object),
             user: expect.any(Object),
+            courseSchedules: expect.any(Object),
           }),
         );
       });
@@ -70,6 +72,7 @@ describe('Student Form Service', () => {
             middleName: expect.any(Object),
             lastName: expect.any(Object),
             extName: expect.any(Object),
+            enrollmentDate: expect.any(Object),
             birthDate: expect.any(Object),
             birthPlace: expect.any(Object),
             contactNo: expect.any(Object),
@@ -100,6 +103,7 @@ describe('Student Form Service', () => {
             lastModifiedDate: expect.any(Object),
             gender: expect.any(Object),
             user: expect.any(Object),
+            courseSchedules: expect.any(Object),
           }),
         );
       });

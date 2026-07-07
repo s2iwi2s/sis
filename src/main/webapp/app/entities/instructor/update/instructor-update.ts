@@ -9,6 +9,8 @@ import { Observable, finalize, map } from 'rxjs';
 
 import { IAppConfig } from 'app/entities/app-config/app-config.model';
 import { AppConfigService } from 'app/entities/app-config/service/app-config.service';
+import { ICourseSchedule } from 'app/entities/course-schedule/course-schedule.model';
+import { CourseScheduleService } from 'app/entities/course-schedule/service/course-schedule.service';
 import { UserService } from 'app/entities/user/service/user.service';
 import { IUser } from 'app/entities/user/user.model';
 import { AlertError } from 'app/shared/alert/alert-error';
@@ -30,11 +32,13 @@ export class InstructorUpdate implements OnInit {
 
   gendersCollection = signal<IAppConfig[]>([]);
   usersSharedCollection = signal<IUser[]>([]);
+  courseSchedulesSharedCollection = signal<ICourseSchedule[]>([]);
 
   protected instructorService = inject(InstructorService);
   protected instructorFormService = inject(InstructorFormService);
   protected appConfigService = inject(AppConfigService);
   protected userService = inject(UserService);
+  protected courseScheduleService = inject(CourseScheduleService);
   protected activatedRoute = inject(ActivatedRoute);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
@@ -43,6 +47,9 @@ export class InstructorUpdate implements OnInit {
   compareAppConfig = (o1: IAppConfig | null, o2: IAppConfig | null): boolean => this.appConfigService.compareAppConfig(o1, o2);
 
   compareUser = (o1: IUser | null, o2: IUser | null): boolean => this.userService.compareUser(o1, o2);
+
+  compareCourseSchedule = (o1: ICourseSchedule | null, o2: ICourseSchedule | null): boolean =>
+    this.courseScheduleService.compareCourseSchedule(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ instructor }) => {
@@ -96,6 +103,12 @@ export class InstructorUpdate implements OnInit {
       this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(this.gendersCollection(), instructor.gender),
     );
     this.usersSharedCollection.update(users => this.userService.addUserToCollectionIfMissing<IUser>(users, instructor.user));
+    this.courseSchedulesSharedCollection.update(courseSchedules =>
+      this.courseScheduleService.addCourseScheduleToCollectionIfMissing<ICourseSchedule>(
+        courseSchedules,
+        ...(instructor.courseSchedules ?? []),
+      ),
+    );
   }
 
   protected loadRelationshipsOptions(): void {
@@ -114,5 +127,18 @@ export class InstructorUpdate implements OnInit {
       .pipe(map((res: HttpResponse<IUser[]>) => res.body ?? []))
       .pipe(map((users: IUser[]) => this.userService.addUserToCollectionIfMissing<IUser>(users, this.instructor?.user)))
       .subscribe((users: IUser[]) => this.usersSharedCollection.set(users));
+
+    this.courseScheduleService
+      .query()
+      .pipe(map((res: HttpResponse<ICourseSchedule[]>) => res.body ?? []))
+      .pipe(
+        map((courseSchedules: ICourseSchedule[]) =>
+          this.courseScheduleService.addCourseScheduleToCollectionIfMissing<ICourseSchedule>(
+            courseSchedules,
+            ...(this.instructor?.courseSchedules ?? []),
+          ),
+        ),
+      )
+      .subscribe((courseSchedules: ICourseSchedule[]) => this.courseSchedulesSharedCollection.set(courseSchedules));
   }
 }

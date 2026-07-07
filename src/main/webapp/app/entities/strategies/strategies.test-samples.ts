@@ -10,7 +10,7 @@ export const sampleWithPartialData: IStrategies = {
   id: 11457,
   createdBy: 'ugh',
   lastModifiedBy: 'gah',
-  lastModifiedDate: dayjs('2026-07-04T03:16'),
+  lastModifiedDate: dayjs('2026-07-06T02:23'),
 };
 
 export const sampleWithFullData: IStrategies = {
@@ -18,9 +18,9 @@ export const sampleWithFullData: IStrategies = {
   name: 'simple whose eek',
   description: '../fake-data/blob/hipster.txt',
   createdBy: 'before unfinished deceivingly',
-  createdDate: dayjs('2026-07-03T17:29'),
+  createdDate: dayjs('2026-07-05T16:36'),
   lastModifiedBy: 'interior',
-  lastModifiedDate: dayjs('2026-07-04T05:44'),
+  lastModifiedDate: dayjs('2026-07-06T04:51'),
 };
 
 export const sampleWithNewData: NewStrategies = {

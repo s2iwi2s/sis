@@ -8,7 +8,7 @@ export const sampleWithRequiredData: IDepartments = {
 
 export const sampleWithPartialData: IDepartments = {
   id: 7070,
-  createdDate: dayjs('2026-07-04T03:30'),
+  createdDate: dayjs('2026-07-06T02:37'),
 };
 
 export const sampleWithFullData: IDepartments = {
@@ -16,9 +16,9 @@ export const sampleWithFullData: IDepartments = {
   name: 'pfft gracefully finished',
   description: 'miserably',
   createdBy: 'safely healthily',
-  createdDate: dayjs('2026-07-04T01:00'),
+  createdDate: dayjs('2026-07-06T00:07'),
   lastModifiedBy: 'sneak',
-  lastModifiedDate: dayjs('2026-07-03T22:05'),
+  lastModifiedDate: dayjs('2026-07-05T21:11'),
 };
 
 export const sampleWithNewData: NewDepartments = {

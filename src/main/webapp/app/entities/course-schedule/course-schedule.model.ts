@@ -18,8 +18,8 @@ export interface ICourseSchedule {
   lastModifiedDate?: dayjs.Dayjs | null;
   terms?: Pick<IAcademicTerms, 'id'> | null;
   year?: Pick<IAcademicYear, 'id'> | null;
-  instructor?: Pick<IInstructor, 'id'> | null;
-  student?: Pick<IStudent, 'id'> | null;
+  instructors?: Pick<IInstructor, 'id'>[] | null;
+  students?: Pick<IStudent, 'id'>[] | null;
 }
 
 export type NewCourseSchedule = Omit<ICourseSchedule, 'id'> & { id: null };

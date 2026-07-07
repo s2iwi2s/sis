@@ -7,20 +7,20 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <!--
-        Added the entity Resources.
+        Added the entity Assessment.
     -->
-    <changeSet id="20260704155835-1" author="jhipster">
-        <createTable tableName="resources">
+    <changeSet id="20260706150419-1" author="jhipster">
+        <createTable tableName="assessment">
             <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="file_name" type="varchar(50)">
+            <column name="name" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="document" type="${blobType}">
+            <column name="instruction" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
-            <column name="document_content_type" type="varchar(255)">
+            <column name="mark_scheme" type="${clobType}">
                 <constraints nullable="true" />
             </column>
             <column name="created_by" type="varchar(50)">
@@ -35,10 +35,27 @@
             <column name="last_modified_date" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
+            <column name="learning_competency_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
         </createTable>
-        <dropDefaultValue tableName="resources" columnName="created_date" columnDataType="${datetimeType}"/>
-        <dropDefaultValue tableName="resources" columnName="last_modified_date" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="assessment" columnName="created_date" columnDataType="${datetimeType}"/>
+        <dropDefaultValue tableName="assessment" columnName="last_modified_date" columnDataType="${datetimeType}"/>
+    </changeSet>
+
+    <changeSet id="20260706150419-1-relations" author="jhipster">
+
+        <createTable tableName="rel_assessment__resources">
+            <column name="resources_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="assessment_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="assessment_id, resources_id" tableName="rel_assessment__resources"/>
     </changeSet>
 
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
@@ -51,17 +68,17 @@
           This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
           Spring Boot configuration key.
     -->
-    <changeSet id="20260704155835-1-data" author="jhipster" context="faker">
+    <changeSet id="20260706150419-1-data" author="jhipster" context="faker">
         <loadData
-                  file="../fake-data/resources.csv"
+                  file="../fake-data/assessment.csv"
                   relativeToChangelogFile="true"
                   separator=";"
-                  tableName="resources"
+                  tableName="assessment"
                   usePreparedStatements="true">
             <column name="id" type="numeric"/>
-            <column name="file_name" type="string"/>
-            <column name="document" type="blob"/>
-            <column name="document_content_type" type="string"/>
+            <column name="name" type="string"/>
+            <column name="instruction" type="string"/>
+            <column name="mark_scheme" type="clob"/>
             <column name="created_by" type="string"/>
             <column name="created_date" type="date"/>
             <column name="last_modified_by" type="string"/>

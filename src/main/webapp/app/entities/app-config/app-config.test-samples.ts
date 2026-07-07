@@ -22,9 +22,9 @@ export const sampleWithFullData: IAppConfig = {
   json: '../fake-data/blob/hipster.txt',
   priority: 10825,
   createdBy: 'our for however',
-  createdDate: dayjs('2026-07-04T08:28'),
+  createdDate: dayjs('2026-07-06T07:35'),
   lastModifiedBy: 'athletic charter about',
-  lastModifiedDate: dayjs('2026-07-04T05:37'),
+  lastModifiedDate: dayjs('2026-07-06T04:44'),
 };
 
 export const sampleWithNewData: NewAppConfig = {

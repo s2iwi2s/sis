@@ -9,6 +9,7 @@ import { RestStudent, StudentService } from './student.service';
 
 const requireRestSample: RestStudent = {
   ...sampleWithRequiredData,
+  enrollmentDate: sampleWithRequiredData.enrollmentDate?.toJSON(),
   birthDate: sampleWithRequiredData.birthDate?.toJSON(),
   createdDate: sampleWithRequiredData.createdDate?.toJSON(),
   lastModifiedDate: sampleWithRequiredData.lastModifiedDate?.toJSON(),

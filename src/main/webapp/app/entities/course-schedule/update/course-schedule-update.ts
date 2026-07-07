@@ -113,10 +113,10 @@ export class CourseScheduleUpdate implements OnInit {
       this.academicYearService.addAcademicYearToCollectionIfMissing<IAcademicYear>(academicYears, courseSchedule.year),
     );
     this.instructorsSharedCollection.update(instructors =>
-      this.instructorService.addInstructorToCollectionIfMissing<IInstructor>(instructors, courseSchedule.instructor),
+      this.instructorService.addInstructorToCollectionIfMissing<IInstructor>(instructors, ...(courseSchedule.instructors ?? [])),
     );
     this.studentsSharedCollection.update(students =>
-      this.studentService.addStudentToCollectionIfMissing<IStudent>(students, courseSchedule.student),
+      this.studentService.addStudentToCollectionIfMissing<IStudent>(students, ...(courseSchedule.students ?? [])),
     );
   }
 
@@ -146,7 +146,7 @@ export class CourseScheduleUpdate implements OnInit {
       .pipe(map((res: HttpResponse<IInstructor[]>) => res.body ?? []))
       .pipe(
         map((instructors: IInstructor[]) =>
-          this.instructorService.addInstructorToCollectionIfMissing<IInstructor>(instructors, this.courseSchedule?.instructor),
+          this.instructorService.addInstructorToCollectionIfMissing<IInstructor>(instructors, ...(this.courseSchedule?.instructors ?? [])),
         ),
       )
       .subscribe((instructors: IInstructor[]) => this.instructorsSharedCollection.set(instructors));
@@ -156,7 +156,7 @@ export class CourseScheduleUpdate implements OnInit {
       .pipe(map((res: HttpResponse<IStudent[]>) => res.body ?? []))
       .pipe(
         map((students: IStudent[]) =>
-          this.studentService.addStudentToCollectionIfMissing<IStudent>(students, this.courseSchedule?.student),
+          this.studentService.addStudentToCollectionIfMissing<IStudent>(students, ...(this.courseSchedule?.students ?? [])),
         ),
       )
       .subscribe((students: IStudent[]) => this.studentsSharedCollection.set(students));

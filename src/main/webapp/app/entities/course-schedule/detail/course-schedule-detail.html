@@ -71,18 +71,20 @@
           </dd>
           <dt><span jhiTranslate="schInfoSysApp.courseSchedule.instructor">Instructor</span></dt>
           <dd>
-            @if (courseSchedule()!.instructor) {
-              <div>
-                <a [routerLink]="['/instructor', courseSchedule()!.instructor?.id, 'view']">{{ courseScheduleRef.instructor?.id }}</a>
-              </div>
+            @for (instructor of courseScheduleRef.instructors; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/instructor', instructor.id, 'view']">{{ instructor?.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
             }
           </dd>
           <dt><span jhiTranslate="schInfoSysApp.courseSchedule.student">Student</span></dt>
           <dd>
-            @if (courseSchedule()!.student) {
-              <div>
-                <a [routerLink]="['/student', courseSchedule()!.student?.id, 'view']">{{ courseScheduleRef.student?.id }}</a>
-              </div>
+            @for (student of courseScheduleRef.students; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/student', student.id, 'view']">{{ student?.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
             }
           </dd>
         </dl>

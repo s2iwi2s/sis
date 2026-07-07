@@ -9,6 +9,8 @@ import { Subject, from, of } from 'rxjs';
 
 import { IAppConfig } from 'app/entities/app-config/app-config.model';
 import { AppConfigService } from 'app/entities/app-config/service/app-config.service';
+import { ICourseSchedule } from 'app/entities/course-schedule/course-schedule.model';
+import { CourseScheduleService } from 'app/entities/course-schedule/service/course-schedule.service';
 import { UserService } from 'app/entities/user/service/user.service';
 import { IUser } from 'app/entities/user/user.model';
 import { StudentService } from '../service/student.service';
@@ -25,6 +27,7 @@ describe('Student Management Update Component', () => {
   let studentService: StudentService;
   let appConfigService: AppConfigService;
   let userService: UserService;
+  let courseScheduleService: CourseScheduleService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -46,6 +49,7 @@ describe('Student Management Update Component', () => {
     studentService = TestBed.inject(StudentService);
     appConfigService = TestBed.inject(AppConfigService);
     userService = TestBed.inject(UserService);
+    courseScheduleService = TestBed.inject(CourseScheduleService);
 
     comp = fixture.componentInstance;
   });
@@ -91,18 +95,43 @@ describe('Student Management Update Component', () => {
       expect(comp.usersSharedCollection()).toEqual(expectedCollection);
     });
 
+    it('should call CourseSchedule query and add missing value', () => {
+      const student: IStudent = { id: 22718 };
+      const courseSchedules: ICourseSchedule[] = [{ id: 3926 }];
+      student.courseSchedules = courseSchedules;
+
+      const courseScheduleCollection: ICourseSchedule[] = [{ id: 3926 }];
+      vitest.spyOn(courseScheduleService, 'query').mockReturnValue(of(new HttpResponse({ body: courseScheduleCollection })));
+      const additionalCourseSchedules = [...courseSchedules];
+      const expectedCollection: ICourseSchedule[] = [...additionalCourseSchedules, ...courseScheduleCollection];
+      vitest.spyOn(courseScheduleService, 'addCourseScheduleToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+      activatedRoute.data = of({ student });
+      comp.ngOnInit();
+
+      expect(courseScheduleService.query).toHaveBeenCalled();
+      expect(courseScheduleService.addCourseScheduleToCollectionIfMissing).toHaveBeenCalledWith(
+        courseScheduleCollection,
+        ...additionalCourseSchedules.map(i => expect.objectContaining(i) as typeof i),
+      );
+      expect(comp.courseSchedulesSharedCollection()).toEqual(expectedCollection);
+    });
+
     it('should update editForm', () => {
       const student: IStudent = { id: 22718 };
       const gender: IAppConfig = { id: 10896 };
       student.gender = gender;
       const user: IUser = { id: 3944 };
       student.user = user;
+      const courseSchedule: ICourseSchedule = { id: 3926 };
+      student.courseSchedules = [courseSchedule];
 
       activatedRoute.data = of({ student });
       comp.ngOnInit();
 
       expect(comp.gendersCollection()).toContainEqual(gender);
       expect(comp.usersSharedCollection()).toContainEqual(user);
+      expect(comp.courseSchedulesSharedCollection()).toContainEqual(courseSchedule);
       expect(comp.student).toEqual(student);
     });
   });
@@ -193,6 +222,16 @@ describe('Student Management Update Component', () => {
         vitest.spyOn(userService, 'compareUser');
         comp.compareUser(entity, entity2);
         expect(userService.compareUser).toHaveBeenCalledWith(entity, entity2);
+      });
+    });
+
+    describe('compareCourseSchedule', () => {
+      it('should forward to courseScheduleService', () => {
+        const entity = { id: 3926 };
+        const entity2 = { id: 1257 };
+        vitest.spyOn(courseScheduleService, 'compareCourseSchedule');
+        comp.compareCourseSchedule(entity, entity2);
+        expect(courseScheduleService.compareCourseSchedule).toHaveBeenCalledWith(entity, entity2);
       });
     });
   });

@@ -1,5 +1,5 @@
 import { HttpHeaders } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnInit, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, effect, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Data, ParamMap, Router, RouterLink } from '@angular/router';
 
@@ -20,6 +20,7 @@ import { SortByDirective, SortDirective, SortService, type SortState, sortStateS
 import { StudentDeleteDialog } from '../delete/student-delete-dialog';
 import { StudentService } from '../service/student.service';
 import { IStudent } from '../student.model';
+import { StudentFormGroup, StudentFormService } from '../update/student-form.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -41,8 +42,11 @@ import { IStudent } from '../student.model';
   ],
 })
 export class Student implements OnInit {
+  readonly source = input<String | null>(null);
+
   subscription: Subscription | null = null;
   readonly students = signal<IStudent[]>([]);
+  readonly studentFilter = signal<IStudent[]>([]);
 
   sortState = sortStateSignal({});
 
@@ -57,6 +61,11 @@ export class Student implements OnInit {
   protected readonly activatedRoute = inject(ActivatedRoute);
   protected readonly sortService = inject(SortService);
   protected modalService = inject(NgbModal);
+
+  protected studentFormService = inject(StudentFormService);
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  filterForm: StudentFormGroup = this.studentFormService.createStudentFormGroup();
 
   constructor() {
     effect(() => {
@@ -124,6 +133,7 @@ export class Student implements OnInit {
     const queryObject: any = {
       page: pageToLoad - 1,
       size: this.itemsPerPage(),
+      eagerload: true,
       sort: this.sortService.buildSortParam(this.sortState()),
     };
     this.studentService.studentsParams.set(queryObject);

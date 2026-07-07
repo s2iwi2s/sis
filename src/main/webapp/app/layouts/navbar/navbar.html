@@ -77,25 +77,27 @@
               </li>
 
               <li>
-                <span>
-                  <fa-icon icon="th-list"></fa-icon>
-                  <span jhiTranslate="global.menu.modules.enrollment">enrollment</span>
-                </span>
+                <a
+                  class="dropdown-item"
+                  routerLink="/enrollment-form"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="collapseNavbar()"
+                  ><fa-icon icon="users" />
+                  <span jhiTranslate="global.menu.modules.enrollmentForm">enrollmentForm</span>
+                </a>
               </li>
+
               <li>
-                <ul>
-                  <li>
-                    <a
-                      class="dropdown-item"
-                      routerLink="/enrollment/new/enroll"
-                      routerLinkActive="active"
-                      [routerLinkActiveOptions]="{ exact: true }"
-                      (click)="collapseNavbar()"
-                    >
-                      <span jhiTranslate="global.menu.modules.enrollmentForm">enrollmentForm</span>
-                    </a>
-                  </li>
-                </ul>
+                <a
+                  class="dropdown-item"
+                  routerLink="/student/new/register"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="collapseNavbar()"
+                  ><fa-icon icon="user" />
+                  <span jhiTranslate="global.menu.modules.registrationForm">Registration Form</span>
+                </a>
               </li>
             </ul>
           </li>

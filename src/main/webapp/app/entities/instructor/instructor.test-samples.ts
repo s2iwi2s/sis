@@ -10,9 +10,9 @@ export const sampleWithPartialData: IInstructor = {
   id: 23554,
   firstName: 'Jermey',
   lastName: 'Torphy',
-  createdDate: dayjs('2026-07-03T20:41'),
+  createdDate: dayjs('2026-07-05T19:48'),
   lastModifiedBy: 'oh fabricate same',
-  lastModifiedDate: dayjs('2026-07-03T22:34'),
+  lastModifiedDate: dayjs('2026-07-05T21:41'),
 };
 
 export const sampleWithFullData: IInstructor = {
@@ -22,13 +22,13 @@ export const sampleWithFullData: IInstructor = {
   lastName: 'Lind',
   email: 'Lambert.Bode42@gmail.com',
   phoneNumber: 'skateboard',
-  hireDate: dayjs('2026-07-04T14:39'),
+  hireDate: dayjs('2026-07-06T13:46'),
   salary: 6108,
   commissionPct: 554,
   createdBy: 'mean',
-  createdDate: dayjs('2026-07-04T03:36'),
+  createdDate: dayjs('2026-07-06T02:43'),
   lastModifiedBy: 'forsaken',
-  lastModifiedDate: dayjs('2026-07-04T12:55'),
+  lastModifiedDate: dayjs('2026-07-06T12:02'),
 };
 
 export const sampleWithNewData: NewInstructor = {

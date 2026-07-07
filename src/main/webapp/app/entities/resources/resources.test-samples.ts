@@ -18,9 +18,9 @@ export const sampleWithFullData: IResources = {
   document: '../fake-data/blob/hipster.png',
   documentContentType: 'unknown',
   createdBy: 'freely inborn slip',
-  createdDate: dayjs('2026-07-04T02:31'),
+  createdDate: dayjs('2026-07-06T01:38'),
   lastModifiedBy: 'unlike',
-  lastModifiedDate: dayjs('2026-07-04T09:28'),
+  lastModifiedDate: dayjs('2026-07-06T08:34'),
 };
 
 export const sampleWithNewData: NewResources = {

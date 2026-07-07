@@ -1,0 +1,44 @@
+<form name="filterForm" novalidate (ngSubmit)="searchLearner()">
+  <div class="row d-print-none shadow-sm rounded-4 p-3">
+    <div class="col-sm-12 row">
+      <label class="col-sm-1 col-form-label col-form-label-sm mb-3" for="filter_field_lrn" jhiTranslate="schInfoSysApp.student.search"
+        >LRN</label
+      >
+      <div class="col-sm-4">
+        <input type="text" placeholder="LRN" class="form-control" name="lrn" id="filter_field_lrn" data-cy="lrn" formControlName="lrn" />
+      </div>
+    </div>
+
+    <label class="col-sm-1 col-form-label col-form-label-sm mb-3" for="field_firstName" jhiTranslate="schInfoSysApp.student.firstName"
+      >First Name</label
+    >
+    <div class="col-sm-3">
+      <input type="text" class="form-control" name="firstName" id="field_firstName" data-cy="firstName" formControlName="firstName" />
+    </div>
+    <label class="col-sm-1 col-form-label col-form-label-sm mb-3" for="field_lastName" jhiTranslate="schInfoSysApp.student.lastName"
+      >Last Name</label
+    >
+    <div class="col-sm-3">
+      <input type="text" class="form-control" name="lastName" id="field_lastName" data-cy="lastName" formControlName="lastName" />
+    </div>
+    <label class="col-sm-1 col-form-label col-form-label-sm mb-3" for="field_birthDate" jhiTranslate="schInfoSysApp.student.birthDate"
+      >Birth Date</label
+    >
+    <div class="col-3">
+      <input
+        id="field_birthDate"
+        data-cy="birthDate"
+        type="date"
+        class="form-control"
+        name="birthDate"
+        formControlName="birthDate"
+        placeholder="YYYY-MM-DD"
+      />
+    </div>
+    <div class="col-sm-12 d-flex justify-content-end">
+      <button type="button" class="btn btn-primary me-2">Search <fa-icon icon="search" /></button>
+      <button type="button" class="btn btn-primary" [routerLink]="['/student/new/enroll']">Register <fa-icon icon="user" /></button>
+    </div>
+  </div>
+  <jhi-student source="register" />
+</form>

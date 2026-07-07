@@ -10,8 +10,8 @@ export const sampleWithPartialData: ILearningCompetency = {
   id: 15074,
   description: 'ah amidst',
   createdBy: 'furiously ah',
-  createdDate: dayjs('2026-07-04T07:51'),
-  lastModifiedDate: dayjs('2026-07-04T10:51'),
+  createdDate: dayjs('2026-07-06T06:58'),
+  lastModifiedDate: dayjs('2026-07-06T09:57'),
 };
 
 export const sampleWithFullData: ILearningCompetency = {
@@ -20,9 +20,9 @@ export const sampleWithFullData: ILearningCompetency = {
   competencyCode: 'boastfully consequently lobster',
   description: 'uh-huh',
   createdBy: 'across vain consequently',
-  createdDate: dayjs('2026-07-04T02:26'),
+  createdDate: dayjs('2026-07-06T01:33'),
   lastModifiedBy: 'sate long',
-  lastModifiedDate: dayjs('2026-07-04T02:30'),
+  lastModifiedDate: dayjs('2026-07-06T01:37'),
 };
 
 export const sampleWithNewData: NewLearningCompetency = {

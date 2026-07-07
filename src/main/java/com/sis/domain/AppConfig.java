@@ -5,9 +5,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import java.io.Serial;
 import java.io.Serializable;
+import java.sql.Types;
 import java.time.Instant;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.JdbcTypeCode;
 
 /**
  * A AppConfig.
@@ -37,6 +39,7 @@ public class AppConfig implements Serializable {
     private String description;
 
     @Lob
+    @JdbcTypeCode(Types.LONGVARCHAR)
     @Column(name = "json")
     private String json;
 

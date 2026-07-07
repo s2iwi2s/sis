@@ -1,23 +1,8 @@
 <div class="d-flex justify-content-center">
   <div class="col-8">
-    <h2 id="jhi-student-heading" data-cy="StudentCreateUpdateHeading">
-      @if (formName === 'enroll') {
-        Enrollment Form
-      } @else {
-        Create or edit a Student
-      }
-    </h2>
+    <h2 id="jhi-student-heading" data-cy="StudentCreateUpdateHeading">Registration Form - {{ source }}</h2>
 
     <jhi-alert-error />
-    <form name="filterForm" novalidate (ngSubmit)="setFilters()" [formGroup]="filterForm">
-      <div class="d-print-none shadow-sm py-2 pb-3 mb-sm-3 bg-body-tertiary rounded-4 row col-sm-6">
-        <label class="form-label col-sm-12" for="filter_field_lrn" jhiTranslate="schInfoSysApp.student.filters">filters</label>
-        <div class="input-group">
-          <input type="text" class="form-control" name="lrn" id="filter_field_lrn" data-cy="lrn" formControlName="lrn" />
-          <span class="input-group-text border-0"><fa-icon icon="search"></fa-icon></span>
-        </div>
-      </div>
-    </form>
 
     <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
       <div>
@@ -100,6 +85,22 @@
             </div>
           }
         </div>
+        @if (source === 'view') {
+          <div class="mb-3">
+            <label class="form-label" for="field_enrollmentDate" jhiTranslate="schInfoSysApp.student.enrollmentDate">Enrollment Date</label>
+            <div class="d-flex">
+              <input
+                id="field_enrollmentDate"
+                data-cy="enrollmentDate"
+                type="datetime-local"
+                class="form-control"
+                name="enrollmentDate"
+                formControlName="enrollmentDate"
+                placeholder="YYYY-MM-DD HH:mm"
+              />
+            </div>
+          </div>
+        }
 
         <div class="mb-3">
           <label class="form-label" for="field_birthDate" jhiTranslate="schInfoSysApp.student.birthDate">Birth Date</label>
@@ -689,6 +690,23 @@
             <option [ngValue]="null"></option>
             @for (userOption of usersSharedCollection(); track $index) {
               <option [ngValue]="userOption">{{ userOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="field_courseSchedules" jhiTranslate="schInfoSysApp.student.courseSchedule">Course Schedule</label>
+          <select
+            class="form-control"
+            id="field_courseSchedules"
+            data-cy="courseSchedule"
+            multiple
+            name="courseSchedules"
+            formControlName="courseSchedules"
+            [compareWith]="compareCourseSchedule"
+          >
+            @for (courseScheduleOption of courseSchedulesSharedCollection(); track $index) {
+              <option [ngValue]="courseScheduleOption">{{ courseScheduleOption.id }}</option>
             }
           </select>
         </div>

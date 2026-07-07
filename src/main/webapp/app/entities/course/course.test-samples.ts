@@ -10,7 +10,7 @@ export const sampleWithPartialData: ICourse = {
   id: 29293,
   subject: 'ugh',
   hoursPerQuarter: 17207,
-  createdDate: dayjs('2026-07-03T22:04'),
+  createdDate: dayjs('2026-07-05T21:11'),
   lastModifiedBy: 'blaspheme',
 };
 
@@ -21,9 +21,9 @@ export const sampleWithFullData: ICourse = {
   courseDescription: '../fake-data/blob/hipster.txt',
   courseObjectives: '../fake-data/blob/hipster.txt',
   createdBy: 'yippee',
-  createdDate: dayjs('2026-07-03T19:13'),
+  createdDate: dayjs('2026-07-05T18:19'),
   lastModifiedBy: 'drat develop after',
-  lastModifiedDate: dayjs('2026-07-04T06:04'),
+  lastModifiedDate: dayjs('2026-07-06T05:11'),
 };
 
 export const sampleWithNewData: NewCourse = {

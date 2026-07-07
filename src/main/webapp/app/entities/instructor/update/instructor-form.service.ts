@@ -30,7 +30,7 @@ type InstructorFormRawValue = FormValueOf<IInstructor>;
 
 type NewInstructorFormRawValue = FormValueOf<NewInstructor>;
 
-type InstructorFormDefaults = Pick<NewInstructor, 'id' | 'hireDate' | 'createdDate' | 'lastModifiedDate'>;
+type InstructorFormDefaults = Pick<NewInstructor, 'id' | 'hireDate' | 'createdDate' | 'lastModifiedDate' | 'courseSchedules'>;
 
 type InstructorFormGroupContent = {
   id: FormControl<InstructorFormRawValue['id'] | NewInstructor['id']>;
@@ -48,6 +48,7 @@ type InstructorFormGroupContent = {
   lastModifiedDate: FormControl<InstructorFormRawValue['lastModifiedDate']>;
   gender: FormControl<InstructorFormRawValue['gender']>;
   user: FormControl<InstructorFormRawValue['user']>;
+  courseSchedules: FormControl<InstructorFormRawValue['courseSchedules']>;
 };
 
 export type InstructorFormGroup = FormGroup<InstructorFormGroupContent>;
@@ -85,6 +86,7 @@ export class InstructorFormService {
       lastModifiedDate: new FormControl(instructorRawValue.lastModifiedDate),
       gender: new FormControl(instructorRawValue.gender),
       user: new FormControl(instructorRawValue.user),
+      courseSchedules: new FormControl(instructorRawValue.courseSchedules ?? []),
     });
   }
 
@@ -108,6 +110,7 @@ export class InstructorFormService {
       hireDate: currentTime,
       createdDate: currentTime,
       lastModifiedDate: currentTime,
+      courseSchedules: [],
     };
   }
 
@@ -130,6 +133,7 @@ export class InstructorFormService {
       hireDate: instructor.hireDate ? instructor.hireDate.format(DATE_TIME_FORMAT) : undefined,
       createdDate: instructor.createdDate ? instructor.createdDate.format(DATE_TIME_FORMAT) : undefined,
       lastModifiedDate: instructor.lastModifiedDate ? instructor.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
+      courseSchedules: instructor.courseSchedules ?? [],
     };
   }
 }

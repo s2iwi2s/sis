@@ -187,6 +187,23 @@
             }
           </select>
         </div>
+
+        <div class="mb-3">
+          <label for="field_courseSchedules" jhiTranslate="schInfoSysApp.instructor.courseSchedule">Course Schedule</label>
+          <select
+            class="form-control"
+            id="field_courseSchedules"
+            data-cy="courseSchedule"
+            multiple
+            name="courseSchedules"
+            formControlName="courseSchedules"
+            [compareWith]="compareCourseSchedule"
+          >
+            @for (courseScheduleOption of courseSchedulesSharedCollection(); track $index) {
+              <option [ngValue]="courseScheduleOption">{{ courseScheduleOption.id }}</option>
+            }
+          </select>
+        </div>
       </div>
 
       <div>

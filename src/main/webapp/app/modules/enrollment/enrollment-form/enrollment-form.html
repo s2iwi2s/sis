@@ -1,0 +1,35 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <h2 id="jhi-student-heading" data-cy="StudentCreateUpdateHeading" jhiTranslate="global.menu.modules.enrollmentForm">Enrollment Form</h2>
+
+    <jhi-alert-error />
+    <div ngbAccordion [closeOthers]="true">
+      <div ngbAccordionItem>
+        <h2 ngbAccordionHeader class="bg-dark">
+          <button ngbAccordionButton><fa-icon icon="search" /><span class="px-2">Search Learner</span></button>
+        </h2>
+        <div ngbAccordionCollapse>
+          <div ngbAccordionBody>
+            <ng-template>
+              <jhi-search-card />
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      <div ngbAccordionItem [collapsed]="!hasStudent">
+        <h2 ngbAccordionHeader>
+          <button ngbAccordionButton><fa-icon icon="user" /><span class="px-2">Learner Details</span></button>
+        </h2>
+        <div ngbAccordionCollapse>
+          <div ngbAccordionBody>
+            <ng-template>
+              @if (hasStudent === true) {
+                <jhi-student-detail [source]="'enroll'" [student]="student" />
+              }
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

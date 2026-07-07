@@ -11,14 +11,16 @@
         "curriculumMappingView": "View",
         "curriculumMappingDashboard": "Dashboard",
         "enrollment": "Enrollment",
-        "enrollmentForm": "Enrollment Form"
+        "enrollmentForm": "Enrollment Form",
+        "registration": "Registration",
+        "registrationForm": "Registration Form"
       },
       "entities": {
         "main": "Entities",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)",
         "adminAuthority": "Authority",
         "instructor": "Instructor",
-        "student": "Student",
+        "student": "Learner",
         "course": "Course",
         "courseSchedule": "Course Schedule",
         "departments": "Departments",

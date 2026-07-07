@@ -18,13 +18,13 @@ export const sampleWithFullData: ICourseSchedule = {
   id: 16687,
   room: 'lava last yum',
   weekDay: 22106,
-  startTime: dayjs('2026-07-03T16:27'),
-  endTime: dayjs('2026-07-03T21:32'),
+  startTime: dayjs('2026-07-05T15:33'),
+  endTime: dayjs('2026-07-05T20:38'),
   description: 'limply',
   createdBy: 'once painfully',
-  createdDate: dayjs('2026-07-04T04:32'),
+  createdDate: dayjs('2026-07-06T03:38'),
   lastModifiedBy: 'showboat',
-  lastModifiedDate: dayjs('2026-07-04T01:52'),
+  lastModifiedDate: dayjs('2026-07-06T00:59'),
 };
 
 export const sampleWithNewData: NewCourseSchedule = {
