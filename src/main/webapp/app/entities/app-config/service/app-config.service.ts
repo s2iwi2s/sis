@@ -101,7 +101,7 @@ export class AppConfigService extends AppConfigsService {
     return o1 && o2 ? this.getAppConfigIdentifier(o1) === this.getAppConfigIdentifier(o2) : o1 === o2;
   }
 
-  addAppConfigToCollectionIfMissing<Type extends Pick<IAppConfig, 'id'>>(
+  addAppConfigToCollectionIfMissing<Type extends Pick<IAppConfig, 'id' | 'value' | 'description'>>(
     appConfigCollection: Type[],
     ...appConfigsToCheck: (Type | null | undefined)[]
   ): Type[] {

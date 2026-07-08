@@ -1,5 +1,6 @@
+/* eslint-disable no-console */
 import { HttpHeaders } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, OnInit, effect, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, effect, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Data, ParamMap, Router, RouterLink } from '@angular/router';
 
@@ -19,7 +20,7 @@ import { ItemCount } from 'app/shared/pagination';
 import { SortByDirective, SortDirective, SortService, type SortState, sortStateSignal } from 'app/shared/sort';
 import { StudentDeleteDialog } from '../delete/student-delete-dialog';
 import { StudentService } from '../service/student.service';
-import { IStudent } from '../student.model';
+import { IStudent, NewStudent } from '../student.model';
 import { StudentFormGroup, StudentFormService } from '../update/student-form.service';
 
 @Component({
@@ -41,12 +42,13 @@ import { StudentFormGroup, StudentFormService } from '../update/student-form.ser
     ItemCount,
   ],
 })
-export class Student implements OnInit {
-  readonly source = input<String | null>(null);
+export class Student implements OnInit, OnChanges {
+  readonly source = input<string>();
+  @Input() studentInputFilter: IStudent | NewStudent = {} as IStudent | NewStudent;
 
   subscription: Subscription | null = null;
   readonly students = signal<IStudent[]>([]);
-  readonly studentFilter = signal<IStudent[]>([]);
+  studentFilter: IStudent | null = null;
 
   sortState = sortStateSignal({});
 
@@ -63,9 +65,6 @@ export class Student implements OnInit {
   protected modalService = inject(NgbModal);
 
   protected studentFormService = inject(StudentFormService);
-
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  filterForm: StudentFormGroup = this.studentFormService.createStudentFormGroup();
 
   constructor() {
     effect(() => {
@@ -85,9 +84,19 @@ export class Student implements OnInit {
     this.subscription = combineLatest([this.activatedRoute.queryParamMap, this.activatedRoute.data])
       .pipe(
         tap(([params, data]) => this.fillComponentAttributeFromRoute(params, data)),
-        tap(() => this.load()),
+        // tap(() => this.load()),
       )
       .subscribe();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('Student.ngOnChanges() called with changes:', changes.studentInputFilter);
+    if (changes.studentInputFilter.currentValue) {
+      const currentFilter = changes.studentInputFilter.currentValue;
+      this.studentFilter = currentFilter;
+      console.log('Student.ngOnChanges() called with currentFilter:', currentFilter);
+      this.load();
+    }
   }
 
   delete(student: IStudent): void {
@@ -129,6 +138,11 @@ export class Student implements OnInit {
   }
 
   protected queryBackend(): void {
+    const sortStateLength = this.sortService.buildSortParam(this.sortState()).length;
+    if (sortStateLength === 0) {
+      this.sortState.set({ predicate: 'lastName', order: 'asc' });
+    }
+
     const pageToLoad: number = this.page();
     const queryObject: any = {
       page: pageToLoad - 1,
@@ -136,7 +150,17 @@ export class Student implements OnInit {
       eagerload: true,
       sort: this.sortService.buildSortParam(this.sortState()),
     };
-    this.studentService.studentsParams.set(queryObject);
+
+    console.log('Student.queryBackend() called with studentFilter:', this.studentFilter);
+    const query = {
+      ...queryObject,
+      lrn: this.studentFilter?.lrn,
+      firstName: this.studentFilter?.firstName,
+      lastName: this.studentFilter?.lastName,
+      birthDate: this.studentFilter?.birthDate,
+    };
+    console.log('Student.queryBackend() called with queryObject:', query);
+    this.studentService.studentsParams.set(query);
   }
 
   protected handleNavigation(page: number, sortState: SortState): void {

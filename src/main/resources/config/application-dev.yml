@@ -15,11 +15,11 @@
 
 logging:
   level:
-    ROOT: DEBUG
-    tech.jhipster: DEBUG
-    org.hibernate.SQL: DEBUG
-    com.sis: DEBUG
-    org.springframework.dao: trace
+    ROOT: INFO
+    tech.jhipster: INFO
+    org.hibernate.SQL: INFO
+    com.sis: INFO
+    org.springframework.dao: INFO
 
 spring:
   devtools:

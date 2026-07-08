@@ -1,5 +1,5 @@
 <div>
-  @if (source() !== 'enrollment') {
+  @if (source() !== 'enroll') {
     <h2 id="page-heading" data-cy="StudentHeading">
       <span jhiTranslate="schInfoSysApp.student.home.title">Students </span>
 
@@ -25,7 +25,7 @@
   <jhi-alert-error />
 
   <jhi-alert />
-
+  {{ source() }}
   @if (students().length === 0) {
     <div class="alert alert-warning" id="no-result">
       <span jhiTranslate="schInfoSysApp.student.home.notFound">No Students found</span>
@@ -98,41 +98,77 @@
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
-            <th scope="col" jhiSortBy="createdBy">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.student.createdBy">Created By</span>
+            @if (source() !== 'enroll') {
+              <th scope="col" jhiSortBy="createdBy">
+                <div class="d-flex">
+                  <span jhiTranslate="schInfoSysApp.student.createdBy">Created By</span>
 
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="createdDate">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.student.createdDate">Created Date</span>
+                  <fa-icon class="p-1" icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="createdDate">
+                <div class="d-flex">
+                  <span jhiTranslate="schInfoSysApp.student.createdDate">Created Date</span>
 
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="lastModifiedBy">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.student.lastModifiedBy">Last Modified By</span>
+                  <fa-icon class="p-1" icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="lastModifiedBy">
+                <div class="d-flex">
+                  <span jhiTranslate="schInfoSysApp.student.lastModifiedBy">Last Modified By</span>
 
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="lastModifiedDate">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.student.lastModifiedDate">Last Modified Date</span>
+                  <fa-icon class="p-1" icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="lastModifiedDate">
+                <div class="d-flex">
+                  <span jhiTranslate="schInfoSysApp.student.lastModifiedDate">Last Modified Date</span>
 
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="user.id">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.student.user">User</span>
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col"></th>
+                  <fa-icon class="p-1" icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="user.id">
+                <div class="d-flex">
+                  <span jhiTranslate="schInfoSysApp.student.user">User</span>
+                  <fa-icon class="p-1" icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="createdBy">
+                <div class="d-flex">
+                  <span jhiTranslate="schInfoSysApp.student.createdBy">Created By</span>
+
+                  <fa-icon class="p-1" icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="createdDate">
+                <div class="d-flex">
+                  <span jhiTranslate="schInfoSysApp.student.createdDate">Created Date</span>
+
+                  <fa-icon class="p-1" icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="lastModifiedBy">
+                <div class="d-flex">
+                  <span jhiTranslate="schInfoSysApp.student.lastModifiedBy">Last Modified By</span>
+
+                  <fa-icon class="p-1" icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="lastModifiedDate">
+                <div class="d-flex">
+                  <span jhiTranslate="schInfoSysApp.student.lastModifiedDate">Last Modified Date</span>
+
+                  <fa-icon class="p-1" icon="sort" />
+                </div>
+              </th>
+              <th scope="col" jhiSortBy="user.id">
+                <div class="d-flex">
+                  <span jhiTranslate="schInfoSysApp.student.user">User</span>
+                  <fa-icon class="p-1" icon="sort" />
+                </div>
+              </th>
+              <th scope="col"></th>
+            }
           </tr>
         </thead>
         <tbody>
@@ -149,31 +185,33 @@
               <td>{{ student.birthDate | formatMediumDatetime }}</td>
               <td>{{ student.birthPlace }}</td>
               <td>{{ student.contactNo }}</td>
-              <td>{{ student.createdBy }}</td>
-              <td>{{ student.createdDate | formatMediumDatetime }}</td>
-              <td>{{ student.lastModifiedBy }}</td>
-              <td>{{ student.lastModifiedDate | formatMediumDatetime }}</td>
-              <td>
-                {{ student.user?.id }}
-              </td>
-              <td class="text-end">
-                <div class="btn-group">
-                  <a [routerLink]="['/student', student.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
-                    <fa-icon icon="eye" />
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
-                  </a>
+              @if (source() !== 'enroll') {
+                <td>{{ student.createdBy }}</td>
+                <td>{{ student.createdDate | formatMediumDatetime }}</td>
+                <td>{{ student.lastModifiedBy }}</td>
+                <td>{{ student.lastModifiedDate | formatMediumDatetime }}</td>
+                <td>
+                  {{ student.user?.id }}
+                </td>
+                <td class="text-end">
+                  <div class="btn-group">
+                    <a [routerLink]="['/student', student.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                      <fa-icon icon="eye" />
+                      <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                    </a>
 
-                  <a [routerLink]="['/student', student.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
-                    <fa-icon icon="pencil-alt" />
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
-                  </a>
+                    <a [routerLink]="['/student', student.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                      <fa-icon icon="pencil-alt" />
+                      <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                    </a>
 
-                  <button type="submit" (click)="delete(student)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
-                    <fa-icon icon="times" />
-                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
-                  </button>
-                </div>
-              </td>
+                    <button type="submit" (click)="delete(student)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                      <fa-icon icon="times" />
+                      <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                    </button>
+                  </div>
+                </td>
+              }
             </tr>
           }
         </tbody>

@@ -8,6 +8,7 @@ import com.sis.service.mapper.StudentMapper;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -64,12 +65,12 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<StudentDTO> findAll(Pageable pageable) {
+    public Page<StudentDTO> findAll(StudentDTO studentDTO, Pageable pageable) {
         LOG.debug("Request to get all Students");
-        return studentRepository.findAll(pageable).map(studentMapper::toDto);
+        return studentRepository.findAll(Example.of(studentMapper.toEntity(studentDTO)), pageable).map(studentMapper::toDto);
     }
 
-    public Page<StudentDTO> findAllWithEagerRelationships(Pageable pageable) {
+    public Page<StudentDTO> findAllWithEagerRelationships(StudentDTO studentDTO, Pageable pageable) {
         return studentRepository.findAllWithEagerRelationships(pageable).map(studentMapper::toDto);
     }
 

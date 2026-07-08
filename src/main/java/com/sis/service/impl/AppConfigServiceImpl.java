@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -68,9 +69,9 @@ public class AppConfigServiceImpl implements AppConfigService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<AppConfigDTO> findAll(Pageable pageable) {
+    public Page<AppConfigDTO> findAll(AppConfigDTO appConfigDTO, Pageable pageable) {
         LOG.debug("Request to get all AppConfigs");
-        return appConfigRepository.findAll(pageable).map(appConfigMapper::toDto);
+        return appConfigRepository.findAll(Example.of(appConfigMapper.toEntity(appConfigDTO)), pageable).map(appConfigMapper::toDto);
     }
 
     /**

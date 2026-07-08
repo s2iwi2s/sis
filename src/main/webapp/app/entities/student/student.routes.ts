@@ -10,7 +10,7 @@ const studentRoute: Routes = [
     path: '',
     loadComponent: () => import('./list/student').then(m => m.Student),
     data: {
-      defaultSort: `id,${ASC}`,
+      defaultSort: `lastName,${ASC}`,
     },
     canActivate: [UserRouteAccessService],
   },

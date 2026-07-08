@@ -230,7 +230,7 @@ export class StudentFormService {
     return {
       ...student,
       enrollmentDate: student.enrollmentDate ? student.enrollmentDate.format(DATE_TIME_FORMAT) : undefined,
-      birthDate: student.birthDate ? student.birthDate.format(DATE_TIME_FORMAT) : undefined,
+      birthDate: student.birthDate ? student.birthDate.format(DATE_TIME_FORMAT) : null,
       createdDate: student.createdDate ? student.createdDate.format(DATE_TIME_FORMAT) : undefined,
       lastModifiedDate: student.lastModifiedDate ? student.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
       courseSchedules: student.courseSchedules ?? [],

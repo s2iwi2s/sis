@@ -36,11 +36,12 @@ public interface AppConfigService {
 
     /**
      * Get all the appConfigs.
+     * @param appConfigDTO
      *
      * @param pageable the pagination information.
      * @return the list of entities.
      */
-    Page<AppConfigDTO> findAll(Pageable pageable);
+    Page<AppConfigDTO> findAll(AppConfigDTO appConfigDTO, Pageable pageable);
 
     /**
      * Get all the AppConfigDTO where Instructor is {@code null}.

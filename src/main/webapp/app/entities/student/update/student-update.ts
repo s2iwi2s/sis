@@ -2,7 +2,7 @@
 import { HttpResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
@@ -129,7 +129,7 @@ export class StudentUpdate implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     this.appConfigService
-      .query({ filter: 'student-is-null' })
+      .query({ code: 'GENDER' })
       .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
       .pipe(
         map((appConfigs: IAppConfig[]) =>

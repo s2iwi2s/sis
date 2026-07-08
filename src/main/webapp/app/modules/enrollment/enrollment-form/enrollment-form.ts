@@ -40,6 +40,7 @@ import { ActivatedRoute } from '@angular/router';
 export class EnrollmentForm implements OnInit {
   student: IStudent | null = null;
   hasStudent = false;
+  source = 'enroll';
 
   protected activatedRoute = inject(ActivatedRoute);
 
