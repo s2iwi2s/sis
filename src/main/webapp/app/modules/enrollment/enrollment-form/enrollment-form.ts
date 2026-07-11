@@ -50,10 +50,6 @@ export class EnrollmentForm implements OnInit {
   protected applicationConfigService = inject(ApplicationConfigService);
   protected activatedRoute = inject(ActivatedRoute);
 
-  constructor() {
-    this.applicationConfigService.eventEmitter.subscribe(item => this.setSelectedStudent(item.selectedStudent));
-  }
-
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ student }) => {
       console.log('EnrollmentForm.ngOnInit() called with student:', JSON.stringify(student));
@@ -61,11 +57,11 @@ export class EnrollmentForm implements OnInit {
     });
   }
 
-  setSelectedStudent(selected: IStudent) {
+  setSelectedStudent(selected: IStudent | null) {
     this.selectedStudent = selected;
   }
 
-  studentOutputFilterEvent(filter: IStudentFilter): void {
+  getStudentFilter(filter: IStudentFilter): void {
     this.studentFilter = filter;
   }
 }

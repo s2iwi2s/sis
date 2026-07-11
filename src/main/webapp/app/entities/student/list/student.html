@@ -202,7 +202,11 @@
     </div>
   } @else {
     @for (studentref of students(); track trackId(studentref)) {
-      <jhi-list-detail-card [student]="studentref" [selectedStudent]="selectedStudent" />
+      <jhi-list-detail-card
+        [student]="studentref"
+        [selectedStudentId]="selectedStudentId"
+        (setSelectedStudent)="setEnrollmentSelectedStudentEvent($event)"
+      />
     }
   }
   @if (students().length > 0) {

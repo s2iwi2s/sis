@@ -5,14 +5,14 @@
     <jhi-alert-error />
     <jhi-alert />
 
-    <jhi-search-card (studentOutputFilter)="studentOutputFilterEvent($event)" />
+    <jhi-search-card (studentOutputFilter)="getStudentFilter($event)" />
 
     <div class="row mt-3">
       <div class="col-4">
-        <jhi-student [source]="source" [studentInputFilter]="studentFilter" />
+        <jhi-student [source]="source" [studentInputFilter]="studentFilter" (setEnrollmentSelectedStudent)="setSelectedStudent($event)" />
       </div>
       <div class="col-8">
-        <jhi-student-detail [source]="source" [student]="selectedStudent" />
+        <jhi-student-detail [source]="source" [student]="selectedStudent" (updateStudent)="setSelectedStudent($event)" />
       </div>
     </div>
   </div>

@@ -10,8 +10,8 @@ import {
   effect,
   inject,
   input,
-  output,
   signal,
+  output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
@@ -63,9 +63,13 @@ import { ApplicationConfigService } from '../../../core/config/application-confi
   ],
 })
 export class Student implements OnInit, OnChanges {
-  selectedStudent: IStudent | null = null;
+  // selectedStudent: IStudent | null = null;
+  selectedStudentId = -1;
+
+  //readonly selectedStudent = input<number>();
   readonly source = input<string>();
-  @Input() studentInputFilter: IStudentFilter = {} as IStudentFilter;
+  readonly studentInputFilter = input<IStudentFilter>();
+  readonly setEnrollmentSelectedStudent = output<IStudent>();
 
   subscription: Subscription | null = null;
   readonly students = signal<IStudent[]>([]);
@@ -89,8 +93,6 @@ export class Student implements OnInit, OnChanges {
   protected studentFormService = inject(StudentFormService);
 
   constructor() {
-    this.applicationConfigService.eventEmitter.subscribe(item => this.setSelectedStudent(item.selectedStudent));
-
     effect(() => {
       const headers = this.studentService.studentsResource.headers();
       if (headers) {
@@ -208,6 +210,12 @@ export class Student implements OnInit, OnChanges {
   }
 
   setSelectedStudent(selected: IStudent) {
-    this.selectedStudent = selected;
+    this.selectedStudentId = selected.id;
+  }
+
+  setEnrollmentSelectedStudentEvent(selected: IStudent) {
+    this.setSelectedStudent(selected);
+    this.setEnrollmentSelectedStudent.emit(selected);
+    //this.load();
   }
 }

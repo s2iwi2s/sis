@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -11,7 +11,7 @@ import { TranslateDirective } from 'app/shared/language';
 import { IStudent } from '../student.model';
 import { NamePipe } from '../../../shared/name/name-pipe';
 import { AgePipe } from '../../../shared/age/age-pipe';
-import { PartialUpdateStudent, StudentService, StudentsService } from '../service/student.service';
+import { PartialUpdateStudent, StudentService } from '../service/student.service';
 import { finalize, Observable } from 'rxjs';
 import dayjs from 'dayjs/esm';
 import { DATE_FORMAT } from '../../../config/input.constants';
@@ -37,6 +37,7 @@ import { ApplicationConfigService } from '../../../core/config/application-confi
 export class StudentDetail {
   readonly source = input<String | null>(null);
   readonly student = input<IStudent | null>(null);
+  readonly updateStudent = output<IStudent | null>();
   readonly isSaving = signal(false);
 
   protected studentService = inject(StudentService);
@@ -67,12 +68,12 @@ export class StudentDetail {
 
   protected onSaveSuccess(updatedStudent: IStudent | null): void {
     console.log('StudentDetail.onSaveSuccess() called with student:', JSON.stringify(updatedStudent));
-    this.applicationConfigService.eventEmitter.emit({
-      selectedStudent: updatedStudent,
-    });
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['/enrollment-form', updatedStudent?.id]);
-    });
+
+    const uStudent = this.student();
+    if (uStudent) {
+      uStudent.enrollmentDate = updatedStudent?.enrollmentDate;
+    }
+    this.updateStudent.emit(updatedStudent);
   }
 
   previousState(): void {

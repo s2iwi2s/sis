@@ -11,19 +11,18 @@ import { NamePipe } from '../../../shared/name/name-pipe';
   styleUrl: './list-detail-card.scss',
 })
 export class ListDetailCard {
+  readonly setSelectedStudent = output<IStudent>();
   readonly student = input<IStudent | null>({} as IStudent);
-  readonly selectedStudent = input<IStudent | null>({} as IStudent);
+  readonly selectedStudentId = input<number>(-1);
 
   protected applicationConfigService = inject(ApplicationConfigService);
 
   isActive(): boolean {
-    return this.student()?.id === this.selectedStudent()?.id;
+    return this.student()?.id === this.selectedStudentId();
   }
 
   selectStudent(selected: IStudent): void {
     console.log('ListDetailCard.selectStudent() called with student:', JSON.stringify(selected));
-    this.applicationConfigService.eventEmitter.emit({
-      selectedStudent: selected,
-    });
+    this.setSelectedStudent.emit(selected);
   }
 }
