@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-center">
   <div class="col-8">
-    <h2 id="jhi-student-heading" data-cy="StudentCreateUpdateHeading">Registration Form - {{ source }}</h2>
-
+    <h2 id="jhi-student-heading" data-cy="StudentCreateUpdateHeading">Registration Form</h2>
+    source[{{ source }}]
     <jhi-alert-error />
 
     <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
@@ -85,6 +85,23 @@
             </div>
           }
         </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_gender" jhiTranslate="schInfoSysApp.student.gender">Gender</label>
+          <select
+            class="form-control"
+            id="field_gender"
+            data-cy="gender"
+            name="gender"
+            formControlName="gender"
+            [compareWith]="compareAppConfig"
+          >
+            <option [ngValue]="null"></option>
+            @for (appConfigOption of gendersCollection(); track $index) {
+              <option [ngValue]="appConfigOption">{{ appConfigOption.value }}</option>
+            }
+          </select>
+        </div>
         @if (source === 'view') {
           <div class="mb-3">
             <label class="form-label" for="field_enrollmentDate" jhiTranslate="schInfoSysApp.student.enrollmentDate">Enrollment Date</label>
@@ -92,7 +109,7 @@
               <input
                 id="field_enrollmentDate"
                 data-cy="enrollmentDate"
-                type="datetime-local"
+                type="date"
                 class="form-control"
                 name="enrollmentDate"
                 formControlName="enrollmentDate"
@@ -108,11 +125,11 @@
             <input
               id="field_birthDate"
               data-cy="birthDate"
-              type="datetime-local"
+              type="date"
               class="form-control"
               name="birthDate"
               formControlName="birthDate"
-              placeholder="YYYY-MM-DD HH:mm"
+              placeholder="YYYY-MM-DD"
             />
           </div>
         </div>
@@ -598,19 +615,17 @@
           }
         </div>
 
-        @let createdByRef = editForm.get('createdBy')!;
         <div class="mb-3">
           <label class="form-label" for="field_createdBy" jhiTranslate="schInfoSysApp.student.createdBy">Created By</label>
-          <input type="text" class="form-control" name="createdBy" id="field_createdBy" data-cy="createdBy" formControlName="createdBy" />
-          @if (createdByRef.invalid && (createdByRef.dirty || createdByRef.touched)) {
-            <div>
-              @if (editForm.get('createdBy')?.errors?.maxlength) {
-                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
-                  >This field cannot be longer than 50 characters.</small
-                >
-              }
-            </div>
-          }
+          <input
+            type="text"
+            class="form-control"
+            name="createdBy"
+            id="field_createdBy"
+            data-cy="createdBy"
+            formControlName="createdBy"
+            readonly
+          />
         </div>
 
         <div class="mb-3">
@@ -624,11 +639,11 @@
               name="createdDate"
               formControlName="createdDate"
               placeholder="YYYY-MM-DD HH:mm"
+              readonly
             />
           </div>
         </div>
 
-        @let lastModifiedByRef = editForm.get('lastModifiedBy')!;
         <div class="mb-3">
           <label class="form-label" for="field_lastModifiedBy" jhiTranslate="schInfoSysApp.student.lastModifiedBy">Last Modified By</label>
           <input
@@ -638,16 +653,8 @@
             id="field_lastModifiedBy"
             data-cy="lastModifiedBy"
             formControlName="lastModifiedBy"
+            readonly
           />
-          @if (lastModifiedByRef.invalid && (lastModifiedByRef.dirty || lastModifiedByRef.touched)) {
-            <div>
-              @if (editForm.get('lastModifiedBy')?.errors?.maxlength) {
-                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '50' }"
-                  >This field cannot be longer than 50 characters.</small
-                >
-              }
-            </div>
-          }
         </div>
 
         <div class="mb-3">
@@ -663,33 +670,18 @@
               name="lastModifiedDate"
               formControlName="lastModifiedDate"
               placeholder="YYYY-MM-DD HH:mm"
+              readonly
             />
           </div>
         </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_gender" jhiTranslate="schInfoSysApp.student.gender">Gender</label>
-          <select
-            class="form-control"
-            id="field_gender"
-            data-cy="gender"
-            name="gender"
-            formControlName="gender"
-            [compareWith]="compareAppConfig"
-          >
-            <option [ngValue]="null"></option>
-            @for (appConfigOption of gendersCollection(); track $index) {
-              <option [ngValue]="appConfigOption">{{ appConfigOption.id }}</option>
-            }
-          </select>
-        </div>
-
+        @let userRef = editForm.get('user')!;
         <div class="mb-3">
           <label class="form-label" for="field_user" jhiTranslate="schInfoSysApp.student.user">User</label>
+
           <select class="form-control" id="field_user" data-cy="user" name="user" formControlName="user" [compareWith]="compareUser">
             <option [ngValue]="null"></option>
             @for (userOption of usersSharedCollection(); track $index) {
-              <option [ngValue]="userOption">{{ userOption.id }}</option>
+              <option [ngValue]="userOption">{{ userOption.login }}</option>
             }
           </select>
         </div>
@@ -706,7 +698,10 @@
             [compareWith]="compareCourseSchedule"
           >
             @for (courseScheduleOption of courseSchedulesSharedCollection(); track $index) {
-              <option [ngValue]="courseScheduleOption">{{ courseScheduleOption.id }}</option>
+              <option [ngValue]="courseScheduleOption">
+                {{ courseScheduleOption.room }} - {{ courseScheduleOption.startTime?.format('HH:mmA') }} -
+                {{ courseScheduleOption.endTime?.format('HH:mmA') }}
+              </option>
             }
           </select>
         </div>

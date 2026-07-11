@@ -40,9 +40,16 @@ export interface IStudent {
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
-  gender?: Pick<IAppConfig, 'id'> | null;
-  user?: Pick<IUser, 'id'> | null;
+  gender?: Pick<IAppConfig, 'id' | 'value'> | null;
+  user?: Pick<IUser, 'id' | 'login'> | null;
   courseSchedules?: Pick<ICourseSchedule, 'id'>[] | null;
+}
+
+export interface IStudentFilter {
+  lrn: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  birthDate: string | null;
 }
 
 export type NewStudent = Omit<IStudent, 'id'> & { id: null };

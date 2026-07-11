@@ -1,188 +1,146 @@
-<div class="d-flex justify-content-center">
-  <div class="col-8">
-    @if (student(); as studentRef) {
-      <div>
-        @if (source() !== 'enroll') {
-          <h2 data-cy="studentDetailsHeading"><span jhiTranslate="schInfoSysApp.student.detail.title">Student</span></h2>
-          <hr />
-        }
-
-        <jhi-alert-error />
-
-        <jhi-alert />
-
-        <dl class="row-md jh-entity-details">
-          <dt><span jhiTranslate="global.field.id">ID</span></dt>
-          <dd>
-            <span>{{ studentRef.id }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.lrn">Lrn</span></dt>
-          <dd>
-            <span>{{ studentRef.lrn }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.firstName">First Name</span></dt>
-          <dd>
-            <span>{{ studentRef.firstName }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.middleName">Middle Name</span></dt>
-          <dd>
-            <span>{{ studentRef.middleName }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.lastName">Last Name</span></dt>
-          <dd>
-            <span>{{ studentRef.lastName }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.extName">Ext Name</span></dt>
-          <dd>
-            <span>{{ studentRef.extName }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.enrollmentDate">Enrollment Date</span></dt>
-          <dd>
-            <span>{{ studentRef.enrollmentDate | formatMediumDatetime }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.birthDate">Birth Date</span></dt>
-          <dd>
-            <span>{{ studentRef.birthDate | formatMediumDatetime }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.birthPlace">Birth Place</span></dt>
-          <dd>
-            <span>{{ studentRef.birthPlace }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.contactNo">Contact No</span></dt>
-          <dd>
-            <span>{{ studentRef.contactNo }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.address1">Address 1</span></dt>
-          <dd>
-            <span>{{ studentRef.address1 }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.address2">Address 2</span></dt>
-          <dd>
-            <span>{{ studentRef.address2 }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.city">City</span></dt>
-          <dd>
-            <span>{{ studentRef.city }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.zipCode">Zip Code</span></dt>
-          <dd>
-            <span>{{ studentRef.zipCode }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.country">Country</span></dt>
-          <dd>
-            <span>{{ studentRef.country }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.nationality">Nationality</span></dt>
-          <dd>
-            <span>{{ studentRef.nationality }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.motherTongue">Mother Tongue</span></dt>
-          <dd>
-            <span>{{ studentRef.motherTongue }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.religion">Religion</span></dt>
-          <dd>
-            <span>{{ studentRef.religion }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.fathersLastName">Fathers Last Name</span></dt>
-          <dd>
-            <span>{{ studentRef.fathersLastName }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.fathersMiddleName">Fathers Middle Name</span></dt>
-          <dd>
-            <span>{{ studentRef.fathersMiddleName }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.fathersFirstName">Fathers First Name</span></dt>
-          <dd>
-            <span>{{ studentRef.fathersFirstName }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.fathersExtName">Fathers Ext Name</span></dt>
-          <dd>
-            <span>{{ studentRef.fathersExtName }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.fathersOccupation">Fathers Occupation</span></dt>
-          <dd>
-            <span>{{ studentRef.fathersOccupation }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.fathersContacts">Fathers Contacts</span></dt>
-          <dd>
-            <span>{{ studentRef.fathersContacts }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.mothersLastName">Mothers Last Name</span></dt>
-          <dd>
-            <span>{{ studentRef.mothersLastName }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.mothersMiddleName">Mothers Middle Name</span></dt>
-          <dd>
-            <span>{{ studentRef.mothersMiddleName }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.mothersFirstName">Mothers First Name</span></dt>
-          <dd>
-            <span>{{ studentRef.mothersFirstName }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.mothersOccupation">Mothers Occupation</span></dt>
-          <dd>
-            <span>{{ studentRef.mothersOccupation }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.mothersContacts">Mothers Contacts</span></dt>
-          <dd>
-            <span>{{ studentRef.mothersContacts }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.guardianFullName">Guardian Full Name</span></dt>
-          <dd>
-            <span>{{ studentRef.guardianFullName }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.guardianContacts">Guardian Contacts</span></dt>
-          <dd>
-            <span>{{ studentRef.guardianContacts }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.createdBy">Created By</span></dt>
-          <dd>
-            <span>{{ studentRef.createdBy }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.createdDate">Created Date</span></dt>
-          <dd>
-            <span>{{ studentRef.createdDate | formatMediumDatetime }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.lastModifiedBy">Last Modified By</span></dt>
-          <dd>
-            <span>{{ studentRef.lastModifiedBy }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.lastModifiedDate">Last Modified Date</span></dt>
-          <dd>
-            <span>{{ studentRef.lastModifiedDate | formatMediumDatetime }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.gender">Gender</span></dt>
-          <dd>
-            @if (student()!.gender) {
-              <div>
-                <a [routerLink]="['/app-config', student()!.gender?.id, 'view']">{{ studentRef.gender?.id }}</a>
-              </div>
-            }
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.user">User</span></dt>
-          <dd>
-            <span>{{ studentRef.user?.id }}</span>
-          </dd>
-          <dt><span jhiTranslate="schInfoSysApp.student.courseSchedule">Course Schedule</span></dt>
-          <dd>
-            @for (courseSchedule of studentRef.courseSchedules; track $index; let last = $last) {
-              <span>
-                <a [routerLink]="['/course-schedule', courseSchedule.id, 'view']">{{ courseSchedule?.id }}</a
-                >{{ last ? '' : ', ' }}
-              </span>
-            }
-          </dd>
-        </dl>
-
-        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
-          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
-        </button>
-
-        <button type="button" [routerLink]="['/student', studentRef.id, 'edit', 'view']" class="btn btn-primary">
-          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
-        </button>
+@if (student(); as studentRef) {
+  <div class="card shadow-lg bg-body-tertiary rounded-4 mb-2">
+    <div class="card-header">
+      <div class="row">
+        <div class="col-sm-9">
+          <h5 data-cy="studentDetailsHeading">
+            <span class="fw-semibold">{{ studentRef.lrn }}</span> - <span>{{ studentRef | name }}</span>
+          </h5>
+        </div>
+        <div class="col-sm-3 d-flex justify-content-end">
+          @if (!studentRef?.enrollmentDate || !studentRef?.enrollmentDate?.isValid()) {
+            <button type="button" class="btn btn-primary btn-sm rounded-pill" (click)="enroll()" [disabled]="isSaving()">
+              <fa-icon icon="pencil-alt" />&nbsp;<span>Enroll</span>
+            </button>
+          }
+        </div>
       </div>
-    }
+    </div>
+    <div class="card-body py-0 row">
+      @if (!source) {
+        <jhi-alert-error />
+        <jhi-alert />
+      }
+
+      <div class="row">
+        <div class="col-12">
+          <span class="fw-semibold" jhiTranslate="schInfoSysApp.student.enrollmentDate">Birth Date</span>
+          <span>{{ studentRef?.enrollmentDate | formatMediumDate }}</span>
+        </div>
+        <div class="col-4"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.birthDate">Birth Date</span></div>
+        <div class="col-4"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.birthPlace">Birth Place</span></div>
+        <div class="col-4"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.age">Age</span></div>
+        <div class="col-4">
+          <span class="text-nowrap">{{ studentRef?.birthDate | formatMediumDate }}</span>
+        </div>
+        <div class="col-4">
+          <span>{{ studentRef?.birthPlace }}</span>
+        </div>
+        <div class="col-4">
+          <span>{{ studentRef?.birthDate | age }}</span>
+        </div>
+
+        <div class="col-4"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.gender">Age</span></div>
+        <div class="col-4"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.contactNo">contactNo</span></div>
+        <div class="col-4"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.religion">religion</span></div>
+        <div class="col-4">
+          <span>{{ studentRef?.gender?.value }}</span>
+        </div>
+        <div class="col-4">
+          <span>{{ studentRef?.contactNo }}</span>
+        </div>
+        <div class="col-4">
+          <span>{{ studentRef?.religion }}</span>
+        </div>
+        <div class="col-4"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.nationality">nationality</span></div>
+        <div class="col-8"><span class="fw-semibold text-nowrap" jhiTranslate="schInfoSysApp.student.motherTongue">motherTongue</span></div>
+        <div class="col-4">
+          <span>{{ studentRef?.nationality }}</span>
+        </div>
+        <div class="col-8">
+          <span>{{ studentRef?.motherTongue }}</span>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+
+  <div class="card shadow-lg bg-body-tertiary rounded-4 mb-2">
+    <div class="card-header">
+      <h5 data-cy="studentDetailsHeading">
+        <span class="fw-semibold" jhiTranslate="schInfoSysApp.student.address">address</span>
+      </h5>
+    </div>
+    <div class="card-body py-0 row">
+      <div class="col-12">
+        <span
+          >{{ studentRef?.address1 }}
+          @if (studentRef?.address2) {
+            {{ studentRef?.address2 }}
+          }
+          <br />{{ studentRef?.city }} {{ studentRef?.country }} {{ studentRef?.zipCode }}</span
+        >
+      </div>
+    </div>
+  </div>
+  <div class="card shadow-lg bg-body-tertiary rounded-4 mb-2">
+    <div class="card-header">
+      <h5 data-cy="studentDetailsHeading">
+        <span>Parents</span>
+      </h5>
+    </div>
+    <div class="card-body py-0 row">
+      <div class="col-8"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.father">Fathers</span></div>
+      <div class="col-4"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.occupation">occupation</span></div>
+      <div class="col-8">
+        <span>{{ studentRef?.fathersLastName }}, {{ studentRef?.fathersFirstName }} {{ studentRef?.fathersMiddleName }}</span>
+      </div>
+      <div class="col-4">
+        <span>{{ studentRef?.fathersOccupation }}</span>
+      </div>
+      <div class="col-12">
+        <span class="fw-semibold" jhiTranslate="schInfoSysApp.student.fathersContacts">Fathers fathersContacts</span>
+      </div>
+      <div class="col-12">
+        <span>{{ studentRef?.fathersContacts }}</span>
+      </div>
+      <div class="col-6"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.mother">Mother</span></div>
+      <div class="col-6"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.occupation">occupation</span></div>
+      <div class="col-6">
+        <span>{{ studentRef?.mothersLastName }}, {{ studentRef?.mothersFirstName }} {{ studentRef?.mothersMiddleName }}</span>
+      </div>
+      <div class="col-6">
+        <span>{{ studentRef?.mothersOccupation }}</span>
+      </div>
+      <div class="col-12"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.mothersContacts">mothersContacts</span></div>
+      <div class="col-12">
+        <span>{{ studentRef?.mothersContacts }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="card shadow-lg bg-body-tertiary rounded-4 mb-2">
+    <div class="card-header">
+      <h5 data-cy="studentDetailsHeading">
+        <span>Guardians</span>
+      </h5>
+    </div>
+    <div class="card-body py-0 row">
+      <div class="col-6"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.guardianFullName">guardianFullName</span></div>
+      <div class="col-6"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.guardianContacts">guardianContacts</span></div>
+      <div class="col-6">
+        <span>{{ studentRef?.guardianFullName }}</span>
+      </div>
+      <div class="col-6">
+        <span>{{ studentRef?.guardianContacts }}</span>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button type="submit" (click)="previousState()" class="btn btn-info rounded-pill" data-cy="entityDetailsBackButton">
+      <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+    </button>
+
+    <button type="button" [routerLink]="['/student', studentRef.id, 'edit', 'view']" class="btn btn-primary rounded-pill">
+      <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+    </button>
+  </div>
+}

@@ -3,8 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import dayjs from 'dayjs/esm';
 
-import { DATE_TIME_FORMAT } from 'app/config/input.constants';
-import { IStudent, NewStudent } from '../student.model';
+import { DATE_FORMAT, DATE_TIME_FORMAT } from 'app/config/input.constants';
+import { IStudent, IStudentFilter, NewStudent } from '../student.model';
 
 /**
  * A partial Type with required key is used as form input.
@@ -75,6 +75,14 @@ type StudentFormGroupContent = {
 };
 
 export type StudentFormGroup = FormGroup<StudentFormGroupContent>;
+
+type StudentFilterFormGroupContent = {
+  lrn: FormControl<IStudentFilter['lrn']>;
+  firstName: FormControl<IStudentFilter['firstName']>;
+  lastName: FormControl<IStudentFilter['lastName']>;
+  birthDate: FormControl<IStudentFilter['birthDate']>;
+};
+export type StudentFilterFormGroup = FormGroup<StudentFilterFormGroupContent>;
 
 @Injectable({ providedIn: 'root' })
 export class StudentFormService {
@@ -217,8 +225,8 @@ export class StudentFormService {
   private convertStudentRawValueToStudent(rawStudent: StudentFormRawValue | NewStudentFormRawValue): IStudent | NewStudent {
     return {
       ...rawStudent,
-      enrollmentDate: dayjs(rawStudent.enrollmentDate, DATE_TIME_FORMAT),
-      birthDate: dayjs(rawStudent.birthDate, DATE_TIME_FORMAT),
+      enrollmentDate: dayjs(rawStudent.enrollmentDate, DATE_FORMAT),
+      birthDate: dayjs(rawStudent.birthDate, DATE_FORMAT),
       createdDate: dayjs(rawStudent.createdDate, DATE_TIME_FORMAT),
       lastModifiedDate: dayjs(rawStudent.lastModifiedDate, DATE_TIME_FORMAT),
     };
@@ -229,11 +237,24 @@ export class StudentFormService {
   ): StudentFormRawValue | PartialWithRequiredKeyOf<NewStudentFormRawValue> {
     return {
       ...student,
-      enrollmentDate: student.enrollmentDate ? student.enrollmentDate.format(DATE_TIME_FORMAT) : undefined,
-      birthDate: student.birthDate ? student.birthDate.format(DATE_TIME_FORMAT) : null,
+      enrollmentDate: student.enrollmentDate ? student.enrollmentDate.format(DATE_FORMAT) : undefined,
+      birthDate: student.birthDate ? student.birthDate.format(DATE_FORMAT) : null,
       createdDate: student.createdDate ? student.createdDate.format(DATE_TIME_FORMAT) : undefined,
       lastModifiedDate: student.lastModifiedDate ? student.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
       courseSchedules: student.courseSchedules ?? [],
     };
+  }
+
+  createStudentFilterForm(): StudentFilterFormGroup {
+    return new FormGroup<StudentFilterFormGroupContent>({
+      lrn: new FormControl(''),
+      firstName: new FormControl('', {
+        validators: [Validators.maxLength(50)],
+      }),
+      lastName: new FormControl('', {
+        validators: [Validators.maxLength(50)],
+      }),
+      birthDate: new FormControl(''),
+    });
   }
 }

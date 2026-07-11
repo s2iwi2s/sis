@@ -1,0 +1,54 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="prod - sch-info-sys [spring-boot:run]" type="MavenRunConfiguration" factoryName="Maven">
+    <MavenSettings>
+      <option name="myGeneralSettings" />
+      <option name="myRunnerSettings">
+        <MavenRunnerSettings>
+          <option name="delegateBuildToMaven" value="false" />
+          <option name="environmentProperties">
+            <map>
+              <entry key="BASE64_SECRET" value="MmQxM2FkNWQwNWRkYTAwZjM1YWJlYmQyNmExNmNjMGQ1ZDg2MjQwMjE4ODIxNDEwMmMxMzQ2YjJmMWUyZWExYjc4OTY2Y2U0NmM3NjY3NTdhYzYwOTg5MzhkYjZmNjVjYmY3NjIzM2I5YzFmZDI4NjBmM2RiM2I0NDQ2MzZhZDk\=" />
+              <entry key="SPRING_DATASOURCE_PASSWORD" value="prod" />
+              <entry key="SPRING_DATASOURCE_URL" value="jdbc:postgresql://photon.vm:5432/slra_prod" />
+              <entry key="SPRING_DATASOURCE_USERNAME" value="sis_prod" />
+            </map>
+          </option>
+          <option name="jreName" value="#USE_PROJECT_JDK" />
+          <option name="mavenProperties">
+            <map />
+          </option>
+          <option name="passParentEnv" value="true" />
+          <option name="skipTests" value="true" />
+          <option name="vmOptions" value="" />
+        </MavenRunnerSettings>
+      </option>
+      <option name="myRunnerParameters">
+        <MavenRunnerParameters>
+          <option name="cmdOptions" />
+          <option name="profiles">
+            <set />
+          </option>
+          <option name="goals">
+            <list>
+              <option value="spring-boot:run" />
+            </list>
+          </option>
+          <option name="multimoduleDir" />
+          <option name="pomFileName" />
+          <option name="profilesMap">
+            <map>
+              <entry key="prod" value="true" />
+              <entry key="api-docs" value="true" />
+            </map>
+          </option>
+          <option name="projectsCmdOptionValues">
+            <list />
+          </option>
+          <option name="resolveToWorkspace" value="false" />
+          <option name="workingDirPath" value="$PROJECT_DIR$" />
+        </MavenRunnerParameters>
+      </option>
+    </MavenSettings>
+    <method v="2" />
+  </configuration>
+</component>

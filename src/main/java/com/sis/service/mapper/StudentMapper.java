@@ -15,7 +15,7 @@ import org.mapstruct.*;
 /**
  * Mapper for the entity {@link Student} and its DTO {@link StudentDTO}.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", config = GlobalMapperConfig.class)
 public interface StudentMapper extends EntityMapper<StudentDTO, Student> {
     @Mapping(target = "gender", source = "gender", qualifiedByName = "appConfigId")
     @Mapping(target = "user", source = "user", qualifiedByName = "userId")
@@ -28,11 +28,13 @@ public interface StudentMapper extends EntityMapper<StudentDTO, Student> {
     @Named("appConfigId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "value", source = "value")
     AppConfigDTO toDtoAppConfigId(AppConfig appConfig);
 
     @Named("userId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "login", source = "login")
     UserDTO toDtoUserId(User user);
 
     @Named("courseScheduleId")

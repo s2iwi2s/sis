@@ -1,7 +1,20 @@
 /* eslint-disable no-console */
 import { HttpHeaders } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges, effect, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  effect,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Data, ParamMap, Router, RouterLink } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -14,14 +27,18 @@ import { DEFAULT_SORT_DATA, ITEM_DELETED_EVENT, SORT } from 'app/config/navigati
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
 import { Alert } from 'app/shared/alert/alert';
 import { AlertError } from 'app/shared/alert/alert-error';
-import { FormatMediumDatetimePipe } from 'app/shared/date';
+import { FormatMediumDatePipe, FormatMediumDatetimePipe } from 'app/shared/date';
 import { TranslateDirective } from 'app/shared/language';
 import { ItemCount } from 'app/shared/pagination';
 import { SortByDirective, SortDirective, SortService, type SortState, sortStateSignal } from 'app/shared/sort';
 import { StudentDeleteDialog } from '../delete/student-delete-dialog';
 import { StudentService } from '../service/student.service';
-import { IStudent, NewStudent } from '../student.model';
-import { StudentFormGroup, StudentFormService } from '../update/student-form.service';
+import { IStudent, IStudentFilter } from '../student.model';
+import { StudentFormService } from '../update/student-form.service';
+import dayjs from 'dayjs/esm';
+import { DATE_FORMAT } from '../../../config/input.constants';
+import { ListDetailCard } from '../list-detail-card/list-detail-card';
+import { ApplicationConfigService } from '../../../core/config/application-config.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,18 +54,22 @@ import { StudentFormGroup, StudentFormService } from '../update/student-form.ser
     SortByDirective,
     TranslateDirective,
     TranslateModule,
+    FormatMediumDatePipe,
     FormatMediumDatetimePipe,
     NgbPagination,
     ItemCount,
+    DatePipe,
+    ListDetailCard,
   ],
 })
 export class Student implements OnInit, OnChanges {
+  selectedStudent: IStudent | null = null;
   readonly source = input<string>();
-  @Input() studentInputFilter: IStudent | NewStudent = {} as IStudent | NewStudent;
+  @Input() studentInputFilter: IStudentFilter = {} as IStudentFilter;
 
   subscription: Subscription | null = null;
   readonly students = signal<IStudent[]>([]);
-  studentFilter: IStudent | null = null;
+  studentFilter: IStudentFilter | null = null;
 
   sortState = sortStateSignal({});
 
@@ -56,6 +77,7 @@ export class Student implements OnInit, OnChanges {
   readonly totalItems = signal(0);
   readonly page = signal(1);
 
+  protected applicationConfigService = inject(ApplicationConfigService);
   readonly router = inject(Router);
   protected readonly studentService = inject(StudentService);
   // eslint-disable-next-line @typescript-eslint/member-ordering
@@ -67,6 +89,8 @@ export class Student implements OnInit, OnChanges {
   protected studentFormService = inject(StudentFormService);
 
   constructor() {
+    this.applicationConfigService.eventEmitter.subscribe(item => this.setSelectedStudent(item.selectedStudent));
+
     effect(() => {
       const headers = this.studentService.studentsResource.headers();
       if (headers) {
@@ -95,7 +119,9 @@ export class Student implements OnInit, OnChanges {
       const currentFilter = changes.studentInputFilter.currentValue;
       this.studentFilter = currentFilter;
       console.log('Student.ngOnChanges() called with currentFilter:', currentFilter);
-      this.load();
+      if (this.studentFilter?.lrn || this.studentFilter?.firstName || this.studentFilter?.lastName || this.studentFilter?.birthDate) {
+        this.load();
+      }
     }
   }
 
@@ -147,18 +173,23 @@ export class Student implements OnInit, OnChanges {
     const queryObject: any = {
       page: pageToLoad - 1,
       size: this.itemsPerPage(),
-      eagerload: true,
+      eagerload: false,
       sort: this.sortService.buildSortParam(this.sortState()),
     };
 
     console.log('Student.queryBackend() called with studentFilter:', this.studentFilter);
     const query = {
       ...queryObject,
-      lrn: this.studentFilter?.lrn,
-      firstName: this.studentFilter?.firstName,
-      lastName: this.studentFilter?.lastName,
-      birthDate: this.studentFilter?.birthDate,
+      lrn: this.studentFilter?.lrn || null,
+      firstName: this.studentFilter?.firstName || null,
+      lastName: this.studentFilter?.lastName || null,
     };
+
+    console.log('Student.queryBackend() called with birthDate:', dayjs(this.studentFilter?.birthDate, DATE_FORMAT));
+    if (dayjs(this.studentFilter?.birthDate, DATE_FORMAT).isValid()) {
+      query.birthDate = dayjs(this.studentFilter?.birthDate, DATE_FORMAT);
+    }
+
     console.log('Student.queryBackend() called with queryObject:', query);
     this.studentService.studentsParams.set(query);
   }
@@ -174,5 +205,9 @@ export class Student implements OnInit, OnChanges {
       relativeTo: this.activatedRoute,
       queryParams: queryParamsObj,
     });
+  }
+
+  setSelectedStudent(selected: IStudent) {
+    this.selectedStudent = selected;
   }
 }

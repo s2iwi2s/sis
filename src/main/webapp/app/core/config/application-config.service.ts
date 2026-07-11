@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',
@@ -6,6 +6,8 @@ import { Injectable } from '@angular/core';
 export class ApplicationConfigService {
   private endpointPrefix = '';
   private microfrontend = false;
+
+  public eventEmitter: EventEmitter<any> = new EventEmitter();
 
   setEndpointPrefix(endpointPrefix: string): void {
     this.endpointPrefix = endpointPrefix;

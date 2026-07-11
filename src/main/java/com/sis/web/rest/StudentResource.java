@@ -148,7 +148,7 @@ public class StudentResource {
         @org.springdoc.core.annotations.ParameterObject StudentDTO studentDTO,
         @RequestParam(name = "eagerload", required = false, defaultValue = "true") boolean eagerload
     ) {
-        LOG.debug("REST request to get a page of Students");
+        LOG.debug("REST request to get a page of Students eagerload: {}", eagerload);
         LOG.debug("REST request to get a page of Students: {}", studentDTO);
         Page<StudentDTO> page;
         if (eagerload) {

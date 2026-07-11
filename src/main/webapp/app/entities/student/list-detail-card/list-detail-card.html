@@ -1,0 +1,14 @@
+@if (student(); as studentRef) {
+  <div
+    class="card shadow-lg bg-body-tertiary rounded-4 mb-2"
+    [class.border-primary-subtle]="isActive()"
+    [class.border-light-subtle]="!isActive()"
+    (click)="selectStudent(studentRef)"
+  >
+    <div class="card-header">{{ studentRef.lrn }} - {{ studentRef | name }}</div>
+    <div class="card-body py-0 row">
+      <div class="col-12">Birth Date: {{ studentRef.birthDate | formatMediumDate }}</div>
+      <div class="col-12">Enrollment Date: {{ studentRef.enrollmentDate | formatMediumDate }}</div>
+    </div>
+  </div>
+}

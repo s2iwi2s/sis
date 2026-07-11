@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { HttpResponse } from '@angular/common/http';
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,7 +26,7 @@ import { StudentFormGroup, StudentFormService } from './student-form.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-student-update',
   templateUrl: './student-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule, DatePipe],
 })
 export class StudentUpdate implements OnInit {
   readonly isSaving = signal(false);
@@ -95,6 +96,8 @@ export class StudentUpdate implements OnInit {
   protected onSaveSuccess(savedStudent: IStudent | null): void {
     if (this.source === 'enroll') {
       this.router.navigate(['/enrollment-form', savedStudent?.id]);
+    } else if (this.source === 'register') {
+      this.router.navigate(['/student', 'new', 'register']);
     } else {
       this.previousState();
     }

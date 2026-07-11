@@ -1,5 +1,9 @@
 package com.sis.service.impl;
 
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.exact;
+import static org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers.startsWith;
+import static org.springframework.data.domain.ExampleMatcher.matching;
+
 import com.sis.domain.Student;
 import com.sis.repository.StudentRepository;
 import com.sis.service.StudentService;
@@ -9,6 +13,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -67,10 +72,30 @@ public class StudentServiceImpl implements StudentService {
     @Transactional(readOnly = true)
     public Page<StudentDTO> findAll(StudentDTO studentDTO, Pageable pageable) {
         LOG.debug("Request to get all Students");
-        return studentRepository.findAll(Example.of(studentMapper.toEntity(studentDTO)), pageable).map(studentMapper::toDto);
+        ExampleMatcher matcher = matching()
+            .withIgnoreNullValues()
+            .withIgnoreCase()
+            .withMatcher("lrn", startsWith())
+            .withMatcher("firstName", startsWith())
+            .withMatcher("lastName", startsWith())
+            .withMatcher("birthDate", exact());
+        Example<Student> studentExample = Example.of(studentMapper.toEntity(studentDTO), matcher);
+        return studentRepository.findAll(studentExample, pageable).map(studentMapper::toDto);
     }
 
     public Page<StudentDTO> findAllWithEagerRelationships(StudentDTO studentDTO, Pageable pageable) {
+        ExampleMatcher matcher = matching()
+            .withIgnoreNullValues()
+            .withIgnoreCase()
+            .withMatcher("lrn", startsWith())
+            .withMatcher("firstName", startsWith())
+            .withMatcher("lastName", startsWith())
+            .withMatcher("birthDate", exact());
+        Example<Student> studentExample = Example.of(studentMapper.toEntity(studentDTO), matcher);
+        return studentRepository.findAllWithEagerRelationships(studentExample, pageable).map(studentMapper::toDto);
+    }
+
+    public Page<StudentDTO> findAllWithEagerRelationships(Pageable pageable) {
         return studentRepository.findAllWithEagerRelationships(pageable).map(studentMapper::toDto);
     }
 
