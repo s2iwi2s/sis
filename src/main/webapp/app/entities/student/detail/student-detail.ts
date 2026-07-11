@@ -70,9 +70,9 @@ export class StudentDetail {
     this.applicationConfigService.eventEmitter.emit({
       selectedStudent: updatedStudent,
     });
-    if (this.source() !== 'enroll') {
+    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
       this.router.navigate(['/enrollment-form', updatedStudent?.id]);
-    }
+    });
   }
 
   previousState(): void {
