@@ -47,6 +47,11 @@ public abstract class AbstractAuditingEntity<T> implements Serializable {
         return createdBy;
     }
 
+    public AbstractAuditingEntity<T> createdBy(String createdBy) {
+        this.createdBy = createdBy;
+        return this;
+    }
+
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
@@ -61,6 +66,11 @@ public abstract class AbstractAuditingEntity<T> implements Serializable {
 
     public String getLastModifiedBy() {
         return lastModifiedBy;
+    }
+
+    public AbstractAuditingEntity<T> lastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+        return this;
     }
 
     public void setLastModifiedBy(String lastModifiedBy) {

@@ -74,45 +74,6 @@ public class AppConfigServiceImpl implements AppConfigService {
         return appConfigRepository.findAll(Example.of(appConfigMapper.toEntity(appConfigDTO)), pageable).map(appConfigMapper::toDto);
     }
 
-    /**
-     *  Get all the appConfigs where Instructor is {@code null}.
-     *  @return the list of entities.
-     */
-    @Transactional(readOnly = true)
-    public List<AppConfigDTO> findAllWhereInstructorIsNull() {
-        LOG.debug("Request to get all appConfigs where Instructor is null");
-        return StreamSupport.stream(appConfigRepository.findAll().spliterator(), false)
-            .filter(appConfig -> appConfig.getInstructor() == null)
-            .map(appConfigMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
-    }
-
-    /**
-     *  Get all the appConfigs where Student is {@code null}.
-     *  @return the list of entities.
-     */
-    @Transactional(readOnly = true)
-    public List<AppConfigDTO> findAllWhereStudentIsNull() {
-        LOG.debug("Request to get all appConfigs where Student is null");
-        return StreamSupport.stream(appConfigRepository.findAll().spliterator(), false)
-            .filter(appConfig -> appConfig.getStudent() == null)
-            .map(appConfigMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
-    }
-
-    /**
-     *  Get all the appConfigs where Course is {@code null}.
-     *  @return the list of entities.
-     */
-    @Transactional(readOnly = true)
-    public List<AppConfigDTO> findAllWhereCourseIsNull() {
-        LOG.debug("Request to get all appConfigs where Course is null");
-        return StreamSupport.stream(appConfigRepository.findAll().spliterator(), false)
-            .filter(appConfig -> appConfig.getCourse() == null)
-            .map(appConfigMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
-    }
-
     @Override
     @Transactional(readOnly = true)
     public Optional<AppConfigDTO> findOne(Long id) {

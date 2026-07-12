@@ -44,25 +44,6 @@ public interface AppConfigService {
     Page<AppConfigDTO> findAll(AppConfigDTO appConfigDTO, Pageable pageable);
 
     /**
-     * Get all the AppConfigDTO where Instructor is {@code null}.
-     *
-     * @return the {@link List} of entities.
-     */
-    List<AppConfigDTO> findAllWhereInstructorIsNull();
-    /**
-     * Get all the AppConfigDTO where Student is {@code null}.
-     *
-     * @return the {@link List} of entities.
-     */
-    List<AppConfigDTO> findAllWhereStudentIsNull();
-    /**
-     * Get all the AppConfigDTO where Course is {@code null}.
-     *
-     * @return the {@link List} of entities.
-     */
-    List<AppConfigDTO> findAllWhereCourseIsNull();
-
-    /**
      * Get the "id" appConfig.
      *
      * @param id the id of the entity.

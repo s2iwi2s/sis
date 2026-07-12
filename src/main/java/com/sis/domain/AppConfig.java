@@ -60,18 +60,6 @@ public class AppConfig implements Serializable {
     @Column(name = "last_modified_date")
     private Instant lastModifiedDate;
 
-    @JsonIgnoreProperties(value = { "gender", "user", "courseSchedules" }, allowSetters = true)
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "gender")
-    private Instructor instructor;
-
-    @JsonIgnoreProperties(value = { "gender", "user", "courseSchedules" }, allowSetters = true)
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "gender")
-    private Student student;
-
-    @JsonIgnoreProperties(value = { "gradelevel", "department", "curriculumMaps", "year", "terms" }, allowSetters = true)
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "gradelevel")
-    private Course course;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -202,63 +190,6 @@ public class AppConfig implements Serializable {
 
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public Instructor getInstructor() {
-        return this.instructor;
-    }
-
-    public void setInstructor(Instructor instructor) {
-        if (this.instructor != null) {
-            this.instructor.setGender(null);
-        }
-        if (instructor != null) {
-            instructor.setGender(this);
-        }
-        this.instructor = instructor;
-    }
-
-    public AppConfig instructor(Instructor instructor) {
-        this.setInstructor(instructor);
-        return this;
-    }
-
-    public Student getStudent() {
-        return this.student;
-    }
-
-    public void setStudent(Student student) {
-        if (this.student != null) {
-            this.student.setGender(null);
-        }
-        if (student != null) {
-            student.setGender(this);
-        }
-        this.student = student;
-    }
-
-    public AppConfig student(Student student) {
-        this.setStudent(student);
-        return this;
-    }
-
-    public Course getCourse() {
-        return this.course;
-    }
-
-    public void setCourse(Course course) {
-        if (this.course != null) {
-            this.course.setGradelevel(null);
-        }
-        if (course != null) {
-            course.setGradelevel(this);
-        }
-        this.course = course;
-    }
-
-    public AppConfig course(Course course) {
-        this.setCourse(course);
-        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

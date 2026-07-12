@@ -39,9 +39,7 @@ public class StudentTestSamples {
             .mothersOccupation("mothersOccupation1")
             .mothersContacts("mothersContacts1")
             .guardianFullName("guardianFullName1")
-            .guardianContacts("guardianContacts1")
-            .createdBy("createdBy1")
-            .lastModifiedBy("lastModifiedBy1");
+            .guardianContacts("guardianContacts1");
     }
 
     public static Student getStudentSample2() {
@@ -74,9 +72,7 @@ public class StudentTestSamples {
             .mothersOccupation("mothersOccupation2")
             .mothersContacts("mothersContacts2")
             .guardianFullName("guardianFullName2")
-            .guardianContacts("guardianContacts2")
-            .createdBy("createdBy2")
-            .lastModifiedBy("lastModifiedBy2");
+            .guardianContacts("guardianContacts2");
     }
 
     public static Student getStudentRandomSampleGenerator() {
@@ -109,8 +105,6 @@ public class StudentTestSamples {
             .mothersOccupation(UUID.randomUUID().toString())
             .mothersContacts(UUID.randomUUID().toString())
             .guardianFullName(UUID.randomUUID().toString())
-            .guardianContacts(UUID.randomUUID().toString())
-            .createdBy(UUID.randomUUID().toString())
-            .lastModifiedBy(UUID.randomUUID().toString());
+            .guardianContacts(UUID.randomUUID().toString());
     }
 }

@@ -219,11 +219,7 @@ class StudentResourceIT {
             .mothersOccupation(DEFAULT_MOTHERS_OCCUPATION)
             .mothersContacts(DEFAULT_MOTHERS_CONTACTS)
             .guardianFullName(DEFAULT_GUARDIAN_FULL_NAME)
-            .guardianContacts(DEFAULT_GUARDIAN_CONTACTS)
-            .createdBy(DEFAULT_CREATED_BY)
-            .createdDate(DEFAULT_CREATED_DATE)
-            .lastModifiedBy(DEFAULT_LAST_MODIFIED_BY)
-            .lastModifiedDate(DEFAULT_LAST_MODIFIED_DATE);
+            .guardianContacts(DEFAULT_GUARDIAN_CONTACTS);
     }
 
     /**
@@ -263,11 +259,7 @@ class StudentResourceIT {
             .mothersOccupation(UPDATED_MOTHERS_OCCUPATION)
             .mothersContacts(UPDATED_MOTHERS_CONTACTS)
             .guardianFullName(UPDATED_GUARDIAN_FULL_NAME)
-            .guardianContacts(UPDATED_GUARDIAN_CONTACTS)
-            .createdBy(UPDATED_CREATED_BY)
-            .createdDate(UPDATED_CREATED_DATE)
-            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
-            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
+            .guardianContacts(UPDATED_GUARDIAN_CONTACTS);
     }
 
     @BeforeEach
@@ -487,11 +479,7 @@ class StudentResourceIT {
             .mothersOccupation(UPDATED_MOTHERS_OCCUPATION)
             .mothersContacts(UPDATED_MOTHERS_CONTACTS)
             .guardianFullName(UPDATED_GUARDIAN_FULL_NAME)
-            .guardianContacts(UPDATED_GUARDIAN_CONTACTS)
-            .createdBy(UPDATED_CREATED_BY)
-            .createdDate(UPDATED_CREATED_DATE)
-            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
-            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
+            .guardianContacts(UPDATED_GUARDIAN_CONTACTS);
         StudentDTO studentDTO = studentMapper.toDto(updatedStudent);
 
         restStudentMockMvc
@@ -592,10 +580,7 @@ class StudentResourceIT {
             .fathersFirstName(UPDATED_FATHERS_FIRST_NAME)
             .fathersExtName(UPDATED_FATHERS_EXT_NAME)
             .mothersLastName(UPDATED_MOTHERS_LAST_NAME)
-            .mothersContacts(UPDATED_MOTHERS_CONTACTS)
-            .createdDate(UPDATED_CREATED_DATE)
-            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
-            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
+            .mothersContacts(UPDATED_MOTHERS_CONTACTS);
 
         restStudentMockMvc
             .perform(
@@ -653,11 +638,7 @@ class StudentResourceIT {
             .mothersOccupation(UPDATED_MOTHERS_OCCUPATION)
             .mothersContacts(UPDATED_MOTHERS_CONTACTS)
             .guardianFullName(UPDATED_GUARDIAN_FULL_NAME)
-            .guardianContacts(UPDATED_GUARDIAN_CONTACTS)
-            .createdBy(UPDATED_CREATED_BY)
-            .createdDate(UPDATED_CREATED_DATE)
-            .lastModifiedBy(UPDATED_LAST_MODIFIED_BY)
-            .lastModifiedDate(UPDATED_LAST_MODIFIED_DATE);
+            .guardianContacts(UPDATED_GUARDIAN_CONTACTS);
 
         restStudentMockMvc
             .perform(

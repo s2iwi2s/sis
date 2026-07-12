@@ -116,11 +116,9 @@ export class Student implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('Student.ngOnChanges() called with changes:', changes.studentInputFilter);
     if (changes.studentInputFilter.currentValue) {
       const currentFilter = changes.studentInputFilter.currentValue;
       this.studentFilter = currentFilter;
-      console.log('Student.ngOnChanges() called with currentFilter:', currentFilter);
       if (this.studentFilter?.lrn || this.studentFilter?.firstName || this.studentFilter?.lastName || this.studentFilter?.birthDate) {
         this.load();
       }

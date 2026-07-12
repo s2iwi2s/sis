@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 import { HttpResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
+import dayjs from 'dayjs/esm';
+
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,12 +23,14 @@ import { StudentService } from '../service/student.service';
 import { IStudent } from '../student.model';
 
 import { StudentFormGroup, StudentFormService } from './student-form.service';
+import { AgePipe } from '../../../shared/age/age-pipe';
+import { DATE_FORMAT } from '../../../config/input.constants';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-student-update',
   templateUrl: './student-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule, DatePipe],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule, DatePipe, AgePipe],
 })
 export class StudentUpdate implements OnInit {
   readonly isSaving = signal(false);
@@ -159,5 +163,10 @@ export class StudentUpdate implements OnInit {
         ),
       )
       .subscribe((courseSchedules: ICourseSchedule[]) => this.courseSchedulesSharedCollection.set(courseSchedules));
+  }
+
+  getBirthDate() {
+    const birthDate = this.editForm.get('birthDate')?.value;
+    return dayjs(birthDate, DATE_FORMAT);
   }
 }

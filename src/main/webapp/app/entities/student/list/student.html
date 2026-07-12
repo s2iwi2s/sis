@@ -105,13 +105,6 @@
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
-            <th scope="col" jhiSortBy="birthPlace">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.student.birthPlace">Birth Place</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
             <th scope="col" jhiSortBy="contactNo">
               <div class="d-flex">
                 <span jhiTranslate="schInfoSysApp.student.contactNo">Contact No</span>
@@ -147,12 +140,6 @@
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
-            <th scope="col" jhiSortBy="user.id">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.student.user">User</span>
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -168,15 +155,11 @@
               <td>{{ student.lastName }}</td>
               <td>{{ student.enrollmentDate | formatMediumDate }}</td>
               <td>{{ student.birthDate | formatMediumDate }}</td>
-              <td>{{ student.birthPlace }}</td>
               <td>{{ student.contactNo }} - {{ source() }}</td>
-              <td>createdBy {{ student.createdBy }}</td>
+              <td>{{ student.createdBy }}</td>
               <td>{{ student.createdDate | formatMediumDatetime }}</td>
               <td>{{ student.lastModifiedBy }}</td>
-              <td>lastModifiedDate {{ student.lastModifiedDate | formatMediumDatetime }}</td>
-              <td>
-                {{ student.user?.login }}
-              </td>
+              <td>{{ student.lastModifiedDate | formatMediumDatetime }}</td>
               <td class="text-end">
                 <div class="btn-group">
                   <a [routerLink]="['/student', student.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
