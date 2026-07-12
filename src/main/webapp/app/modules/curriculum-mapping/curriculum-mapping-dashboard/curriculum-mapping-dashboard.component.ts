@@ -4,7 +4,6 @@ import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { forkJoin, Observable, OperatorFunction } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
-import { JsonPipe, KeyValuePipe } from '@angular/common';
 
 import { ICurriculumMap } from '../../../entities/curriculum-map/curriculum-map.model';
 import { ICourse } from '../../../entities/course/course.model';
@@ -41,8 +40,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   imports: [
     NgbTypeaheadModule,
     FormsModule,
-    JsonPipe,
-    KeyValuePipe,
     RouterLink,
     CourseDetailCardComponent,
     ScopeSeqCardComponent,

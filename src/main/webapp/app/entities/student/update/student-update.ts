@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import { HttpResponse } from '@angular/common/http';
-import { DatePipe } from '@angular/common';
 import dayjs from 'dayjs/esm';
 
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
@@ -30,7 +29,7 @@ import { DATE_FORMAT } from '../../../config/input.constants';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-student-update',
   templateUrl: './student-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule, DatePipe, AgePipe],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule, AgePipe],
 })
 export class StudentUpdate implements OnInit {
   readonly isSaving = signal(false);

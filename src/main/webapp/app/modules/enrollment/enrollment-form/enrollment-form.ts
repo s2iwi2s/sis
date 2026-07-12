@@ -1,16 +1,6 @@
 /* eslint-disable no-console */
 import { Component, inject, OnInit } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  NgbAccordionButton,
-  NgbAccordionDirective,
-  NgbAccordionItem,
-  NgbAccordionHeader,
-  NgbAccordionToggle,
-  NgbAccordionBody,
-  NgbAccordionCollapse,
-} from '@ng-bootstrap/ng-bootstrap/accordion';
-
 import { AlertError } from 'app/shared/alert/alert-error';
 import { SearchCard } from '../search-card/search-card';
 import { IStudent, IStudentFilter } from 'app/entities/student/student.model';
@@ -23,22 +13,7 @@ import { Alert } from '../../../shared/alert/alert';
 
 @Component({
   selector: 'jhi-enrollment-form',
-  imports: [
-    AlertError,
-    Alert,
-    SearchCard,
-    FontAwesomeModule,
-    StudentDetail,
-    Student,
-    NgbAccordionDirective,
-    NgbAccordionButton,
-    NgbAccordionDirective,
-    NgbAccordionItem,
-    NgbAccordionHeader,
-    NgbAccordionToggle,
-    NgbAccordionBody,
-    NgbAccordionCollapse,
-  ],
+  imports: [AlertError, Alert, SearchCard, FontAwesomeModule, StudentDetail, Student],
   templateUrl: './enrollment-form.html',
   styleUrl: './enrollment-form.scss',
 })

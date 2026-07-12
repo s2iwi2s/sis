@@ -2,15 +2,14 @@
 import { ChangeDetectionStrategy, Component, inject, output } from '@angular/core';
 import { StudentFilterFormGroup, StudentFormService } from 'app/entities/student/update/student-form.service';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { Student } from 'app/entities/student/list/student';
 import { RouterLink } from '@angular/router';
-import { IStudent, IStudentFilter, NewStudent } from 'app/entities/student/student.model';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { IStudent, IStudentFilter } from 'app/entities/student/student.model';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-search-card',
-  imports: [FaIconComponent, Student, RouterLink, ReactiveFormsModule],
+  imports: [FaIconComponent, RouterLink, ReactiveFormsModule],
   templateUrl: './search-card.html',
   styleUrl: './search-card.scss',
 })

@@ -6,7 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { Alert } from 'app/shared/alert/alert';
 import { AlertError } from 'app/shared/alert/alert-error';
-import { FormatMediumDatePipe, FormatMediumDatetimePipe } from 'app/shared/date';
+import { FormatMediumDatePipe } from 'app/shared/date';
 import { TranslateDirective } from 'app/shared/language';
 import { IStudent } from '../student.model';
 import { NamePipe } from '../../../shared/name/name-pipe';
@@ -21,18 +21,7 @@ import { ApplicationConfigService } from '../../../core/config/application-confi
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-student-detail',
   templateUrl: './student-detail.html',
-  imports: [
-    FontAwesomeModule,
-    Alert,
-    AlertError,
-    TranslateDirective,
-    TranslateModule,
-    RouterLink,
-    FormatMediumDatetimePipe,
-    FormatMediumDatePipe,
-    NamePipe,
-    AgePipe,
-  ],
+  imports: [FontAwesomeModule, Alert, AlertError, TranslateDirective, TranslateModule, RouterLink, FormatMediumDatePipe, NamePipe, AgePipe],
 })
 export class StudentDetail {
   readonly source = input<String | null>(null);

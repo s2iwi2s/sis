@@ -1,20 +1,7 @@
 /* eslint-disable no-console */
 import { HttpHeaders } from '@angular/common/http';
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  effect,
-  inject,
-  input,
-  signal,
-  output,
-} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnChanges, OnInit, SimpleChanges, effect, inject, input, signal, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DatePipe } from '@angular/common';
 import { ActivatedRoute, Data, ParamMap, Router, RouterLink } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -58,7 +45,6 @@ import { ApplicationConfigService } from '../../../core/config/application-confi
     FormatMediumDatetimePipe,
     NgbPagination,
     ItemCount,
-    DatePipe,
     ListDetailCard,
   ],
 })
