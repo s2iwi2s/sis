@@ -6,19 +6,18 @@ import com.sis.service.dto.ResourcesDTO;
 import com.sis.web.rest.errors.BadRequestAlertException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
 import tech.jhipster.web.util.PaginationUtil;
@@ -55,7 +54,8 @@ public class ResourcesResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PostMapping("")
-    public ResponseEntity<ResourcesDTO> createResources(@Valid @RequestBody ResourcesDTO resourcesDTO) throws URISyntaxException {
+    public ResponseEntity<ResourcesDTO> createResources(@Valid @RequestBody ResourcesDTO resourcesDTO)
+        throws URISyntaxException, IOException {
         LOG.debug("REST request to save Resources : {}", resourcesDTO);
         if (resourcesDTO.getId() != null) {
             throw new BadRequestAlertException("A new resources cannot already have an ID", ENTITY_NAME, "idexists");
@@ -175,5 +175,37 @@ public class ResourcesResource {
         return ResponseEntity.noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @GetMapping("/doc/{id}")
+    public ResponseEntity<byte[]> getDocResources(@PathVariable("id") Long id) {
+        LOG.debug("REST request to get Resources : {}", id);
+        Optional<ResourcesDTO> resourcesDTO = resourcesService.findOne(id);
+
+        return resourcesDTO
+            .map(res -> {
+                byte[] document = res.getDocument();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setCacheControl(CacheControl.noCache().getHeaderValue());
+
+                return ResponseEntity.ok().headers(headers).contentType(MediaType.valueOf(res.getDocumentContentType())).body(document);
+            })
+            .orElseThrow(() -> {
+                return new ResponseStatusException(HttpStatus.NOT_FOUND);
+            });
+    }
+
+    @GetMapping("/{id}/assessment")
+    public ResponseEntity<Set<ResourcesDTO>> findAllByAssessment(@PathVariable("id") Long assessmentId) {
+        LOG.debug("REST request to get selected Resources by assessment id : {}", assessmentId);
+        Set<ResourcesDTO> resourcesDTOs = resourcesService.findResourcesByAssessments(assessmentId);
+        return ResponseEntity.ok(resourcesDTOs);
+    }
+
+    @GetMapping("/{id}/strategies")
+    public ResponseEntity<Set<ResourcesDTO>> findAllByStrategies(@PathVariable("id") Long strategiesId) {
+        LOG.debug("REST request to get selected Resources by strategies id : {}", strategiesId);
+        Set<ResourcesDTO> resourcesDTOs = resourcesService.findResourcesByStrategies(strategiesId);
+        return ResponseEntity.ok(resourcesDTOs);
     }
 }

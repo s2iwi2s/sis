@@ -5,7 +5,9 @@ import com.sis.repository.StrategiesRepository;
 import com.sis.service.StrategiesService;
 import com.sis.service.dto.StrategiesDTO;
 import com.sis.service.mapper.StrategiesMapper;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -84,5 +86,10 @@ public class StrategiesServiceImpl implements StrategiesService {
     public void delete(Long id) {
         LOG.debug("Request to delete Strategies : {}", id);
         strategiesRepository.deleteById(id);
+    }
+
+    @Override
+    public List<StrategiesDTO> findAllByCourse(Long courseId) {
+        return strategiesRepository.findAllByCourseId(courseId).stream().map(strategiesMapper::toDto).collect(Collectors.toList());
     }
 }

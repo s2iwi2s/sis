@@ -4,9 +4,7 @@ import jakarta.persistence.Lob;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * A DTO for the {@link com.sis.domain.Resources} entity.
@@ -33,10 +31,6 @@ public class ResourcesDTO implements Serializable {
     private String lastModifiedBy;
 
     private Instant lastModifiedDate;
-
-    private Set<StrategiesDTO> strategieses = new HashSet<>();
-
-    private Set<AssessmentDTO> assessments = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -102,22 +96,6 @@ public class ResourcesDTO implements Serializable {
         this.lastModifiedDate = lastModifiedDate;
     }
 
-    public Set<StrategiesDTO> getStrategieses() {
-        return strategieses;
-    }
-
-    public void setStrategieses(Set<StrategiesDTO> strategieses) {
-        this.strategieses = strategieses;
-    }
-
-    public Set<AssessmentDTO> getAssessments() {
-        return assessments;
-    }
-
-    public void setAssessments(Set<AssessmentDTO> assessments) {
-        this.assessments = assessments;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -150,8 +128,6 @@ public class ResourcesDTO implements Serializable {
             ", createdDate='" + getCreatedDate() + "'" +
             ", lastModifiedBy='" + getLastModifiedBy() + "'" +
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
-            ", strategieses=" + getStrategieses() +
-            ", assessments=" + getAssessments() +
             "}";
     }
 }

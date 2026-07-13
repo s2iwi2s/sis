@@ -15,8 +15,6 @@ import org.mapstruct.*;
  */
 @Mapper(componentModel = "spring")
 public interface ResourcesMapper extends EntityMapper<ResourcesDTO, Resources> {
-    @Mapping(target = "strategieses", source = "strategieses", qualifiedByName = "strategiesIdSet")
-    @Mapping(target = "assessments", source = "assessments", qualifiedByName = "assessmentIdSet")
     ResourcesDTO toDto(Resources s);
 
     @Mapping(target = "strategieses", ignore = true)

@@ -69,6 +69,15 @@ public class Strategies implements Serializable {
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
+    public Strategies() {
+        super();
+    }
+
+    public Strategies(Long id) {
+        super();
+        this.setId(id);
+    }
+
     public Long getId() {
         return this.id;
     }

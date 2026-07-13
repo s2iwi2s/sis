@@ -177,4 +177,11 @@ public class CurriculumMapResource {
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
     }
+
+    @GetMapping("/{id}/course")
+    public ResponseEntity<List<CurriculumMapDTO>> getCurriculumMapByCourse(@PathVariable("id") Long courseId) {
+        LOG.debug("REST request to get CurriculumMap By Course: {}", courseId);
+        List<CurriculumMapDTO> curriculumMapDTOs = curriculumMapService.findByCourse(courseId);
+        return ResponseEntity.ok(curriculumMapDTOs);
+    }
 }

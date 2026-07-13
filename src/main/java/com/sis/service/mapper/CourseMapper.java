@@ -26,6 +26,7 @@ public interface CourseMapper extends EntityMapper<CourseDTO, Course> {
     @Named("appConfigId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "description", source = "description")
     AppConfigDTO toDtoAppConfigId(AppConfig appConfig);
 
     @Named("departmentsId")

@@ -51,6 +51,12 @@ public class CourseDTO implements Serializable {
         this.id = id;
     }
 
+    public CourseDTO id(Long id) {
+        this.id = id;
+
+        return this;
+    }
+
     public String getSubject() {
         return subject;
     }

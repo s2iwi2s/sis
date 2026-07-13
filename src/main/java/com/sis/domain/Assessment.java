@@ -70,6 +70,15 @@ public class Assessment implements Serializable {
     @JsonIgnoreProperties(value = { "strategieses", "assessments", "curriculumMap" }, allowSetters = true)
     private LearningCompetency learningCompetency;
 
+    public Assessment() {
+        super();
+    }
+
+    public Assessment(Long id) {
+        super();
+        setId(id);
+    }
+
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -196,6 +205,15 @@ public class Assessment implements Serializable {
 
     public Assessment removeResources(Resources resources) {
         this.resourceses.remove(resources);
+        return this;
+    }
+
+    public Assessment removeResources(Long resourceId) {
+        this.resourceses
+            .stream()
+            .filter(r -> r.getId().longValue() == resourceId.longValue())
+            .findFirst()
+            .map(r -> this.resourceses.remove(r));
         return this;
     }
 
