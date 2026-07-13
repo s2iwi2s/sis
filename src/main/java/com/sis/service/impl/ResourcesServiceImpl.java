@@ -147,7 +147,7 @@ public class ResourcesServiceImpl implements ResourcesService {
                 s.removeResources(r);
                 strategiesRepository.save(s);
             });
-            assessmentRepository.findByResources(r).ifPresent(a -> {
+            assessmentRepository.findByresourceses(r).ifPresent(a -> {
                 a.removeResources(r);
                 assessmentRepository.save(a);
             });

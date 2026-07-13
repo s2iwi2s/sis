@@ -30,7 +30,7 @@ public interface AssessmentRepository extends AssessmentRepositoryWithBagRelatio
         return this.fetchBagRelationships(this.findAll(pageable));
     }
 
-    Optional<Assessment> findByResources(Resources resources);
+    Optional<Assessment> findByresourceses(Resources resources);
 
     @Query(
         "select a from Assessment a " +
