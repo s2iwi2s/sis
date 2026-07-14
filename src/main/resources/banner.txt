@@ -1,13 +1,24 @@
 
-  ${AnsiColor.GREEN}      ██╗${AnsiColor.RED} ██╗   ██╗ ████████╗ ███████╗   ██████╗ ████████╗ ████████╗ ███████╗
-  ${AnsiColor.GREEN}      ██║${AnsiColor.RED} ██║   ██║ ╚══██╔══╝ ██╔═══██╗ ██╔════╝ ╚══██╔══╝ ██╔═════╝ ██╔═══██╗
-  ${AnsiColor.GREEN}      ██║${AnsiColor.RED} ████████║    ██║    ███████╔╝ ╚█████╗     ██║    ██████╗   ███████╔╝
-  ${AnsiColor.GREEN}██╗   ██║${AnsiColor.RED} ██╔═══██║    ██║    ██╔════╝   ╚═══██╗    ██║    ██╔═══╝   ██╔══██║
-  ${AnsiColor.GREEN}╚██████╔╝${AnsiColor.RED} ██║   ██║ ████████╗ ██║       ██████╔╝    ██║    ████████╗ ██║  ╚██╗
-  ${AnsiColor.GREEN} ╚═════╝ ${AnsiColor.RED} ╚═╝   ╚═╝ ╚═══════╝ ╚═╝       ╚═════╝     ╚═╝    ╚═══════╝ ╚═╝   ╚═╝
-
-${AnsiColor.BRIGHT_BLUE}:: JHipster 🤓  :: Running Spring Boot ${spring-boot.version} :: Startup profile(s) ${spring.profiles.active} ::
-:: https://www.jhipster.tech ::${AnsiColor.DEFAULT}
+${AnsiColor.RED}+-----------------------------+
+${AnsiColor.RED}
+${AnsiColor.RED}   sSSs   .S    sSSs
+${AnsiColor.RED}  d%%SP  .SS   d%%SP${AnsiColor.GREEN}    ##
+${AnsiColor.RED} d%S'    S%S  d%S'  ${AnsiColor.GREEN}    ##
+${AnsiColor.RED} S%|     S%S  S%|   ${AnsiColor.GREEN}  ######
+${AnsiColor.RED} S&S     S&S  S&S   ${AnsiColor.GREEN}    ##
+${AnsiColor.RED} Y&Ss    S&S  Y&Ss  ${AnsiColor.GREEN}    ##
+${AnsiColor.RED} `S&&S   S&S  `S&&S
+${AnsiColor.RED}   `S*S  S&S    `S*S
+${AnsiColor.RED}    l*S  S*S     l*S
+${AnsiColor.RED}   .S*P  S*S    .S*P
+${AnsiColor.RED} sSS*S   S*S  sSS*S
+${AnsiColor.RED} YSS'    S*S  YSS'
+${AnsiColor.RED}         SP
+${AnsiColor.RED}         Y
+${AnsiColor.RED}+-----------------------------+
+${AnsiColor.RED}
+${AnsiColor.BRIGHT_BLUE}:: Running Spring Boot ${spring-boot.version} :: Startup profile(s) ${spring.profiles.active} ::
+${AnsiColor.DEFAULT}
 
 ++++++++++++++++++++++++++++++++++++++++++++++
 ${AnsiColor.BRIGHT_RED}
