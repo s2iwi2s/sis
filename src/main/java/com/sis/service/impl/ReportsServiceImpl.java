@@ -7,14 +7,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReportsServiceImpl implements ReportsService {
 
-    private final CurriculumMappingReport curriculumMappingReport;
+    private final PdfReport curriculumMappingReport;
+    private final PdfReport registrationReport;
 
-    public ReportsServiceImpl(CurriculumMappingReport curriculumMappingReport) {
+    public ReportsServiceImpl(CurriculumMappingReportImpl curriculumMappingReport, RegistrationReportImpl registrationReport) {
         this.curriculumMappingReport = curriculumMappingReport;
+        this.registrationReport = registrationReport;
     }
 
     @Override
     public ReportResponseDTO getCurMapReport(long courseId) throws Exception {
-        return curriculumMappingReport.getCurMapReport(courseId);
+        return curriculumMappingReport.getReport(courseId);
+    }
+
+    @Override
+    public ReportResponseDTO getRegistrationReport(long studentId) throws Exception {
+        return registrationReport.getReport(studentId);
     }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, input, output, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, input, OnInit, output, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -12,10 +12,11 @@ import { IStudent } from '../student.model';
 import { NamePipe } from '../../../shared/name/name-pipe';
 import { AgePipe } from '../../../shared/age/age-pipe';
 import { PartialUpdateStudent, StudentService } from '../service/student.service';
-import { finalize, Observable } from 'rxjs';
+import { finalize, map, Observable } from 'rxjs';
 import dayjs from 'dayjs/esm';
 import { DATE_FORMAT } from '../../../config/input.constants';
 import { ApplicationConfigService } from '../../../core/config/application-config.service';
+import { ReportsService } from '../../../modules/report/reports-service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,9 +28,12 @@ export class StudentDetail {
   readonly source = input<String | null>(null);
   readonly student = input<IStudent | null>(null);
   readonly updateStudent = output<IStudent | null>();
+
   readonly isSaving = signal(false);
+  readonly loadingPdf = signal(false);
 
   protected studentService = inject(StudentService);
+  protected reportsService = inject(ReportsService);
   protected applicationConfigService = inject(ApplicationConfigService);
   protected router = inject(Router);
 
@@ -45,12 +49,14 @@ export class StudentDetail {
       error: () => this.onSaveError(),
     });
   }
+
   protected onSaveFinalize(): void {
     //protected onSaveFinalize(savedStudent: IStudent | null): void {
     // this.updateForm(savedStudent ?? this.student!);
 
     this.isSaving.set(false);
   }
+
   protected onSaveError(): void {
     // Api for inheritance.
   }
@@ -63,6 +69,14 @@ export class StudentDetail {
       uStudent.enrollmentDate = updatedStudent?.enrollmentDate;
     }
     this.updateStudent.emit(updatedStudent);
+  }
+
+  showPdf() {
+    this.loadingPdf.set(true);
+    const student = this.student();
+    if (student) {
+      this.reportsService.downloadPdf(this.studentService.getRegistrationPdf(student.id)).subscribe(() => this.loadingPdf.set(false));
+    }
   }
 
   previousState(): void {

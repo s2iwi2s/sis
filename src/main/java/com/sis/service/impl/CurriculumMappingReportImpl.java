@@ -2,15 +2,16 @@ package com.sis.service.impl;
 
 import com.sis.service.*;
 import com.sis.service.dto.*;
-import com.sis.service.util.PdfConverter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.spring6.SpringTemplateEngine;
 
 @Service
-public class CurriculumMappingReportImpl implements CurriculumMappingReport {
+public class CurriculumMappingReportImpl extends AbstractPdfReport<CurriculumMappingReportDetailDto, Long> {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private final CourseService courseService;
@@ -34,9 +35,29 @@ public class CurriculumMappingReportImpl implements CurriculumMappingReport {
     }
 
     @Override
-    public ReportResponseDTO getCurMapReport(long courseId) throws Exception {
-        log.info("Service report with course id={}", courseId);
-        CurriculumMappingReportDetailDto curMapDetails = getCurMapDetails(courseId);
+    public SpringTemplateEngine getTemplateEngine() {
+        return null;
+    }
+
+    @Override
+    public String getContextVariable() {
+        return "";
+    }
+
+    @Override
+    public CurriculumMappingReportDetailDto getData(Long courseId) {
+        return courseService
+            .findOne(courseId)
+            .map(courseDTO -> new CurriculumMappingReportDetailDto().courseDTO(courseDTO))
+            .map(details -> details.setCurriculumMapDTOS(this.curriculumMapService.findByCourse(details.getCourseDTO().getId())))
+            .map(details -> details.learningCompetencyDTOS(this.learningCompetencyService.findAllByCourse(details.getCourseDTO().getId())))
+            .map(details -> details.strategiesDTOS(strategiesService.findAllByCourse(details.getCourseDTO().getId())))
+            .map(details -> details.assessmentDTOS(assessmentService.findAllByCourse(details.getCourseDTO().getId())))
+            .orElseThrow();
+    }
+
+    @Override
+    public String getHtml(CurriculumMappingReportDetailDto curMapDetails) throws IOException {
         List<CurriculumMappingReportRowDto> list = new ArrayList<>();
         List<QuarterDTO> qtrList = new ArrayList<>();
         try {
@@ -237,37 +258,26 @@ public class CurriculumMappingReportImpl implements CurriculumMappingReport {
         }
 
         html.append("</tbody>").append("</table>").append("</body></html>");
-        //log.info(html.toString());
-
-        ReportResponseDTO dto = null;
-        try {
-            dto = PdfConverter.htmlToPdf(
-                String.format("course_%d_%d_%s", courseId, System.currentTimeMillis(), getFilename()),
-                html.toString()
-            );
-            // PdfConverter.byteAryToFile(dto.getBinaryData(), dto.getFilename());
-        } catch (Exception e) {
-            dto = new ReportResponseDTO();
-            log.error("Error: " + e.getMessage(), e);
-        }
-
-        return dto;
+        return html.toString();
     }
 
     @Override
-    public String getFilename() throws Exception {
+    public String setLine(String line, CurriculumMappingReportDetailDto data) {
+        return "";
+    }
+
+    @Override
+    public String getTemplateFileName() {
+        return null;
+    }
+
+    @Override
+    public String getTemplateName() {
+        return null;
+    }
+
+    @Override
+    public String getOutputFileName() {
         return "curr_map.pdf";
-    }
-
-    @Override
-    public CurriculumMappingReportDetailDto getCurMapDetails(Long courseId) {
-        return courseService
-            .findOne(courseId)
-            .map(courseDTO -> new CurriculumMappingReportDetailDto().courseDTO(courseDTO))
-            .map(details -> details.setCurriculumMapDTOS(this.curriculumMapService.findByCourse(details.getCourseDTO().getId())))
-            .map(details -> details.learningCompetencyDTOS(this.learningCompetencyService.findAllByCourse(details.getCourseDTO().getId())))
-            .map(details -> details.strategiesDTOS(strategiesService.findAllByCourse(details.getCourseDTO().getId())))
-            .map(details -> details.assessmentDTOS(assessmentService.findAllByCourse(details.getCourseDTO().getId())))
-            .orElseThrow();
     }
 }

@@ -13,6 +13,9 @@
               <fa-icon icon="pencil-alt" />&nbsp;<span>Enroll</span>
             </button>
           }
+          <button type="button" class="btn btn-primary btn-sm rounded-pill" (click)="showPdf()" [disabled]="loadingPdf()">
+            <fa-icon icon="pencil-alt" />&nbsp;<span>Registration PDF</span>
+          </button>
         </div>
       </div>
     </div>

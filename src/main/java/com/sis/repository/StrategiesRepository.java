@@ -30,7 +30,7 @@ public interface StrategiesRepository extends StrategiesRepositoryWithBagRelatio
         return this.fetchBagRelationships(this.findAll(pageable));
     }
 
-    Optional<Strategies> findByResources(Resources resources);
+    Optional<Strategies> findByResourceses(Resources resources);
 
     @Query(
         "select s from Strategies s " +

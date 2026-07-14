@@ -8,6 +8,7 @@ import { ApplicationConfigService } from 'app/core/config/application-config.ser
 import { createRequestOption } from 'app/core/request/request-util';
 import { isPresent } from 'app/core/util/operators';
 import { IStudent, NewStudent } from '../student.model';
+import { IReport } from '../../../modules/curriculum-mapping/report.model';
 
 export type PartialUpdateStudent = Partial<IStudent> & Pick<IStudent, 'id'>;
 
@@ -45,6 +46,7 @@ export class StudentsService {
   );
   protected readonly applicationConfigService = inject(ApplicationConfigService);
   protected readonly resourceUrl = this.applicationConfigService.getEndpointFor('api/students');
+  protected readonly registrationPdfResourceUrl = this.applicationConfigService.getEndpointFor('/api/report/registration');
 
   protected convertValueFromServer(restStudent: RestStudent): IStudent {
     return {
@@ -84,6 +86,21 @@ export class StudentService extends StudentsService {
     return this.http
       .get<RestStudent>(`${this.resourceUrl}/${encodeURIComponent(id)}`)
       .pipe(map(res => this.convertResponseFromServer(res)));
+  }
+
+  getRegistrationPdf(id: number): Observable<IReport> {
+    return (
+      this.http
+        .get<HttpResponse<IReport>>(`${this.registrationPdfResourceUrl}/${encodeURIComponent(id)}`, { observe: 'response' })
+        // .pipe(map((res) => this.convertReportData(res.body!)))
+        .pipe(map(res => res.clone({ body: this.convertReportData(res.body!) })))
+        .pipe(map(res => res.body!))
+    );
+  }
+
+  convertReportData(data: HttpResponse<IReport>) {
+    console.log('StudentsService.convertReportData data: ', JSON.stringify(data));
+    return { ...data } as IReport;
   }
 
   query(req?: any): Observable<HttpResponse<IStudent[]>> {

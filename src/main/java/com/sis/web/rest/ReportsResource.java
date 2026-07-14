@@ -23,7 +23,12 @@ public class ReportsResource {
     }
 
     @GetMapping("/currMap/{courseId}")
-    public ResponseEntity<ReportResponseDTO> getReport(@PathVariable("courseId") long courseId) throws Exception {
+    public ResponseEntity<ReportResponseDTO> getCurrMapReport(@PathVariable("courseId") long courseId) throws Exception {
         return ResponseEntity.ok().body(reportsService.getCurMapReport(courseId));
+    }
+
+    @GetMapping("/registration/{studentId}")
+    public ResponseEntity<ReportResponseDTO> getRegistrationReport(@PathVariable("studentId") long studentId) throws Exception {
+        return ResponseEntity.ok().body(reportsService.getRegistrationReport(studentId));
     }
 }

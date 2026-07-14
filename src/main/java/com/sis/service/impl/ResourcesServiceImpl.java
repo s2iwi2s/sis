@@ -143,7 +143,7 @@ public class ResourcesServiceImpl implements ResourcesService {
         LOG.debug("Request to delete Resources : {}", id);
 
         resourcesRepository.findById(id).ifPresent(r -> {
-            strategiesRepository.findByResources(r).ifPresent(s -> {
+            strategiesRepository.findByResourceses(r).ifPresent(s -> {
                 s.removeResources(r);
                 strategiesRepository.save(s);
             });
