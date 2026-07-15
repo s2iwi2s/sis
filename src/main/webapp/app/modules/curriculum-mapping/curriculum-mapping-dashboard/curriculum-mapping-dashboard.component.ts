@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { forkJoin, Observable, OperatorFunction } from 'rxjs';
@@ -61,8 +61,7 @@ export class CurriculumMappingDashboardComponent implements OnInit {
   lcMap: Map<number, ILearningCompetency[]> = new Map();
   sMap: Map<number, IStrategies[]> = new Map();
   aMap: Map<number, IAssessment[]> = new Map();
-
-  isLoading = false;
+  isLoading = signal(false);
 
   constructor(
     protected router: Router,
@@ -76,17 +75,8 @@ export class CurriculumMappingDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ course }) => {
-      if (course) {
-        this.isLoading = true;
-        this.selectedCourse = course;
-        this.clear();
-        forkJoin([
-          this.curriculumMapService.queryByCourse(course.id),
-          this.learningCompetencyService.queryByCourse(course.id),
-          this.strategiesService.queryByCourse(course.id),
-          this.assessmentService.queryByCourse(course.id),
-        ]).subscribe(res => this.loadCurriculumMappingsResponse(res));
-      }
+      console.log('CurriculumMappingDashboardComponent.ngOnInit called with course:', course);
+      this.loadCurriculumMappings(course);
     });
 
     this.courseService.query().subscribe(er => (this.courses = er.body));
@@ -110,10 +100,17 @@ export class CurriculumMappingDashboardComponent implements OnInit {
           .slice(0, 10),
       ),
     );
-
-  loadCurriculumMappings(course: ICourse | null): void {
+  loadCurriculumMappings(course: ICourse | null) {
     if (course) {
-      this.router.navigate(['/', 'curriculum-mapping', 'dashboard', course.id, this.selectedQuarter]);
+      this.isLoading.set(true);
+      this.selectedCourse = course;
+      this.clear();
+      forkJoin([
+        this.curriculumMapService.queryByCourse(course.id),
+        this.learningCompetencyService.queryByCourse(course.id),
+        this.strategiesService.queryByCourse(course.id),
+        this.assessmentService.queryByCourse(course.id),
+      ]).subscribe(res => this.loadCurriculumMappingsResponse(res));
     }
   }
 
@@ -133,12 +130,10 @@ export class CurriculumMappingDashboardComponent implements OnInit {
       this.aMap = this.mapAssessmentByLearningCompetency(aRes.body ?? []);
       this.curMapByQuarter = this.mapCurriculumByQuarter(currRes.body ?? []);
 
-      this.activatedRoute.params.subscribe(({ quarterNo }) => {
-        this.selectedQuarter = +quarterNo;
-        this.isLoading = false;
-      });
+      this.isLoading.set(false);
     }
   }
+
   clear() {
     this.lcMap = new Map();
     this.sMap = new Map();

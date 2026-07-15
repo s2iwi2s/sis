@@ -22,18 +22,4 @@ class DepartmentsTest {
         departments2 = getDepartmentsSample2();
         assertThat(departments1).isNotEqualTo(departments2);
     }
-
-    @Test
-    void courseTest() {
-        Departments departments = getDepartmentsRandomSampleGenerator();
-        Course courseBack = getCourseRandomSampleGenerator();
-
-        departments.setCourse(courseBack);
-        assertThat(departments.getCourse()).isEqualTo(courseBack);
-        assertThat(courseBack.getDepartment()).isEqualTo(departments);
-
-        departments.course(null);
-        assertThat(departments.getCourse()).isNull();
-        assertThat(courseBack.getDepartment()).isNull();
-    }
 }

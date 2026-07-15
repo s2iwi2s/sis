@@ -73,19 +73,6 @@ public class DepartmentsServiceImpl implements DepartmentsService {
         return departmentsRepository.findAll(pageable).map(departmentsMapper::toDto);
     }
 
-    /**
-     *  Get all the departmentses where Course is {@code null}.
-     *  @return the list of entities.
-     */
-    @Transactional(readOnly = true)
-    public List<DepartmentsDTO> findAllWhereCourseIsNull() {
-        LOG.debug("Request to get all departmentses where Course is null");
-        return StreamSupport.stream(departmentsRepository.findAll().spliterator(), false)
-            .filter(departments -> departments.getCourse() == null)
-            .map(departmentsMapper::toDto)
-            .collect(Collectors.toCollection(LinkedList::new));
-    }
-
     @Override
     @Transactional(readOnly = true)
     public Optional<DepartmentsDTO> findOne(Long id) {

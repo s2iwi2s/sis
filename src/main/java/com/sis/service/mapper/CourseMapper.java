@@ -26,6 +26,7 @@ public interface CourseMapper extends EntityMapper<CourseDTO, Course> {
     @Named("appConfigId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "value", source = "value")
     @Mapping(target = "description", source = "description")
     AppConfigDTO toDtoAppConfigId(AppConfig appConfig);
 
@@ -42,5 +43,6 @@ public interface CourseMapper extends EntityMapper<CourseDTO, Course> {
     @Named("academicTermsId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "name")
     AcademicTermsDTO toDtoAcademicTermsId(AcademicTerms academicTerms);
 }

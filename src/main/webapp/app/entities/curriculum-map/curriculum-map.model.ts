@@ -13,7 +13,7 @@ export interface ICurriculumMap {
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
-  course?: Pick<ICourse, 'id'> | null;
+  course?: Pick<ICourse, 'id' | 'subject' | 'gradelevel' | 'year'> | null;
 }
 
 export type NewCurriculumMap = Omit<ICurriculumMap, 'id'> & { id: null };

@@ -101,6 +101,7 @@ export class StudentUpdate implements OnInit {
     if (this.source === 'enroll') {
       this.router.navigate(['/enrollment-form', savedStudent?.id]);
     } else if (this.source === 'register') {
+      this.studentFormService.resetForm(this.editForm, {} as IStudent);
       this.router.navigate(['/student', 'new', 'register']);
     } else {
       this.previousState();

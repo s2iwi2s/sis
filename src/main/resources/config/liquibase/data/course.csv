@@ -1,0 +1,9 @@
+id;subject;hours_per_quarter;course_description;course_objectives;gradelevel_id;department_id;year_id;terms_id;created_by;created_date;last_modified_by;last_modified_date
+1;Science;48;Science Course Description;Science Course Objectives;9;1;1;1;admin;2026-07-06T08:43:43;admin;2026-07-05T23:13:47
+2;Reading;48;Reading Course Description;Reading Course Objectives;9;1;1;1;admin;2026-07-06T08:43:43;admin;2026-07-05T23:13:47
+3;Math;48;Math Course Description;Math Course Objectives;9;1;1;1;admin;2026-07-06T08:43:43;admin;2026-07-05T23:13:47
+4;Social Studies;48;Social Studies Course Description;Social Studies Course Objectives;9;1;1;1;admin;2026-07-06T08:43:43;admin;2026-07-05T23:13:47
+5;Science;48;Science Course Description;Science Course Objectives;8;1;1;1;admin;2026-07-06T08:43:43;admin;2026-07-05T23:13:47
+6;Reading;48;Reading Course Description;Reading Course Objectives;8;1;1;1;admin;2026-07-06T08:43:43;admin;2026-07-05T23:13:47
+7;Math;48;Math Course Description;Math Course Objectives;8;1;1;1;admin;2026-07-06T08:43:43;admin;2026-07-05T23:13:47
+8;Social Studies;48;Social Studies Course Description;Social Studies Course Objectives;8;1;1;1;admin;2026-07-06T08:43:43;admin;2026-07-05T23:13:47

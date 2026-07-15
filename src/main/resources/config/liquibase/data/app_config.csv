@@ -1,0 +1,12 @@
+id;code;value;description;json;priority;created_by;created_date;last_modified_by;last_modified_date
+1;GENDER;Male;Male;;1;admin;2026-07-06T05:29:18;admin;2026-07-06T00:31:10
+2;GENDER;Female;Female;;2;admin;2026-07-06T05:16:06;admin;2026-07-06T03:28:32
+3;GRADE_LEVEL;Kinder;Kinder;;1;admin;2026-07-05T20:41:16;admin;2026-07-06T08:45:04
+4;GRADE_LEVEL;Grade 1;Grade 1;;2;admin;2026-07-06T04:10:39;admin;2026-07-06T13:05:22
+5;GRADE_LEVEL;Grade 2;Grade 2;;3;admin;2026-07-06T06:34:35;admin;2026-07-06T10:30:16
+6;GRADE_LEVEL;Grade 3;Grade 3;;4;admin;2026-07-06T07:42:47;admin;2026-07-06T09:38:31
+7;GRADE_LEVEL;Grade 4;Grade 4;;5;admin;2026-07-05T18:02:38;admin;2026-07-06T07:08:43
+8;GRADE_LEVEL;Grade 5;Grade 5;;6;admin;2026-07-06T06:14:38;admin;2026-07-06T10:17:13
+9;GRADE_LEVEL;Grade 6;Grade 6;;7;admin;2026-07-05T20:12:07;admin;2026-07-06T08:37:23
+10;GRADE_LEVEL;Grade 7;Grade 7;;8;admin;2026-07-05T21:58:44;admin;2026-07-06T10:01:34
+11;GRADE_LEVEL;Grade 8;Grade 8;;9;admin;2026-07-05T16:29:59;admin;2026-07-05T19:09:11

@@ -69,7 +69,6 @@ public class Course implements Serializable {
 
     @JsonIgnoreProperties(value = { "course" }, allowSetters = true)
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(unique = true)
     private Departments department;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "course")

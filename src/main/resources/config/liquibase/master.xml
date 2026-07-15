@@ -12,19 +12,19 @@
     <property name="timeType" value="time(6)" dbms="postgresql"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260706150019_added_entity_AppConfig.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260706150619_added_entity_AcademicYear.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260706150719_added_entity_AcademicTerms.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20260706145919_added_entity_Departments.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260706145519_added_entity_Instructor.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260706145619_added_entity_Student.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260706145719_added_entity_Course.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260706145819_added_entity_CourseSchedule.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20260706145919_added_entity_Departments.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20260706150019_added_entity_AppConfig.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260706150119_added_entity_CurriculumMap.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260706150219_added_entity_LearningCompetency.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260706150319_added_entity_Strategies.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260706150419_added_entity_Assessment.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260706150519_added_entity_Resources.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20260706150619_added_entity_AcademicYear.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20260706150719_added_entity_AcademicTerms.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20260706145519_added_entity_constraints_Instructor.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20260706145619_added_entity_constraints_Student.xml" relativeToChangelogFile="false"/>

@@ -9,7 +9,7 @@
             <map>
               <entry key="BASE64_SECRET" value="MmQxM2FkNWQwNWRkYTAwZjM1YWJlYmQyNmExNmNjMGQ1ZDg2MjQwMjE4ODIxNDEwMmMxMzQ2YjJmMWUyZWExYjc4OTY2Y2U0NmM3NjY3NTdhYzYwOTg5MzhkYjZmNjVjYmY3NjIzM2I5YzFmZDI4NjBmM2RiM2I0NDQ2MzZhZDk\=" />
               <entry key="SPRING_DATASOURCE_PASSWORD" value="dev" />
-              <entry key="SPRING_DATASOURCE_URL" value="jdbc:postgresql://photon.vm:5432/slra_dev" />
+              <entry key="SPRING_DATASOURCE_URL" value="jdbc:postgresql://dev.postgresql.db:5432/slra_dev" />
               <entry key="SPRING_DATASOURCE_USERNAME" value="sis_dev" />
             </map>
           </option>

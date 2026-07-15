@@ -31,6 +31,14 @@ const curriculumMapRoute: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
+    path: ':courseId/:quarterNo/new',
+    loadComponent: () => import('./update/curriculum-map-update').then(m => m.CurriculumMapUpdate),
+    resolve: {
+      curriculumMap: CurriculumMapResolve,
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
     path: ':id/edit',
     loadComponent: () => import('./update/curriculum-map-update').then(m => m.CurriculumMapUpdate),
     resolve: {

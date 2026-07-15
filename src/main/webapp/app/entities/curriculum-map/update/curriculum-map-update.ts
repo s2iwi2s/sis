@@ -24,6 +24,7 @@ import { CurriculumMapFormGroup, CurriculumMapFormService } from './curriculum-m
 })
 export class CurriculumMapUpdate implements OnInit {
   readonly isSaving = signal(false);
+  isFromDashboard = false;
   curriculumMap: ICurriculumMap | null = null;
 
   coursesSharedCollection = signal<ICourse[]>([]);
@@ -43,6 +44,12 @@ export class CurriculumMapUpdate implements OnInit {
       this.curriculumMap = curriculumMap;
       if (curriculumMap) {
         this.updateForm(curriculumMap);
+        if (curriculumMap && curriculumMap.id === -1) {
+          this.isFromDashboard = true;
+          this.editForm.patchValue({
+            id: null,
+          });
+        }
       }
 
       this.loadRelationshipsOptions();

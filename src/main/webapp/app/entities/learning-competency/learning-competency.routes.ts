@@ -31,6 +31,14 @@ const learningCompetencyRoute: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
+    path: ':curriculumMapId/new',
+    loadComponent: () => import('./update/learning-competency-update').then(m => m.LearningCompetencyUpdate),
+    resolve: {
+      learningCompetency: LearningCompetencyResolve,
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
     path: ':id/edit',
     loadComponent: () => import('./update/learning-competency-update').then(m => m.LearningCompetencyUpdate),
     resolve: {

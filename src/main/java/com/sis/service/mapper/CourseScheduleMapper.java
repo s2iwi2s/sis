@@ -34,11 +34,13 @@ public interface CourseScheduleMapper extends EntityMapper<CourseScheduleDTO, Co
     @Named("academicTermsId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "name")
     AcademicTermsDTO toDtoAcademicTermsId(AcademicTerms academicTerms);
 
     @Named("academicYearId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "name")
     AcademicYearDTO toDtoAcademicYearId(AcademicYear academicYear);
 
     @Named("instructorId")

@@ -58,6 +58,9 @@ public class StudentDTO implements Serializable {
     @Size(max = 100)
     private String nationality;
 
+    @Size(max = 100)
+    private String citizenship;
+
     @Size(max = 50)
     private String motherTongue;
 
@@ -257,6 +260,14 @@ public class StudentDTO implements Serializable {
 
     public void setNationality(String nationality) {
         this.nationality = nationality;
+    }
+
+    public String getCitizenship() {
+        return citizenship;
+    }
+
+    public void setCitizenship(String citizenship) {
+        this.citizenship = citizenship;
     }
 
     public String getMotherTongue() {

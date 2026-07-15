@@ -49,10 +49,6 @@ public class Departments implements Serializable {
     @Column(name = "last_modified_date")
     private Instant lastModifiedDate;
 
-    @JsonIgnoreProperties(value = { "gradelevel", "department", "curriculumMaps", "year", "terms" }, allowSetters = true)
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "department")
-    private Course course;
-
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
     public Long getId() {
@@ -144,25 +140,6 @@ public class Departments implements Serializable {
 
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
-    }
-
-    public Course getCourse() {
-        return this.course;
-    }
-
-    public void setCourse(Course course) {
-        if (this.course != null) {
-            this.course.setDepartment(null);
-        }
-        if (course != null) {
-            course.setDepartment(this);
-        }
-        this.course = course;
-    }
-
-    public Departments course(Course course) {
-        this.setCourse(course);
-        return this;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

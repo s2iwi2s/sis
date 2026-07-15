@@ -86,6 +86,10 @@ public class Student extends AbstractAuditingEntity<Long> implements Serializabl
     @Column(name = "nationality", length = 100)
     private String nationality;
 
+    @Size(max = 100)
+    @Column(name = "citizenship", length = 100)
+    private String citizenship;
+
     @Size(max = 50)
     @Column(name = "mother_tongue", length = 50)
     private String motherTongue;
@@ -376,6 +380,19 @@ public class Student extends AbstractAuditingEntity<Long> implements Serializabl
 
     public void setNationality(String nationality) {
         this.nationality = nationality;
+    }
+
+    public String getCitizenship() {
+        return citizenship;
+    }
+
+    public Student citizenship(String citizenship) {
+        this.citizenship = citizenship;
+        return this;
+    }
+
+    public void setCitizenship(String citizenship) {
+        this.citizenship = citizenship;
     }
 
     public String getMotherTongue() {

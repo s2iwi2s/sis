@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 
 import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { forkJoin, Observable, OperatorFunction } from 'rxjs';
@@ -62,7 +62,7 @@ export class CurriculumMappingViewComponent implements OnInit {
   sMap: Map<number, IStrategies[]>;
   aMap: Map<number, IAssessment[]>;
 
-  isLoading = false;
+  isLoading = signal(false);
 
   protected readonly courseService = inject(CourseService);
   protected readonly curriculumMapService = inject(CurriculumMapService);
@@ -102,6 +102,7 @@ export class CurriculumMappingViewComponent implements OnInit {
 
   loadCurriculumMappings(course: ICourse | null): void {
     if (course) {
+      this.isLoading.set(true);
       forkJoin([
         this.curriculumMapService.queryByCourse(course.id),
         this.learningCompetencyService.queryByCourse(course.id),
@@ -127,6 +128,7 @@ export class CurriculumMappingViewComponent implements OnInit {
       this.aMap = this.mapAssessmentByLearningCompetency(aRes.body ?? []);
       this.curMapByQuarter = this.mapCurriculumByQuarter(currRes.body ?? []);
     }
+    this.isLoading.set(false);
   }
 
   mapCurriculumByQuarter(array: ICurriculumMap[] = []): Map<number, ICurriculumMap[]> {

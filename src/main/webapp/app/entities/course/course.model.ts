@@ -15,7 +15,7 @@ export interface ICourse {
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
-  gradelevel?: Pick<IAppConfig, 'id' | 'description'> | null;
+  gradelevel?: Pick<IAppConfig, 'id' | 'description' | 'value'> | null;
   department?: Pick<IDepartments, 'id' | 'name'> | null;
   year?: Pick<IAcademicYear, 'id' | 'name'> | null;
   terms?: Pick<IAcademicTerms, 'id' | 'name'> | null;

@@ -9,6 +9,7 @@
         margin-top: 10px;
         margin-bottom: 10px;
       }
+
       .logo {
         width: 80px;
         height: 80px;
@@ -18,12 +19,15 @@
         font-family: Arial, Helvetica, sans-serif;
         font-size: medium;
       }
+
       .fs-large {
         font-size: large;
       }
+
       .fs-medium {
         font-size: medium;
       }
+
       .fs-small {
         font-size: small;
       }
@@ -45,6 +49,7 @@
       .p-3 {
         padding: 3px;
       }
+
       .pt-3 {
         padding-top: 3px;
       }
@@ -82,6 +87,7 @@
       .flex-item-90 {
         flex: 90%;
       }
+
       .flex-item-70 {
         flex: 70%;
       }
@@ -93,6 +99,7 @@
       .flex-item-50 {
         flex: 50%;
       }
+
       .flex-item-40 {
         flex: 40%;
       }
@@ -132,15 +139,15 @@
     <hr class="my-1" />
     <!--
 <div class="my-1">
-  <div class="col-7">
-    <p class="fw-semibold">STUDENT/ PUPIL REGISTRATION FORM</p>
-  </div>
+<div class="col-7">
+<p class="fw-semibold">STUDENT/ PUPIL REGISTRATION FORM</p>
+</div>
 
-  <div class="col-sm-5 border border-black text-sm-end">
-    <p class="my-0">DATE:________________</p>
-    <p class="my-0">GRADE LEVEL:________________</p>
-    <p class="my-0 pe-5"><span class="me-3">NEW</span><span>OLD</span></p>
-  </div>
+<div class="col-sm-5 border border-black text-sm-end">
+<p class="my-0">DATE:________________</p>
+<p class="my-0">GRADE LEVEL:________________</p>
+<p class="my-0 pe-5"><span class="me-3">NEW</span><span>OLD</span></p>
+</div>
 </div>
 -->
     <div class="flex-container">
@@ -156,7 +163,7 @@
     </div>
 
     <span th:if="${!#strings.isEmpty(student.lrn)}" th:text="#{pdf.registration.lrn(${student.lrn})}">LRN:</span>
-    <div class="flex-container">
+    <div class="p-3 flex-container">
       <div class="flex-item-60 flex-container">
         <div class="flex-item-10">Name:</div>
         <div class="border-bottom flex-item-90">
@@ -172,6 +179,45 @@
       <div class="flex-item-20 flex-container">
         <div class="flex-item-10">Gender:</div>
         <div class="flex-item-90 border-bottom" th:text="#{pdf.value(${student.gender.value})}">gender</div>
+      </div>
+    </div>
+
+    <div class="p-3 flex-container">
+      <div class="flex-item-50 flex-container">
+        <div class="flex-item-10">Citizenship:</div>
+        <div class="flex-item-90 border-bottom" th:text="#{pdf.value(${student.citizenship})}">Citizenship</div>
+      </div>
+      <div class="flex-item-50 flex-container">
+        <div class="flex-item-10">Nationality:</div>
+        <div class="flex-item-90 border-bottom" th:text="#{pdf.value(${student.nationality})}">Nationality</div>
+      </div>
+    </div>
+
+    <div class="p-3 flex-container">
+      <div class="flex-item-50 flex-container">
+        <div class="flex-item-40">Father's Name:</div>
+        <div class="flex-item-60 border-bottom">
+          <span th:text="#{pdf.value(${student.fathersLastName})}">lastName</span>,
+          <span th:text="#{pdf.value(${student.fathersFirstName})}">firstName</span>
+        </div>
+      </div>
+      <div class="flex-item-50 flex-container">
+        <div class="flex-item-30">Occupation:</div>
+        <div class="flex-item-70 border-bottom" th:text="#{pdf.value(${student.fathersOccupation})}">mothersOccupation</div>
+      </div>
+    </div>
+
+    <div class="p-3 flex-container">
+      <div class="flex-item-50 flex-container">
+        <div class="flex-item-40">Mother's Name:</div>
+        <div class="flex-item-60 border-bottom">
+          <span th:text="#{pdf.value(${student.mothersLastName})}">lastName</span>,
+          <span th:text="#{pdf.value(${student.mothersFirstName})}">firstName</span>
+        </div>
+      </div>
+      <div class="flex-item-50 flex-container">
+        <div class="flex-item-30">Occupation:</div>
+        <div class="flex-item-70 border-bottom" th:text="#{pdf.value(${student.mothersOccupation})}">mothersOccupation</div>
       </div>
     </div>
   </body>

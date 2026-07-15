@@ -9,6 +9,7 @@ import { CourseService } from '../service/course.service';
 
 const courseResolve = (route: ActivatedRouteSnapshot): Observable<null | ICourse> => {
   const { id } = route.params;
+  console.log('courseResolve called with id:', id);
   if (id) {
     const router = inject(Router);
     const service = inject(CourseService);

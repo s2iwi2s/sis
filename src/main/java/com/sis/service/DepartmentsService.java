@@ -43,13 +43,6 @@ public interface DepartmentsService {
     Page<DepartmentsDTO> findAll(Pageable pageable);
 
     /**
-     * Get all the DepartmentsDTO where Course is {@code null}.
-     *
-     * @return the {@link List} of entities.
-     */
-    List<DepartmentsDTO> findAllWhereCourseIsNull();
-
-    /**
      * Get the "id" departments.
      *
      * @param id the id of the entity.

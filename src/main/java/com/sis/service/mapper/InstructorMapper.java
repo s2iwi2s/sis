@@ -28,6 +28,7 @@ public interface InstructorMapper extends EntityMapper<InstructorDTO, Instructor
     @Named("appConfigId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "value", source = "value")
     AppConfigDTO toDtoAppConfigId(AppConfig appConfig);
 
     @Named("userId")
@@ -38,6 +39,8 @@ public interface InstructorMapper extends EntityMapper<InstructorDTO, Instructor
     @Named("courseScheduleId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "room", source = "room")
+    @Mapping(target = "description", source = "description")
     CourseScheduleDTO toDtoCourseScheduleId(CourseSchedule courseSchedule);
 
     @Named("courseScheduleIdSet")

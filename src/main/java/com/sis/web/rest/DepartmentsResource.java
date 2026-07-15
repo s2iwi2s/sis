@@ -148,10 +148,6 @@ public class DepartmentsResource {
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
         @RequestParam(name = "filter", required = false) String filter
     ) {
-        if ("course-is-null".equals(filter)) {
-            LOG.debug("REST request to get all Departmentss where course is null");
-            return new ResponseEntity<>(departmentsService.findAllWhereCourseIsNull(), HttpStatus.OK);
-        }
         LOG.debug("REST request to get a page of Departmentses");
         Page<DepartmentsDTO> page = departmentsService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
