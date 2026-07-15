@@ -151,7 +151,7 @@
           >
             <option [ngValue]="null"></option>
             @for (appConfigOption of gradelevelsCollection(); track $index) {
-              <option [ngValue]="appConfigOption">{{ appConfigOption.id }}</option>
+              <option [ngValue]="appConfigOption">{{ appConfigOption.value }}</option>
             }
           </select>
         </div>
@@ -168,7 +168,7 @@
           >
             <option [ngValue]="null"></option>
             @for (departmentsOption of departmentsCollection(); track $index) {
-              <option [ngValue]="departmentsOption">{{ departmentsOption.id }}</option>
+              <option [ngValue]="departmentsOption">{{ departmentsOption.name }}</option>
             }
           </select>
         </div>
@@ -185,7 +185,7 @@
           >
             <option [ngValue]="null"></option>
             @for (academicYearOption of academicYearsSharedCollection(); track $index) {
-              <option [ngValue]="academicYearOption">{{ academicYearOption.id }}</option>
+              <option [ngValue]="academicYearOption">{{ academicYearOption.name }}</option>
             }
           </select>
         </div>

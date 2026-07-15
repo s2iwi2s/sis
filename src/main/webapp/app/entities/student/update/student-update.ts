@@ -36,6 +36,7 @@ export class StudentUpdate implements OnInit {
   readonly source: string;
   student: IStudent | null = null;
 
+  gradelevelsCollection = signal<IAppConfig[]>([]);
   gendersCollection = signal<IAppConfig[]>([]);
   usersSharedCollection = signal<IUser[]>([]);
   courseSchedulesSharedCollection = signal<ICourseSchedule[]>([]);
@@ -120,7 +121,9 @@ export class StudentUpdate implements OnInit {
   protected updateForm(student: IStudent): void {
     this.student = student;
     this.studentFormService.resetForm(this.editForm, student);
-
+    this.gradelevelsCollection.set(
+      this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(this.gradelevelsCollection(), student.gradelevel),
+    );
     this.gendersCollection.set(
       this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(this.gendersCollection(), student.gender),
     );
@@ -135,8 +138,20 @@ export class StudentUpdate implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     this.appConfigService
+      .query({ code: 'GRADE_LEVEL' })
+      .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
+      .pipe(map(this.appConfigService.sortAppConfig))
+      .pipe(
+        map((appConfigs: IAppConfig[]) =>
+          this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.student?.gradelevel),
+        ),
+      )
+      .subscribe((appConfigs: IAppConfig[]) => this.gradelevelsCollection.set(appConfigs));
+
+    this.appConfigService
       .query({ code: 'GENDER' })
       .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
+      .pipe(map(this.appConfigService.sortAppConfig))
       .pipe(
         map((appConfigs: IAppConfig[]) =>
           this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.student?.gender),

@@ -2,12 +2,12 @@
   <div class="card shadow-lg bg-body-tertiary rounded-4 mb-2">
     <div class="card-header">
       <div class="row">
-        <div class="col-sm-9">
+        <div class="col-sm-8">
           <h5 data-cy="studentDetailsHeading">
             <span class="fw-semibold">{{ studentRef.lrn }}</span> - <span>{{ studentRef | name }}</span>
           </h5>
         </div>
-        <div class="col-sm-3 d-flex justify-content-end">
+        <div class="col-sm-4 d-flex justify-content-end">
           @if (!studentRef?.enrollmentDate || !studentRef?.enrollmentDate?.isValid()) {
             <button type="button" class="btn btn-primary btn-sm rounded-pill" (click)="enroll()" [disabled]="isSaving()">
               <fa-icon icon="pencil-alt" />&nbsp;<span>Enroll</span>
@@ -26,9 +26,19 @@
       }
 
       <div class="row">
-        <div class="col-12">
-          <span class="fw-semibold fst-italic" jhiTranslate="schInfoSysApp.student.enrollmentDate">Birth Date</span>
+        <div class="col-4">
+          <span class="fw-semibold fst-italic" jhiTranslate="schInfoSysApp.student.enrollmentDate">enrollmentDate</span>
           <span class="fst-italic">{{ studentRef?.enrollmentDate | formatMediumDate }}</span>
+        </div>
+        <div class="col-8">
+          <span class="fw-semibold fst-italic" jhiTranslate="schInfoSysApp.student.gradelevel">gradelevel</span>
+          <span class="fst-italic">{{ studentRef?.gradelevel?.value }}</span>
+          <select class="form-control" id="field_gradelevel" name="gradelevel" [(ngModel)]="gradelevel">
+            <option [ngValue]="null"></option>
+            @for (appConfigOption of gradelevelsCollection(); track $index) {
+              <option [selected]="appConfigOption.id === gradelevel?.id" [ngValue]="appConfigOption">{{ appConfigOption.value }}</option>
+            }
+          </select>
         </div>
         <div class="col-4"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.birthDate">Birth Date</span></div>
         <div class="col-4"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.birthPlace">Birth Place</span></div>

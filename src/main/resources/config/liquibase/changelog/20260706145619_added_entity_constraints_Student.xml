@@ -16,6 +16,12 @@
                                  referencedColumnNames="id"
                                  referencedTableName="app_config"
                                  />
+      <addForeignKeyConstraint baseColumnNames="gradelevel_id"
+                               baseTableName="student"
+                               constraintName="fk_student__gradelevel_id"
+                               referencedColumnNames="id"
+                               referencedTableName="app_config"
+      />
 
         <addForeignKeyConstraint baseColumnNames="user_id"
                                  baseTableName="student"

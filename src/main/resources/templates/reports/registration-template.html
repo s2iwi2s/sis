@@ -3,42 +3,176 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Bootstrap demo</title>
-    <link rel="stylesheet" th:href="@{http://localhost:8080/css/main.css}" />
+    <title th:text="#{pdf.reg.title(${student.lrn})}">SLRA Registration"</title>
+    <style>
+      @page {
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+      .logo {
+        width: 80px;
+        height: 80px;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: medium;
+      }
+      .fs-large {
+        font-size: large;
+      }
+      .fs-medium {
+        font-size: medium;
+      }
+      .fs-small {
+        font-size: small;
+      }
+
+      .fw-bold {
+        font-weight: bold;
+      }
+
+      .my-0 {
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+
+      .my-1 {
+        margin-top: 1px;
+        margin-bottom: 1px;
+      }
+
+      .p-3 {
+        padding: 3px;
+      }
+      .pt-3 {
+        padding-top: 3px;
+      }
+
+      .border-black {
+        border: 1px solid black;
+      }
+
+      .border-bottom {
+        border-bottom: 1px solid black;
+      }
+
+      .text-center {
+        text-align: center;
+      }
+
+      .text-end {
+        text-align: right;
+      }
+
+      .position-absolute {
+        position: absolute;
+        z-index: -1000;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      .flex-container {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .flex-item-90 {
+        flex: 90%;
+      }
+      .flex-item-70 {
+        flex: 70%;
+      }
+
+      .flex-item-60 {
+        flex: 60%;
+      }
+
+      .flex-item-50 {
+        flex: 50%;
+      }
+      .flex-item-40 {
+        flex: 40%;
+      }
+
+      .flex-item-33 {
+        flex: 33%;
+      }
+
+      .flex-item-30 {
+        flex: 30%;
+      }
+
+      .flex-item-auto {
+        flex: 1 1 0px;
+      }
+
+      .flex-item-20 {
+        flex: 20%;
+      }
+
+      .flex-item-10 {
+        flex: 10%;
+      }
+    </style>
   </head>
-  <body class="bg-slate-100 flex items-center justify-center min-h-screen">
-    <table>
-      <tr>
-        <td>ST. LORENZO RUIZ ACADEMY OF TAGUM, INC.</td>
-      </tr>
-      <tr>
-        <td>Apokon, Tagum City, 8100 Davao del Norte</td>
-      </tr>
-      <tr>
-        <td>Gov't. Recognition Nos. 007, s.2010 (High School); No. 006, s.2012 (Elementary)</td>
-      </tr>
-    </table>
+  <body>
+    <!--
+<body class="p-3 m-0 border-0">
+-->
+    <img src="http://localhost:8080/img/slra.jfif" class="logo position-absolute" />
+    <p class="fs-small">&nbsp;</p>
+    <p class="text-center fs-large fw-bold my-0">ST. LORENZO RUIZ ACADEMY OF TAGUM, INC.</p>
+    <small>
+      <p class="text-center my-0">Apokon, Tagum City, 8100 Davao del Norte</p>
+      <p class="text-center my-0">Gov't. Recognition Nos. 007, s.2010 (High School); No. 006, s.2012 (Elementary)</p>
+    </small>
+    <hr class="my-1" />
+    <!--
+<div class="my-1">
+  <div class="col-7">
+    <p class="fw-semibold">STUDENT/ PUPIL REGISTRATION FORM</p>
+  </div>
 
-    <p th:text="#{pdf.registration.lrn(${student.lrn})}">LRN:</p>
-
-    <h1 th:text="'Hello!'" />
-    <p class="m-16 text-md">Have a nice day!</p>
-    <div class="p-8 bg-white rounded-xl shadow-lg border border-slate-200">
-      <h1 class="text-3xl font-extrabold text-blue-600 mb-2">Hello, JTE!</h1>
-      <p class="text-slate-600">Ultra-fast templates with JTE and Tailwind CSS.</p>
-    </div>
-    <div class="bg-white dark:bg-gray-800 rounded-lg px-6 py-8 ring shadow-xl ring-gray-900/5">
-      <div>
-        <span class="inline-flex items-center justify-center rounded-md bg-indigo-500 p-2 shadow-lg">
-          <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-            <!-- ... -->
-          </svg>
-        </span>
+  <div class="col-sm-5 border border-black text-sm-end">
+    <p class="my-0">DATE:________________</p>
+    <p class="my-0">GRADE LEVEL:________________</p>
+    <p class="my-0 pe-5"><span class="me-3">NEW</span><span>OLD</span></p>
+  </div>
+</div>
+-->
+    <div class="flex-container">
+      <div class="flex-item-70 fw-bold pt-3">STUDENT/ PUPIL REGISTRATION FORM</div>
+      <div class="flex-item-30 text-end border-black p-3">
+        <div class="my-0 text-end">DATE:________</div>
+        <div class="my-0 text-end">GRADE LEVEL:________</div>
+        <div class="my-0 flex-container">
+          <div class="flex-item-50 text-end">NEW</div>
+          <div class="flex-item-50 text-center">OLD</div>
+        </div>
       </div>
-      <h3 class="text-gray-900 dark:text-white mt-5 text-base font-medium tracking-tight">Writes upside-down</h3>
-      <p class="text-gray-500 dark:text-gray-400 mt-2 text-sm">
-        The Zero Gravity Pen can be used to write in any orientation, including upside-down. It even works in outer space.
-      </p>
+    </div>
+
+    <span th:if="${!#strings.isEmpty(student.lrn)}" th:text="#{pdf.registration.lrn(${student.lrn})}">LRN:</span>
+    <div class="flex-container">
+      <div class="flex-item-60 flex-container">
+        <div class="flex-item-10">Name:</div>
+        <div class="border-bottom flex-item-90">
+          <span th:text="#{pdf.value(${student.lastName})}">lastName</span>,
+          <span th:text="#{pdf.value(${student.firstName})}">firstName</span>
+          <span th:text="#{pdf.value(${student.middleName})}">middleName</span>
+        </div>
+      </div>
+      <div class="flex-item-20 flex-container">
+        <div class="flex-item-10">Age:</div>
+        <div class="flex-item-90 border-bottom" th:text="#{pdf.value(${student.age})}">0</div>
+      </div>
+      <div class="flex-item-20 flex-container">
+        <div class="flex-item-10">Gender:</div>
+        <div class="flex-item-90 border-bottom" th:text="#{pdf.value(${student.gender.value})}">gender</div>
+      </div>
     </div>
   </body>
 </html>

@@ -60,6 +60,7 @@
       "createdDate": "Created Date",
       "lastModifiedBy": "Last Modified By",
       "lastModifiedDate": "Last Modified Date",
+      "gradelevel": "Grade Level",
       "gender": "Gender",
       "user": "User",
       "courseSchedule": "Course Schedule"

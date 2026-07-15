@@ -16,13 +16,29 @@
             <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
           </div>
         }
-        <div class="col-6">
+        <div class="col-7">
           <div class="col-3">
             <label class="form-label" for="field_lrn" jhiTranslate="schInfoSysApp.student.lrn">Lrn</label>
             <input type="text" class="form-control" name="lrn" id="field_lrn" data-cy="lrn" formControlName="lrn" />
           </div>
         </div>
-        <div class="col-6"></div>
+
+        <div class="col-4">
+          <label class="form-label" for="field_gradelevel" jhiTranslate="schInfoSysApp.student.gradelevel">gradelevel</label>
+          <select
+            class="form-control"
+            id="field_gradelevel"
+            data-cy="gradelevel"
+            name="gradelevel"
+            formControlName="gradelevel"
+            [compareWith]="compareAppConfig"
+          >
+            <option [ngValue]="null"></option>
+            @for (appConfigOption of gradelevelsCollection(); track $index) {
+              <option [ngValue]="appConfigOption">{{ appConfigOption.value }}</option>
+            }
+          </select>
+        </div>
 
         @let lastNameRef = editForm.get('lastName')!;
         <div class="col-4">

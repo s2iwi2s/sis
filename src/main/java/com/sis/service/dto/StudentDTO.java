@@ -2,7 +2,8 @@ package com.sis.service.dto;
 
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -114,6 +115,8 @@ public class StudentDTO implements Serializable {
 
     private AppConfigDTO gender;
 
+    private AppConfigDTO gradelevel;
+
     private UserDTO user;
 
     private Set<CourseScheduleDTO> courseSchedules = new HashSet<>();
@@ -176,6 +179,16 @@ public class StudentDTO implements Serializable {
 
     public Instant getBirthDate() {
         return birthDate;
+    }
+
+    public Integer getAge() {
+        if (this.birthDate == null) {
+            return 0;
+        }
+
+        LocalDateTime birthdayLocalDateTime = LocalDateTime.ofInstant(this.birthDate, ZoneId.systemDefault());
+        LocalDateTime today = LocalDateTime.now();
+        return (int) ChronoUnit.YEARS.between(birthdayLocalDateTime, today);
     }
 
     public void setBirthDate(Instant birthDate) {
@@ -406,6 +419,14 @@ public class StudentDTO implements Serializable {
         this.gender = gender;
     }
 
+    public AppConfigDTO getGradelevel() {
+        return gradelevel;
+    }
+
+    public void setGradelevel(AppConfigDTO gradelevel) {
+        this.gradelevel = gradelevel;
+    }
+
     public UserDTO getUser() {
         return user;
     }
@@ -427,11 +448,10 @@ public class StudentDTO implements Serializable {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof StudentDTO)) {
+        if (!(o instanceof StudentDTO studentDTO)) {
             return false;
         }
 
-        StudentDTO studentDTO = (StudentDTO) o;
         if (this.id == null) {
             return false;
         }
@@ -449,6 +469,7 @@ public class StudentDTO implements Serializable {
         return "StudentDTO{" +
             "id=" + getId() +
             ", lrn='" + getLrn() + "'" +
+            ", gradelevel='" + getGradelevel() + "'" +
             ", firstName='" + getFirstName() + "'" +
             ", middleName='" + getMiddleName() + "'" +
             ", lastName='" + getLastName() + "'" +

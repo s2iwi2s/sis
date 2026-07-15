@@ -150,6 +150,10 @@ public class Student extends AbstractAuditingEntity<Long> implements Serializabl
     @OneToOne(fetch = FetchType.LAZY)
     private AppConfig gender;
 
+    @JsonIgnoreProperties(value = { "instructor", "student", "course" }, allowSetters = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    private AppConfig gradelevel;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private User user;
@@ -582,6 +586,18 @@ public class Student extends AbstractAuditingEntity<Long> implements Serializabl
         return this;
     }
 
+    public AppConfig getGradelevel() {
+        return gradelevel;
+    }
+
+    public void setGradelevel(AppConfig gradelevel) {
+        this.gradelevel = gradelevel;
+    }
+
+    public void gradelevel(AppConfig gradelevel) {
+        this.gradelevel = gradelevel;
+    }
+
     public User getUser() {
         return this.user;
     }
@@ -643,6 +659,7 @@ public class Student extends AbstractAuditingEntity<Long> implements Serializabl
         return "Student{" +
             "id=" + getId() +
             ", lrn='" + getLrn() + "'" +
+            ", gradelevel='" + getGradelevel() + "'" +
             ", firstName='" + getFirstName() + "'" +
             ", middleName='" + getMiddleName() + "'" +
             ", lastName='" + getLastName() + "'" +

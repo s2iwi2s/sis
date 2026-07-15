@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { HttpHeaders } from '@angular/common/http';
-import { Component, ChangeDetectionStrategy, OnChanges, OnInit, SimpleChanges, effect, inject, input, signal, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject, input, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Data, ParamMap, Router, RouterLink } from '@angular/router';
 
@@ -8,7 +8,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap/pagination';
 import { TranslateModule } from '@ngx-translate/core';
-import { Subscription, combineLatest, filter, tap } from 'rxjs';
+import { combineLatest, filter, Subscription, tap } from 'rxjs';
 
 import { DEFAULT_SORT_DATA, ITEM_DELETED_EVENT, SORT } from 'app/config/navigation.constants';
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
@@ -103,8 +103,7 @@ export class Student implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.studentInputFilter.currentValue) {
-      const currentFilter = changes.studentInputFilter.currentValue;
-      this.studentFilter = currentFilter;
+      this.studentFilter = changes.studentInputFilter.currentValue;
       if (this.studentFilter?.lrn || this.studentFilter?.firstName || this.studentFilter?.lastName || this.studentFilter?.birthDate) {
         this.load();
       }

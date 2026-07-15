@@ -36,6 +36,7 @@ type StudentFormDefaults = Pick<NewStudent, 'id' | 'enrollmentDate' | 'birthDate
 type StudentFormGroupContent = {
   id: FormControl<StudentFormRawValue['id'] | NewStudent['id']>;
   lrn: FormControl<StudentFormRawValue['lrn']>;
+  gradelevel: FormControl<StudentFormRawValue['gradelevel']>;
   firstName: FormControl<StudentFormRawValue['firstName']>;
   middleName: FormControl<StudentFormRawValue['middleName']>;
   lastName: FormControl<StudentFormRawValue['lastName']>;
@@ -99,6 +100,7 @@ export class StudentFormService {
           validators: [Validators.required],
         },
       ),
+      gradelevel: new FormControl(studentRawValue.gradelevel),
       lrn: new FormControl(studentRawValue.lrn),
       firstName: new FormControl(studentRawValue.firstName, {
         validators: [Validators.maxLength(50)],

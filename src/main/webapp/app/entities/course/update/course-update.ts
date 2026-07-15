@@ -143,8 +143,9 @@ export class CourseUpdate implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     this.appConfigService
-      .query({ filter: 'course-is-null' })
+      .query({ code: 'GRADE_LEVEL' })
       .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
+      .pipe(map(this.appConfigService.sortAppConfig))
       .pipe(
         map((appConfigs: IAppConfig[]) =>
           this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.course?.gradelevel),
@@ -155,6 +156,7 @@ export class CourseUpdate implements OnInit {
     this.departmentsService
       .query({ filter: 'course-is-null' })
       .pipe(map((res: HttpResponse<IDepartments[]>) => res.body ?? []))
+      .pipe(map(this.appConfigService.sortAppConfig))
       .pipe(
         map((departmentses: IDepartments[]) =>
           this.departmentsService.addDepartmentsToCollectionIfMissing<IDepartments>(departmentses, this.course?.department),
@@ -165,6 +167,7 @@ export class CourseUpdate implements OnInit {
     this.academicYearService
       .query()
       .pipe(map((res: HttpResponse<IAcademicYear[]>) => res.body ?? []))
+      .pipe(map(this.appConfigService.sortAppConfig))
       .pipe(
         map((academicYears: IAcademicYear[]) =>
           this.academicYearService.addAcademicYearToCollectionIfMissing<IAcademicYear>(academicYears, this.course?.year),
@@ -175,6 +178,7 @@ export class CourseUpdate implements OnInit {
     this.academicTermsService
       .query()
       .pipe(map((res: HttpResponse<IAcademicTerms[]>) => res.body ?? []))
+      .pipe(map(this.appConfigService.sortAppConfig))
       .pipe(
         map((academicTermses: IAcademicTerms[]) =>
           this.academicTermsService.addAcademicTermsToCollectionIfMissing<IAcademicTerms>(academicTermses, this.course?.terms),

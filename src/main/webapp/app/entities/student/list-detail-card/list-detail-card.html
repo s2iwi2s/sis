@@ -7,8 +7,9 @@
   >
     <div class="card-header fw-semibold">({{ studentRef.id }}) {{ studentRef.lrn }} - {{ studentRef | name }}</div>
     <div class="card-body py-0 row">
-      <div class="col-12 fst-italic">Enrollment Date: {{ studentRef.enrollmentDate | formatMediumDate }}</div>
-      <div class="col-12">Birth Date: {{ studentRef.birthDate | formatMediumDate }}</div>
+      <div class="col-6 fst-italic">Enrollment Date: {{ studentRef.enrollmentDate | formatMediumDate }}</div>
+      <div class="col-6">Grade Level: {{ studentRef.gradelevel?.value }}</div>
+      <div class="col-6">Birth Date: {{ studentRef.birthDate | formatMediumDate }}</div>
     </div>
   </div>
 }

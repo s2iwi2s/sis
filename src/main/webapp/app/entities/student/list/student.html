@@ -91,6 +91,13 @@
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
+            <th scope="col" jhiSortBy="gradelevel">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.student.gradelevel">gradelevel</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
             <th scope="col" jhiSortBy="enrollmentDate">
               <div class="d-flex">
                 <span jhiTranslate="schInfoSysApp.student.enrollmentDate">Enrollment Date</span>
@@ -153,6 +160,7 @@
               <td>{{ student.firstName }}</td>
               <td>{{ student.middleName }}</td>
               <td>{{ student.lastName }}</td>
+              <td>{{ student.gradelevel?.value }}</td>
               <td>{{ student.enrollmentDate | formatMediumDate }}</td>
               <td>{{ student.birthDate | formatMediumDate }}</td>
               <td>{{ student.contactNo }} - {{ source() }}</td>

@@ -41,6 +41,7 @@ export interface IStudent {
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
   gender?: Pick<IAppConfig, 'id' | 'value'> | null;
+  gradelevel?: Pick<IAppConfig, 'id' | 'value'> | null;
   user?: Pick<IUser, 'id' | 'login'> | null;
   courseSchedules?: Pick<ICourseSchedule, 'id'>[] | null;
 }

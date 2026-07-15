@@ -55,6 +55,7 @@ public class SecurityConfiguration {
                 // prettier-ignore
                 authz
                     .requestMatchers("/index.html", "/*.js", "/*.txt", "/*.json", "/*.map", "/*.css").permitAll()
+                    .requestMatchers("/img/**", "/js/**", "/css/**").permitAll()
                     .requestMatchers("/*.ico", "/*.png", "/*.svg", "/*.webapp").permitAll()
                     .requestMatchers("/content/**").permitAll()
                     .requestMatchers("/resources/**").permitAll()

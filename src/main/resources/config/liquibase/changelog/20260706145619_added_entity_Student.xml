@@ -29,6 +29,12 @@
             <column name="ext_name" type="varchar(10)">
                 <constraints nullable="true" />
             </column>
+            <column name="gender_id" type="bigint">
+              <constraints nullable="true"/>
+            </column>
+            <column name="gradelevel_id" type="bigint">
+              <constraints nullable="true"/>
+            </column>
             <column name="enrollment_date" type="${datetimeType}">
                 <constraints nullable="true" />
             </column>
@@ -115,9 +121,6 @@
             </column>
             <column name="last_modified_date" type="${datetimeType}">
                 <constraints nullable="true" />
-            </column>
-            <column name="gender_id" type="bigint">
-                <constraints nullable="true"/>
             </column>
             <column name="user_id" type="bigint">
                 <constraints nullable="true" unique="true" uniqueConstraintName="ux_student__user_id" />

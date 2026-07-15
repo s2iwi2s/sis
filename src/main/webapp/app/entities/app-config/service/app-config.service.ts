@@ -121,6 +121,11 @@ export class AppConfigService extends AppConfigsService {
     return appConfigCollection;
   }
 
+  sortAppConfig(appConfigs: IAppConfig[]) {
+    const optionsCopy = [...appConfigs];
+    return optionsCopy.sort((a, b) => ((a.priority || 0) < (b.priority || 0) ? -1 : 1));
+  }
+
   protected convertValueFromClient<T extends IAppConfig | NewAppConfig | PartialUpdateAppConfig>(appConfig: T): RestOf<T> {
     return {
       ...appConfig,
