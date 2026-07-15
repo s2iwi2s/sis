@@ -5,10 +5,8 @@ import { HtmlUtilService } from '../../../core/util/html-util.service';
 import { RouterLink } from '@angular/router';
 import { DataUtils } from '../../../core/util/data-util.service';
 import { CurriculumMappingService } from '../curriculum-mapping.service';
-import { IReport } from '../report.model';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { ReportsService } from '../../report/reports-service';
-import { finalize, map } from 'rxjs';
 
 @Component({
   selector: 'jhi-course-detail-card',
@@ -25,17 +23,7 @@ export class CourseDetailCardComponent {
   protected curriculumMappingService = inject(CurriculumMappingService);
   protected reportsService = inject(ReportsService);
 
-  // openFile(base64String: string, contentType: string | null | undefined): void {
-  //   return this.dataUtils.openFile(base64String, contentType);
-  // }
-
   downloadPdf(courseId: number): void {
-    // this.isdl = true;
-    // this.curriculumMappingService.find(courseId).subscribe(res => {
-    //   const dto: IReport | null = res.body;
-    //   this.openFile(dto?.binaryData || '', 'application/pdf');
-    //   this.isdl = false;
-    // });
     this.reportsService.downloadPdf(this.curriculumMappingService.find(courseId)).subscribe(() => (this.isdl = false));
   }
 }

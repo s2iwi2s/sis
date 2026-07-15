@@ -31,6 +31,14 @@ const assessmentRoute: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
+    path: ':learningCompetencyId/:seqNo/:competencyCode/new',
+    loadComponent: () => import('./update/assessment-update').then(m => m.AssessmentUpdate),
+    resolve: {
+      assessment: AssessmentResolve,
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
     path: ':id/edit',
     loadComponent: () => import('./update/assessment-update').then(m => m.AssessmentUpdate),
     resolve: {

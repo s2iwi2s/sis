@@ -31,6 +31,14 @@ const strategiesRoute: Routes = [
     canActivate: [UserRouteAccessService],
   },
   {
+    path: ':learningCompetencyId/:seqNo/:competencyCode/new',
+    loadComponent: () => import('./update/strategies-update').then(m => m.StrategiesUpdate),
+    resolve: {
+      strategies: StrategiesResolve,
+    },
+    canActivate: [UserRouteAccessService],
+  },
+  {
     path: ':id/edit',
     loadComponent: () => import('./update/strategies-update').then(m => m.StrategiesUpdate),
     resolve: {

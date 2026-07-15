@@ -34,6 +34,7 @@ import { QuarterCardComponent } from '../quarter-card/quarter-card.component';
 import { Alert } from 'app/shared/alert/alert';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import TranslateDirective from '../../../shared/language/translate.directive';
 
 @Component({
   selector: 'jhi-curriculum-mapping-dashboard',
@@ -41,6 +42,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     NgbTypeaheadModule,
     FormsModule,
     RouterLink,
+    TranslateDirective,
     CourseDetailCardComponent,
     ScopeSeqCardComponent,
     QuarterCardComponent,

@@ -5,6 +5,7 @@ import { forkJoin, Observable, OperatorFunction } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
 
+import TranslateDirective from '../../../shared/language/translate.directive';
 import { ICurriculumMap } from '../../../entities/curriculum-map/curriculum-map.model';
 import { ICourse } from '../../../entities/course/course.model';
 import { CourseService } from '../../../entities/course/service/course.service';
@@ -42,6 +43,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   imports: [
     NgbTypeaheadModule,
     FormsModule,
+    TranslateDirective,
     CourseDetailCardComponent,
     QuarterCardComponent,
     ScopeSeqCardComponent,

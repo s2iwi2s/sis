@@ -3,6 +3,7 @@
     "curriculumMappingDashboard": {
       "home": {
         "title": "Curriculum Mapping Dashboard",
+        "title-view": "Curriculum Mapping View",
         "createLabel": "Create a new Curriculum Map",
         "createOrEditLabel": "Create or edit a Curriculum Map",
         "notFound": "No Curriculum Maps found"
