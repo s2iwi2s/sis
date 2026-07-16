@@ -6,8 +6,12 @@
 
     <div class="modal-body">
       <jhi-alert-error />
-      <p id="jhi-delete-resources-heading" jhiTranslate="schInfoSysApp.resources.delete.question" [translateValues]="{ id: resources.id }">
-        Are you sure you want to delete Resources {{ resources.id }}?
+      <p
+        id="jhi-delete-resources-heading"
+        jhiTranslate="schInfoSysApp.resources.delete.question"
+        [translateValues]="{ fileName: resources.fileName }"
+      >
+        Are you sure you want to delete Resources {{ resources.fileName }}?
       </p>
     </div>
 

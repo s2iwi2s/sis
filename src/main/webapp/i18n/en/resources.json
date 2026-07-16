@@ -12,7 +12,7 @@
       "updated": "A Resources is updated with identifier {{ param }}",
       "deleted": "A Resources is deleted with identifier {{ param }}",
       "delete": {
-        "question": "Are you sure you want to delete Resources {{ id }}?"
+        "question": "Are you sure you want to delete Resources {{ fileName }}?"
       },
       "detail": {
         "title": "Resources"

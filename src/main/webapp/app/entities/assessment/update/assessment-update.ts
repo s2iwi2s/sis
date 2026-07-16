@@ -25,12 +25,13 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
 import { ResourcesUploadDialogComponent } from '../../resources/upload-dialog/resources-upload-dialog.component';
 import { ITEM_DELETED_EVENT, ITEM_UPLOADED_EVENT } from '../../../config/navigation.constants';
 import { ResourcesDeleteDialog } from '../../resources/delete/resources-delete-dialog';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-assessment-update',
   templateUrl: './assessment-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule, ClipboardModule],
 })
 export class AssessmentUpdate implements OnInit {
   readonly isSaving = signal(false);
@@ -137,7 +138,10 @@ export class AssessmentUpdate implements OnInit {
   }
 
   deleteResource(resources: IResources): void {
-    const modalRef = this.resourcesDeleteDialogModalService.open(ResourcesDeleteDialog, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.resourcesDeleteDialogModalService.open(ResourcesDeleteDialog, {
+      size: 'lg',
+      backdrop: 'static',
+    });
     modalRef.componentInstance.resources = resources;
     // unsubscribe not needed because closed completes on modal close
     modalRef.closed
@@ -152,6 +156,7 @@ export class AssessmentUpdate implements OnInit {
     this.deleteResourceFromForm(resources);
     this.loadRelationshipsOptions();
   }
+
   private deleteResourceFromForm(resourceToRemove: IResources): void {
     if (this.assessment) {
       if (!this.assessment.resourceses) {
@@ -163,6 +168,13 @@ export class AssessmentUpdate implements OnInit {
       });
     }
   }
+
+  baseUrl(api: string): string {
+    const url = window.location.href;
+    return url.split('/assessment')[0] + api;
+  }
+
+  onClipboardCopy(successful: boolean): void {}
 
   showAddImagesForm(): void {
     const modalRef = this.resourcesUploadDialogModalService.open(ResourcesUploadDialogComponent, {

@@ -25,12 +25,13 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
 import { ITEM_DELETED_EVENT, ITEM_UPLOADED_EVENT } from '../../../config/navigation.constants';
 import { ResourcesUploadDialogComponent } from '../../resources/upload-dialog/resources-upload-dialog.component';
 import { ResourcesDeleteDialog } from '../../resources/delete/resources-delete-dialog';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-strategies-update',
   templateUrl: './strategies-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule, ClipboardModule],
 })
 export class StrategiesUpdate implements OnInit {
   readonly isSaving = signal(false);
@@ -79,7 +80,12 @@ export class StrategiesUpdate implements OnInit {
   setFileData(event: Event, field: string, isImage: boolean): void {
     this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe({
       error: (err: FileLoadError) =>
-        this.eventManager.broadcast(new EventWithContent<AlertErrorModel>('schInfoSysApp.error', { ...err, key: `error.file.${err.key}` })),
+        this.eventManager.broadcast(
+          new EventWithContent<AlertErrorModel>('schInfoSysApp.error', {
+            ...err,
+            key: `error.file.${err.key}`,
+          }),
+        ),
     });
   }
 
@@ -96,8 +102,19 @@ export class StrategiesUpdate implements OnInit {
       this.subscribeToSaveResponse(this.strategiesService.update(strategies));
     }
   }
+
+  baseUrl(api: string): string {
+    const url = window.location.href;
+    return url.split('/strategies')[0] + api;
+  }
+
+  public onClipboardCopy(successful: boolean): void {}
+
   deleteResource(resources: IResources): void {
-    const modalRef = this.resourcesDeleteDialogModalService.open(ResourcesDeleteDialog, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.resourcesDeleteDialogModalService.open(ResourcesDeleteDialog, {
+      size: 'lg',
+      backdrop: 'static',
+    });
     modalRef.componentInstance.resources = resources;
     // unsubscribe not needed because closed completes on modal close
     modalRef.closed
@@ -112,7 +129,10 @@ export class StrategiesUpdate implements OnInit {
   }
 
   showAddImagesForm(): void {
-    const modalRef = this.resourcesUploadDialogModalService.open(ResourcesUploadDialogComponent, { size: 'lg', backdrop: 'static' });
+    const modalRef = this.resourcesUploadDialogModalService.open(ResourcesUploadDialogComponent, {
+      size: 'lg',
+      backdrop: 'static',
+    });
     // unsubscribe not needed because closed completes on modal close
     modalRef.closed
       .pipe(
