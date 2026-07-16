@@ -30,6 +30,7 @@ public interface StudentMapper extends EntityMapper<StudentDTO, Student> {
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
     @Mapping(target = "value", source = "value")
+    @Mapping(target = "code", source = "code")
     AppConfigDTO toDtoAppConfigId(AppConfig appConfig);
 
     @Named("userId")

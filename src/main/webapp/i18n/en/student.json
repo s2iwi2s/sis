@@ -38,6 +38,7 @@
       "zipCode": "Zip Code",
       "country": "Country",
       "nationality": "Nationality",
+      "citizenship": "Citizenship",
       "motherTongue": "Mother Tongue",
       "religion": "Religion",
       "occupation": "Occupation",

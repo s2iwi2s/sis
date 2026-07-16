@@ -9,6 +9,7 @@
       <input type="hidden" name="createdDate" formControlName="createdDate" />
       <input type="hidden" name="lastModifiedBy" formControlName="lastModifiedBy" />
       <input type="hidden" name="lastModifiedDate" formControlName="lastModifiedDate" />
+
       <div class="row">
         @if (editForm.controls.id.value !== null) {
           <div class="col-12">
@@ -16,14 +17,28 @@
             <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
           </div>
         }
-        <div class="col-7">
+        <div class="row col-9">
           <div class="col-3">
             <label class="form-label" for="field_lrn" jhiTranslate="schInfoSysApp.student.lrn">Lrn</label>
             <input type="text" class="form-control" name="lrn" id="field_lrn" data-cy="lrn" formControlName="lrn" />
           </div>
+          <div class="col-auto">
+            <label class="form-label" for="field_enrollmentDate" jhiTranslate="schInfoSysApp.student.enrollmentDate">Enrollment Date</label>
+            <div class="d-flex">
+              <input
+                id="field_enrollmentDate"
+                data-cy="enrollmentDate"
+                type="date"
+                class="form-control"
+                name="enrollmentDate"
+                formControlName="enrollmentDate"
+                placeholder="YYYY-MM-DD HH:mm"
+              />
+            </div>
+          </div>
         </div>
 
-        <div class="col-4">
+        <div class="col-3">
           <label class="form-label" for="field_gradelevel" jhiTranslate="schInfoSysApp.student.gradelevel">gradelevel</label>
           <select
             class="form-control"
@@ -123,22 +138,6 @@
             }
           </select>
         </div>
-        @if (source === 'view') {
-          <div class="">
-            <label class="form-label" for="field_enrollmentDate" jhiTranslate="schInfoSysApp.student.enrollmentDate">Enrollment Date</label>
-            <div class="d-flex">
-              <input
-                id="field_enrollmentDate"
-                data-cy="enrollmentDate"
-                type="date"
-                class="form-control"
-                name="enrollmentDate"
-                formControlName="enrollmentDate"
-                placeholder="YYYY-MM-DD HH:mm"
-              />
-            </div>
-          </div>
-        }
 
         <div class="col-3">
           <label class="form-label" for="field_birthDate" jhiTranslate="schInfoSysApp.student.birthDate">Birth Date</label>
@@ -272,7 +271,7 @@
         </div>
 
         @let nationalityRef = editForm.get('nationality')!;
-        <div class="col-4">
+        <div class="col-3">
           <label class="form-label" for="field_nationality" jhiTranslate="schInfoSysApp.student.nationality">Nationality</label>
           <input
             type="text"
@@ -293,8 +292,30 @@
           }
         </div>
 
+        @let citizenshipRef = editForm.get('citizenship')!;
+        <div class="col-3">
+          <label class="form-label" for="field_citizenship" jhiTranslate="schInfoSysApp.student.citizenship">citizenship</label>
+          <input
+            type="text"
+            class="form-control"
+            name="citizenship"
+            id="field_citizenship"
+            data-cy="citizenship"
+            formControlName="citizenship"
+          />
+          @if (citizenshipRef.invalid && (citizenshipRef.dirty || citizenshipRef.touched)) {
+            <div>
+              @if (editForm.get('citizenship')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '100' }"
+                  >This field cannot be longer than 100 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
         @let motherTongueRef = editForm.get('motherTongue')!;
-        <div class="col-4">
+        <div class="col-3">
           <label class="form-label" for="field_motherTongue" jhiTranslate="schInfoSysApp.student.motherTongue">Mother Tongue</label>
           <input
             type="text"
@@ -316,7 +337,7 @@
         </div>
 
         @let religionRef = editForm.get('religion')!;
-        <div class="col-4">
+        <div class="col-3">
           <label class="form-label" for="field_religion" jhiTranslate="schInfoSysApp.student.religion">Religion</label>
           <input type="text" class="form-control" name="religion" id="field_religion" data-cy="religion" formControlName="religion" />
           @if (religionRef.invalid && (religionRef.dirty || religionRef.touched)) {

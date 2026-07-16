@@ -8,13 +8,11 @@
           </h5>
         </div>
         <div class="col-sm-4 d-flex justify-content-end">
-          @if (!studentRef?.enrollmentDate || !studentRef?.enrollmentDate?.isValid()) {
-            <button type="button" class="btn btn-primary btn-sm rounded-pill" (click)="enroll()" [disabled]="isSaving()">
-              <fa-icon icon="pencil-alt" />&nbsp;<span>Enroll</span>
-            </button>
-          }
+          <button type="button" class="btn btn-primary btn-sm rounded-pill me-2" (click)="enroll()" [disabled]="isSaving()">
+            <fa-icon icon="pencil-alt" />&nbsp;<span>Enroll</span>
+          </button>
           <button type="button" class="btn btn-primary btn-sm rounded-pill" (click)="showPdf()" [disabled]="loadingPdf()">
-            <fa-icon icon="pencil-alt" />&nbsp;<span>Registration PDF</span>
+            <fa-icon icon="print" />&nbsp;<span>Print</span>
           </button>
         </div>
       </div>
@@ -33,12 +31,14 @@
         <div class="col-8">
           <span class="fw-semibold fst-italic" jhiTranslate="schInfoSysApp.student.gradelevel">gradelevel</span>
           <span class="fst-italic">{{ studentRef?.gradelevel?.value }}</span>
-          <select class="form-control" id="field_gradelevel" name="gradelevel" [(ngModel)]="gradelevel">
-            <option [ngValue]="null"></option>
-            @for (appConfigOption of gradelevelsCollection(); track $index) {
-              <option [selected]="appConfigOption.id === gradelevel?.id" [ngValue]="appConfigOption">{{ appConfigOption.value }}</option>
-            }
-          </select>
+          @if (source() === 'enroll') {
+            <select class="form-control" id="field_gradelevel" name="gradelevel" [(ngModel)]="gradelevel">
+              <option [ngValue]="null"></option>
+              @for (appConfigOption of gradelevelsCollection(); track $index) {
+                <option [selected]="appConfigOption.id === gradelevel?.id" [ngValue]="appConfigOption">{{ appConfigOption.value }}</option>
+              }
+            </select>
+          }
         </div>
         <div class="col-4"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.birthDate">Birth Date</span></div>
         <div class="col-4"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.birthPlace">Birth Place</span></div>
@@ -66,7 +66,8 @@
           <span>{{ studentRef?.religion }}</span>
         </div>
         <div class="col-4"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.nationality">nationality</span></div>
-        <div class="col-8"><span class="fw-semibold text-nowrap" jhiTranslate="schInfoSysApp.student.motherTongue">motherTongue</span></div>
+        <div class="col-4"><span class="fw-semibold" jhiTranslate="schInfoSysApp.student.citizenship">citizenship</span></div>
+        <div class="col-4"><span class="fw-semibold text-nowrap" jhiTranslate="schInfoSysApp.student.motherTongue">motherTongue</span></div>
         <div class="col-4">
           <span>{{ studentRef?.nationality }}</span>
         </div>

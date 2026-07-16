@@ -21,6 +21,7 @@ export interface IStudent {
   zipCode?: string | null;
   country?: string | null;
   nationality?: string | null;
+  citizenship?: string | null;
   motherTongue?: string | null;
   religion?: string | null;
   fathersLastName?: string | null;

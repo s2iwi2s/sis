@@ -51,6 +51,7 @@ type StudentFormGroupContent = {
   zipCode: FormControl<StudentFormRawValue['zipCode']>;
   country: FormControl<StudentFormRawValue['country']>;
   nationality: FormControl<StudentFormRawValue['nationality']>;
+  citizenship: FormControl<StudentFormRawValue['citizenship']>;
   motherTongue: FormControl<StudentFormRawValue['motherTongue']>;
   religion: FormControl<StudentFormRawValue['religion']>;
   fathersLastName: FormControl<StudentFormRawValue['fathersLastName']>;
@@ -138,6 +139,9 @@ export class StudentFormService {
         validators: [Validators.maxLength(50)],
       }),
       nationality: new FormControl(studentRawValue.nationality, {
+        validators: [Validators.maxLength(100)],
+      }),
+      citizenship: new FormControl(studentRawValue.citizenship, {
         validators: [Validators.maxLength(100)],
       }),
       motherTongue: new FormControl(studentRawValue.motherTongue, {
