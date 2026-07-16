@@ -17,9 +17,9 @@ logging:
   level:
     ROOT: INFO
     tech.jhipster: INFO
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicTypeDescriptor: TRACE
-    org.hibernate.orm.jdbc.bind: TRACE
+    #    org.hibernate.SQL: DEBUG
+    #    org.hibernate.type.descriptor.sql.BasicTypeDescriptor: TRACE
+    #    org.hibernate.orm.jdbc.bind: TRACE
     com.sis: DEBUG
     org.springframework.dao: INFO
 

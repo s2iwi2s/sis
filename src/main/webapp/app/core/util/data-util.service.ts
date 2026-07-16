@@ -4,6 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { Observable, Observer } from 'rxjs';
 
 import { byteSize, openFile, toBase64 } from 'app/shared/jhipster/data-utils';
+import { IResources } from '../../entities/resources/resources.model';
 
 export type FileLoadErrorType = 'not.image' | 'could.not.extract';
 
@@ -76,6 +77,22 @@ export class DataUtils {
         };
         observer.error(error);
       }
+    });
+  }
+
+  fileToResource(file: File): Observable<IResources> {
+    return new Observable((observer: Observer<IResources>) => {
+      let resource: IResources = { id: 0 };
+      toBase64(file, (base64Data: string) => {
+        resource = {
+          ...resource,
+          fileName: file.name,
+          document: base64Data,
+          documentContentType: file.type,
+        };
+        observer.next(resource);
+        observer.complete();
+      });
     });
   }
 }

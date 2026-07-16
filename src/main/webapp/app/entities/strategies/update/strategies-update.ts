@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
-import { Observable, finalize, map } from 'rxjs';
+import { Observable, finalize, map, filter, switchMap } from 'rxjs';
 
 import { DataUtils, FileLoadError } from 'app/core/util/data-util.service';
 import { EventManager, EventWithContent } from 'app/core/util/event-manager.service';
@@ -21,6 +21,10 @@ import { IStrategies } from '../strategies.model';
 
 import { StrategiesFormGroup, StrategiesFormService } from './strategies-form.service';
 import { AlertErrorModel } from 'app/shared/alert/alert-error.model';
+import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
+import { ITEM_DELETED_EVENT, ITEM_UPLOADED_EVENT } from '../../../config/navigation.constants';
+import { ResourcesUploadDialogComponent } from '../../resources/upload-dialog/resources-upload-dialog.component';
+import { ResourcesDeleteDialog } from '../../resources/delete/resources-delete-dialog';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,6 +46,8 @@ export class StrategiesUpdate implements OnInit {
   protected resourcesService = inject(ResourcesService);
   protected learningCompetencyService = inject(LearningCompetencyService);
   protected activatedRoute = inject(ActivatedRoute);
+  protected resourcesDeleteDialogModalService = inject(NgbModal);
+  protected resourcesUploadDialogModalService = inject(NgbModal);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
   editForm: StrategiesFormGroup = this.strategiesFormService.createStrategiesFormGroup();
@@ -90,6 +96,57 @@ export class StrategiesUpdate implements OnInit {
       this.subscribeToSaveResponse(this.strategiesService.update(strategies));
     }
   }
+  deleteResource(resources: IResources): void {
+    const modalRef = this.resourcesDeleteDialogModalService.open(ResourcesDeleteDialog, { size: 'lg', backdrop: 'static' });
+    modalRef.componentInstance.resources = resources;
+    // unsubscribe not needed because closed completes on modal close
+    modalRef.closed
+      .pipe(
+        filter(reason => reason === ITEM_DELETED_EVENT),
+        switchMap(async () => {
+          this.deleteResourceFromForm(resources);
+          this.loadRelationshipsOptions();
+        }),
+      )
+      .subscribe();
+  }
+
+  showAddImagesForm(): void {
+    const modalRef = this.resourcesUploadDialogModalService.open(ResourcesUploadDialogComponent, { size: 'lg', backdrop: 'static' });
+    // unsubscribe not needed because closed completes on modal close
+    modalRef.closed
+      .pipe(
+        filter(reason => reason === ITEM_UPLOADED_EVENT),
+        switchMap(async () => {
+          modalRef.componentInstance.save(
+            (resourcesAry: Pick<IResources, 'id' | 'fileName' | 'documentContentType'>[], activeModal: NgbActiveModal) => {
+              console.log('StrategiesUpdate.modalRef.componentInstance.save() called with resourcesAry:', resourcesAry);
+              if (this.strategies) {
+                this.strategies.resourceses = [...(this.strategies.resourceses ? this.strategies.resourceses : []), ...resourcesAry];
+                console.log('StrategiesUpdate.modalRef.componentInstance.save() called with strategies:', this.strategies);
+                this.strategiesService.update(this.strategies).subscribe(ret => {
+                  this.updateForm(this.strategies ? this.strategies : { id: 0 });
+                  this.loadRelationshipsOptions();
+                });
+              }
+            },
+          );
+        }),
+      )
+      .subscribe();
+  }
+
+  private deleteResourceFromForm(resourceToRemove: IResources): void {
+    if (this.strategies) {
+      if (!this.strategies.resourceses) {
+        this.strategies.resourceses = [];
+      }
+      this.strategies.resourceses = this.strategies.resourceses.filter(r => r.id !== resourceToRemove.id);
+      this.editForm.patchValue({
+        resourceses: this.strategies.resourceses,
+      });
+    }
+  }
 
   protected subscribeToSaveResponse(result: Observable<IStrategies | null>): void {
     result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
@@ -126,6 +183,7 @@ export class StrategiesUpdate implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
+    /*
     this.resourcesService
       .query()
       .pipe(map((res: HttpResponse<IResources[]>) => res.body ?? []))
@@ -148,5 +206,6 @@ export class StrategiesUpdate implements OnInit {
         ),
       )
       .subscribe((learningCompetencies: ILearningCompetency[]) => this.learningCompetenciesSharedCollection.set(learningCompetencies));
+     */
   }
 }

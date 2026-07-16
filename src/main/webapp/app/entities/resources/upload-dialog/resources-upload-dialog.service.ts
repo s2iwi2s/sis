@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { EntityResponseType, ResourcesService } from '../service/resources.service';
+import { ResourcesService } from '../service/resources.service';
 import { IResources } from '../resources.model';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { forkJoin, Observable } from 'rxjs';
@@ -8,28 +8,24 @@ import { forkJoin, Observable } from 'rxjs';
 export class ResourcesUploadDialogService {
   constructor(protected resourcesService: ResourcesService) {}
 
-  createResources(resourceAry: IResources[]): Observable<EntityResponseType[]> {
+  createResources(resourceAry: IResources[]): Observable<IResources[]> {
     return forkJoin(resourceAry.map(resource => this.resourcesService.create({ ...resource, id: null })));
   }
 
-  convertEntityResponseTypeToIResources(
-    entityResponseType: EntityResponseType,
-  ): Pick<IResources, 'id' | 'fileName' | 'documentContentType'> {
-    const resource = entityResponseType.body;
+  convertEntityResponseTypeToIResources(resources: IResources): Pick<IResources, 'id' | 'fileName' | 'documentContentType'> {
     return {
-      id: resource?.id ?? 0,
       fileName: null,
       documentContentType: null,
-      ...resource,
+      ...resources,
     };
   }
 
   updateEntity(
     currentModal: NgbActiveModal,
-    entityResponseTypeAry: EntityResponseType[],
+    resources: IResources[],
     callback: (resourcesAry: Pick<IResources, 'id' | 'fileName' | 'documentContentType'>[], activeModal: NgbActiveModal) => void,
   ): void {
-    const resourcesAry = entityResponseTypeAry.map(this.convertEntityResponseTypeToIResources);
+    const resourcesAry = resources.map(this.convertEntityResponseTypeToIResources);
     callback(resourcesAry, currentModal);
   }
 }

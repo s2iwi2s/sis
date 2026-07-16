@@ -12,8 +12,8 @@ export interface IAssessment {
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
-  resourceses?: Pick<IResources, 'id'>[] | null;
-  learningCompetency?: Pick<ILearningCompetency, 'id'> | null;
+  resourceses?: Pick<IResources, 'id' | 'fileName'>[] | null;
+  learningCompetency?: Pick<ILearningCompetency, 'id' | 'seqNo' | 'competencyCode'> | null;
 }
 
 export type NewAssessment = Omit<IAssessment, 'id'> & { id: null };

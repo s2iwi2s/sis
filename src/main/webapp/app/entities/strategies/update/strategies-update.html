@@ -25,6 +25,27 @@
         </div>
 
         <div class="mb-3">
+          <label class="form-label" for="field_learningCompetency" jhiTranslate="schInfoSysApp.strategies.learningCompetency"
+            >Learning Competency</label
+          >
+          <select
+            class="form-control"
+            id="field_learningCompetency"
+            data-cy="learningCompetency"
+            name="learningCompetency"
+            formControlName="learningCompetency"
+            [compareWith]="compareLearningCompetency"
+          >
+            <option [ngValue]="null"></option>
+            @for (learningCompetencyOption of learningCompetenciesSharedCollection(); track $index) {
+              <option [ngValue]="learningCompetencyOption">
+                {{ learningCompetencyOption.seqNo + ' - ' + learningCompetencyOption.competencyCode }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
           <label class="form-label" for="field_description" jhiTranslate="schInfoSysApp.strategies.description">Description</label>
           <textarea
             class="form-control"
@@ -33,6 +54,32 @@
             data-cy="description"
             formControlName="description"
           ></textarea>
+        </div>
+        <div class="mb-3">
+          <label for="field_resourceses" jhiTranslate="schInfoSysApp.strategies.resources">Resources</label>
+          @if (editForm.controls.id.value !== null) {
+            <a (click)="showAddImagesForm()"><fa-icon icon="plus"></fa-icon></a>
+          }
+          <select
+            class="form-control d-none"
+            id="field_resourceses"
+            data-cy="resources"
+            multiple
+            name="resourceses"
+            formControlName="resourceses"
+            [compareWith]="compareResources"
+          >
+            @for (resourcesOption of resourcesesSharedCollection(); track $index) {
+              <option [ngValue]="resourcesOption">{{ resourcesOption.fileName }}</option>
+            }
+          </select>
+          @if (strategies?.resourceses !== null) {
+            <ul class="list-group">
+              @for (resourcesref of strategies?.resourceses; track $index) {
+                <li class="list-group-item">{{ resourcesref?.fileName }}</li>
+              }
+            </ul>
+          }
         </div>
 
         @let createdByRef = editForm.get('createdBy')!;
@@ -104,42 +151,6 @@
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>
-        </div>
-
-        <div class="mb-3">
-          <label for="field_resourceses" jhiTranslate="schInfoSysApp.strategies.resources">Resources</label>
-          <select
-            class="form-control"
-            id="field_resourceses"
-            data-cy="resources"
-            multiple
-            name="resourceses"
-            formControlName="resourceses"
-            [compareWith]="compareResources"
-          >
-            @for (resourcesOption of resourcesesSharedCollection(); track $index) {
-              <option [ngValue]="resourcesOption">{{ resourcesOption.id }}</option>
-            }
-          </select>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_learningCompetency" jhiTranslate="schInfoSysApp.strategies.learningCompetency"
-            >Learning Competency</label
-          >
-          <select
-            class="form-control"
-            id="field_learningCompetency"
-            data-cy="learningCompetency"
-            name="learningCompetency"
-            formControlName="learningCompetency"
-            [compareWith]="compareLearningCompetency"
-          >
-            <option [ngValue]="null"></option>
-            @for (learningCompetencyOption of learningCompetenciesSharedCollection(); track $index) {
-              <option [ngValue]="learningCompetencyOption">{{ learningCompetencyOption.id }}</option>
-            }
-          </select>
         </div>
       </div>
 

@@ -37,7 +37,7 @@ public class Resources implements Serializable {
 
     @Lob
     @Column(name = "document")
-    @JdbcTypeCode(Types.BINARY)
+    @JdbcTypeCode(Types.BLOB)
     private byte[] document;
 
     @Column(name = "document_content_type")
@@ -260,7 +260,7 @@ public class Resources implements Serializable {
         return "Resources{" +
             "id=" + getId() +
             ", fileName='" + getFileName() + "'" +
-            ", document='" + getDocument() + "'" +
+//            ", document='" + getDocument() + "'" +
             ", documentContentType='" + getDocumentContentType() + "'" +
             ", createdBy='" + getCreatedBy() + "'" +
             ", createdDate='" + getCreatedDate() + "'" +

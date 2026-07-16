@@ -153,7 +153,7 @@
             [compareWith]="compareStrategies"
           >
             @for (strategiesOption of strategiesesSharedCollection(); track $index) {
-              <option [ngValue]="strategiesOption">{{ strategiesOption.id }}</option>
+              <option [ngValue]="strategiesOption">{{ strategiesOption.name }}</option>
             }
           </select>
         </div>
@@ -170,7 +170,7 @@
             [compareWith]="compareAssessment"
           >
             @for (assessmentOption of assessmentsSharedCollection(); track $index) {
-              <option [ngValue]="assessmentOption">{{ assessmentOption.id }}</option>
+              <option [ngValue]="assessmentOption">{{ assessmentOption.name }}</option>
             }
           </select>
         </div>

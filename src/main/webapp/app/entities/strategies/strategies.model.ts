@@ -11,7 +11,7 @@ export interface IStrategies {
   createdDate?: dayjs.Dayjs | null;
   lastModifiedBy?: string | null;
   lastModifiedDate?: dayjs.Dayjs | null;
-  resourceses?: Pick<IResources, 'id'>[] | null;
+  resourceses?: Pick<IResources, 'id' | 'fileName'>[] | null;
   learningCompetency?: Pick<ILearningCompetency, 'id'> | null;
 }
 
