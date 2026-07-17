@@ -5,6 +5,7 @@ import dayjs from 'dayjs/esm';
 
 import { DATE_FORMAT, DATE_TIME_FORMAT } from 'app/config/input.constants';
 import { IStudent, IStudentFilter, NewStudent } from '../student.model';
+import { IAppConfig } from '../../app-config/app-config.model';
 
 /**
  * A partial Type with required key is used as form input.
@@ -80,6 +81,7 @@ export type StudentFormGroup = FormGroup<StudentFormGroupContent>;
 
 type StudentFilterFormGroupContent = {
   lrn: FormControl<IStudentFilter['lrn']>;
+  gradelevel: FormControl<IStudentFilter['gradelevel']>;
   firstName: FormControl<IStudentFilter['firstName']>;
   lastName: FormControl<IStudentFilter['lastName']>;
   birthDate: FormControl<IStudentFilter['birthDate']>;
@@ -254,6 +256,7 @@ export class StudentFormService {
   createStudentFilterForm(): StudentFilterFormGroup {
     return new FormGroup<StudentFilterFormGroupContent>({
       lrn: new FormControl(''),
+      gradelevel: new FormControl({} as IAppConfig),
       firstName: new FormControl('', {
         validators: [Validators.maxLength(50)],
       }),

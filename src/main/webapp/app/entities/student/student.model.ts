@@ -49,6 +49,7 @@ export interface IStudent {
 
 export interface IStudentFilter {
   lrn: string | null;
+  gradelevel?: Pick<IAppConfig, 'id' | 'value'> | null;
   firstName: string | null;
   lastName: string | null;
   birthDate: string | null;

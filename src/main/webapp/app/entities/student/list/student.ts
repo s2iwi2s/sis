@@ -104,7 +104,14 @@ export class Student implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.studentInputFilter.currentValue) {
       this.studentFilter = changes.studentInputFilter.currentValue;
-      if (this.studentFilter?.lrn || this.studentFilter?.firstName || this.studentFilter?.lastName || this.studentFilter?.birthDate) {
+      console.log('Student.ngOnChanges() called with studentFilter:', this.studentFilter);
+      if (
+        this.studentFilter?.lrn !== null ||
+        this.studentFilter?.firstName !== null ||
+        this.studentFilter?.lastName !== null ||
+        this.studentFilter?.birthDate !== null ||
+        this.studentFilter?.gradelevel?.id !== null
+      ) {
         this.load();
       }
     }
@@ -165,10 +172,23 @@ export class Student implements OnInit, OnChanges {
     console.log('Student.queryBackend() called with studentFilter:', this.studentFilter);
     const query = {
       ...queryObject,
-      lrn: this.studentFilter?.lrn || null,
-      firstName: this.studentFilter?.firstName || null,
-      lastName: this.studentFilter?.lastName || null,
+      // lrn: this.studentFilter?.lrn || null,
+      // firstName: this.studentFilter?.firstName || null,
+      // lastName: this.studentFilter?.lastName || null,
+      // "gradelevel.id": this.studentFilter?.gradelevel?.id || null
     };
+    if (this.studentFilter?.lrn) {
+      query.lrn = this.studentFilter?.lrn;
+    }
+    if (this.studentFilter?.firstName) {
+      query.firstName = this.studentFilter?.firstName;
+    }
+    if (this.studentFilter?.lastName) {
+      query.lastName = this.studentFilter?.lastName;
+    }
+    if (this.studentFilter?.gradelevel?.id) {
+      query['gradelevel.id'] = this.studentFilter?.gradelevel?.id;
+    }
 
     console.log('Student.queryBackend() called with birthDate:', dayjs(this.studentFilter?.birthDate, DATE_FORMAT));
     if (dayjs(this.studentFilter?.birthDate, DATE_FORMAT).isValid()) {

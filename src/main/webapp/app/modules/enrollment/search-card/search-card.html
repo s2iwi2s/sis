@@ -1,11 +1,11 @@
 <form name="filterForm" class="d-flex align-items-center" novalidate (ngSubmit)="searchLearner()" [formGroup]="filterForm">
   <div class="m-auto shadow-lg bg-body-tertiary rounded-4 p-3 w-50">
     <div class="row row-cols-auto">
-      <div class="col-6">
+      <div class="row col-12">
         <label class="col-sm-auto col-form-label col-form-label-sm" for="filter_field_lrn" jhiTranslate="schInfoSysApp.student.search"
           >LRN</label
         >
-        <div class="col-sm-auto">
+        <div class="col-sm-4">
           <input
             type="text"
             class="form-control form-control-sm"
@@ -17,60 +17,72 @@
             formControlName="lrn"
           />
         </div>
-      </div>
-
-      <div class="col-6">
-        <label class="col-sm-auto col-form-label col-form-label-sm" for="field_birthDate" jhiTranslate="schInfoSysApp.student.birthDate"
-          >Birth Date</label
+        <label class="col-sm-auto col-form-label col-form-label-sm" for="filter_field_lrn" jhiTranslate="schInfoSysApp.student.gradelevel"
+          >Grade Level</label
         >
-        <div class="col-sm-auto">
-          <input
-            id="field_birthDate"
-            data-cy="birthDate"
-            type="date"
-            class="form-control form-control-sm"
-            name="birthDate"
-            formControlName="birthDate"
-            placeholder="YYYY-MM-DD"
-          />
-        </div>
-      </div>
-    </div>
 
-    <div class="row mb-2">
-      <div class="col-6">
-        <label class="col-sm-auto col-form-label col-form-label-sm" for="field_firstName" jhiTranslate="schInfoSysApp.student.firstName"
-          >First Name</label
-        >
-        <div class="col-sm-auto">
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            name="firstName"
-            placeholder="First Name"
-            aria-label="First Name"
-            id="field_firstName"
-            data-cy="firstName"
-            formControlName="firstName"
-          />
+        <div class="col-sm-4">
+          <select class="form-control" id="field_gradelevel" data-cy="gradelevel" name="gradelevel" formControlName="gradelevel">
+            <option [ngValue]="null"></option>
+            @for (appConfigOption of gradelevelsCollection(); track $index) {
+              <option [ngValue]="appConfigOption">{{ appConfigOption.value }}</option>
+            }
+          </select>
         </div>
       </div>
 
-      <div class="col-6">
-        <label class="col-sm-auto col-form-label col-form-label-sm" for="field_lastName" jhiTranslate="schInfoSysApp.student.lastName"
-          >Last Name</label
-        >
-        <div class="col-sm-auto">
-          <input
-            type="text"
-            class="form-control form-control-sm"
-            name="lastName"
-            placeholder="Last Name"
-            aria-label="Last Name"
-            id="field_lastName"
-            data-cy="lastName"
-            formControlName="lastName"
-          />
+      <div class="row mb-2">
+        <div class="col-4">
+          <label class="col-sm-auto col-form-label col-form-label-sm" for="field_firstName" jhiTranslate="schInfoSysApp.student.firstName"
+            >First Name</label
+          >
+          <div class="col-sm-auto">
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              name="firstName"
+              placeholder="First Name"
+              aria-label="First Name"
+              id="field_firstName"
+              data-cy="firstName"
+              formControlName="firstName"
+            />
+          </div>
+        </div>
+
+        <div class="col-4">
+          <label class="col-sm-auto col-form-label col-form-label-sm" for="field_lastName" jhiTranslate="schInfoSysApp.student.lastName"
+            >Last Name</label
+          >
+          <div class="col-sm-auto">
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              name="lastName"
+              placeholder="Last Name"
+              aria-label="Last Name"
+              id="field_lastName"
+              data-cy="lastName"
+              formControlName="lastName"
+            />
+          </div>
+        </div>
+
+        <div class="col-4">
+          <label class="col-sm-auto col-form-label col-form-label-sm" for="field_birthDate" jhiTranslate="schInfoSysApp.student.birthDate"
+            >Birth Date</label
+          >
+          <div class="col-sm-auto">
+            <input
+              id="field_birthDate"
+              data-cy="birthDate"
+              type="date"
+              class="form-control form-control-sm"
+              name="birthDate"
+              formControlName="birthDate"
+              placeholder="YYYY-MM-DD"
+            />
+          </div>
         </div>
       </div>
     </div>
