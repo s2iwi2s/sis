@@ -55,6 +55,11 @@ type StudentFormGroupContent = {
   citizenship: FormControl<StudentFormRawValue['citizenship']>;
   motherTongue: FormControl<StudentFormRawValue['motherTongue']>;
   religion: FormControl<StudentFormRawValue['religion']>;
+  cityAddress: FormControl<StudentFormRawValue['cityAddress']>;
+  lastSchool: FormControl<StudentFormRawValue['lastSchool']>;
+  lastSchoolAddress: FormControl<StudentFormRawValue['lastSchoolAddress']>;
+  lastSchoolContacts: FormControl<StudentFormRawValue['lastSchoolContacts']>;
+  parentCivilStatus: FormControl<StudentFormRawValue['parentCivilStatus']>;
   fathersLastName: FormControl<StudentFormRawValue['fathersLastName']>;
   fathersMiddleName: FormControl<StudentFormRawValue['fathersMiddleName']>;
   fathersFirstName: FormControl<StudentFormRawValue['fathersFirstName']>;
@@ -152,6 +157,19 @@ export class StudentFormService {
       religion: new FormControl(studentRawValue.religion, {
         validators: [Validators.maxLength(100)],
       }),
+      cityAddress: new FormControl(studentRawValue.cityAddress, {
+        validators: [Validators.maxLength(100)],
+      }),
+      lastSchool: new FormControl(studentRawValue.lastSchool, {
+        validators: [Validators.maxLength(100)],
+      }),
+      lastSchoolAddress: new FormControl(studentRawValue.lastSchoolAddress, {
+        validators: [Validators.maxLength(100)],
+      }),
+      lastSchoolContacts: new FormControl(studentRawValue.lastSchoolContacts, {
+        validators: [Validators.maxLength(100)],
+      }),
+      parentCivilStatus: new FormControl(studentRawValue.parentCivilStatus),
       fathersLastName: new FormControl(studentRawValue.fathersLastName, {
         validators: [Validators.maxLength(50)],
       }),

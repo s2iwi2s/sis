@@ -98,6 +98,26 @@ public class Student extends AbstractAuditingEntity<Long> implements Serializabl
     @Column(name = "religion", length = 100)
     private String religion;
 
+    @Size(max = 100)
+    @Column(name = "city_address", length = 100)
+    private String cityAddress;
+
+    @Size(max = 100)
+    @Column(name = "last_school", length = 100)
+    private String lastSchool;
+
+    @Size(max = 100)
+    @Column(name = "last_school_address", length = 100)
+    private String lastSchoolAddress;
+
+    @Size(max = 100)
+    @Column(name = "last_school_contacts", length = 100)
+    private String lastSchoolContacts;
+
+    @JsonIgnoreProperties(value = { "instructor", "student", "course" }, allowSetters = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    private AppConfig parentCivilStatus;
+
     @Size(max = 50)
     @Column(name = "fathers_last_name", length = 50)
     private String fathersLastName;
@@ -421,6 +441,58 @@ public class Student extends AbstractAuditingEntity<Long> implements Serializabl
         this.religion = religion;
     }
 
+    public String getCityAddress() {
+        return cityAddress;
+    }
+
+    public Student cityAddress(String cityAddress) {
+        this.cityAddress = cityAddress;
+        return this;
+    }
+
+    public void setCityAddress(String cityAddress) {
+        this.cityAddress = cityAddress;
+    }
+
+    public String getLastSchool() {
+        return lastSchool;
+    }
+
+    public Student lastSchool(String lastSchool) {
+        this.lastSchool = lastSchool;
+        return this;
+    }
+
+    public void setLastSchool(String lastSchool) {
+        this.lastSchool = lastSchool;
+    }
+
+    public String getLastSchoolAddress() {
+        return lastSchoolAddress;
+    }
+
+    public void setLastSchoolAddress(String lastSchoolAddress) {
+        this.lastSchoolAddress = lastSchoolAddress;
+    }
+
+    public Student lastSchoolAddress(String lastSchoolAddress) {
+        this.lastSchoolAddress = lastSchoolAddress;
+        return this;
+    }
+
+    public String getLastSchoolContacts() {
+        return lastSchoolContacts;
+    }
+
+    public void setLastSchoolContacts(String lastSchoolContacts) {
+        this.lastSchoolContacts = lastSchoolContacts;
+    }
+
+    public Student lastSchoolContacts(String lastSchoolContacts) {
+        this.lastSchoolContacts = lastSchoolContacts;
+        return this;
+    }
+
     public String getFathersLastName() {
         return this.fathersLastName;
     }
@@ -432,6 +504,19 @@ public class Student extends AbstractAuditingEntity<Long> implements Serializabl
 
     public void setFathersLastName(String fathersLastName) {
         this.fathersLastName = fathersLastName;
+    }
+
+    public AppConfig getParentCivilStatus() {
+        return parentCivilStatus;
+    }
+
+    public Student parentCivilStatus(AppConfig parentCivilStatus) {
+        this.parentCivilStatus = parentCivilStatus;
+        return this;
+    }
+
+    public void setParentCivilStatus(AppConfig parentCivilStatus) {
+        this.parentCivilStatus = parentCivilStatus;
     }
 
     public String getFathersMiddleName() {
@@ -691,8 +776,10 @@ public class Student extends AbstractAuditingEntity<Long> implements Serializabl
             ", zipCode='" + getZipCode() + "'" +
             ", country='" + getCountry() + "'" +
             ", nationality='" + getNationality() + "'" +
+            ", citizenship='" + getCitizenship() + "'" +
             ", motherTongue='" + getMotherTongue() + "'" +
             ", religion='" + getReligion() + "'" +
+            ", parentCivilStatus='" + getParentCivilStatus() + "'" +
             ", fathersLastName='" + getFathersLastName() + "'" +
             ", fathersMiddleName='" + getFathersMiddleName() + "'" +
             ", fathersFirstName='" + getFathersFirstName() + "'" +

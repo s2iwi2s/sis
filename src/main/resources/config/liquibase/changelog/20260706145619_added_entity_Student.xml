@@ -74,6 +74,21 @@
             <column name="religion" type="varchar(100)">
                 <constraints nullable="true" />
             </column>
+          <column name="city_address" type="varchar(100)">
+            <constraints nullable="true" />
+          </column>
+          <column name="last_school" type="varchar(100)">
+            <constraints nullable="true" />
+          </column>
+          <column name="last_school_address" type="varchar(100)">
+            <constraints nullable="true" />
+          </column>
+          <column name="last_school_contacts" type="varchar(100)">
+            <constraints nullable="true" />
+          </column>
+            <column name="parent_civil_status_id" type="bigint">
+              <constraints nullable="true" />
+            </column>
             <column name="fathers_last_name" type="varchar(50)">
                 <constraints nullable="true" />
             </column>

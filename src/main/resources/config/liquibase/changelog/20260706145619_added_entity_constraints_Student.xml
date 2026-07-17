@@ -43,5 +43,13 @@
                                  referencedColumnNames="id"
                                  referencedTableName="course_schedule"
                                  />
+
+
+      <addForeignKeyConstraint baseColumnNames="parent_civil_status_id"
+                               baseTableName="student"
+                               constraintName="fk_student__parent_civil_status_id"
+                               referencedColumnNames="id"
+                               referencedTableName="app_config"
+      />
     </changeSet>
 </databaseChangeLog>

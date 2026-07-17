@@ -1,5 +1,6 @@
 package com.sis.service.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 import java.io.Serializable;
 import java.time.*;
@@ -66,6 +67,20 @@ public class StudentDTO implements Serializable {
 
     @Size(max = 100)
     private String religion;
+
+    @Size(max = 100)
+    private String cityAddress;
+
+    @Size(max = 100)
+    private String lastSchool;
+
+    @Size(max = 100)
+    private String lastSchoolAddress;
+
+    @Size(max = 100)
+    private String lastSchoolContacts;
+
+    private AppConfigDTO parentCivilStatus;
 
     @Size(max = 50)
     private String fathersLastName;
@@ -284,6 +299,46 @@ public class StudentDTO implements Serializable {
 
     public void setReligion(String religion) {
         this.religion = religion;
+    }
+
+    public String getCityAddress() {
+        return cityAddress;
+    }
+
+    public void setCityAddress(String cityAddress) {
+        this.cityAddress = cityAddress;
+    }
+
+    public String getLastSchool() {
+        return lastSchool;
+    }
+
+    public void setLastSchool(String lastSchool) {
+        this.lastSchool = lastSchool;
+    }
+
+    public String getLastSchoolAddress() {
+        return lastSchoolAddress;
+    }
+
+    public void setLastSchoolAddress(String lastSchoolAddress) {
+        this.lastSchoolAddress = lastSchoolAddress;
+    }
+
+    public String getLastSchoolContacts() {
+        return lastSchoolContacts;
+    }
+
+    public void setLastSchoolContacts(String lastSchoolContacts) {
+        this.lastSchoolContacts = lastSchoolContacts;
+    }
+
+    public AppConfigDTO getParentCivilStatus() {
+        return parentCivilStatus;
+    }
+
+    public void setParentCivilStatus(AppConfigDTO parentCivilStatus) {
+        this.parentCivilStatus = parentCivilStatus;
     }
 
     public String getFathersLastName() {

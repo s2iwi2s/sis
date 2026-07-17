@@ -24,6 +24,11 @@ export interface IStudent {
   citizenship?: string | null;
   motherTongue?: string | null;
   religion?: string | null;
+  cityAddress?: string | null;
+  lastSchool?: string | null;
+  lastSchoolAddress?: string | null;
+  lastSchoolContacts?: string | null;
+  parentCivilStatus?: Pick<IAppConfig, 'id' | 'value'> | null;
   fathersLastName?: string | null;
   fathersMiddleName?: string | null;
   fathersFirstName?: string | null;

@@ -19,6 +19,7 @@ import org.mapstruct.*;
 public interface StudentMapper extends EntityMapper<StudentDTO, Student> {
     @Mapping(target = "gender", source = "gender", qualifiedByName = "appConfigId")
     @Mapping(target = "gradelevel", source = "gradelevel", qualifiedByName = "appConfigId")
+    @Mapping(target = "parentCivilStatus", source = "parentCivilStatus", qualifiedByName = "appConfigId")
     @Mapping(target = "user", source = "user", qualifiedByName = "userId")
     @Mapping(target = "courseSchedules", source = "courseSchedules", qualifiedByName = "courseScheduleIdSet")
     StudentDTO toDto(Student s);

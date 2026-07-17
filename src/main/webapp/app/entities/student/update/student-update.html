@@ -351,6 +351,119 @@
           }
         </div>
 
+        @let cityAddressRef = editForm.get('cityAddress')!;
+        <div class="col-3">
+          <label class="form-label" for="field_cityAddress" jhiTranslate="schInfoSysApp.student.cityAddress">cityAddress</label>
+          <input
+            type="text"
+            class="form-control"
+            name="cityAddress"
+            id="field_cityAddress"
+            data-cy="cityAddress"
+            formControlName="cityAddress"
+          />
+          @if (cityAddressRef.invalid && (cityAddressRef.dirty || cityAddressRef.touched)) {
+            <div>
+              @if (editForm.get('cityAddress')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '100' }"
+                  >This field cannot be longer than 100 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let lastSchoolRef = editForm.get('lastSchool')!;
+        <div class="col-3">
+          <label class="form-label" for="field_lastSchool" jhiTranslate="schInfoSysApp.student.lastSchool">lastSchool</label>
+          <input
+            type="text"
+            class="form-control"
+            name="lastSchool"
+            id="field_lastSchool"
+            data-cy="lastSchool"
+            formControlName="lastSchool"
+          />
+          @if (lastSchoolRef.invalid && (lastSchoolRef.dirty || lastSchoolRef.touched)) {
+            <div>
+              @if (editForm.get('lastSchool')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '100' }"
+                  >This field cannot be longer than 100 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let lastSchoolAddressRef = editForm.get('lastSchoolAddress')!;
+        <div class="col-3">
+          <label class="form-label" for="field_lastSchoolAddress" jhiTranslate="schInfoSysApp.student.lastSchoolAddress"
+            >lastSchoolAddress</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="lastSchoolAddress"
+            id="field_lastSchoolAddress"
+            data-cy="lastSchoolAddress"
+            formControlName="lastSchoolAddress"
+          />
+          @if (lastSchoolAddressRef.invalid && (lastSchoolAddressRef.dirty || lastSchoolAddressRef.touched)) {
+            <div>
+              @if (editForm.get('lastSchoolAddress')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '100' }"
+                  >This field cannot be longer than 100 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let lastSchoolContactsRef = editForm.get('lastSchoolContacts')!;
+        <div class="col-3">
+          <label class="form-label" for="field_lastSchoolContacts" jhiTranslate="schInfoSysApp.student.lastSchoolContacts"
+            >lastSchoolContacts</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            name="lastSchoolContacts"
+            id="field_lastSchoolContacts"
+            data-cy="lastSchoolContacts"
+            formControlName="lastSchoolContacts"
+          />
+          @if (lastSchoolContactsRef.invalid && (lastSchoolContactsRef.dirty || lastSchoolContactsRef.touched)) {
+            <div>
+              @if (editForm.get('lastSchoolContacts')?.errors?.maxlength) {
+                <small class="form-text text-danger" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: '100' }"
+                  >This field cannot be longer than 100 characters.</small
+                >
+              }
+            </div>
+          }
+        </div>
+
+        @let parentCivilStatusRef = editForm.get('parentCivilStatus')!;
+        <div class="col-3">
+          <label class="form-label" for="field_parentCivilStatus" jhiTranslate="schInfoSysApp.student.parentCivilStatus"
+            >parentCivilStatus</label
+          >
+          <select
+            class="form-control"
+            id="field_parentCivilStatus"
+            data-cy="parentCivilStatus"
+            name="parentCivilStatus"
+            formControlName="parentCivilStatus"
+            [compareWith]="compareAppConfig"
+          >
+            <option [ngValue]="null"></option>
+            @for (appConfigOption of parentCivilStatusCollection(); track $index) {
+              <option [ngValue]="appConfigOption">{{ appConfigOption.value }}</option>
+            }
+          </select>
+        </div>
+        <div class="col-8"></div>
+
         @let fathersLastNameRef = editForm.get('fathersLastName')!;
         <div class="col-3">
           <label class="form-label" for="field_fathersLastName" jhiTranslate="schInfoSysApp.student.fathersLastName"

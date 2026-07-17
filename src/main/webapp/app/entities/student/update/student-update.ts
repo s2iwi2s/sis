@@ -40,6 +40,7 @@ export class StudentUpdate implements OnInit {
   gendersCollection = signal<IAppConfig[]>([]);
   usersSharedCollection = signal<IUser[]>([]);
   courseSchedulesSharedCollection = signal<ICourseSchedule[]>([]);
+  parentCivilStatusCollection = signal<IAppConfig[]>([]);
 
   protected studentService = inject(StudentService);
   protected studentFormService = inject(StudentFormService);
@@ -159,6 +160,17 @@ export class StudentUpdate implements OnInit {
         ),
       )
       .subscribe((appConfigs: IAppConfig[]) => this.gendersCollection.set(appConfigs));
+
+    this.appConfigService
+      .query({ code: 'CIVIL_STATUS' })
+      .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
+      .pipe(map(this.appConfigService.sortAppConfig))
+      .pipe(
+        map((appConfigs: IAppConfig[]) =>
+          this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.student?.parentCivilStatus),
+        ),
+      )
+      .subscribe((appConfigs: IAppConfig[]) => this.parentCivilStatusCollection.set(appConfigs));
 
     this.userService
       .query()
