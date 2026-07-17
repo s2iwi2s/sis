@@ -29,6 +29,7 @@
         </li>
         @if (account() !== null) {
           <li
+            *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_ENROLLMENT', 'ROLE_REGISTRATION', 'ROLE_CURRICULUM_MAPPING']"
             ngbDropdown
             class="nav-item dropdown pointer"
             display="dynamic"
@@ -43,13 +44,13 @@
               </span>
             </a>
             <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="sis-menu">
-              <li>
+              <li *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_CURRICULUM_MAPPING']">
                 <span>
                   <fa-icon icon="th-list"></fa-icon>
                   <span jhiTranslate="global.menu.modules.curriculumMapping">curriculumMapping</span>
                 </span>
               </li>
-              <li>
+              <li *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_CURRICULUM_MAPPING']">
                 <ul>
                   <li>
                     <a
@@ -76,7 +77,7 @@
                 </ul>
               </li>
 
-              <li>
+              <li *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_ENROLLMENT']">
                 <a
                   class="dropdown-item"
                   routerLink="/enrollment-form"
@@ -88,7 +89,7 @@
                 </a>
               </li>
 
-              <li>
+              <li *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_REGISTRATION']">
                 <a
                   class="dropdown-item"
                   routerLink="/student/new/register"
@@ -102,6 +103,7 @@
             </ul>
           </li>
           <li
+            *jhiHasAnyAuthority="'ROLE_ADMIN'"
             ngbDropdown
             class="nav-item dropdown pointer"
             display="dynamic"
@@ -119,25 +121,49 @@
               <li>
                 <a
                   class="dropdown-item"
-                  routerLink="/instructor"
+                  routerLink="/academic-year"
                   routerLinkActive="active"
                   [routerLinkActiveOptions]="{ exact: true }"
                   (click)="collapseNavbar()"
                 >
                   <fa-icon icon="asterisk" [fixedWidth]="true" />
-                  <span jhiTranslate="global.menu.entities.instructor">Instructor</span>
+                  <span jhiTranslate="global.menu.entities.academicYear">Academic Year</span>
                 </a>
               </li>
               <li>
                 <a
                   class="dropdown-item"
-                  routerLink="/student"
+                  routerLink="/academic-terms"
                   routerLinkActive="active"
                   [routerLinkActiveOptions]="{ exact: true }"
                   (click)="collapseNavbar()"
                 >
                   <fa-icon icon="asterisk" [fixedWidth]="true" />
-                  <span jhiTranslate="global.menu.entities.student">Student</span>
+                  <span jhiTranslate="global.menu.entities.academicTerms">Academic Terms</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  routerLink="/app-config"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="collapseNavbar()"
+                >
+                  <fa-icon icon="asterisk" [fixedWidth]="true" />
+                  <span jhiTranslate="global.menu.entities.appConfig">App Config</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  routerLink="/assessment"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="collapseNavbar()"
+                >
+                  <fa-icon icon="asterisk" [fixedWidth]="true" />
+                  <span jhiTranslate="global.menu.entities.assessment">Assessment</span>
                 </a>
               </li>
               <li>
@@ -167,6 +193,18 @@
               <li>
                 <a
                   class="dropdown-item"
+                  routerLink="/curriculum-map"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="collapseNavbar()"
+                >
+                  <fa-icon icon="asterisk" [fixedWidth]="true" />
+                  <span jhiTranslate="global.menu.entities.curriculumMap">Curriculum Map</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
                   routerLink="/departments"
                   routerLinkActive="active"
                   [routerLinkActiveOptions]="{ exact: true }"
@@ -179,25 +217,25 @@
               <li>
                 <a
                   class="dropdown-item"
-                  routerLink="/app-config"
+                  routerLink="/instructor"
                   routerLinkActive="active"
                   [routerLinkActiveOptions]="{ exact: true }"
                   (click)="collapseNavbar()"
                 >
                   <fa-icon icon="asterisk" [fixedWidth]="true" />
-                  <span jhiTranslate="global.menu.entities.appConfig">App Config</span>
+                  <span jhiTranslate="global.menu.entities.instructor">Instructor</span>
                 </a>
               </li>
               <li>
                 <a
                   class="dropdown-item"
-                  routerLink="/curriculum-map"
+                  routerLink="/student"
                   routerLinkActive="active"
                   [routerLinkActiveOptions]="{ exact: true }"
                   (click)="collapseNavbar()"
                 >
                   <fa-icon icon="asterisk" [fixedWidth]="true" />
-                  <span jhiTranslate="global.menu.entities.curriculumMap">Curriculum Map</span>
+                  <span jhiTranslate="global.menu.entities.student">Student</span>
                 </a>
               </li>
               <li>
@@ -227,18 +265,6 @@
               <li>
                 <a
                   class="dropdown-item"
-                  routerLink="/assessment"
-                  routerLinkActive="active"
-                  [routerLinkActiveOptions]="{ exact: true }"
-                  (click)="collapseNavbar()"
-                >
-                  <fa-icon icon="asterisk" [fixedWidth]="true" />
-                  <span jhiTranslate="global.menu.entities.assessment">Assessment</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  class="dropdown-item"
                   routerLink="/resources"
                   routerLinkActive="active"
                   [routerLinkActiveOptions]="{ exact: true }"
@@ -246,30 +272,6 @@
                 >
                   <fa-icon icon="asterisk" [fixedWidth]="true" />
                   <span jhiTranslate="global.menu.entities.resources">Resources</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  class="dropdown-item"
-                  routerLink="/academic-year"
-                  routerLinkActive="active"
-                  [routerLinkActiveOptions]="{ exact: true }"
-                  (click)="collapseNavbar()"
-                >
-                  <fa-icon icon="asterisk" [fixedWidth]="true" />
-                  <span jhiTranslate="global.menu.entities.academicYear">Academic Year</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  class="dropdown-item"
-                  routerLink="/academic-terms"
-                  routerLinkActive="active"
-                  [routerLinkActiveOptions]="{ exact: true }"
-                  (click)="collapseNavbar()"
-                >
-                  <fa-icon icon="asterisk" [fixedWidth]="true" />
-                  <span jhiTranslate="global.menu.entities.academicTerms">Academic Terms</span>
                 </a>
               </li>
               <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->

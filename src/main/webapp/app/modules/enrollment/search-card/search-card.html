@@ -92,7 +92,12 @@
         Search
         <fa-icon icon="search" />
       </button>
-      <button type="button" class="btn rounded-pill" [routerLink]="['/student/new/enroll']">
+      <button
+        type="button"
+        class="btn rounded-pill"
+        [routerLink]="['/student/new/enroll']"
+        *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_REGISTRATION']"
+      >
         Register
         <fa-icon icon="user" />
       </button>

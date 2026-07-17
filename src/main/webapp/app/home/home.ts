@@ -6,13 +6,14 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AccountService } from 'app/core/auth/account.service';
 import { TranslateDirective } from 'app/shared/language';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import HasAnyAuthorityDirective from '../shared/auth/has-any-authority.directive';
 
 @Component({
   selector: 'jhi-home',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './home.html',
   styleUrl: './home.scss',
-  imports: [FontAwesomeModule, TranslateDirective, TranslateModule, RouterLink, RouterLinkActive],
+  imports: [HasAnyAuthorityDirective, FontAwesomeModule, TranslateDirective, TranslateModule, RouterLink, RouterLinkActive],
 })
 export default class Home {
   public readonly account = inject(AccountService).account;

@@ -15,14 +15,14 @@
             >
           }
         </div>
-        <ul class="menu fs-4">
-          <li>
+        <ul class="menu fs-4" *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_ENROLLMENT', 'ROLE_REGISTRATION', 'ROLE_CURRICULUM_MAPPING']">
+          <li *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_CURRICULUM_MAPPING']">
             <span>
               <fa-icon icon="th-list"></fa-icon>
               <span jhiTranslate="global.menu.modules.curriculumMapping">curriculumMapping</span>
             </span>
           </li>
-          <li>
+          <li *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_CURRICULUM_MAPPING']">
             <ul>
               <li>
                 <a
@@ -47,14 +47,14 @@
             </ul>
           </li>
 
-          <li>
+          <li *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_ENROLLMENT']">
             <a class="dropdown-item" routerLink="/enrollment-form" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
               <fa-icon icon="users" />
               <span jhiTranslate="global.menu.modules.enrollmentForm">enrollmentForm</span>
             </a>
           </li>
 
-          <li>
+          <li *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_REGISTRATION']">
             <a
               class="dropdown-item"
               routerLink="/student/new/register"

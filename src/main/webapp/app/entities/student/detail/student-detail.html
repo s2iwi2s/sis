@@ -149,11 +149,18 @@
     </div>
   </div>
   <div>
-    <button type="submit" (click)="previousState()" class="btn btn-info rounded-pill" data-cy="entityDetailsBackButton">
-      <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
-    </button>
+    @if (source() !== 'enroll') {
+      <button type="submit" (click)="previousState()" class="btn btn-info rounded-pill" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+      </button>
+    }
 
-    <button type="button" [routerLink]="['/student', studentRef.id, 'edit', source()]" class="btn btn-primary rounded-pill">
+    <button
+      type="button"
+      [routerLink]="['/student', studentRef.id, 'edit', source()]"
+      class="btn btn-primary rounded-pill"
+      *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_REGISTRATION']"
+    >
       <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
     </button>
   </div>
