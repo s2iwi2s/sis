@@ -7,6 +7,7 @@
 
       <div>
         <jhi-alert-error />
+        <jhi-alert />
 
         @if (editForm.controls.id.value !== null) {
           <div class="mb-3">
@@ -118,6 +119,10 @@
           </div>
         </div>
       </div>
+
+      @if (successMessage()) {
+        <ngb-alert #selfClosingAlert type="success" (closed)="successMessage.set('')">{{ successMessage() }}</ngb-alert>
+      }
 
       <div>
         <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">

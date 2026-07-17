@@ -1,20 +1,20 @@
 
 ${AnsiColor.RED}+-----------------------------+
 ${AnsiColor.RED}
-${AnsiColor.RED}   sSSs   .S    sSSs
-${AnsiColor.RED}  d%%SP  .SS   d%%SP${AnsiColor.GREEN}    ##
-${AnsiColor.RED} d%S'    S%S  d%S'  ${AnsiColor.GREEN}    ##
-${AnsiColor.RED} S%|     S%S  S%|   ${AnsiColor.GREEN}  ######
-${AnsiColor.RED} S&S     S&S  S&S   ${AnsiColor.GREEN}    ##
-${AnsiColor.RED} Y&Ss    S&S  Y&Ss  ${AnsiColor.GREEN}    ##
-${AnsiColor.RED} `S&&S   S&S  `S&&S
-${AnsiColor.RED}   `S*S  S&S    `S*S
-${AnsiColor.RED}    l*S  S*S     l*S
-${AnsiColor.RED}   .S*P  S*S    .S*P
-${AnsiColor.RED} sSS*S   S*S  sSS*S
-${AnsiColor.RED} YSS'    S*S  YSS'
-${AnsiColor.RED}         SP
-${AnsiColor.RED}         Y
+${AnsiColor.RED}   sIs   .S     sIs
+${AnsiColor.RED}  siSis  siS   SiSis${AnsiColor.GREEN}    ##
+${AnsiColor.RED} siS'    SIS  siS'  ${AnsiColor.GREEN}    ##
+${AnsiColor.RED} SiS     SIS  SiS   ${AnsiColor.GREEN}  ######
+${AnsiColor.RED} SiS     SIS  SiS   ${AnsiColor.GREEN}    ##
+${AnsiColor.RED} SiSis   SIS  SiSs  ${AnsiColor.GREEN}    ##
+${AnsiColor.RED} `SiSS   SIS  `SiSS
+${AnsiColor.RED}   `SiS  SIS    `SiS
+${AnsiColor.RED}    SiS  SIS     SiS
+${AnsiColor.RED}   .SIS  SIS    .SiS
+${AnsiColor.RED} siSiS   SIS  siSIS
+${AnsiColor.RED} siS'    SIS  SiS'
+${AnsiColor.RED}         SS
+${AnsiColor.RED}         S
 ${AnsiColor.RED}+-----------------------------+
 ${AnsiColor.RED}
 ${AnsiColor.BRIGHT_BLUE}:: Running Spring Boot ${spring-boot.version} :: Startup profile(s) ${spring.profiles.active} ::

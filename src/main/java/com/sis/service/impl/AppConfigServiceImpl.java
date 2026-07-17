@@ -75,6 +75,16 @@ public class AppConfigServiceImpl implements AppConfigService {
     }
 
     @Override
+    public List<AppConfigDTO> findAll(AppConfigDTO appConfigDTO) {
+        LOG.debug("Request to get all AppConfigs");
+        return appConfigRepository
+            .findAll(Example.of(appConfigMapper.toEntity(appConfigDTO)))
+            .stream()
+            .map(a -> appConfigMapper.toDto(a))
+            .toList();
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Optional<AppConfigDTO> findOne(Long id) {
         LOG.debug("Request to get AppConfig : {}", id);

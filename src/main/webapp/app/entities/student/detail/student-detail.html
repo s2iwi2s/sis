@@ -91,7 +91,7 @@
           @if (studentRef?.address2) {
             {{ studentRef?.address2 }}
           }
-          <br />{{ studentRef?.city }} {{ studentRef?.country }} {{ studentRef?.zipCode }}</span
+          , <br />{{ studentRef?.city }} {{ studentRef?.country }} {{ studentRef?.zipCode }}</span
         >
       </div>
     </div>
@@ -153,7 +153,7 @@
       <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
     </button>
 
-    <button type="button" [routerLink]="['/student', studentRef.id, 'edit', 'view']" class="btn btn-primary rounded-pill">
+    <button type="button" [routerLink]="['/student', studentRef.id, 'edit', source()]" class="btn btn-primary rounded-pill">
       <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
     </button>
   </div>

@@ -20,10 +20,6 @@
     </div>
   </h2>
 
-  <jhi-alert-error />
-
-  <jhi-alert />
-
   @if (appConfigs().length === 0) {
     <div class="alert alert-warning" id="no-result">
       <span jhiTranslate="schInfoSysApp.appConfig.home.notFound">No App Configs found</span>
@@ -57,13 +53,6 @@
             <th scope="col" jhiSortBy="description">
               <div class="d-flex">
                 <span jhiTranslate="schInfoSysApp.appConfig.description">Description</span>
-
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
-            <th scope="col" jhiSortBy="json">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.appConfig.json">Json</span>
 
                 <fa-icon class="p-1" icon="sort" />
               </div>
@@ -115,7 +104,6 @@
               <td>{{ appConfig.code }}</td>
               <td>{{ appConfig.value }}</td>
               <td>{{ appConfig.description }}</td>
-              <td>{{ appConfig.json }}</td>
               <td>{{ appConfig.priority }}</td>
               <td>{{ appConfig.createdBy }}</td>
               <td>{{ appConfig.createdDate | formatMediumDatetime }}</td>

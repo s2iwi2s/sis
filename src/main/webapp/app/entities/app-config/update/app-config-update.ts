@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal, viewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap/alert';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
@@ -15,15 +16,21 @@ import { IAppConfig } from '../app-config.model';
 import { AppConfigService } from '../service/app-config.service';
 
 import { AppConfigFormGroup, AppConfigFormService } from './app-config-form.service';
+import { Alert } from '../../../shared/alert/alert';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-app-config-update',
   templateUrl: './app-config-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, NgbAlert, Alert, AlertError, ReactiveFormsModule],
 })
 export class AppConfigUpdate implements OnInit {
   readonly isSaving = signal(false);
+  readonly successMessage = signal('');
+  readonly selfClosingAlert = viewChild<NgbAlert>('selfClosingAlert');
+
   appConfig: IAppConfig | null = null;
 
   protected dataUtils = inject(DataUtils);
@@ -55,7 +62,12 @@ export class AppConfigUpdate implements OnInit {
   setFileData(event: Event, field: string, isImage: boolean): void {
     this.dataUtils.loadFileToForm(event, this.editForm, field, isImage).subscribe({
       error: (err: FileLoadError) =>
-        this.eventManager.broadcast(new EventWithContent<AlertErrorModel>('schInfoSysApp.error', { ...err, key: `error.file.${err.key}` })),
+        this.eventManager.broadcast(
+          new EventWithContent<AlertErrorModel>('schInfoSysApp.error', {
+            ...err,
+            key: `error.file.${err.key}`,
+          }),
+        ),
     });
   }
 
@@ -74,14 +86,26 @@ export class AppConfigUpdate implements OnInit {
   }
 
   protected subscribeToSaveResponse(result: Observable<IAppConfig | null>): void {
-    result.pipe(finalize(() => this.onSaveFinalize())).subscribe({
-      next: () => this.onSaveSuccess(),
+    result.subscribe({
+      next: result => this.onSaveSuccess(result),
       error: () => this.onSaveError(),
     });
   }
 
-  protected onSaveSuccess(): void {
-    this.previousState();
+  protected onSaveSuccess(savedConfig: IAppConfig | null): void {
+    const type = this.editForm.getRawValue().id === null ? 'created' : 'updated';
+    //this.previousState();
+    this.setMessage(`A Config ${savedConfig?.code} is ${type}`);
+    if (type === 'created') {
+      this.updateForm({} as IAppConfig);
+    } else {
+      this.updateForm(savedConfig || ({} as IAppConfig)); //({id: savedConfig?.id || null, ...savedConfig});
+    }
+  }
+
+  setMessage(msg: string) {
+    this.successMessage.set(msg);
+    setTimeout(() => this.selfClosingAlert()?.close(), 5000);
   }
 
   protected onSaveError(): void {

@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -147,12 +146,17 @@ public class AppConfigResource {
     public ResponseEntity<List<AppConfigDTO>> getAllAppConfigs(
         @org.springdoc.core.annotations.ParameterObject AppConfigDTO appConfigDTO,
         @org.springdoc.core.annotations.ParameterObject Pageable pageable,
-        @RequestParam(name = "filter", required = false) String filter
+        @RequestParam(name = "eagerload", required = false, defaultValue = "false") boolean eagerload
     ) {
         LOG.debug("REST request to get a page of AppConfigs");
-        Page<AppConfigDTO> page = appConfigService.findAll(appConfigDTO, pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        if (eagerload) {
+            List<AppConfigDTO> allEager = appConfigService.findAll(appConfigDTO);
+            return ResponseEntity.ok().body(allEager);
+        } else {
+            Page<AppConfigDTO> page = appConfigService.findAll(appConfigDTO, pageable);
+            HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+            return ResponseEntity.ok().headers(headers).body(page.getContent());
+        }
     }
 
     /**

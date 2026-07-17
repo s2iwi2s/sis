@@ -786,9 +786,19 @@
         }
       </div>
 
+      @if (successMessage()) {
+        <ngb-alert #selfClosingAlert type="success" (closed)="successMessage.set('')">{{ successMessage() }}</ngb-alert>
+      }
+
       <div class="mt-2">
         <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
-          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+          <fa-icon icon="ban" />&nbsp;
+
+          @if (source === 'enroll') {
+            <span jhiTranslate="entity.action.back">Back</span>
+          } @else {
+            <span jhiTranslate="entity.action.cancel">Cancel</span>
+          }
         </button>
 
         <button

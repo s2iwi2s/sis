@@ -42,6 +42,12 @@ public interface AppConfigService {
      * @return the list of entities.
      */
     Page<AppConfigDTO> findAll(AppConfigDTO appConfigDTO, Pageable pageable);
+    /**
+     * Get all the appConfigs.
+     * @param appConfigDTO
+     * @return the list of entities.
+     */
+    List<AppConfigDTO> findAll(AppConfigDTO appConfigDTO);
 
     /**
      * Get the "id" appConfig.

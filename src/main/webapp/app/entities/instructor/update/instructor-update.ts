@@ -113,8 +113,9 @@ export class InstructorUpdate implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     this.appConfigService
-      .query({ filter: 'instructor-is-null' })
+      .query({ code: 'GENDER', eagerload: true })
       .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
+      .pipe(map(this.appConfigService.sortAppConfig))
       .pipe(
         map((appConfigs: IAppConfig[]) =>
           this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.instructor?.gender),

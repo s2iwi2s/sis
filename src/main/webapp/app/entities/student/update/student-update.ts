@@ -2,7 +2,7 @@
 import { HttpResponse } from '@angular/common/http';
 import dayjs from 'dayjs/esm';
 
-import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal, viewChild } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -24,12 +24,13 @@ import { IStudent } from '../student.model';
 import { StudentFormGroup, StudentFormService } from './student-form.service';
 import { AgePipe } from '../../../shared/age/age-pipe';
 import { DATE_FORMAT } from '../../../config/input.constants';
+import { NgbAlert } from '@ng-bootstrap/ng-bootstrap/alert';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-student-update',
   templateUrl: './student-update.html',
-  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, AlertError, ReactiveFormsModule, AgePipe],
+  imports: [TranslateDirective, TranslateModule, FontAwesomeModule, NgbAlert, AlertError, ReactiveFormsModule, AgePipe],
 })
 export class StudentUpdate implements OnInit {
   readonly isSaving = signal(false);
@@ -41,6 +42,9 @@ export class StudentUpdate implements OnInit {
   usersSharedCollection = signal<IUser[]>([]);
   courseSchedulesSharedCollection = signal<ICourseSchedule[]>([]);
   parentCivilStatusCollection = signal<IAppConfig[]>([]);
+
+  readonly successMessage = signal('');
+  readonly selfClosingAlert = viewChild<NgbAlert>('selfClosingAlert');
 
   protected studentService = inject(StudentService);
   protected studentFormService = inject(StudentFormService);
@@ -99,14 +103,23 @@ export class StudentUpdate implements OnInit {
   }
 
   protected onSaveSuccess(savedStudent: IStudent | null): void {
-    if (this.source === 'enroll') {
-      this.router.navigate(['/enrollment-form', savedStudent?.id]);
-    } else if (this.source === 'register') {
-      this.studentFormService.resetForm(this.editForm, {} as IStudent);
-      this.router.navigate(['/student', 'new', 'register']);
+    const type = this.editForm.getRawValue().id === null ? 'created' : 'updated';
+    this.student = savedStudent;
+    this.setMessage(`Learner ${this.student?.lastName}, ${this.student?.firstName} is ${type}`);
+
+    if (type === 'created') {
+      this.updateForm({} as IStudent);
+      //this.router.navigate(['/student', 'new', 'register']);
+      //this.previousState();
     } else {
-      this.previousState();
+      this.updateForm(savedStudent || ({} as IStudent));
+      // this.router.navigate(['/enrollment-form', savedStudent?.id]);
     }
+  }
+
+  setMessage(msg: string) {
+    this.successMessage.set(msg);
+    setTimeout(() => this.selfClosingAlert()?.close(), 5000);
   }
 
   protected onSaveError(): void {
@@ -140,7 +153,7 @@ export class StudentUpdate implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     this.appConfigService
-      .query({ code: 'GRADE_LEVEL' })
+      .query({ code: 'GRADE_LEVEL', eagerload: true })
       .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
       .pipe(map(this.appConfigService.sortAppConfig))
       .pipe(
@@ -151,7 +164,7 @@ export class StudentUpdate implements OnInit {
       .subscribe((appConfigs: IAppConfig[]) => this.gradelevelsCollection.set(appConfigs));
 
     this.appConfigService
-      .query({ code: 'GENDER' })
+      .query({ code: 'GENDER', eagerload: true })
       .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
       .pipe(map(this.appConfigService.sortAppConfig))
       .pipe(
@@ -162,7 +175,7 @@ export class StudentUpdate implements OnInit {
       .subscribe((appConfigs: IAppConfig[]) => this.gendersCollection.set(appConfigs));
 
     this.appConfigService
-      .query({ code: 'CIVIL_STATUS' })
+      .query({ code: 'CIVIL_STATUS', eagerload: true })
       .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
       .pipe(map(this.appConfigService.sortAppConfig))
       .pipe(

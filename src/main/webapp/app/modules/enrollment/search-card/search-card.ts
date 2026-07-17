@@ -36,7 +36,7 @@ export class SearchCard implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     this.appConfigService
-      .query({ code: 'GRADE_LEVEL' })
+      .query({ code: 'GRADE_LEVEL', eagerload: true })
       .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
       .pipe(map(this.appConfigService.sortAppConfig))
       // .pipe(

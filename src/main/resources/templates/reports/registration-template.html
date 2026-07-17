@@ -10,14 +10,36 @@
         margin-bottom: 10px;
       }
 
+      * {
+        box-sizing: border-box;
+      }
+
+      .flex-container {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: small;
+      }
+
+      hr.fc-blue {
+        border: 1px solid #0b5ed7;
+      }
+
       .logo {
         width: 80px;
         height: 80px;
       }
 
-      body {
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: medium;
+      .position-absolute {
+        position: absolute;
+        z-index: -1000;
+      }
+
+      .w70 {
+        width: 70%;
       }
 
       .fs-large {
@@ -35,10 +57,17 @@
       .fw-bold {
         font-weight: bold;
       }
+      .ftd-uline {
+        text-decoration: underline;
+      }
 
       .my-0 {
         margin-top: 0;
         margin-bottom: 0;
+      }
+
+      .mt-20 {
+        margin-top: 20px;
       }
 
       .my-1 {
@@ -50,8 +79,27 @@
         padding: 3px;
       }
 
+      .pt-1 {
+        padding-top: 1px;
+      }
+
       .pt-3 {
         padding-top: 3px;
+      }
+
+      .pl-3 {
+        padding-left: 3px;
+      }
+
+      .pt-5 {
+        padding-top: 5px;
+      }
+
+      .pt-10 {
+        padding-top: 10px;
+      }
+      .pb-5 {
+        padding-bottom: 5px;
       }
 
       .border-black {
@@ -70,38 +118,48 @@
         text-align: right;
       }
 
-      .position-absolute {
-        position: absolute;
-        z-index: -1000;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      .flex-container {
-        display: flex;
-        flex-wrap: wrap;
-      }
-
       .flex-item-90 {
         flex: 90%;
+      }
+
+      .flex-item-78 {
+        flex: 78%;
+      }
+
+      .flex-item-77 {
+        flex: 77%;
+      }
+
+      .flex-item-75 {
+        flex: 75%;
       }
 
       .flex-item-70 {
         flex: 70%;
       }
 
+      .flex-item-65 {
+        flex: 65%;
+      }
+
       .flex-item-60 {
         flex: 60%;
+      }
+
+      .flex-item-51 {
+        flex: 51%;
       }
 
       .flex-item-50 {
         flex: 50%;
       }
 
-      .flex-item-40 {
-        flex: 40%;
+      .flex-item-49 {
+        flex: 49%;
+      }
+
+      .flex-item-35 {
+        flex: 35%;
       }
 
       .flex-item-33 {
@@ -112,8 +170,16 @@
         flex: 30%;
       }
 
-      .flex-item-auto {
-        flex: 1 1 0px;
+      .flex-item-25 {
+        flex: 25%;
+      }
+
+      .flex-item-23 {
+        flex: 23%;
+      }
+
+      .flex-item-22 {
+        flex: 22%;
       }
 
       .flex-item-20 {
@@ -122,6 +188,13 @@
 
       .flex-item-10 {
         flex: 10%;
+      }
+
+      .flex-item-auto {
+        flex: 1 1 0px;
+      }
+      ul.nlist {
+        list-style-type: decimal;
       }
     </style>
   </head>
@@ -137,19 +210,7 @@
       <p class="text-center my-0">Gov't. Recognition Nos. 007, s.2010 (High School); No. 006, s.2012 (Elementary)</p>
     </small>
     <hr class="my-1" />
-    <!--
-<div class="my-1">
-<div class="col-7">
-<p class="fw-semibold">STUDENT/ PUPIL REGISTRATION FORM</p>
-</div>
 
-<div class="col-sm-5 border border-black text-sm-end">
-<p class="my-0">DATE:________________</p>
-<p class="my-0">GRADE LEVEL:________________</p>
-<p class="my-0 pe-5"><span class="me-3">NEW</span><span>OLD</span></p>
-</div>
-</div>
--->
     <div class="flex-container">
       <div class="flex-item-70 fw-bold pt-3">STUDENT/ PUPIL REGISTRATION FORM</div>
       <div class="flex-item-30 text-end border-black p-3">
@@ -169,7 +230,7 @@
         <div class="border-bottom flex-item-90">
           <span th:text="#{pdf.value(${student.lastName})}">lastName</span>,
           <span th:text="#{pdf.value(${student.firstName})}">firstName</span>
-          <span th:text="#{pdf.value(${student.middleName})}">middleName</span>
+          <span th:text="#{pdf.value(${student.middleName != null} ? ${student.middleName} : '')}">middleName</span>
         </div>
       </div>
       <div class="flex-item-20 flex-container">
@@ -178,7 +239,7 @@
       </div>
       <div class="flex-item-20 flex-container">
         <div class="flex-item-10">Gender:</div>
-        <div class="flex-item-90 border-bottom" th:text="#{pdf.value(${student.gender.value})}">gender</div>
+        <div class="flex-item-90 border-bottom" th:text="#{pdf.value(${student.gender} != null? ${student.gender.value} : '')}">gender</div>
       </div>
     </div>
 
@@ -195,30 +256,219 @@
 
     <div class="p-3 flex-container">
       <div class="flex-item-50 flex-container">
-        <div class="flex-item-40">Father's Name:</div>
-        <div class="flex-item-60 border-bottom">
-          <span th:text="#{pdf.value(${student.fathersLastName})}">lastName</span>,
-          <span th:text="#{pdf.value(${student.fathersFirstName})}">firstName</span>
+        <div class="flex-item-35">Father's Name:</div>
+        <div class="flex-item-65 border-bottom">
+          <span th:text="#{pdf.value(${student.fathersLastName} != null? ${student.fathersLastName} : '')}">lastName</span>,
+          <span th:text="#{pdf.value(${student.fathersFirstName} != null? ${student.fathersFirstName} : '')}">firstName</span>
         </div>
       </div>
       <div class="flex-item-50 flex-container">
-        <div class="flex-item-30">Occupation:</div>
-        <div class="flex-item-70 border-bottom" th:text="#{pdf.value(${student.fathersOccupation})}">mothersOccupation</div>
+        <div class="flex-item-25">Occupation:</div>
+        <div
+          class="flex-item-75 border-bottom"
+          th:text="#{pdf.value(${student.fathersOccupation} != null? ${student.fathersOccupation} : '')}"
+        >
+          mothersOccupation
+        </div>
       </div>
     </div>
 
     <div class="p-3 flex-container">
       <div class="flex-item-50 flex-container">
-        <div class="flex-item-40">Mother's Name:</div>
-        <div class="flex-item-60 border-bottom">
-          <span th:text="#{pdf.value(${student.mothersLastName})}">lastName</span>,
-          <span th:text="#{pdf.value(${student.mothersFirstName})}">firstName</span>
+        <div class="flex-item-35">Mother's Name:</div>
+        <div class="flex-item-65 border-bottom">
+          <span th:text="#{pdf.value(${student.mothersLastName} != null? ${student.mothersLastName} : '')}">lastName</span>,
+          <span th:text="#{pdf.value(${student.mothersFirstName} != null? ${student.mothersFirstName} : '')}">firstName</span>
         </div>
       </div>
       <div class="flex-item-50 flex-container">
-        <div class="flex-item-30">Occupation:</div>
-        <div class="flex-item-70 border-bottom" th:text="#{pdf.value(${student.mothersOccupation})}">mothersOccupation</div>
+        <div class="flex-item-25">Occupation:</div>
+        <div
+          class="flex-item-75 border-bottom"
+          th:text="#{pdf.value(${student.mothersOccupation} != null? ${student.mothersOccupation} : '')}"
+        >
+          mothersOccupation
+        </div>
       </div>
+    </div>
+
+    <div class="p-3 flex-container">
+      <div class="flex-item-50 flex-container">
+        <div class="flex-item-49">Civil Status of parents:</div>
+        <div
+          class="flex-item-51 border-bottom"
+          th:text="#{pdf.value(${student.parentCivilStatus} != null? ${student.parentCivilStatus.value} : '')}"
+        >
+          parentCivilStatus
+        </div>
+      </div>
+      <div class="flex-item-50 flex-container">
+        <div class="flex-item-10">Guardian:</div>
+        <div
+          class="flex-item-90 border-bottom"
+          th:text="#{pdf.value(${student.guardianFullName} != null? ${student.guardianFullName} : '')}"
+        >
+          guardianFullName
+        </div>
+      </div>
+    </div>
+    <div class="p-3 flex-container">
+      <div class="flex-item-22">Permanent Address:</div>
+      <div class="flex-item-78 border-bottom">
+        <span th:text="#{pdf.value(${student.address1})}">address1</span>
+        <span th:text="#{pdf.value(${student.address2} != null? ${student.address2} : '')}">address2</span>,
+        <span th:text="#{pdf.value(${student.city})}">city</span>
+        <span th:text="#{pdf.value(${student.zipCode} != null? ${student.zipCode} : '')}">zipCode</span>
+        <span th:text="#{pdf.value(${student.country})}">country</span>
+      </div>
+    </div>
+    <div class="p-3 flex-container">
+      <div class="flex-item-40">City Address, if staying in Tagum City:</div>
+      <div class="flex-item-60 border-bottom">
+        <span th:text="#{pdf.value(${student.cityAddress})}">cityAddress</span>
+      </div>
+    </div>
+    <div class="p-3 flex-container">
+      <div class="flex-item-23">Last School Attended:</div>
+      <div class="flex-item-77 border-bottom">
+        <span th:text="#{pdf.value(${student.lastSchool})}">lastSchool</span>
+      </div>
+    </div>
+    <div class="p-3 flex-container">
+      <div class="flex-item-40">Address of last school Attended:</div>
+      <div class="flex-item-60 border-bottom">
+        <span th:text="#{pdf.value(${student.lastSchool})}">lastSchool</span>
+      </div>
+    </div>
+
+    <div class="p-3 flex-container">
+      <div class="flex-item-25">Contact Nos:</div>
+      <div class="flex-item-75 border-bottom">
+        <span th:text="#{pdf.value(${student.lastSchoolContacts})}">lastSchoolContacts</span>
+      </div>
+    </div>
+    <div class="fw-bold p-3 pt-5 flex-container">HOMESCHOOL/E-LEARNING REQUIRED FORMS:</div>
+    <div class="p-3 flex-container">____ Factors to Consider Before Homeschooling</div>
+    <div class="p-3 flex-container">____ Homeschool Parents Questionnaire (HPQ)/ Alternative Learning - Parents Questionnaire (ALPQ)</div>
+    <div class="fw-bold p-3 pt-5 flex-container">
+      <div class="flex-item-50">CREDENTIALS</div>
+      <div class="flex-item-50">ESC REQUIREMENTS</div>
+    </div>
+    <div class="pt-1 flex-container">
+      <div class="pl-3 flex-item-50"><input type="checkbox" /> 1X1 ID pictue</div>
+      <div class="pl-3 flex-item-50"><input type="checkbox" /> Certificate of low income</div>
+    </div>
+    <div class="pt-1 flex-container">
+      <div class="pl-3 flex-item-50"><input type="checkbox" /> PSA Birth certificate photocopy</div>
+      <div class="pl-3 flex-item-50"><input type="checkbox" /> Monthly family income:</div>
+    </div>
+    <div class="pt-1 flex-container">
+      <div class="pl-3 flex-item-50"><input type="checkbox" /> Good moral certificate</div>
+      <div class="pl-3 flex-item-50"><input type="checkbox" /> Student Application for ESC Participation</div>
+    </div>
+    <div class="pt-1 flex-container">
+      <div class="pl-3 flex-item-50"><input type="checkbox" /> Report card</div>
+      <div class="pl-3 flex-item-50"><input type="checkbox" /> ESC Grantee Enrolment Contract</div>
+    </div>
+    <div class="pt-1 flex-container">
+      <div class="pl-3 flex-item-50"><input type="checkbox" /> Others, please specify:____________</div>
+      <div class="pl-3 flex-item-50"></div>
+    </div>
+    <div class="fw-bold p-3 mt-20 flex-container">
+      <div class="text-center flex-item-50">Student/ Pupil Signature</div>
+      <div class="text-center flex-item-50">Parent/ Guardian’s Signature</div>
+    </div>
+    <div class="fw-bold mt-20 flex-container">
+      <div class="text-center flex-item-49 ftd-uline">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+      <div class="text-center flex-item-49 ftd-uline">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+    <div class="fw-bold flex-container">
+      <div class="text-center flex-item-49">Teacher</div>
+      <div class="text-center flex-item-49">MS. ERNA M. GENERALE</div>
+    </div>
+    <div class="flex-container">
+      <div class="text-center flex-item-49"></div>
+      <div class="text-center flex-item-49">Cashier</div>
+    </div>
+
+    <div class="fw-bold pt-3 mt-20 flex-container">
+      <div class="text-center flex-item-50 ftd-uline">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        MS ROSALIND W. GATMIN
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+      <div class="text-center flex-item-50 ftd-uline">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        MS. MAYUMI M PINZON, MAEM
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+
+    <div class="flex-container pb-5">
+      <div class="text-center flex-item-49">Registrar</div>
+      <div class="text-center flex-item-49">Principal</div>
+    </div>
+
+    <hr class="fc-blue" />
+
+    <div class="fw-bold text-center">STATEMENT OF COMMITMENT</div>
+    <div>
+      I, ____________________________________, as parent/guardian of ______________________________, promise to confer with my child’s
+      Adviser, whether electronically or face-to-face (thus, observing social distancing and other minimum health standards) regarding my
+      child’s behavior and academic progress. I understand that I am liable for my child’s learning process.
+    </div>
+    <div>
+      Furthermore, I hereby agree to abide the policies and regulations of the school including the following:
+      <ul class="nlist">
+        <li>Administrative policies;</li>
+        <li>Prompt payment of tuition fees and other school fees;</li>
+        <li>
+          That our personal information shall be kept confidential. However, we allow transfer, whether electronically or hardcopy and
+          submit to legitimate offices and Agencies, who are collating learners’ information for the benefit of the school and ourselves;
+        </li>
+        <li>
+          That this e-learning/ homeschool programs offer the following subjects as appropriate in his/her Grade level, Christian Living &
+          Values Education (CLVE), Technology & Livelihood Education (TLE)/ Edukasyong Pantahanan at Pangkabuhayan (EPP), Araling
+          Panlipunan, Science, Mathematics, Filipino and English.
+        </li>
+      </ul>
+    </div>
+    <div>
+      I recognize that the implementation of these rules will contribute to the welfare of my child and will lead to the attainment of the
+      objectives of St. Lorenzo Ruiz Academy of Tagum, Inc..
+    </div>
+    <div class="fw-bold mt-20 flex-container">
+      <div class="text-center flex-item-49 ftd-uline">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+      <div class="text-center flex-item-49 ftd-uline">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+    <div class="flex-container">
+      <div class="text-center flex-item-49">Student/ Pupil’s Signature</div>
+      <div class="text-center flex-item-49">Parent/ Guardian’s Signature</div>
+    </div>
+
+    <div class="fw-bold pt-3 mt-20 flex-container">
+      <div class="text-center flex-item-50 ftd-uline">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        MS ROSALIND W. GATMIN
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+      <div class="text-center flex-item-50 ftd-uline">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        MS. MAYUMI M PINZON, MAEM
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
+    <div class="flex-container">
+      <div class="text-center flex-item-49">Prefect of Discipline</div>
+      <div class="text-center flex-item-49">Principal</div>
     </div>
   </body>
 </html>

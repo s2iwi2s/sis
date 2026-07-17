@@ -10,3 +10,5 @@ id;code;value;description;json;priority;created_by;created_date;last_modified_by
 9;GRADE_LEVEL;Grade 6;Grade 6;;7;admin;2026-07-05T20:12:07;admin;2026-07-06T08:37:23
 10;GRADE_LEVEL;Grade 7;Grade 7;;8;admin;2026-07-05T21:58:44;admin;2026-07-06T10:01:34
 11;GRADE_LEVEL;Grade 8;Grade 8;;9;admin;2026-07-05T16:29:59;admin;2026-07-05T19:09:11
+12;CIVIL_STATUS;Married;Grade 8;;1;admin;2026-07-05T16:29:59;admin;2026-07-05T19:09:11
+13;CIVIL_STATUS;Separated;Grade 8;;2;admin;2026-07-05T16:29:59;admin;2026-07-05T19:09:11

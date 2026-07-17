@@ -1,6 +1,7 @@
 package com.sis.service;
 
 import com.itextpdf.html2pdf.HtmlConverter;
+import com.sis.service.dto.AppConfigDTO;
 import com.sis.service.dto.ReportResponseDTO;
 import java.io.*;
 import java.net.URISyntaxException;
@@ -10,6 +11,7 @@ import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.TemplateEngine;
@@ -50,12 +52,32 @@ public abstract class AbstractPdfReport<T, P> implements PdfReport<T, P> {
         return content;
     }
 
+    public String getHtmlFromAppConfig(T data) {
+        AppConfigService appConfigService = getAppConfigService();
+        List<AppConfigDTO> list = appConfigService.findAll(new AppConfigDTO().code(getAppConfigKey()));
+
+        String templateHtml = list
+            .stream()
+            .map(dto -> dto.getJson())
+            .collect(Collectors.joining());
+        TemplateEngine templateEngine = this.getTemplateEngine();
+        Locale locale = Locale.forLanguageTag("en");
+        Context context = new Context(locale);
+        context.setVariable(templateHtml, data);
+
+        String renderedString = templateEngine.process(templateHtml, context);
+        return renderedString;
+    }
+
     public String getHtml(T data) throws IOException, URISyntaxException {
-        if (getTemplateFileName() != null) {
+        if (getAppConfigKey() != null && !getAppConfigKey().isEmpty()) {
+            return getHtmlFromAppConfig(data);
+        } else if (getTemplateFileName() != null) {
             return getHtmlFromClasspath(data);
         } else if (getTemplateName() != null) {
             return getHtmlFromTemplate(data);
         }
+
         return "<html/>";
     }
 

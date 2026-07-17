@@ -51,8 +51,19 @@ public class AppConfigDTO implements Serializable {
         this.code = code;
     }
 
+    public AppConfigDTO code(String code) {
+        this.code = code;
+
+        return this;
+    }
+
     public String getValue() {
         return value;
+    }
+
+    public AppConfigDTO value(String value) {
+        this.value = value;
+        return this;
     }
 
     public void setValue(String value) {

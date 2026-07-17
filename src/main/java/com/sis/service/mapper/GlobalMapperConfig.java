@@ -11,9 +11,9 @@ import org.mapstruct.ReportingPolicy;
 public interface GlobalMapperConfig {
     default String mapEmptyToNull(String value) {
         if (value == null || value.equalsIgnoreCase("null") || value.equalsIgnoreCase("undefined")) {
-            return null;
+            return "";
         }
-        return value.trim().isEmpty() ? null : value;
+        return value.trim().isEmpty() ? "" : value;
     }
 
     default void updateEmptyToNull(String value, @MappingTarget String target) {

@@ -14,6 +14,9 @@ public interface PdfReport<T, P> {
 
     T getData(P params);
 
+    AppConfigService getAppConfigService();
+    String getAppConfigKey();
+
     String getHtml(T data) throws IOException, URISyntaxException;
 
     String setLine(String line, T data);

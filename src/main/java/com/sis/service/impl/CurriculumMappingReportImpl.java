@@ -57,6 +57,16 @@ public class CurriculumMappingReportImpl extends AbstractPdfReport<CurriculumMap
     }
 
     @Override
+    public AppConfigService getAppConfigService() {
+        return null;
+    }
+
+    @Override
+    public String getAppConfigKey() {
+        return "";
+    }
+
+    @Override
     public String getHtml(CurriculumMappingReportDetailDto curMapDetails) throws IOException {
         List<CurriculumMappingReportRowDto> list = new ArrayList<>();
         List<QuarterDTO> qtrList = new ArrayList<>();
