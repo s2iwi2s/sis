@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
@@ -52,26 +53,34 @@ public abstract class AbstractPdfReport<T, P> implements PdfReport<T, P> {
         return content;
     }
 
-    public String getHtmlFromAppConfig(T data) {
-        AppConfigService appConfigService = getAppConfigService();
-        List<AppConfigDTO> list = appConfigService.findAll(new AppConfigDTO().code(getAppConfigKey()));
+    public String getHtmlFromAppConfig(T data, List<AppConfigDTO> list) {
+        LOG.info("getHtmlFromAppConfig data={}", data);
+        LOG.info("getHtmlFromAppConfig list={}", list);
 
         String templateHtml = list
             .stream()
             .map(dto -> dto.getJson())
             .collect(Collectors.joining());
+        LOG.info("getHtmlFromAppConfig templateHtml={}", templateHtml);
+
         TemplateEngine templateEngine = this.getTemplateEngine();
         Locale locale = Locale.forLanguageTag("en");
         Context context = new Context(locale);
-        context.setVariable(templateHtml, data);
+        context.setVariable("student", data);
 
         String renderedString = templateEngine.process(templateHtml, context);
         return renderedString;
     }
 
     public String getHtml(T data) throws IOException, URISyntaxException {
+        AppConfigService appConfigService = getAppConfigService();
+        List<AppConfigDTO> list = new ArrayList<>();
         if (getAppConfigKey() != null && !getAppConfigKey().isEmpty()) {
-            return getHtmlFromAppConfig(data);
+            list = appConfigService.findAll(new AppConfigDTO().code(getAppConfigKey()));
+        }
+
+        if (list.size() != 0) {
+            return getHtmlFromAppConfig(data, list);
         } else if (getTemplateFileName() != null) {
             return getHtmlFromClasspath(data);
         } else if (getTemplateName() != null) {

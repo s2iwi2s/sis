@@ -5,6 +5,7 @@ import com.sis.service.AppConfigService;
 import com.sis.service.StudentService;
 import com.sis.service.dto.AppConfigDTO;
 import com.sis.service.dto.StudentDTO;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.dialect.SpringStandardDialect;
@@ -21,9 +22,14 @@ public class RegistrationReportImpl extends AbstractPdfReport<StudentDTO, Long> 
         this.studentService = studentService;
         this.appConfigService = appConfigService;
 
-        templateEngine.setDialect(new SpringStandardDialect());
-        StringTemplateResolver templateResolver = new StringTemplateResolver();
-        templateEngine.setTemplateResolver(templateResolver);
+        if (getAppConfigKey() != null && !getAppConfigKey().isEmpty()) {
+            List<AppConfigDTO> list = appConfigService.findAll(new AppConfigDTO().code(getAppConfigKey()));
+            if (list.size() != 0) {
+                templateEngine.setDialect(new SpringStandardDialect());
+                StringTemplateResolver templateResolver = new StringTemplateResolver();
+                templateEngine.setTemplateResolver(templateResolver);
+            }
+        }
         this.templateEngine = templateEngine;
     }
 

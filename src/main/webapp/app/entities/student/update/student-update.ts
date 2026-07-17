@@ -112,12 +112,12 @@ export class StudentUpdate implements OnInit {
       //this.router.navigate(['/student', 'new', 'register']);
       //this.previousState();
     } else {
-      this.updateForm(savedStudent || ({} as IStudent));
+      this.updateForm(savedStudent ?? ({} as IStudent));
       // this.router.navigate(['/enrollment-form', savedStudent?.id]);
     }
   }
 
-  setMessage(msg: string) {
+  protected setMessage(msg: string): void {
     this.successMessage.set(msg);
     setTimeout(() => this.selfClosingAlert()?.close(), 5000);
   }
@@ -205,7 +205,7 @@ export class StudentUpdate implements OnInit {
       .subscribe((courseSchedules: ICourseSchedule[]) => this.courseSchedulesSharedCollection.set(courseSchedules));
   }
 
-  getBirthDate() {
+  protected getBirthDate(): dayjs.Dayjs {
     const birthDate = this.editForm.get('birthDate')?.value;
     return dayjs(birthDate, DATE_FORMAT);
   }

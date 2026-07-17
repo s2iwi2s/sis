@@ -87,7 +87,7 @@ export class AppConfigUpdate implements OnInit {
 
   protected subscribeToSaveResponse(result: Observable<IAppConfig | null>): void {
     result.subscribe({
-      next: result => this.onSaveSuccess(result),
+      next: appConfigRes => this.onSaveSuccess(appConfigRes),
       error: () => this.onSaveError(),
     });
   }
@@ -99,17 +99,21 @@ export class AppConfigUpdate implements OnInit {
     if (type === 'created') {
       this.updateForm({} as IAppConfig);
     } else {
-      this.updateForm(savedConfig || ({} as IAppConfig)); //({id: savedConfig?.id || null, ...savedConfig});
+      this.updateForm(savedConfig ?? ({} as IAppConfig)); //({id: savedConfig?.id || null, ...savedConfig});
     }
+
+    this.isSaving.set(false);
   }
 
-  setMessage(msg: string) {
+  protected setMessage(msg: string): void {
     this.successMessage.set(msg);
     setTimeout(() => this.selfClosingAlert()?.close(), 5000);
   }
 
   protected onSaveError(): void {
     // Api for inheritance.
+
+    this.isSaving.set(false);
   }
 
   protected onSaveFinalize(): void {
