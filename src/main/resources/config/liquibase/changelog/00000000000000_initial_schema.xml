@@ -7,7 +7,27 @@
                         http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
     <changeSet id="00000000000000" author="jhipster">
-        <createSequence sequenceName="sequence_generator" startValue="1050" incrementBy="50"/>
+<!--      <createSequence sequenceName="sequence_generator" startValue="1050" incrementBy="50" />-->
+
+<!--      <createSequence sequenceName="user_seq" startValue="8" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="authority_seq" startValue="1" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="user_authority_seq" startValue="1" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="roles_seq" startValue="1" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="instructor_seq" startValue="1" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="instructor_seq" startValue="1" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="student_seq" startValue="1" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="course_seq" startValue="1" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="course_schedule_seq" startValue="1" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="departments_seq" startValue="1" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="app_config_seq" startValue="1" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="curr_map_seq" startValue="1" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="learn_comp_seq" startValue="1" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="strategies_seq" startValue="1" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="assessment_seq" startValue="1" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="resources_seq" startValue="1" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="academic_year_seq" startValue="1" incrementBy="1"/>-->
+<!--      <createSequence sequenceName="academic_terms_seq" startValue="1" incrementBy="1"/>-->
+
     </changeSet>
 
     <!--
@@ -15,9 +35,9 @@
         The initial schema has the '00000000000001' id, so that it is over-written if we re-generate it.
     -->
     <changeSet id="00000000000001" author="jhipster">
-        <createTable tableName="jhi_user">
-            <column name="id" type="bigint">
-                <constraints primaryKey="true" nullable="false"/>
+        <createTable tableName="jhi_user" >
+            <column name="id" type="serial" incrementBy="1" startWith="7" valueSequenceNext="jhi_user_id_seq">
+                <constraints primaryKey="true" nullable="false" />
             </column>
             <column name="login" type="varchar(50)">
                 <constraints unique="true" nullable="false" uniqueConstraintName="ux_user_login"/>
@@ -46,7 +66,7 @@
             <column name="last_modified_date" type="timestamp"/>
         </createTable>
 
-        <createTable tableName="jhi_authority">
+        <createTable tableName="jhi_authority" >
             <column name="name" type="varchar(50)">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -106,7 +126,7 @@
 
     <changeSet author="jhipster" id="00000000000002" context="test">
         <createTable tableName="jhi_date_time_wrapper">
-            <column name="id" type="BIGINT">
+            <column name="id" type="bigint">
                 <constraints primaryKey="true" primaryKeyName="jhi_date_time_wrapperPK"/>
             </column>
             <column name="instant" type="timestamp"/>
