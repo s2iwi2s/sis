@@ -26,7 +26,7 @@ public class CustomElementFactoryImpl implements ReplacedElementFactory {
             String imagePath = e.getAttribute("src");
             try {
                 InputStream input = new URL("http://localhost:8080/" + imagePath).openStream();
-                byte[] bytes = IOUtils.toByteArray(input);
+                byte[] bytes = input.readAllBytes();
                 Image image = Image.getInstance(bytes);
                 FSImage fsImage = new ITextFSImage(image);
                 fsImage.scale(cssWidth, cssHeight);

@@ -205,8 +205,7 @@ public class CurriculumMappingReportImpl extends AbstractPdfReport<CurriculumMap
                     .append("<thead>")
                     .append("<tr><th class=\"text-center\">")
                     .append(
-                        String.format(
-                            "%s - %s - Quarter %d",
+                        "%s - %s - Quarter %d".formatted(
                             courseDTO.getSubject(),
                             courseDTO.getGradelevel().getDescription(),
                             dto.getQuarterDTO().getQuarter()

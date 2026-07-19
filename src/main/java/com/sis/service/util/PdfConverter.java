@@ -5,6 +5,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.apache.logging.log4j.util.Base64Util;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -49,7 +51,7 @@ public interface PdfConverter {
 
     // FIXME: temporary save to file
     public static void byteAryToFile(byte[] ary, String fileName) throws IOException {
-        try (OutputStream os = new FileOutputStream(fileName)) {
+        try (OutputStream os = Files.newOutputStream(Path.of(fileName))) {
             os.write(ary);
         }
     }

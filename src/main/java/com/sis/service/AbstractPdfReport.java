@@ -30,8 +30,9 @@ public abstract class AbstractPdfReport<T, P> implements PdfReport<T, P> {
     public String getHtmlFromClasspath(T data) throws IOException, URISyntaxException {
         LOG.info("Class={}, PackageName={}", this.getClass(), this.getClass().getPackageName());
         LOG.info("TemplateFileName={}", this.getTemplateFileName());
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream(getTemplateFileName());
-        Path filePath = Paths.get(this.getClass().getClassLoader().getResource(getTemplateFileName()).toURI());
+
+        //        InputStream is = this.getClass().getClassLoader().getResourceAsStream(getTemplateFileName());
+        Path filePath = Path.of(this.getClass().getClassLoader().getResource(getTemplateFileName()).toURI());
         LOG.info("FilePath={}", filePath.toString());
         List<String> lines = Files.readAllLines(filePath);
 
@@ -105,7 +106,8 @@ public abstract class AbstractPdfReport<T, P> implements PdfReport<T, P> {
 
     // FIXME: temporary save to file
     public static void byteAryToFile(byte[] ary, String fileName) throws IOException {
-        try (OutputStream os = new FileOutputStream(fileName)) {
+        Path filePath = Path.of(fileName);
+        try (OutputStream os = Files.newOutputStream(filePath)) {
             os.write(ary);
         }
     }
