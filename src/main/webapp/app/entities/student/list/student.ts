@@ -1,14 +1,14 @@
 /* eslint-disable no-console */
-import { HttpHeaders } from '@angular/common/http';
+import { HttpHeaders, HttpResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, effect, inject, input, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Data, ParamMap, Router, RouterLink } from '@angular/router';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap/modal';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap/pagination';
 import { TranslateModule } from '@ngx-translate/core';
-import { combineLatest, filter, Subscription, tap } from 'rxjs';
+import { combineLatest, filter, map, Subject, Subscription, tap } from 'rxjs';
 
 import { DEFAULT_SORT_DATA, ITEM_DELETED_EVENT, SORT } from 'app/config/navigation.constants';
 import { ITEMS_PER_PAGE, PAGE_HEADER, TOTAL_COUNT_RESPONSE_HEADER } from 'app/config/pagination.constants';
@@ -21,11 +21,14 @@ import { SortByDirective, SortDirective, SortService, type SortState, sortStateS
 import { StudentDeleteDialog } from '../delete/student-delete-dialog';
 import { StudentService } from '../service/student.service';
 import { IStudent, IStudentFilter } from '../student.model';
-import { StudentFormService } from '../update/student-form.service';
+import { StudentFilterFormGroup, StudentFormService } from '../update/student-form.service';
 import dayjs from 'dayjs/esm';
 import { DATE_FORMAT } from '../../../config/input.constants';
 import { ListDetailCard } from '../list-detail-card/list-detail-card';
 import { ApplicationConfigService } from '../../../core/config/application-config.service';
+import { IAppConfig } from '../../app-config/app-config.model';
+import { AppConfigService } from '../../app-config/service/app-config.service';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,7 +36,7 @@ import { ApplicationConfigService } from '../../../core/config/application-confi
   templateUrl: './student.html',
   imports: [
     RouterLink,
-    FormsModule,
+    ReactiveFormsModule,
     FontAwesomeModule,
     AlertError,
     Alert,
@@ -77,6 +80,12 @@ export class Student implements OnInit, OnChanges {
   protected modalService = inject(NgbModal);
 
   protected studentFormService = inject(StudentFormService);
+  protected appConfigService = inject(AppConfigService);
+
+  filterForm: StudentFilterFormGroup = this.studentFormService.createStudentFilterForm();
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  gradelevelsCollection = signal<IAppConfig[]>([]);
 
   constructor() {
     effect(() => {
@@ -88,6 +97,14 @@ export class Student implements OnInit, OnChanges {
     effect(() => {
       this.students.set(this.fillComponentAttributesFromResponseBody([...this.studentService.students()]));
     });
+
+    this.filterForm.valueChanges.pipe(debounceTime(1000)).subscribe(query => {
+      console.log('Student.constructor filterForm.valueChanges called with query:', query);
+      this.studentFilter = query as IStudentFilter;
+      this.load();
+    });
+
+    this.loadRelationshipsOptions();
   }
 
   trackId = (item: IStudent): number => this.studentService.getStudentIdentifier(item);
@@ -141,6 +158,19 @@ export class Student implements OnInit, OnChanges {
     this.handleNavigation(page, this.sortState());
   }
 
+  protected loadRelationshipsOptions(): void {
+    this.appConfigService
+      .query({ code: 'GRADE_LEVEL', eagerload: true })
+      .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
+      .pipe(map(this.appConfigService.sortAppConfig))
+      // .pipe(
+      //   map((appConfigs: IAppConfig[]) =>
+      //     this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.student?.gradelevel),
+      //   ),
+      // )
+      .subscribe((appConfigs: IAppConfig[]) => this.gradelevelsCollection.set(appConfigs));
+  }
+
   protected fillComponentAttributeFromRoute(params: ParamMap, data: Data): void {
     const page = params.get(PAGE_HEADER);
     this.page.set(+(page ?? 1));
@@ -178,7 +208,7 @@ export class Student implements OnInit, OnChanges {
       // "gradelevel.id": this.studentFilter?.gradelevel?.id || null
     };
     if (this.studentFilter?.lrn) {
-      query.lrn = this.studentFilter?.lrn;
+      query.lrn = this.studentFilter.lrn;
     }
     if (this.studentFilter?.firstName) {
       query.firstName = this.studentFilter?.firstName;
