@@ -55,7 +55,6 @@ export class Student implements OnInit, OnChanges {
   // selectedStudent: IStudent | null = null;
   selectedStudentId = -1;
 
-  //readonly selectedStudent = input<number>();
   readonly source = input<string>();
   readonly studentInputFilter = input<IStudentFilter>();
   readonly setEnrollmentSelectedStudent = output<IStudent>();
@@ -70,18 +69,20 @@ export class Student implements OnInit, OnChanges {
   readonly totalItems = signal(0);
   readonly page = signal(1);
 
+  protected readonly router = inject(Router);
   protected applicationConfigService = inject(ApplicationConfigService);
-  readonly router = inject(Router);
   protected readonly studentService = inject(StudentService);
-  // eslint-disable-next-line @typescript-eslint/member-ordering
-  readonly isLoading = this.studentService.studentsResource.isLoading;
   protected readonly activatedRoute = inject(ActivatedRoute);
   protected readonly sortService = inject(SortService);
   protected modalService = inject(NgbModal);
 
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  readonly isLoading = this.studentService.studentsResource.isLoading;
+
   protected studentFormService = inject(StudentFormService);
   protected appConfigService = inject(AppConfigService);
 
+  // eslint-disable-next-line @typescript-eslint/member-ordering
   filterForm: StudentFilterFormGroup = this.studentFormService.createStudentFilterForm();
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
@@ -123,11 +124,11 @@ export class Student implements OnInit, OnChanges {
       this.studentFilter = changes.studentInputFilter.currentValue;
       console.log('Student.ngOnChanges() called with studentFilter:', this.studentFilter);
       if (
-        this.studentFilter?.lrn !== null ||
-        this.studentFilter?.firstName !== null ||
-        this.studentFilter?.lastName !== null ||
-        this.studentFilter?.birthDate !== null ||
-        this.studentFilter?.gradelevel?.id !== null
+        this.studentFilter?.lrn ||
+        this.studentFilter?.firstName ||
+        this.studentFilter?.lastName ||
+        this.studentFilter?.birthDate ||
+        this.studentFilter?.gradelevel?.id
       ) {
         this.load();
       }
@@ -211,13 +212,13 @@ export class Student implements OnInit, OnChanges {
       query.lrn = this.studentFilter.lrn;
     }
     if (this.studentFilter?.firstName) {
-      query.firstName = this.studentFilter?.firstName;
+      query.firstName = this.studentFilter.firstName;
     }
     if (this.studentFilter?.lastName) {
-      query.lastName = this.studentFilter?.lastName;
+      query.lastName = this.studentFilter.lastName;
     }
     if (this.studentFilter?.gradelevel?.id) {
-      query['gradelevel.id'] = this.studentFilter?.gradelevel?.id;
+      query['gradelevel.id'] = this.studentFilter.gradelevel.id;
     }
 
     console.log('Student.queryBackend() called with birthDate:', dayjs(this.studentFilter?.birthDate, DATE_FORMAT));
@@ -242,13 +243,12 @@ export class Student implements OnInit, OnChanges {
     });
   }
 
-  setSelectedStudent(selected: IStudent) {
+  protected setSelectedStudent(selected: IStudent): void {
     this.selectedStudentId = selected.id;
   }
 
-  setEnrollmentSelectedStudentEvent(selected: IStudent) {
+  protected setEnrollmentSelectedStudentEvent(selected: IStudent): void {
     this.setSelectedStudent(selected);
     this.setEnrollmentSelectedStudent.emit(selected);
-    //this.load();
   }
 }
