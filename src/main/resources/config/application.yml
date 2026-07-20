@@ -92,12 +92,12 @@ management:
 
 spring:
   application:
-    name: SchInfoSys
+    name: sis
   docker:
     compose:
-      enabled: true
-      lifecycle-management: start-only
-      file: src/main/docker/services.yml
+      enabled: false
+      lifecycle-management: none
+  #      file: src/main/docker/services.yml
   profiles:
     # The commented value for `active` can be replaced with valid Spring profiles to load.
     # Otherwise, it will be filled in by maven when building the JAR file
@@ -105,10 +105,10 @@ spring:
     active: '@spring.profiles.active@'
     group:
       prod:
-        - secret-samples
+        - secret-config
         - api-docs
       dev:
-        - secret-samples
+        - secret-config
         - api-docs
         # Uncomment to activate TLS for the dev profile
         #- tls
@@ -135,11 +135,14 @@ spring:
       hibernate.order_updates: true
       hibernate.query.fail_on_pagination_over_collection_fetch: true
       hibernate.query.in_clause_parameter_padding: true
+      hibernate.default_schema: slra_sis
     hibernate:
       ddl-auto: none
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
         implicit-strategy: org.springframework.boot.hibernate.SpringImplicitNamingStrategy
+  liquibase:
+    default-schema: slra_sis
   messages:
     basename: i18n/messages
   main:

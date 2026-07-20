@@ -18,6 +18,7 @@ logging:
     ROOT: INFO
     tech.jhipster: INFO
     com.sis: INFO
+    org.springframework.boot.hibernate.autoconfigure: TRACE
 
 management:
   prometheus:
@@ -36,8 +37,8 @@ spring:
     hikari:
       poolName: Hikari
       auto-commit: false
-  # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
   liquibase:
+    # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
     contexts: prod
   mail:
     host: localhost
