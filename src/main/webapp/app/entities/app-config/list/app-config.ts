@@ -30,8 +30,6 @@ import { AppConfigService } from '../service/app-config.service';
     RouterLink,
     FormsModule,
     FontAwesomeModule,
-    AlertError,
-    Alert,
     SortDirective,
     SortByDirective,
     TranslateDirective,

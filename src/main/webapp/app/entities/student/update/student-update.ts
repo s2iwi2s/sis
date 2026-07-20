@@ -82,7 +82,11 @@ export class StudentUpdate implements OnInit {
   }
 
   previousState(): void {
-    globalThis.history.back();
+    if (this.source === 'enroll') {
+      this.router.navigate(['/enrollment-form', this.student?.id]);
+    } else {
+      globalThis.history.back();
+    }
   }
 
   save(): void {

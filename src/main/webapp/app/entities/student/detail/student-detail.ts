@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { ChangeDetectionStrategy, Component, inject, input, OnChanges, OnInit, output, signal, SimpleChanges } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 
@@ -21,6 +22,7 @@ import { IAppConfig } from '../../app-config/app-config.model';
 import { AppConfigService } from '../../app-config/service/app-config.service';
 import { HttpResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import HasAnyAuthorityDirective from '../../../shared/auth/has-any-authority.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,6 +39,7 @@ import { FormsModule } from '@angular/forms';
     NamePipe,
     AgePipe,
     FormsModule,
+    HasAnyAuthorityDirective,
   ],
 })
 export class StudentDetail implements OnInit, OnChanges {
@@ -124,7 +127,7 @@ export class StudentDetail implements OnInit, OnChanges {
     this.updateStudent.emit(updatedStudent);
   }
 
-  showPdf() {
+  protected showPdf(): void {
     this.loadingPdf.set(true);
     const student = this.student();
     if (student) {
@@ -132,7 +135,8 @@ export class StudentDetail implements OnInit, OnChanges {
     }
   }
 
-  previousState(): void {
+  protected previousState(): void {
+    // this.router.navigate(['/student', 'enrollment-form']);
     globalThis.history.back();
   }
 }

@@ -11,11 +11,12 @@ import { HttpResponse } from '@angular/common/http';
 import { AppConfigService } from '../../../entities/app-config/service/app-config.service';
 import { TranslateDirective } from '../../../shared/language';
 import { TranslateModule } from '@ngx-translate/core';
+import HasAnyAuthorityDirective from '../../../shared/auth/has-any-authority.directive';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'jhi-search-card',
-  imports: [FaIconComponent, RouterLink, ReactiveFormsModule, TranslateDirective, TranslateModule],
+  imports: [FaIconComponent, RouterLink, ReactiveFormsModule, TranslateDirective, TranslateModule, HasAnyAuthorityDirective],
   templateUrl: './search-card.html',
   styleUrl: './search-card.scss',
 })
