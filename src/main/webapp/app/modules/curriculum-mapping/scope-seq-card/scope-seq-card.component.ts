@@ -16,20 +16,18 @@ import TranslateDirective from '../../../shared/language/translate.directive';
 export class ScopeSeqCardComponent {
   selectedCourse = input<ICourse>();
   curMapByQuarter = input<Map<string, ICurriculumMap[]>>();
-  selectedQuarter = input(1);
+  selectedQuarter = input<number>(1);
   hasCurMap = input(false);
 
-  selectedQuarterOutput = output<ICourse>();
+  selectedQuarterOutput = output<number>();
 
   protected router = inject(Router);
 
-  showQuarter(quarter: string) {
-    if (this.selectedQuarter() !== -1 && this.selectedCourse()) {
-      this.router.navigate(['/', 'curriculum-mapping', 'dashboard', this.selectedCourse()?.id, quarter]);
-    }
+  showQuarter(quarter: string): void {
+    this.selectedQuarterOutput.emit(Math.abs(+quarter));
   }
 
-  isSelectedQuarter(quarter: string) {
+  isSelectedQuarter(quarter: string): boolean {
     console.log(`EnrollmentForm.ngOnInit() called with quarter=${quarter}, selectedQuarter: ${this.selectedQuarter()}`);
 
     return Math.abs(this.selectedQuarter()) === Math.abs(+quarter);

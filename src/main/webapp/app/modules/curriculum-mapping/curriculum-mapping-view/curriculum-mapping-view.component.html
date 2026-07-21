@@ -10,9 +10,7 @@
     <jhi-alert></jhi-alert>
 
     <div class="shadow-sm py-2 pb-3 mb-sm-3 bg-body-tertiary rounded-4 row col-sm-6 d-print-none">
-      <label class="form-label col-sm-12" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.searchCourse" for="field_course"
-        >searchCourse</label
-      >
+      <label for="field_course" class="visually-hidden">Search Course</label>
       <div class="input-group">
         <input
           type="text"
@@ -20,49 +18,53 @@
           name="course"
           id="field_course"
           data-cy="course"
-          [(ngModel)]="selectedCourse"
-          [ngbTypeahead]="search"
-          [inputFormatter]="formatter"
-          [resultFormatter]="formatter"
+          placeholder="Search Course"
+          aria-label="Search Course"
+          [(ngModel)]="curriculumMappingService.selectedCourse"
+          [ngbTypeahead]="curriculumMappingService.search"
+          [inputFormatter]="this.curriculumMappingService.formatter"
+          [resultFormatter]="this.curriculumMappingService.formatter"
           [editable]="false"
-          (ngModelChange)="loadCurriculumMappings(selectedCourse)"
+          (ngModelChange)="curriculumMappingService.loadCurriculumMappings(curriculumMappingService.selectedCourse)"
         />
         <span class="input-group-text border-0"><fa-icon icon="search"></fa-icon></span>
       </div>
     </div>
-    @if (isLoading()) {
+    @if (curriculumMappingService.isLoading()) {
       <div class="d-flex justify-content-center">
         <div class="spinner-border" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
       </div>
     }
-    @if (selectedCourse) {
-      <jhi-course-detail-card [selectedCourse]="selectedCourse"></jhi-course-detail-card>
+    @if (curriculumMappingService.selectedCourse) {
+      <jhi-course-detail-card [selectedCourse]="curriculumMappingService.selectedCourse"></jhi-course-detail-card>
 
       <div class="row py-2 bg-body-tertiary mb-sm-3">
         <div class="row">
-          @if (!hasCurMap) {
+          @if (!curriculumMappingService.hasCurMap) {
             <div class="col-sm-12 p-1 fw-bold text-center text-bg-danger">No Curriculum</div>
             <div class="col-sm-12 p-1 text-center">
-              <a [routerLink]="['/curriculum-map', selectedCourse.id, 1, 'new']">Add Curriculum Map <fa-icon icon="plus" /></a>
+              <a [routerLink]="['/curriculum-map', curriculumMappingService.selectedCourse.id, 1, 'new']"
+                >Add Curriculum Map <fa-icon icon="plus"
+              /></a>
             </div>
           }
           <jhi-scope-seq-card
-            [selectedCourse]="selectedCourse"
-            [curMapByQuarter]="curMapByQuarter"
+            [selectedCourse]="curriculumMappingService.selectedCourse"
+            [curMapByQuarter]="curriculumMappingService.curMapByQuarter"
             [selectedQuarter]="-1"
-            [hasCurMap]="hasCurMap"
+            [hasCurMap]="curriculumMappingService.hasCurMap"
           ></jhi-scope-seq-card>
 
-          @for (key of curMapByQuarter.keys(); track $index) {
+          @for (key of curriculumMappingService.curMapByQuarter.keys(); track $index) {
             <jhi-quarter-card
-              [selectedCourse]="selectedCourse"
-              [curMapByQuarter]="curMapByQuarter"
+              [selectedCourse]="curriculumMappingService.selectedCourse"
+              [curMapByQuarter]="curriculumMappingService.curMapByQuarter"
               [selectedQuarter]="+key"
-              [lcMap]="lcMap"
-              [sMap]="sMap"
-              [aMap]="aMap"
+              [lcMap]="curriculumMappingService.lcMap"
+              [sMap]="curriculumMappingService.sMap"
+              [aMap]="curriculumMappingService.aMap"
             ></jhi-quarter-card>
           }
         </div>

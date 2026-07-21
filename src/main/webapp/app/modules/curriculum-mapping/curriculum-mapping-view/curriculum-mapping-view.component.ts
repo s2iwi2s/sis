@@ -31,10 +31,11 @@ import {
 import { CourseDetailCardComponent } from '../course-detail-card/course-detail-card.component';
 import { QuarterCardComponent } from '../quarter-card/quarter-card.component';
 import { ScopeSeqCardComponent } from '../scope-seq-card/scope-seq-card.component';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Alert } from 'app/shared/alert/alert';
 import { AlertError } from 'app/shared/alert/alert-error';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { CurriculumMappingService } from '../curriculum-mapping.service';
 
 @Component({
   selector: 'jhi-curriculum-mapping-view',
@@ -54,18 +55,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   ],
 })
 export class CurriculumMappingViewComponent implements OnInit {
-  selectedCourse: ICourse | null = null;
-
-  courses?: ICourse[] | null = [];
-
-  hasCurMap = false;
-  curMapByQuarter: Map<string, ICurriculumMap[]>;
-  lcMap: Map<string, ILearningCompetency[]>;
-  sMap: Map<string, IStrategies[]>;
-  aMap: Map<string, IAssessment[]>;
-
-  isLoading = signal(false);
-
+  protected readonly curriculumMappingService = inject(CurriculumMappingService);
+  protected activatedRoute = inject(ActivatedRoute);
   protected readonly courseService = inject(CourseService);
   protected readonly curriculumMapService = inject(CurriculumMapService);
   protected readonly learningCompetencyService = inject(LearningCompetencyService);
@@ -73,133 +64,14 @@ export class CurriculumMappingViewComponent implements OnInit {
   protected readonly assessmentService = inject(AssessmentService);
 
   constructor() {
-    this.curMapByQuarter = new Map();
-    this.lcMap = new Map();
-    this.sMap = new Map();
-    this.aMap = new Map();
+    this.curriculumMappingService.clear();
   }
 
   ngOnInit(): void {
-    this.courseService.query().subscribe(er => (this.courses = er.body));
-  }
+    this.activatedRoute.data.subscribe(({ course }) => {
+      this.curriculumMappingService.loadCurriculumMappings(course);
+    });
 
-  formatter = (course: ICourse): string =>
-    (course.subject ?? '') + ': ' + (course.gradelevel?.description ?? '') + ' ' + (course.terms?.name ?? '');
-
-  search: OperatorFunction<string, readonly ICourse[]> = (text$: Observable<string>) =>
-    text$.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      filter(term => term.length >= 2),
-      map(term =>
-        (this.courses ?? [])
-          .filter(course =>
-            new RegExp(term, 'mi').test(
-              (course.subject ?? '') + ': ' + (course.gradelevel?.description ?? '') + ' ' + (course.terms?.name ?? ''),
-            ),
-          )
-          .slice(0, 10),
-      ),
-    );
-
-  loadCurriculumMappings(course: ICourse | null): void {
-    if (course) {
-      this.isLoading.set(true);
-      forkJoin([
-        this.curriculumMapService.queryByCourse(course.id),
-        this.learningCompetencyService.queryByCourse(course.id),
-        this.strategiesService.queryByCourse(course.id),
-        this.assessmentService.queryByCourse(course.id),
-      ]).subscribe(res => this.loadCurriculumMappingsResponse(res));
-    }
-  }
-
-  loadCurriculumMappingsResponse(
-    res: [
-      CurriculumMapEntityArrayResponseType,
-      LearningCompetencyEntityArrayResponseType,
-      StrategiesEntityArrayResponseType,
-      AssessmentEntityArrayResponseType,
-    ],
-  ): void {
-    const [currRes, lcRes, sRes, aRes] = res;
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (res && res.length > 1) {
-      this.lcMap = this.mapLearningCompetenceyByCurriculum(lcRes.body ?? []);
-      this.sMap = this.mapStrategiesByLearningCompetency(sRes.body ?? []);
-      this.aMap = this.mapAssessmentByLearningCompetency(aRes.body ?? []);
-      this.curMapByQuarter = this.mapCurriculumByQuarter(currRes.body ?? []);
-    }
-    this.isLoading.set(false);
-  }
-
-  mapCurriculumByQuarter(array: ICurriculumMap[] = []): Map<string, ICurriculumMap[]> {
-    this.hasCurMap = array.length > 0;
-    array.sort((a, b) => (a.quarterNo ?? 0) - (b.quarterNo ?? 0) || (a.weekNo ?? 0) - (b.weekNo ?? 0));
-    const hash = array.reduce((mapper: Map<string, ICurriculumMap[]>, item: ICurriculumMap) => {
-      const key = `${item.quarterNo}`;
-      let list = mapper.get(key);
-      if (!list) {
-        list = [];
-        mapper.set(key, list);
-      }
-      list.push(item);
-      return mapper;
-    }, new Map<string, ICurriculumMap[]>());
-    return hash;
-  }
-
-  mapLearningCompetenceyByCurriculum(array: ILearningCompetency[]): Map<string, ICurriculumMap[]> {
-    const hash = array.reduce((mapper: Map<string, ILearningCompetency[]>, item: ILearningCompetency) => {
-      const key = `${item.curriculumMap?.id}`;
-      let list = mapper.get(key);
-      if (!list) {
-        list = [];
-        mapper.set(key, list);
-      }
-      list.push(item);
-      return mapper;
-    }, new Map<string, ILearningCompetency[]>());
-    return hash;
-  }
-
-  getLearningCompetenciesFromMapping(currMapId: number): ILearningCompetency[] {
-    return this.lcMap.get(`${currMapId}`) ?? [];
-  }
-
-  mapStrategiesByLearningCompetency(array: IStrategies[]): Map<string, IStrategies[]> {
-    const hash = array.reduce((mapper: Map<string, IStrategies[]>, item: IStrategies) => {
-      const key = `${item.learningCompetency?.id}`;
-      let list = mapper.get(key);
-      if (!list) {
-        list = [];
-        mapper.set(key, list);
-      }
-      list.push(item);
-      return mapper;
-    }, new Map<string, IStrategies[]>());
-    return hash;
-  }
-
-  getStrategiesFromMapping(learningCompetencyId: number): IStrategies[] {
-    return this.sMap.get(`${learningCompetencyId}`) ?? [];
-  }
-
-  mapAssessmentByLearningCompetency(array: IAssessment[]): Map<string, IAssessment[]> {
-    const hash = array.reduce((mapper: Map<string, IAssessment[]>, item: IAssessment) => {
-      const key = `${item.learningCompetency?.id}`;
-      let list = mapper.get(key);
-      if (!list) {
-        list = [];
-        mapper.set(key, list);
-      }
-      list.push(item);
-      return mapper;
-    }, new Map<string, IAssessment[]>());
-    return hash;
-  }
-
-  getAssessmentFromMapping(learningCompetencyId: number): IAssessment[] {
-    return this.aMap.get(`${learningCompetencyId}`) ?? [];
+    this.curriculumMappingService.loadCourses();
   }
 }

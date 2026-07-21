@@ -10,6 +10,9 @@ const curriculumMappingRoute: Routes = [
     path: '',
     component: CurriculumMappingViewComponent,
     canActivate: [UserRouteAccessService],
+    resolve: {
+      course: courseResolve,
+    },
   },
   {
     path: 'dashboard',
