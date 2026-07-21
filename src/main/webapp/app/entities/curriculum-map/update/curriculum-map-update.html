@@ -20,6 +20,25 @@
         }
 
         <div class="mb-3">
+          <label class="form-label" for="field_course" jhiTranslate="schInfoSysApp.curriculumMap.course">Course</label>
+          <select
+            class="form-control"
+            id="field_course"
+            data-cy="course"
+            name="course"
+            formControlName="course"
+            [compareWith]="compareCourse"
+          >
+            <option [ngValue]="null"></option>
+            @for (courseOption of coursesSharedCollection(); track $index) {
+              <option [ngValue]="courseOption">
+                {{ courseOption.gradelevel?.description + ': ' + courseOption.subject + ' - ' + courseOption.year?.name }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
           <label class="form-label" for="field_quarterNo" jhiTranslate="schInfoSysApp.curriculumMap.quarterNo">Quarter No</label>
           <input type="number" class="form-control" name="quarterNo" id="field_quarterNo" data-cy="quarterNo" formControlName="quarterNo" />
         </div>
@@ -131,25 +150,6 @@
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_course" jhiTranslate="schInfoSysApp.curriculumMap.course">Course</label>
-          <select
-            class="form-control"
-            id="field_course"
-            data-cy="course"
-            name="course"
-            formControlName="course"
-            [compareWith]="compareCourse"
-          >
-            <option [ngValue]="null"></option>
-            @for (courseOption of coursesSharedCollection(); track $index) {
-              <option [ngValue]="courseOption">
-                {{ courseOption.gradelevel?.description + ': ' + courseOption.subject + ' - ' + courseOption.year?.name }}
-              </option>
-            }
-          </select>
         </div>
       </div>
 

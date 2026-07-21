@@ -1,10 +1,15 @@
 package com.sis.service.impl;
 
+import com.sis.domain.AcademicYear;
 import com.sis.domain.Course;
+import com.sis.repository.AcademicYearRepository;
 import com.sis.repository.CourseRepository;
+import com.sis.service.AcademicYearService;
 import com.sis.service.CourseService;
+import com.sis.service.dto.AcademicYearDTO;
 import com.sis.service.dto.CourseDTO;
 import com.sis.service.mapper.CourseMapper;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +27,13 @@ public class CourseServiceImpl implements CourseService {
 
     private static final Logger LOG = LoggerFactory.getLogger(CourseServiceImpl.class);
 
+    private final AcademicYearRepository academicYearRepository;
     private final CourseRepository courseRepository;
 
     private final CourseMapper courseMapper;
 
-    public CourseServiceImpl(CourseRepository courseRepository, CourseMapper courseMapper) {
+    public CourseServiceImpl(AcademicYearRepository academicYearRepository, CourseRepository courseRepository, CourseMapper courseMapper) {
+        this.academicYearRepository = academicYearRepository;
         this.courseRepository = courseRepository;
         this.courseMapper = courseMapper;
     }
@@ -60,6 +67,17 @@ public class CourseServiceImpl implements CourseService {
             })
             .map(courseRepository::save)
             .map(courseMapper::toDto);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CourseDTO> findAll(boolean current) {
+        LOG.debug("Request to get all Courses current by year");
+        return courseRepository
+            .findByYearCurrentOrderByYearNameAscGradelevelValueAscSubjectAsc(current)
+            .stream()
+            .map(courseMapper::toDto)
+            .toList();
     }
 
     @Override

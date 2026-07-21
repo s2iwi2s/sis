@@ -142,11 +142,19 @@ public class CourseResource {
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of Courses in body.
      */
     @GetMapping("")
-    public ResponseEntity<List<CourseDTO>> getAllCourses(@org.springdoc.core.annotations.ParameterObject Pageable pageable) {
+    public ResponseEntity<List<CourseDTO>> getAllCourses(
+        @org.springdoc.core.annotations.ParameterObject Pageable pageable,
+        @RequestParam(name = "current", required = false, defaultValue = "false") boolean current
+    ) {
         LOG.debug("REST request to get a page of Courses");
-        Page<CourseDTO> page = courseService.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
-        return ResponseEntity.ok().headers(headers).body(page.getContent());
+        if (current) {
+            List<CourseDTO> courseDTOS = courseService.findAll(current);
+            return ResponseEntity.ok(courseDTOS);
+        } else {
+            Page<CourseDTO> page = courseService.findAll(pageable);
+            HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
+            return ResponseEntity.ok().headers(headers).body(page.getContent());
+        }
     }
 
     /**

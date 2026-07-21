@@ -1,6 +1,7 @@
 package com.sis.service;
 
 import com.sis.service.dto.CourseDTO;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +41,14 @@ public interface CourseService {
      * @return the list of entities.
      */
     Page<CourseDTO> findAll(Pageable pageable);
+
+    /**
+     * Get all the courses.
+     *
+     * @param current the year.current.
+     * @return the list of entities.
+     */
+    public List<CourseDTO> findAll(boolean current);
 
     /**
      * Get the "id" course.

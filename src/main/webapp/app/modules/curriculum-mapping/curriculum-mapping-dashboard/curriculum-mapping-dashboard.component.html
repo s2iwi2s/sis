@@ -6,8 +6,9 @@
 
     <hr class="d-print-none" />
 
-    <jhi-alert-error></jhi-alert-error>
-    <jhi-alert></jhi-alert>
+    <jhi-alert-error />
+
+    <jhi-alert />
 
     <div class="d-print-none shadow-sm py-2 pb-3 mb-sm-3 bg-body-tertiary rounded-4 row col-sm-6">
       <label class="form-label col-sm-12" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.searchCourse" for="field_course"
@@ -25,7 +26,7 @@
           [inputFormatter]="formatter"
           [resultFormatter]="formatter"
           [editable]="false"
-          (ngModelChange)="loadCurriculumMappings(selectedCourse)"
+          (ngModelChange)="loadCurriculumMappings()"
         />
         <span class="input-group-text border-0"><fa-icon icon="search"></fa-icon></span>
       </div>
@@ -53,14 +54,15 @@
           <jhi-scope-seq-card
             [selectedCourse]="selectedCourse"
             [curMapByQuarter]="curMapByQuarter"
-            [selectedQuarter]="selectedQuarter"
+            [selectedQuarter]="selectedQuarter()"
+            (selectedQuarterOutput)="setSelectedQuarter($event)"
             [hasCurMap]="hasCurMap"
           ></jhi-scope-seq-card>
 
           <jhi-quarter-card
             [selectedCourse]="selectedCourse"
             [curMapByQuarter]="curMapByQuarter"
-            [selectedQuarter]="selectedQuarter"
+            [selectedQuarter]="selectedQuarter()"
             [lcMap]="lcMap"
             [sMap]="sMap"
             [aMap]="aMap"

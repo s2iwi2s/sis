@@ -1,13 +1,14 @@
 import { HttpClient, HttpResponse, httpResource } from '@angular/common/http';
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, inject, signal, WritableSignal } from '@angular/core';
 
 import dayjs from 'dayjs/esm';
-import { Observable, map } from 'rxjs';
+import { Observable, map, Subscription } from 'rxjs';
 
 import { ApplicationConfigService } from 'app/core/config/application-config.service';
 import { createRequestOption } from 'app/core/request/request-util';
 import { isPresent } from 'app/core/util/operators';
 import { IAppConfig, NewAppConfig } from '../app-config.model';
+import { OrderService } from '../../../core/util/order-service';
 
 export type PartialUpdateAppConfig = Partial<IAppConfig> & Pick<IAppConfig, 'id'>;
 
@@ -42,6 +43,8 @@ export class AppConfigsService {
     (this.appConfigsResource.hasValue() ? this.appConfigsResource.value() : []).map(item => this.convertValueFromServer(item)),
   );
   protected readonly applicationConfigService = inject(ApplicationConfigService);
+  protected orderService = inject(OrderService);
+
   protected readonly resourceUrl = this.applicationConfigService.getEndpointFor('api/app-configs');
 
   protected convertValueFromServer(restAppConfig: RestAppConfig): IAppConfig {
@@ -121,9 +124,17 @@ export class AppConfigService extends AppConfigsService {
     return appConfigCollection;
   }
 
-  sortAppConfig(appConfigs: IAppConfig[]) {
-    const optionsCopy = [...appConfigs];
-    return optionsCopy.sort((a, b) => ((a.priority || 0) < (b.priority || 0) ? -1 : 1));
+  getConfig(code: string, selectedOption: Pick<IAppConfig, 'id' | 'value'> | null | undefined): Observable<IAppConfig[]> {
+    return this.query({ code, eagerload: true })
+      .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
+      .pipe(map((appConfigs: IAppConfig[]) => this.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, selectedOption)))
+      .pipe(map(this.sortAppConfig));
+    // .subscribe((appConfigs: IAppConfig[]) => collection.set(appConfigs));
+  }
+
+  sortAppConfig(appConfigs: IAppConfig[]): IAppConfig[] {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return this.orderService.sort(appConfigs, 'priority', 'asc', 'number');
   }
 
   protected convertValueFromClient<T extends IAppConfig | NewAppConfig | PartialUpdateAppConfig>(appConfig: T): RestOf<T> {

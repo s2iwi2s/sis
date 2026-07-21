@@ -1,4 +1,6 @@
-import { Component, Input } from '@angular/core';
+/* eslint-disable no-console */
+
+import { Component, inject, input, Input, output } from '@angular/core';
 import { ICourse } from '../../../entities/course/course.model';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { Router, RouterLink } from '@angular/router';
@@ -13,20 +15,24 @@ import TranslateDirective from '../../../shared/language/translate.directive';
   templateUrl: './scope-seq-card.component.html',
 })
 export class ScopeSeqCardComponent {
-  @Input() selectedCourse: ICourse | null = null;
-  @Input() curMapByQuarter: Map<number, ICurriculumMap[]> = new Map();
-  @Input() selectedQuarter: number = 1;
-  @Input() hasCurMap = false;
+  selectedCourse = input<ICourse>();
+  curMapByQuarter = input<Map<string, ICurriculumMap[]>>();
+  selectedQuarter = input(1);
+  hasCurMap = input(false);
 
-  constructor(protected router: Router) {}
+  selectedQuarterOutput = output<ICourse>();
 
-  showQuarter(quarter: number) {
-    if (this.selectedQuarter !== -1 && this.selectedCourse) {
-      this.router.navigate(['/', 'curriculum-mapping', 'dashboard', this.selectedCourse.id, quarter]);
+  protected router = inject(Router);
+
+  showQuarter(quarter: string) {
+    if (this.selectedQuarter() !== -1 && this.selectedCourse()) {
+      this.router.navigate(['/', 'curriculum-mapping', 'dashboard', this.selectedCourse()?.id, quarter]);
     }
   }
 
-  isSelectedQuarter(quarter: number) {
-    return this.selectedQuarter === quarter;
+  isSelectedQuarter(quarter: string) {
+    console.log(`EnrollmentForm.ngOnInit() called with quarter=${quarter}, selectedQuarter: ${this.selectedQuarter()}`);
+
+    return Math.abs(this.selectedQuarter()) === Math.abs(+quarter);
   }
 }

@@ -38,6 +38,7 @@ public interface CourseMapper extends EntityMapper<CourseDTO, Course> {
     @Named("academicYearId")
     @BeanMapping(ignoreByDefault = true)
     @Mapping(target = "id", source = "id")
+    @Mapping(target = "name", source = "name")
     AcademicYearDTO toDtoAcademicYearId(AcademicYear academicYear);
 
     @Named("academicTermsId")

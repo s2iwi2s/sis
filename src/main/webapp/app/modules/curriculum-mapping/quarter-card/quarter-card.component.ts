@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, Input } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import TranslateDirective from '../../../shared/language/translate.directive';
 import { ICourse } from '../../../entities/course/course.model';
@@ -15,29 +15,29 @@ import { RouterLink } from '@angular/router';
   templateUrl: './quarter-card.component.html',
 })
 export class QuarterCardComponent {
-  @Input() selectedCourse: ICourse | null = null;
-  @Input() curMapByQuarter: Map<number, ICurriculumMap[]> = new Map();
-  @Input() selectedQuarter: number = 1;
+  selectedCourse = input<ICourse>();
+  curMapByQuarter = input<Map<string, ICurriculumMap[]>>();
+  selectedQuarter = input(1);
 
-  @Input() lcMap: Map<number, ILearningCompetency[]> = new Map();
-  @Input() sMap: Map<number, IStrategies[]> = new Map();
-  @Input() aMap: Map<number, IAssessment[]> = new Map();
+  lcMap = input<Map<string, ILearningCompetency[]>>();
+  sMap = input<Map<string, IStrategies[]>>();
+  aMap = input<Map<string, IAssessment[]>>();
 
   getLearningCompetenciesFromMapping(currMapId: number): ILearningCompetency[] {
-    const array = this.lcMap.get(currMapId) ?? [];
+    const array = this.lcMap()?.get(`${currMapId}`) ?? [];
     array.sort((a, b) => (a.seqNo ?? 0) - (b.seqNo ?? 0));
     return array;
   }
 
   getStrategiesFromMapping(learningCompetencyId: number): IStrategies[] {
-    const array = this.sMap.get(learningCompetencyId) ?? [];
-    array.sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
-    return this.sMap.get(learningCompetencyId) ?? [];
+    const array = this.sMap()?.get(`${learningCompetencyId}`) ?? [];
+    array.sort((a, b) => a.id - b.id);
+    return this.sMap()?.get(`${learningCompetencyId}`) ?? [];
   }
 
   getAssessmentFromMapping(learningCompetencyId: number): IAssessment[] {
-    const array = this.aMap.get(learningCompetencyId) ?? [];
-    array.sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
+    const array = this.aMap()?.get(`${learningCompetencyId}`) ?? [];
+    array.sort((a, b) => a.id - b.id);
     return array;
   }
 }

@@ -1,12 +1,12 @@
 <div class="row bg-body-secondary border">
   <div class="row">
     <div class="col mb-sm-2 fw-bold text-center">
-      {{ selectedCourse?.subject }} - {{ selectedCourse?.gradelevel?.description }} - Quarter {{ selectedQuarter }}
+      {{ selectedCourse()?.subject }} - {{ selectedCourse()?.gradelevel?.description }} - Quarter {{ selectedQuarter() }}
     </div>
   </div>
   <div class="row">
     <div class="col mb-sm-2 mx-0 px-0 fw-bold text-center">
-      <span><span jhiTranslate="schInfoSysApp.curriculumMappingDashboard.curriculumMap">curriculumMap</span></span>
+      <span jhiTranslate="schInfoSysApp.curriculumMappingDashboard.curriculumMap">curriculumMap</span>
     </div>
   </div>
 </div>
@@ -29,7 +29,7 @@
     </tr>
   </thead>
   <tbody class="table-group-divider">
-    @for (c of curMapByQuarter.get(selectedQuarter); track $index) {
+    @for (c of curMapByQuarter()?.get(`${selectedQuarter()}`); track $index) {
       <tr>
         <td>
           <a class="d-print-none" [routerLink]="['/curriculum-map', c?.id, 'edit']"><fa-icon icon="pencil-alt"></fa-icon></a>

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { HttpResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -44,7 +45,7 @@ export class CurriculumMapUpdate implements OnInit {
       this.curriculumMap = curriculumMap;
       if (curriculumMap) {
         this.updateForm(curriculumMap);
-        if (curriculumMap && curriculumMap.id === -1) {
+        if (curriculumMap?.id === -1) {
           this.isFromDashboard = true;
           this.editForm.patchValue({
             id: null,
@@ -100,7 +101,7 @@ export class CurriculumMapUpdate implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     this.courseService
-      .query()
+      .query({ current: true })
       .pipe(map((res: HttpResponse<ICourse[]>) => res.body ?? []))
       .pipe(map((courses: ICourse[]) => this.courseService.addCourseToCollectionIfMissing<ICourse>(courses, this.curriculumMap?.course)))
       .subscribe((courses: ICourse[]) => this.coursesSharedCollection.set(courses));

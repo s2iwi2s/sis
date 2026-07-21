@@ -108,17 +108,9 @@ export class StudentUpdate implements OnInit {
 
   protected onSaveSuccess(savedStudent: IStudent | null): void {
     const type = this.editForm.getRawValue().id === null ? 'created' : 'updated';
-    this.student = savedStudent;
-    this.setMessage(`Learner ${this.student?.lastName}, ${this.student?.firstName} is ${type}`);
-
-    if (type === 'created') {
-      this.updateForm({} as IStudent);
-      //this.router.navigate(['/student', 'new', 'register']);
-      //this.previousState();
-    } else {
-      this.updateForm(savedStudent ?? ({} as IStudent));
-      // this.router.navigate(['/enrollment-form', savedStudent?.id]);
-    }
+    //this.student = savedStudent;
+    this.setMessage(`Learner ${savedStudent?.lastName}, ${savedStudent?.firstName} is ${type}`);
+    this.updateForm(savedStudent ?? ({} as IStudent));
   }
 
   protected setMessage(msg: string): void {
@@ -157,36 +149,13 @@ export class StudentUpdate implements OnInit {
 
   protected loadRelationshipsOptions(): void {
     this.appConfigService
-      .query({ code: 'GRADE_LEVEL', eagerload: true })
-      .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
-      .pipe(map(this.appConfigService.sortAppConfig))
-      .pipe(
-        map((appConfigs: IAppConfig[]) =>
-          this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.student?.gradelevel),
-        ),
-      )
+      .getConfig('GRADE_LEVEL', this.student?.gradelevel)
       .subscribe((appConfigs: IAppConfig[]) => this.gradelevelsCollection.set(appConfigs));
-
     this.appConfigService
-      .query({ code: 'GENDER', eagerload: true })
-      .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
-      .pipe(map(this.appConfigService.sortAppConfig))
-      .pipe(
-        map((appConfigs: IAppConfig[]) =>
-          this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.student?.gender),
-        ),
-      )
+      .getConfig('GENDER', this.student?.gender)
       .subscribe((appConfigs: IAppConfig[]) => this.gendersCollection.set(appConfigs));
-
     this.appConfigService
-      .query({ code: 'CIVIL_STATUS', eagerload: true })
-      .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
-      .pipe(map(this.appConfigService.sortAppConfig))
-      .pipe(
-        map((appConfigs: IAppConfig[]) =>
-          this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.student?.parentCivilStatus),
-        ),
-      )
+      .getConfig('CIVIL_STATUS', this.student?.parentCivilStatus)
       .subscribe((appConfigs: IAppConfig[]) => this.parentCivilStatusCollection.set(appConfigs));
 
     this.userService

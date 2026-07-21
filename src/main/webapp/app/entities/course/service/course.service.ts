@@ -119,6 +119,13 @@ export class CourseService extends CoursesService {
     return courseCollection;
   }
 
+  sortCourse(items: ICourse[]): ICourse[] {
+    const optionsCopy = [...items];
+    return optionsCopy.sort(
+      (a, b) => (b.subject ?? '').localeCompare(a.subject ?? '') || (b.year?.name ?? '').localeCompare(a.year?.name ?? ''),
+    );
+  }
+
   protected convertValueFromClient<T extends ICourse | NewCourse | PartialUpdateCourse>(course: T): RestOf<T> {
     return {
       ...course,

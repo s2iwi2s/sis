@@ -40,6 +40,12 @@
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
+            <th scope="col" jhiSortBy="course.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.curriculumMap.course">Course</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
             <th scope="col" jhiSortBy="quarterNo">
               <div class="d-flex">
                 <span jhiTranslate="schInfoSysApp.curriculumMap.quarterNo">Quarter No</span>
@@ -103,12 +109,6 @@
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
-            <th scope="col" jhiSortBy="course.id">
-              <div class="d-flex">
-                <span jhiTranslate="schInfoSysApp.curriculumMap.course">Course</span>
-                <fa-icon class="p-1" icon="sort" />
-              </div>
-            </th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -117,6 +117,15 @@
             <tr data-cy="entityTable">
               <td>
                 <a [routerLink]="['/curriculum-map', curriculumMap.id, 'view']">{{ curriculumMap.id }}</a>
+              </td>
+              <td>
+                @if (curriculumMap.course) {
+                  <div>
+                    <a [routerLink]="['/course', curriculumMap.course.id, 'view']"
+                      >{{ curriculumMap.course.subject }} - {{ curriculumMap.course?.gradelevel?.value }}</a
+                    >
+                  </div>
+                }
               </td>
               <td>{{ curriculumMap.quarterNo }}</td>
               <td>{{ curriculumMap.weekNo }}</td>
@@ -127,13 +136,6 @@
               <td>{{ curriculumMap.createdDate | formatMediumDatetime }}</td>
               <td>{{ curriculumMap.lastModifiedBy }}</td>
               <td>{{ curriculumMap.lastModifiedDate | formatMediumDatetime }}</td>
-              <td>
-                @if (curriculumMap.course) {
-                  <div>
-                    <a [routerLink]="['/course', curriculumMap.course.id, 'view']">{{ curriculumMap.course.id }}</a>
-                  </div>
-                }
-              </td>
               <td class="text-end">
                 <div class="btn-group">
                   <a [routerLink]="['/curriculum-map', curriculumMap.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
