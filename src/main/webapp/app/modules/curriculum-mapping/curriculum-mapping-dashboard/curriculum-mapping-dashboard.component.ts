@@ -4,7 +4,6 @@ import { NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
 import { forkJoin, Observable, OperatorFunction } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
-import { JsonPipe, KeyValuePipe } from '@angular/common';
 
 import { ICurriculumMap } from '../../../entities/curriculum-map/curriculum-map.model';
 import { ICourse } from '../../../entities/course/course.model';
@@ -36,7 +35,6 @@ import { QuarterCardComponent } from '../quarter-card/quarter-card.component';
 import { AlertError } from '../../../shared/alert/alert-error';
 import { Alert } from '../../../shared/alert/alert';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { of } from 'rxjs';
 
 @Component({
   selector: 'jhi-curriculum-mapping-dashboard',
@@ -44,8 +42,6 @@ import { of } from 'rxjs';
   imports: [
     NgbTypeaheadModule,
     FormsModule,
-    JsonPipe,
-    KeyValuePipe,
     RouterLink,
     CourseDetailCardComponent,
     ScopeSeqCardComponent,

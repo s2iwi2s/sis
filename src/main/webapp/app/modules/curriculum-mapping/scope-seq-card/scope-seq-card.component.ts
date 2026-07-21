@@ -1,17 +1,16 @@
 /* eslint-disable no-console */
 
-import { Component, inject, input, Input, output } from '@angular/core';
+import { Component, inject, input, output } from '@angular/core';
 import { ICourse } from '../../../entities/course/course.model';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { Router, RouterLink } from '@angular/router';
 import { ICurriculumMap } from '../../../entities/curriculum-map/curriculum-map.model';
-import { NgClass } from '@angular/common';
 import TranslateDirective from '../../../shared/language/translate.directive';
 
 @Component({
   selector: 'jhi-scope-seq-card',
   standalone: true,
-  imports: [FaIconComponent, RouterLink, NgClass, TranslateDirective],
+  imports: [FaIconComponent, RouterLink, TranslateDirective],
   templateUrl: './scope-seq-card.component.html',
 })
 export class ScopeSeqCardComponent {

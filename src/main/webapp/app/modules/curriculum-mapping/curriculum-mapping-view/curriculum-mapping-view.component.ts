@@ -59,10 +59,10 @@ export class CurriculumMappingViewComponent implements OnInit {
   courses?: ICourse[] | null = [];
 
   hasCurMap = false;
-  curMapByQuarter: Map<number, ICurriculumMap[]>;
-  lcMap: Map<number, ILearningCompetency[]>;
-  sMap: Map<number, IStrategies[]>;
-  aMap: Map<number, IAssessment[]>;
+  curMapByQuarter: Map<string, ICurriculumMap[]>;
+  lcMap: Map<string, ILearningCompetency[]>;
+  sMap: Map<string, IStrategies[]>;
+  aMap: Map<string, IAssessment[]>;
 
   isLoading = signal(false);
 
@@ -133,11 +133,11 @@ export class CurriculumMappingViewComponent implements OnInit {
     this.isLoading.set(false);
   }
 
-  mapCurriculumByQuarter(array: ICurriculumMap[] = []): Map<number, ICurriculumMap[]> {
+  mapCurriculumByQuarter(array: ICurriculumMap[] = []): Map<string, ICurriculumMap[]> {
     this.hasCurMap = array.length > 0;
     array.sort((a, b) => (a.quarterNo ?? 0) - (b.quarterNo ?? 0) || (a.weekNo ?? 0) - (b.weekNo ?? 0));
-    const hash = array.reduce((mapper: Map<number, ICurriculumMap[]>, item: ICurriculumMap) => {
-      const key = item.quarterNo ?? 0;
+    const hash = array.reduce((mapper: Map<string, ICurriculumMap[]>, item: ICurriculumMap) => {
+      const key = `${item.quarterNo}`;
       let list = mapper.get(key);
       if (!list) {
         list = [];
@@ -145,13 +145,13 @@ export class CurriculumMappingViewComponent implements OnInit {
       }
       list.push(item);
       return mapper;
-    }, new Map<number, ICurriculumMap[]>());
+    }, new Map<string, ICurriculumMap[]>());
     return hash;
   }
 
-  mapLearningCompetenceyByCurriculum(array: ILearningCompetency[]): Map<number, ICurriculumMap[]> {
-    const hash = array.reduce((mapper: Map<number, ILearningCompetency[]>, item: ILearningCompetency) => {
-      const key = item.curriculumMap?.id ?? 0;
+  mapLearningCompetenceyByCurriculum(array: ILearningCompetency[]): Map<string, ICurriculumMap[]> {
+    const hash = array.reduce((mapper: Map<string, ILearningCompetency[]>, item: ILearningCompetency) => {
+      const key = `${item.curriculumMap?.id}`;
       let list = mapper.get(key);
       if (!list) {
         list = [];
@@ -159,17 +159,17 @@ export class CurriculumMappingViewComponent implements OnInit {
       }
       list.push(item);
       return mapper;
-    }, new Map<number, ILearningCompetency[]>());
+    }, new Map<string, ILearningCompetency[]>());
     return hash;
   }
 
   getLearningCompetenciesFromMapping(currMapId: number): ILearningCompetency[] {
-    return this.lcMap.get(currMapId) ?? [];
+    return this.lcMap.get(`${currMapId}`) ?? [];
   }
 
-  mapStrategiesByLearningCompetency(array: IStrategies[]): Map<number, IStrategies[]> {
-    const hash = array.reduce((mapper: Map<number, IStrategies[]>, item: IStrategies) => {
-      const key = item.learningCompetency?.id ?? 0;
+  mapStrategiesByLearningCompetency(array: IStrategies[]): Map<string, IStrategies[]> {
+    const hash = array.reduce((mapper: Map<string, IStrategies[]>, item: IStrategies) => {
+      const key = `${item.learningCompetency?.id}`;
       let list = mapper.get(key);
       if (!list) {
         list = [];
@@ -177,17 +177,17 @@ export class CurriculumMappingViewComponent implements OnInit {
       }
       list.push(item);
       return mapper;
-    }, new Map<number, IStrategies[]>());
+    }, new Map<string, IStrategies[]>());
     return hash;
   }
 
   getStrategiesFromMapping(learningCompetencyId: number): IStrategies[] {
-    return this.sMap.get(learningCompetencyId) ?? [];
+    return this.sMap.get(`${learningCompetencyId}`) ?? [];
   }
 
-  mapAssessmentByLearningCompetency(array: IAssessment[]): Map<number, IAssessment[]> {
-    const hash = array.reduce((mapper: Map<number, IAssessment[]>, item: IAssessment) => {
-      const key = item.learningCompetency?.id ?? 0;
+  mapAssessmentByLearningCompetency(array: IAssessment[]): Map<string, IAssessment[]> {
+    const hash = array.reduce((mapper: Map<string, IAssessment[]>, item: IAssessment) => {
+      const key = `${item.learningCompetency?.id}`;
       let list = mapper.get(key);
       if (!list) {
         list = [];
@@ -195,11 +195,11 @@ export class CurriculumMappingViewComponent implements OnInit {
       }
       list.push(item);
       return mapper;
-    }, new Map<number, IAssessment[]>());
+    }, new Map<string, IAssessment[]>());
     return hash;
   }
 
   getAssessmentFromMapping(learningCompetencyId: number): IAssessment[] {
-    return this.aMap.get(learningCompetencyId) ?? [];
+    return this.aMap.get(`${learningCompetencyId}`) ?? [];
   }
 }
