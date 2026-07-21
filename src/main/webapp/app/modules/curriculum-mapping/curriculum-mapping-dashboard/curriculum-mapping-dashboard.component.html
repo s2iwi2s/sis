@@ -11,15 +11,13 @@
     <jhi-alert />
 
     <div class="d-print-none shadow-sm py-2 pb-3 mb-sm-3 bg-body-tertiary rounded-4 row col-sm-6">
-      <label class="form-label col-sm-12" jhiTranslate="schInfoSysApp.curriculumMappingDashboard.searchCourse" for="field_course"
-        >searchCourse</label
-      >
+      <label for="field_course" class="visually-hidden">Search Course</label>
       <div class="input-group">
         <input
-          type="text"
-          class="form-control rounded-4"
           name="course"
           id="field_course"
+          type="text"
+          class="form-control rounded-4"
           data-cy="course"
           [(ngModel)]="selectedCourse"
           [ngbTypeahead]="search"
@@ -27,6 +25,8 @@
           [resultFormatter]="formatter"
           [editable]="false"
           (ngModelChange)="loadCurriculumMappings()"
+          placeholder="Search Course"
+          aria-label="Search Course"
         />
         <span class="input-group-text border-0"><fa-icon icon="search"></fa-icon></span>
       </div>

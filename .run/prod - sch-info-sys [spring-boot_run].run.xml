@@ -9,8 +9,9 @@
             <map>
               <entry key="BASE64_SECRET" value="MmQxM2FkNWQwNWRkYTAwZjM1YWJlYmQyNmExNmNjMGQ1ZDg2MjQwMjE4ODIxNDEwMmMxMzQ2YjJmMWUyZWExYjc4OTY2Y2U0NmM3NjY3NTdhYzYwOTg5MzhkYjZmNjVjYmY3NjIzM2I5YzFmZDI4NjBmM2RiM2I0NDQ2MzZhZDk\=" />
               <entry key="SPRING_DATASOURCE_PASSWORD" value="prod" />
-              <entry key="SPRING_DATASOURCE_URL" value="jdbc:postgresql://prod.postgresql.db:5432/slra_prod" />
+              <entry key="SPRING_DATASOURCE_URL" value="jdbc:postgresql://prod.postgresql.db:5433/slra_prod?currentSchema?=slra_sis" />
               <entry key="SPRING_DATASOURCE_USERNAME" value="sis_prod" />
+              <entry key="SPRING_LIQUIBASE_URL" value="jdbc:postgresql://prod.postgresql.db:5433/slra_prod?currentSchema?=slra_sis" />
             </map>
           </option>
           <option name="jreName" value="#USE_PROJECT_JDK" />
