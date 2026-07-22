@@ -11,7 +11,7 @@
     -->
     <changeSet id="20260706145719-1" author="jhipster">
         <createTable tableName="course">
-            <column name="id" type="serial" incrementBy="1" startWith="8" valueSequenceNext="course_id_seq">
+            <column name="id" type="serial" incrementBy="1" startWith="9" valueSequenceNext="course_id_seq">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="subject" type="varchar(50)">
