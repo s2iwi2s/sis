@@ -44,6 +44,9 @@ export class LearningCompetencyUpdate implements OnInit {
       this.learningCompetency = learningCompetency;
       if (learningCompetency) {
         this.updateForm(learningCompetency);
+        if (this.learningCompetency?.id === -1) {
+          this.editForm.patchValue({ id: null });
+        }
       }
 
       this.loadRelationshipsOptions();
@@ -96,14 +99,14 @@ export class LearningCompetencyUpdate implements OnInit {
     this.curriculumMapService
       .query()
       .pipe(map((res: HttpResponse<ICurriculumMap[]>) => res.body ?? []))
-      .pipe(
-        map((curriculumMaps: ICurriculumMap[]) =>
-          this.curriculumMapService.addCurriculumMapToCollectionIfMissing<ICurriculumMap>(
-            curriculumMaps,
-            this.learningCompetency?.curriculumMap,
-          ),
-        ),
-      )
+      // .pipe(
+      //   map((curriculumMaps: ICurriculumMap[]) =>
+      //     this.curriculumMapService.addCurriculumMapToCollectionIfMissing<ICurriculumMap>(
+      //       curriculumMaps,
+      //       this.learningCompetency?.curriculumMap,
+      //     ),
+      //   ),
+      // )
       .subscribe((curriculumMaps: ICurriculumMap[]) => this.curriculumMapsSharedCollection.set(curriculumMaps));
   }
 }

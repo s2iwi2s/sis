@@ -8,7 +8,7 @@ import { ILearningCompetency } from '../learning-competency.model';
 import { LearningCompetencyService } from '../service/learning-competency.service';
 
 const learningCompetencyResolve = (route: ActivatedRouteSnapshot): Observable<null | ILearningCompetency> => {
-  const { id } = route.params;
+  const { id, curriculumMapId } = route.params;
   if (id) {
     const router = inject(Router);
     const service = inject(LearningCompetencyService);
@@ -22,6 +22,13 @@ const learningCompetencyResolve = (route: ActivatedRouteSnapshot): Observable<nu
         return EMPTY;
       }),
     );
+  } else if (curriculumMapId) {
+    return of({
+      id: -1,
+      curriculumMap: {
+        id: curriculumMapId,
+      },
+    });
   }
 
   return of(null);

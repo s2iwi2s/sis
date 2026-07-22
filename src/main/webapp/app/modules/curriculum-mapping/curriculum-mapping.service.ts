@@ -73,8 +73,18 @@ export class CurriculumMappingService {
     return this.http.get<IReport>(`${this.resourceUrl}/currMap/${courseId}`, { observe: 'response' }).pipe(map(res => res.body!));
   }
 
-  formatter = (course: ICourse): string =>
-    (course.subject ? course.subject + ': ' : '') + (course.gradelevel?.description ?? '') + ' ' + (course.terms?.name ?? '');
+  formatter = (course: ICourse): string => {
+    if (course.id && course.id !== -1) {
+      return `${course.subject ? course.subject + ': ' : ''}: ${course.gradelevel?.description ?? ''} ${course.year?.name ?? ''} ${course.terms?.name ?? ''}`;
+      // (
+      //   (course.subject ? course.subject + ': ' : '') +
+      //   (course.gradelevel?.description ?? '') +
+      //   (course.year?.name ?? '') +
+      //   ' ' +
+      //   (course.terms?.name ?? '');
+    }
+    return '';
+  };
 
   search: OperatorFunction<string, readonly ICourse[]> = (text$: Observable<string>) =>
     text$.pipe(
@@ -85,7 +95,12 @@ export class CurriculumMappingService {
         this.courses
           .filter(course =>
             new RegExp(term, 'mi').test(
-              (course.subject ? course.subject + ': ' : '') + (course.gradelevel?.description ?? '') + ' ' + (course.terms?.name ?? ''),
+              (course.subject ? course.subject + ': ' : '') +
+                (course.gradelevel?.description ?? '') +
+                ' ' +
+                (course.year?.name ?? '') +
+                ' ' +
+                (course.terms?.name ?? ''),
             ),
           )
           .slice(0, 10),

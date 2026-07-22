@@ -23,7 +23,7 @@ public class RegistrationReportImpl extends AbstractPdfReport<StudentDTO, Long> 
         this.appConfigService = appConfigService;
 
         if (getAppConfigKey() != null && !getAppConfigKey().isEmpty()) {
-            List<AppConfigDTO> list = appConfigService.findAll(new AppConfigDTO().code(getAppConfigKey()));
+            List<AppConfigDTO> list = appConfigService.findAllByCode(getAppConfigKey());
             if (list.size() != 0) {
                 templateEngine.setDialect(new SpringStandardDialect());
                 StringTemplateResolver templateResolver = new StringTemplateResolver();

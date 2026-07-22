@@ -139,7 +139,7 @@ public class AppConfigResource {
      * {@code GET  /app-configs} : get all the App Configs.
      *
      * @param pageable the pagination information.
-     * @param filter the filter of the request.
+     * @param eagerload the eagerload of the request.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of App Configs in body.
      */
     @GetMapping("")
@@ -150,7 +150,7 @@ public class AppConfigResource {
     ) {
         LOG.debug("REST request to get a page of AppConfigs");
         if (eagerload) {
-            List<AppConfigDTO> allEager = appConfigService.findAll(appConfigDTO);
+            List<AppConfigDTO> allEager = appConfigService.findAllByCode(appConfigDTO.getCode());
             return ResponseEntity.ok().body(allEager);
         } else {
             Page<AppConfigDTO> page = appConfigService.findAll(appConfigDTO, pageable);

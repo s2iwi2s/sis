@@ -16,6 +16,12 @@ type RestOf<T extends ICurriculumMap | NewCurriculumMap> = Omit<T, 'createdDate'
   lastModifiedDate?: string | null;
 };
 
+export type ICurriculumMapParam = {
+  map: ICurriculumMap;
+  courseId: number;
+  quarterNo: number;
+};
+
 export type RestCurriculumMap = RestOf<ICurriculumMap>;
 
 export type NewRestCurriculumMap = RestOf<NewCurriculumMap>;
@@ -107,7 +113,7 @@ export class CurriculumMapService extends CurriculumMapsService {
   }
 
   compareCurriculumMap(o1: Pick<ICurriculumMap, 'id'> | null, o2: Pick<ICurriculumMap, 'id'> | null): boolean {
-    return o1 && o2 ? this.getCurriculumMapIdentifier(o1) === this.getCurriculumMapIdentifier(o2) : o1 === o2;
+    return Math.ceil(o1?.id ?? 0) === Math.ceil(o2?.id ?? 0);
   }
 
   addCurriculumMapToCollectionIfMissing<Type extends Pick<ICurriculumMap, 'id'>>(

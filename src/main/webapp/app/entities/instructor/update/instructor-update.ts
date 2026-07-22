@@ -112,16 +112,7 @@ export class InstructorUpdate implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
-    this.appConfigService
-      .query({ code: 'GENDER', eagerload: true })
-      .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
-      .pipe(map(this.appConfigService.sortAppConfig))
-      .pipe(
-        map((appConfigs: IAppConfig[]) =>
-          this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.instructor?.gender),
-        ),
-      )
-      .subscribe((appConfigs: IAppConfig[]) => this.gendersCollection.set(appConfigs));
+    this.appConfigService.getConfig('GENDER', this.instructor?.gender).subscribe(appConfigs => this.gendersCollection.set(appConfigs));
 
     this.userService
       .query()

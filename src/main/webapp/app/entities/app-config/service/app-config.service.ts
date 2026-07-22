@@ -124,12 +124,16 @@ export class AppConfigService extends AppConfigsService {
     return appConfigCollection;
   }
 
-  getConfig(code: string, selectedOption: Pick<IAppConfig, 'id' | 'value'> | null | undefined): Observable<IAppConfig[]> {
+  getConfig(code: string, selectedOption?: Pick<IAppConfig, 'id' | 'value'> | null): Observable<IAppConfig[]> {
     return this.query({ code, eagerload: true })
       .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
-      .pipe(map((appConfigs: IAppConfig[]) => this.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, selectedOption)))
-      .pipe(map(this.sortAppConfig));
-    // .subscribe((appConfigs: IAppConfig[]) => collection.set(appConfigs));
+      .pipe(
+        map((appConfigs: IAppConfig[]) => {
+          this.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, selectedOption);
+          return appConfigs;
+        }),
+      );
+    // .pipe(map(this.sortAppConfig));
   }
 
   sortAppConfig(appConfigs: IAppConfig[]): IAppConfig[] {

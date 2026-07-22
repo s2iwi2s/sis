@@ -98,13 +98,13 @@ export class Student implements OnInit, OnChanges {
     effect(() => {
       this.students.set(this.fillComponentAttributesFromResponseBody([...this.studentService.students()]));
     });
-
-    this.filterForm.valueChanges.pipe(debounceTime(1000)).subscribe(query => {
-      console.log('Student.constructor filterForm.valueChanges called with query:', query);
-      this.studentFilter = query as IStudentFilter;
-      this.load();
+    effect(() => {
+      this.filterForm.valueChanges.pipe(debounceTime(1000)).subscribe(query => {
+        console.log('Student.constructor filterForm.valueChanges called with query:', query);
+        this.studentFilter = query as IStudentFilter;
+        this.load();
+      });
     });
-
     this.loadRelationshipsOptions();
   }
 
@@ -160,16 +160,18 @@ export class Student implements OnInit, OnChanges {
   }
 
   protected loadRelationshipsOptions(): void {
-    this.appConfigService
-      .query({ code: 'GRADE_LEVEL', eagerload: true })
-      .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
-      .pipe(map(this.appConfigService.sortAppConfig))
-      // .pipe(
-      //   map((appConfigs: IAppConfig[]) =>
-      //     this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.student?.gradelevel),
-      //   ),
-      // )
-      .subscribe((appConfigs: IAppConfig[]) => this.gradelevelsCollection.set(appConfigs));
+    this.appConfigService.getConfig('GRADE_LEVEL').subscribe(appConfigs => this.gradelevelsCollection.set(appConfigs));
+
+    // this.appConfigService
+    //   .query({ code: 'GRADE_LEVEL', eagerload: true })
+    //   .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
+    //   .pipe(map(this.appConfigService.sortAppConfig))
+    //   // .pipe(
+    //   //   map((appConfigs: IAppConfig[]) =>
+    //   //     this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.student?.gradelevel),
+    //   //   ),
+    //   // )
+    //   .subscribe((appConfigs: IAppConfig[]) => this.gradelevelsCollection.set(appConfigs));
   }
 
   protected fillComponentAttributeFromRoute(params: ParamMap, data: Data): void {

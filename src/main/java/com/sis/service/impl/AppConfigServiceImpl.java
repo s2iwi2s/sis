@@ -75,10 +75,10 @@ public class AppConfigServiceImpl implements AppConfigService {
     }
 
     @Override
-    public List<AppConfigDTO> findAll(AppConfigDTO appConfigDTO) {
+    public List<AppConfigDTO> findAllByCode(String code) {
         LOG.debug("Request to get all AppConfigs");
         return appConfigRepository
-            .findAll(Example.of(appConfigMapper.toEntity(appConfigDTO)))
+            .findAllByCodeOrderByPriorityAscValueAsc(code)
             .stream()
             .map(a -> appConfigMapper.toDto(a))
             .toList();

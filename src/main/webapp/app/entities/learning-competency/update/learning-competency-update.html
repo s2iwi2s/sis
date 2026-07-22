@@ -20,6 +20,27 @@
         }
 
         <div class="mb-3">
+          <label class="form-label" for="field_curriculumMap" jhiTranslate="schInfoSysApp.learningCompetency.curriculumMap"
+            >Curriculum Map</label
+          >
+          <select
+            class="form-control"
+            id="field_curriculumMap"
+            data-cy="curriculumMap"
+            name="curriculumMap"
+            formControlName="curriculumMap"
+            [compareWith]="compareCurriculumMap"
+          >
+            <option [ngValue]="null"></option>
+            @for (curriculumMapOption of curriculumMapsSharedCollection(); track $index) {
+              <option [ngValue]="curriculumMapOption">
+                {{ '[' + curriculumMapOption.quarterNo + '-' + curriculumMapOption.weekNo + '] ' + curriculumMapOption.topic }}
+              </option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
           <label class="form-label" for="field_seqNo" jhiTranslate="schInfoSysApp.learningCompetency.seqNo">Seq No</label>
           <input type="number" class="form-control" name="seqNo" id="field_seqNo" data-cy="seqNo" formControlName="seqNo" />
         </div>
@@ -129,27 +150,6 @@
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_curriculumMap" jhiTranslate="schInfoSysApp.learningCompetency.curriculumMap"
-            >Curriculum Map</label
-          >
-          <select
-            class="form-control"
-            id="field_curriculumMap"
-            data-cy="curriculumMap"
-            name="curriculumMap"
-            formControlName="curriculumMap"
-            [compareWith]="compareCurriculumMap"
-          >
-            <option [ngValue]="null"></option>
-            @for (curriculumMapOption of curriculumMapsSharedCollection(); track $index) {
-              <option [ngValue]="curriculumMapOption">
-                {{ '[' + curriculumMapOption.quarterNo + '-' + curriculumMapOption.weekNo + '] ' + curriculumMapOption.topic }}
-              </option>
-            }
-          </select>
         </div>
       </div>
 

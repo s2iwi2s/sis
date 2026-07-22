@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { HttpClient, HttpResponse, httpResource } from '@angular/common/http';
 import { Injectable, computed, inject, signal } from '@angular/core';
 
@@ -96,7 +97,10 @@ export class CourseService extends CoursesService {
   }
 
   compareCourse(o1: Pick<ICourse, 'id'> | null, o2: Pick<ICourse, 'id'> | null): boolean {
-    return o1 && o2 ? this.getCourseIdentifier(o1) === this.getCourseIdentifier(o2) : o1 === o2;
+    const compare = `${o1?.id ?? 0}` === `${o2?.id ?? 0}`;
+
+    console.log(`CurriculumMapUpdate.constructor() called with o1?.id=${o1?.id}, o2?.id: ${o2?.id}, compare=${compare}`);
+    return compare;
   }
 
   addCourseToCollectionIfMissing<Type extends Pick<ICourse, 'id'>>(
@@ -117,13 +121,6 @@ export class CourseService extends CoursesService {
       return [...coursesToAdd, ...courseCollection];
     }
     return courseCollection;
-  }
-
-  sortCourse(items: ICourse[]): ICourse[] {
-    const optionsCopy = [...items];
-    return optionsCopy.sort(
-      (a, b) => (b.subject ?? '').localeCompare(a.subject ?? '') || (b.year?.name ?? '').localeCompare(a.year?.name ?? ''),
-    );
   }
 
   protected convertValueFromClient<T extends ICourse | NewCourse | PartialUpdateCourse>(course: T): RestOf<T> {

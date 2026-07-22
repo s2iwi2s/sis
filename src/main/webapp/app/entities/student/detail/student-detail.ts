@@ -77,7 +77,7 @@ export class StudentDetail implements OnInit, OnChanges {
     this.subscribeToSaveResponse(this.studentService.partialUpdate(param));
   }
 
-  loadRelationshipsOptions() {
+  loadRelationshipsOptions(): void {
     this.appConfigService
       .query({ code: 'GRADE_LEVEL' })
       .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))

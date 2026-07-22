@@ -35,13 +35,16 @@ export class CurriculumMappingDashboardComponent implements OnInit {
 
   constructor() {
     this.curriculumMappingService.clear();
+    this.curriculumMappingService.loadCourses();
+    if (this.curriculumMappingService.selectedCourse?.id) {
+      this.loadCurriculumMappings(this.curriculumMappingService.selectedCourse);
+    }
   }
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ course }) => {
       this.loadCurriculumMappings(course);
     });
-    this.curriculumMappingService.loadCourses();
   }
 
   loadCurriculumMappings(course: ICourse | null): void {

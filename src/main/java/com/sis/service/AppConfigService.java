@@ -44,10 +44,10 @@ public interface AppConfigService {
     Page<AppConfigDTO> findAll(AppConfigDTO appConfigDTO, Pageable pageable);
     /**
      * Get all the appConfigs.
-     * @param appConfigDTO
+     * @param code the code of the entity
      * @return the list of entities.
      */
-    List<AppConfigDTO> findAll(AppConfigDTO appConfigDTO);
+    public List<AppConfigDTO> findAllByCode(String code);
 
     /**
      * Get the "id" appConfig.

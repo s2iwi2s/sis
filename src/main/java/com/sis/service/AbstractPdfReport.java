@@ -77,7 +77,7 @@ public abstract class AbstractPdfReport<T, P> implements PdfReport<T, P> {
         AppConfigService appConfigService = getAppConfigService();
         List<AppConfigDTO> list = new ArrayList<>();
         if (getAppConfigKey() != null && !getAppConfigKey().isEmpty()) {
-            list = appConfigService.findAll(new AppConfigDTO().code(getAppConfigKey()));
+            list = appConfigService.findAllByCode(getAppConfigKey());
         }
 
         if (list.size() != 0) {
