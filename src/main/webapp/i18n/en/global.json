@@ -16,7 +16,7 @@
         "registrationForm": "Registration Form"
       },
       "entities": {
-        "main": "Entities",
+        "main": "Maintenance",
         "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)",
         "adminAuthority": "Authority",
         "instructor": "Instructor",

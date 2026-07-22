@@ -69,18 +69,17 @@ public class AppConfigResource {
     /**
      * {@code PUT  /app-configs/:id} : Updates an existing appConfig.
      *
-     * @param id the id of the appConfigDTO to save.
+     * @param id           the id of the appConfigDTO to save.
      * @param appConfigDTO the appConfigDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated appConfigDTO,
      * or with status {@code 400 (Bad Request)} if the appConfigDTO is not valid,
      * or with status {@code 500 (Internal Server Error)} if the appConfigDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PutMapping("/{id}")
     public ResponseEntity<AppConfigDTO> updateAppConfig(
         @PathVariable(value = "id", required = false) final Long id,
         @Valid @RequestBody AppConfigDTO appConfigDTO
-    ) throws URISyntaxException {
+    ) {
         LOG.debug("REST request to update AppConfig : {}, {}", id, appConfigDTO);
         if (appConfigDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -102,19 +101,18 @@ public class AppConfigResource {
     /**
      * {@code PATCH  /app-configs/:id} : Partial updates given fields of an existing appConfig, field will ignore if it is null
      *
-     * @param id the id of the appConfigDTO to save.
+     * @param id           the id of the appConfigDTO to save.
      * @param appConfigDTO the appConfigDTO to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated appConfigDTO,
      * or with status {@code 400 (Bad Request)} if the appConfigDTO is not valid,
      * or with status {@code 404 (Not Found)} if the appConfigDTO is not found,
      * or with status {@code 500 (Internal Server Error)} if the appConfigDTO couldn't be updated.
-     * @throws URISyntaxException if the Location URI syntax is incorrect.
      */
     @PatchMapping(value = "/{id}", consumes = { "application/json", "application/merge-patch+json" })
     public ResponseEntity<AppConfigDTO> partialUpdateAppConfig(
         @PathVariable(value = "id", required = false) final Long id,
         @NotNull @RequestBody AppConfigDTO appConfigDTO
-    ) throws URISyntaxException {
+    ) {
         LOG.debug("REST request to partial update AppConfig partially : {}, {}", id, appConfigDTO);
         if (appConfigDTO.getId() == null) {
             throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
@@ -138,7 +136,7 @@ public class AppConfigResource {
     /**
      * {@code GET  /app-configs} : get all the App Configs.
      *
-     * @param pageable the pagination information.
+     * @param pageable  the pagination information.
      * @param eagerload the eagerload of the request.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of App Configs in body.
      */

@@ -142,9 +142,7 @@ export class CourseUpdate implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
-    this.appConfigService
-      .getConfig('GRADE_LEVEL', this.course?.gradelevel)
-      .subscribe(appConfigs => this.gradelevelsCollection.set(appConfigs));
+    this.appConfigService.getConfig('GRADE_LEVEL', this.course?.gradelevel, this.gradelevelsCollection).subscribe();
 
     this.departmentsService
       .query({ filter: 'course-is-null' })

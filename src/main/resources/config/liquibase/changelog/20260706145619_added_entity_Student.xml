@@ -203,6 +203,7 @@
             <column name="citizenship " type="string"/>
             <column name="mother_tongue" type="string"/>
             <column name="religion" type="string"/>
+            <column name="parent_civil_status_id" type="numeric"/>
             <column name="fathers_last_name" type="string"/>
             <column name="fathers_middle_name" type="string"/>
             <column name="fathers_first_name" type="string"/>

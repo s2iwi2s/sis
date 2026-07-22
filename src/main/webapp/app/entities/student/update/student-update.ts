@@ -148,15 +148,9 @@ export class StudentUpdate implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
-    this.appConfigService
-      .getConfig('GRADE_LEVEL', this.student?.gradelevel)
-      .subscribe((appConfigs: IAppConfig[]) => this.gradelevelsCollection.set(appConfigs));
-    this.appConfigService
-      .getConfig('GENDER', this.student?.gender)
-      .subscribe((appConfigs: IAppConfig[]) => this.gendersCollection.set(appConfigs));
-    this.appConfigService
-      .getConfig('CIVIL_STATUS', this.student?.parentCivilStatus)
-      .subscribe((appConfigs: IAppConfig[]) => this.parentCivilStatusCollection.set(appConfigs));
+    this.appConfigService.getConfig('GRADE_LEVEL', this.student?.gradelevel, this.gradelevelsCollection).subscribe();
+    this.appConfigService.getConfig('GENDER', this.student?.gender, this.gendersCollection).subscribe();
+    this.appConfigService.getConfig('CIVIL_STATUS', this.student?.parentCivilStatus, this.parentCivilStatusCollection).subscribe();
 
     this.userService
       .query()

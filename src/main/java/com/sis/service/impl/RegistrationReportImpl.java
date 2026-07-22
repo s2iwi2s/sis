@@ -24,7 +24,7 @@ public class RegistrationReportImpl extends AbstractPdfReport<StudentDTO, Long> 
 
         if (getAppConfigKey() != null && !getAppConfigKey().isEmpty()) {
             List<AppConfigDTO> list = appConfigService.findAllByCode(getAppConfigKey());
-            if (list.size() != 0) {
+            if (!list.isEmpty()) {
                 templateEngine.setDialect(new SpringStandardDialect());
                 StringTemplateResolver templateResolver = new StringTemplateResolver();
                 templateEngine.setTemplateResolver(templateResolver);
@@ -45,26 +45,7 @@ public class RegistrationReportImpl extends AbstractPdfReport<StudentDTO, Long> 
 
     @Override
     public StudentDTO getData(Long studentId) {
-        StudentDTO dto = studentService
-            .findOne(studentId)
-            .map(studentDTO -> studentDTO)
-            .orElseThrow();
-        //        if(dto.getGender() == null) {
-        //            dto.setGender(new AppConfigDTO()
-        //                .value("")
-        //                .code(""));
-        //        }
-        //        if(dto.getGradelevel() == null) {
-        //            dto.setGradelevel(new AppConfigDTO()
-        //                .value("")
-        //                .code(""));
-        //        }
-        //        if(dto.getParentCivilStatus() == null) {
-        //            dto.setParentCivilStatus(new AppConfigDTO()
-        //                .value("")
-        //                .code(""));
-        //        }
-        return dto;
+        return studentService.findOne(studentId).orElseThrow();
     }
 
     @Override

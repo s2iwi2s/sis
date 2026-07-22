@@ -36,7 +36,7 @@ public interface AppConfigService {
 
     /**
      * Get all the appConfigs.
-     * @param appConfigDTO
+     * @param appConfigDTO config entity
      *
      * @param pageable the pagination information.
      * @return the list of entities.
@@ -47,7 +47,7 @@ public interface AppConfigService {
      * @param code the code of the entity
      * @return the list of entities.
      */
-    public List<AppConfigDTO> findAllByCode(String code);
+    List<AppConfigDTO> findAllByCode(String code);
 
     /**
      * Get the "id" appConfig.

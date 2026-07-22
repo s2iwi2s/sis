@@ -112,7 +112,7 @@ export class InstructorUpdate implements OnInit {
   }
 
   protected loadRelationshipsOptions(): void {
-    this.appConfigService.getConfig('GENDER', this.instructor?.gender).subscribe(appConfigs => this.gendersCollection.set(appConfigs));
+    this.appConfigService.getConfig('GENDER', this.instructor?.gender, this.gendersCollection).subscribe();
 
     this.userService
       .query()

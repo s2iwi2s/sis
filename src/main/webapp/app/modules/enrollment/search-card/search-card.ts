@@ -26,26 +26,17 @@ export class SearchCard implements OnInit {
 
   readonly source = 'enroll';
 
+  gradelevelsCollection = signal<IAppConfig[]>([]);
+
   protected studentFormService = inject(StudentFormService);
   protected appConfigService = inject(AppConfigService);
-
-  gradelevelsCollection = signal<IAppConfig[]>([]);
 
   ngOnInit(): void {
     this.loadRelationshipsOptions();
   }
 
   protected loadRelationshipsOptions(): void {
-    this.appConfigService
-      .query({ code: 'GRADE_LEVEL', eagerload: true })
-      .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
-      .pipe(map(this.appConfigService.sortAppConfig))
-      // .pipe(
-      //   map((appConfigs: IAppConfig[]) =>
-      //     this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.student?.gradelevel),
-      //   ),
-      // )
-      .subscribe((appConfigs: IAppConfig[]) => this.gradelevelsCollection.set(appConfigs));
+    this.appConfigService.getConfig('GRADE_LEVEL', null, this.gradelevelsCollection).subscribe();
   }
 
   // eslint-disable-next-line @typescript-eslint/member-ordering

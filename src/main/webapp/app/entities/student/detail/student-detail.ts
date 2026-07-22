@@ -79,19 +79,8 @@ export class StudentDetail implements OnInit, OnChanges {
 
   loadRelationshipsOptions(): void {
     this.appConfigService
-      .query({ code: 'GRADE_LEVEL' })
-      .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
-      .pipe(map(this.appConfigService.sortAppConfig))
-      .pipe(
-        map((appConfigs: IAppConfig[]) =>
-          this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.student()?.gradelevel),
-        ),
-      )
+      .getConfig('GRADE_LEVEL', this.student()?.gradelevel, this.gradelevelsCollection)
       .subscribe((appConfigs: IAppConfig[]) => {
-        this.gradelevelsCollection.set(appConfigs);
-        this.gradelevelsCollection.set(
-          this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(this.gradelevelsCollection(), this.student()?.gradelevel),
-        );
         this.gradelevelsCollection()
           .filter(f => f.id === this.student()?.gradelevel?.id)
           .map(value => (this.gradelevel = value));

@@ -7,7 +7,6 @@ import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -44,14 +43,13 @@ public abstract class AbstractPdfReport<T, P> implements PdfReport<T, P> {
         return html.toString();
     }
 
-    public String getHtmlFromTemplate(T data) throws IOException, URISyntaxException {
+    public String getHtmlFromTemplate(T data) {
         TemplateEngine templateEngine = this.getTemplateEngine();
         Locale locale = Locale.forLanguageTag("en");
         Context context = new Context(locale);
         context.setVariable(getContextVariable(), data);
 
-        String content = templateEngine.process(this.getTemplateName(), context);
-        return content;
+        return templateEngine.process(this.getTemplateName(), context);
     }
 
     public String getHtmlFromAppConfig(T data, List<AppConfigDTO> list) {
@@ -69,8 +67,7 @@ public abstract class AbstractPdfReport<T, P> implements PdfReport<T, P> {
         Context context = new Context(locale);
         context.setVariable("student", data);
 
-        String renderedString = templateEngine.process(templateHtml, context);
-        return renderedString;
+        return templateEngine.process(templateHtml, context);
     }
 
     public String getHtml(T data) throws IOException, URISyntaxException {
@@ -92,7 +89,7 @@ public abstract class AbstractPdfReport<T, P> implements PdfReport<T, P> {
     }
 
     ReportResponseDTO createPdf(T data) throws IOException, URISyntaxException {
-        ReportResponseDTO dto = null;
+        ReportResponseDTO dto;
         try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
             HtmlConverter.convertToPdf(getHtml(data), os);
             String base64 = Base64.getEncoder().encodeToString(os.toByteArray());

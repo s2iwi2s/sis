@@ -160,18 +160,7 @@ export class Student implements OnInit, OnChanges {
   }
 
   protected loadRelationshipsOptions(): void {
-    this.appConfigService.getConfig('GRADE_LEVEL').subscribe(appConfigs => this.gradelevelsCollection.set(appConfigs));
-
-    // this.appConfigService
-    //   .query({ code: 'GRADE_LEVEL', eagerload: true })
-    //   .pipe(map((res: HttpResponse<IAppConfig[]>) => res.body ?? []))
-    //   .pipe(map(this.appConfigService.sortAppConfig))
-    //   // .pipe(
-    //   //   map((appConfigs: IAppConfig[]) =>
-    //   //     this.appConfigService.addAppConfigToCollectionIfMissing<IAppConfig>(appConfigs, this.student?.gradelevel),
-    //   //   ),
-    //   // )
-    //   .subscribe((appConfigs: IAppConfig[]) => this.gradelevelsCollection.set(appConfigs));
+    this.appConfigService.getConfig('GRADE_LEVEL', null, this.gradelevelsCollection).subscribe();
   }
 
   protected fillComponentAttributeFromRoute(params: ParamMap, data: Data): void {

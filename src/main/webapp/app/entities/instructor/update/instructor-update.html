@@ -42,6 +42,23 @@
         </div>
 
         <div class="mb-3">
+          <label class="form-label" for="field_gender" jhiTranslate="schInfoSysApp.instructor.gender">Gender</label>
+          <select
+            class="form-control"
+            id="field_gender"
+            data-cy="gender"
+            name="gender"
+            formControlName="gender"
+            [compareWith]="compareAppConfig"
+          >
+            <option [ngValue]="null"></option>
+            @for (appConfigOption of gendersCollection(); track $index) {
+              <option [ngValue]="appConfigOption">{{ appConfigOption.value }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
           <label class="form-label" for="field_email" jhiTranslate="schInfoSysApp.instructor.email">Email</label>
           <input type="text" class="form-control" name="email" id="field_email" data-cy="email" formControlName="email" />
         </div>
@@ -159,23 +176,6 @@
               placeholder="YYYY-MM-DD HH:mm"
             />
           </div>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label" for="field_gender" jhiTranslate="schInfoSysApp.instructor.gender">Gender</label>
-          <select
-            class="form-control"
-            id="field_gender"
-            data-cy="gender"
-            name="gender"
-            formControlName="gender"
-            [compareWith]="compareAppConfig"
-          >
-            <option [ngValue]="null"></option>
-            @for (appConfigOption of gendersCollection(); track $index) {
-              <option [ngValue]="appConfigOption">{{ appConfigOption.id }}</option>
-            }
-          </select>
         </div>
 
         <div class="mb-3">
