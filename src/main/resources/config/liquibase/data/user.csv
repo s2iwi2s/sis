@@ -1,7 +1,7 @@
 id;login;password_hash;first_name;last_name;email;image_url;activated;lang_key;created_by;last_modified_by
 1;admin;$2a$10$gSAhZrxMllrbgj/kkK9UceBPpChGWJA7SYIb1Mqo.n5aNLq1/oRrC;Admin;Administrator;admin@localhost;;true;en;system;system
 2;user;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;User;User;user@localhost;;true;en;system;system
-3;wpidor;$2a$10$gSAhZrxMllrbgj/kkK9UceBPpChGWJA7SYIb1Mqo.n5aNLq1/oRrC;Winston;Pidor;wpidor@localhost;;true;en;system;admin
+3;wpidor;$2a$10$hDPFLH63TZ0j9UfAhb7ri.YtasOfBfDdQQE6hzjBr9vWTmm9ln8mG;Winston;sisAdmin!;wpidor@localhost;;true;en;system;admin
 4;lperion;$2a$10$gSAhZrxMllrbgj/kkK9UceBPpChGWJA7SYIb1Mqo.n5aNLq1/oRrC;Lorena;Perion;lperion@localhost;;true;en;system;admin
 5;enroll;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;Enrol;User;enroll@localhost;;true;en;system;admin
 6;reg;$2a$10$VEjxo0jq2YG9Rbk2HmX9S.k1uZBGYUHdUcid3g/vfiEl7lwWgOH/K;Reg;User;reg@localhost;;true;en;system;admin

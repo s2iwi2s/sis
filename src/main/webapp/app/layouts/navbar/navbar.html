@@ -1,4 +1,4 @@
-<nav data-cy="navbar" class="navbar navbar-dark navbar-expand-md bg-dark" data-bs-theme="dark">
+<nav data-cy="navbar" class="navbar navbar-expand-md navbar-light bg-primary">
   <div class="container-fluid">
     <a class="navbar-brand logo" routerLink="/" (click)="collapseNavbar()">
       <span class="logo-img"></span>
@@ -39,14 +39,14 @@
           >
             <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="sis-menu">
               <span>
-                <fa-icon icon="th-list" />
+                <fa-icon icon="cubes" />
                 <span jhiTranslate="global.menu.modules.main">sis</span>
               </span>
             </a>
             <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="sis-menu">
               <li *jhiHasAnyAuthority="['ROLE_ADMIN', 'ROLE_CURRICULUM_MAPPING']">
                 <span>
-                  <fa-icon icon="th-list"></fa-icon>
+                  <fa-icon icon="book-open-reader"></fa-icon>
                   <span jhiTranslate="global.menu.modules.curriculumMapping">curriculumMapping</span>
                 </span>
               </li>
@@ -96,7 +96,7 @@
                   routerLinkActive="active"
                   [routerLinkActiveOptions]="{ exact: true }"
                   (click)="collapseNavbar()"
-                  ><fa-icon icon="user" />
+                  ><fa-icon icon="contact-card" />
                   <span jhiTranslate="global.menu.modules.registrationForm">Registration Form</span>
                 </a>
               </li>
@@ -113,7 +113,7 @@
           >
             <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu">
               <span>
-                <fa-icon icon="th-list" />
+                <fa-icon icon="screwdriver-wrench" />
                 <span jhiTranslate="global.menu.entities.main">Entities</span>
               </span>
             </a>
@@ -150,7 +150,7 @@
                   [routerLinkActiveOptions]="{ exact: true }"
                   (click)="collapseNavbar()"
                 >
-                  <fa-icon icon="asterisk" [fixedWidth]="true" />
+                  <fa-icon icon="gear" [fixedWidth]="true" />
                   <span jhiTranslate="global.menu.entities.appConfig">App Config</span>
                 </a>
               </li>
@@ -198,7 +198,7 @@
                   [routerLinkActiveOptions]="{ exact: true }"
                   (click)="collapseNavbar()"
                 >
-                  <fa-icon icon="asterisk" [fixedWidth]="true" />
+                  <fa-icon icon="book-open-reader" [fixedWidth]="true" />
                   <span jhiTranslate="global.menu.entities.curriculumMap">Curriculum Map</span>
                 </a>
               </li>
@@ -222,7 +222,7 @@
                   [routerLinkActiveOptions]="{ exact: true }"
                   (click)="collapseNavbar()"
                 >
-                  <fa-icon icon="asterisk" [fixedWidth]="true" />
+                  <fa-icon icon="person-chalkboard" [fixedWidth]="true" />
                   <span jhiTranslate="global.menu.entities.instructor">Instructor</span>
                 </a>
               </li>
@@ -234,7 +234,7 @@
                   [routerLinkActiveOptions]="{ exact: true }"
                   (click)="collapseNavbar()"
                 >
-                  <fa-icon icon="asterisk" [fixedWidth]="true" />
+                  <fa-icon icon="user-tie" [fixedWidth]="true" />
                   <span jhiTranslate="global.menu.entities.student">Student</span>
                 </a>
               </li>
@@ -246,7 +246,7 @@
                   [routerLinkActiveOptions]="{ exact: true }"
                   (click)="collapseNavbar()"
                 >
-                  <fa-icon icon="asterisk" [fixedWidth]="true" />
+                  <fa-icon icon="lines-leaning" [fixedWidth]="true" />
                   <span jhiTranslate="global.menu.entities.learningCompetency">Learning Competency</span>
                 </a>
               </li>
@@ -302,7 +302,7 @@
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="collapseNavbar()"
               >
-                <fa-icon icon="asterisk" [fixedWidth]="true" />
+                <fa-icon icon="person-circle-question" [fixedWidth]="true" />
                 <span jhiTranslate="global.menu.entities.adminAuthority">Authority</span>
               </a>
             </li>
@@ -314,7 +314,7 @@
                 [routerLinkActiveOptions]="{ exact: true }"
                 (click)="collapseNavbar()"
               >
-                <fa-icon icon="asterisk" [fixedWidth]="true" />
+                <fa-icon icon="user-group" [fixedWidth]="true" />
                 <span jhiTranslate="userManagement.home.title">User Management</span>
               </a>
             </li>

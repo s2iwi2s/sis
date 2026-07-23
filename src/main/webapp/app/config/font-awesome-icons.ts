@@ -41,6 +41,16 @@ import {
   faClipboard,
   faPaperclip,
   faPrint,
+  faCubes,
+  faContactCard,
+  faBookOpenReader,
+  faUserTie,
+  faGear,
+  faPersonChalkboard,
+  faLinesLeaning,
+  faScrewdriverWrench,
+  faUserGroup,
+  faPersonCircleQuestion,
   // jhipster-needle-add-icon-import
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -88,5 +98,15 @@ export const fontAwesomeIcons = [
   faClipboard,
   faPaperclip,
   faPrint,
+  faCubes,
+  faContactCard,
+  faBookOpenReader,
+  faUserTie,
+  faGear,
+  faPersonChalkboard,
+  faLinesLeaning,
+  faScrewdriverWrench,
+  faUserGroup,
+  faPersonCircleQuestion,
   // jhipster-needle-add-icon-import
 ];
