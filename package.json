@@ -1,8 +1,8 @@
 {
   "name": "sch-info-sys",
-  "version": "0.0.1-SNAPSHOT",
+  "version": "1.0.0",
   "private": true,
-  "description": "Description for Sch Info Sys",
+  "description": "Sch Info Sys",
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {

@@ -6,7 +6,7 @@
 
   <groupId>com.sis</groupId>
   <artifactId>sch-info-sys</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.1</version>
   <packaging>jar</packaging>
   <name>Sch Info Sys</name>
   <description>Description for Sch Info Sys</description>
