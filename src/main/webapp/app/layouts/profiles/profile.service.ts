@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 
@@ -22,12 +24,15 @@ export class ProfileService {
 
     this.profileInfo$ = this.http.get<InfoResponse>(this.infoUrl).pipe(
       map((response: InfoResponse) => {
-        const { activeProfiles } = response;
+        const { activeProfiles, git } = response;
+        console.log('ProfileService.getProfileInfo() with git ', git);
         const profileInfo: ProfileInfo = {
           activeProfiles,
           inProduction: activeProfiles?.includes('prod'),
           openAPIEnabled: activeProfiles?.includes('api-docs'),
+          version: git?.commit.id.describe,
         };
+        console.log('ProfileService.getProfileInfo() with profileInfo ', profileInfo);
         if (activeProfiles && response['display-ribbon-on-profiles']) {
           const displayRibbonOnProfiles = response['display-ribbon-on-profiles'].split(',');
           const ribbonProfiles = displayRibbonOnProfiles.filter(profile => activeProfiles.includes(profile));

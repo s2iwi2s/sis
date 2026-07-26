@@ -39,11 +39,11 @@ import ActiveMenuDirective from './active-menu.directive';
   ],
 })
 export default class Navbar implements OnInit {
+  version: string;
   readonly inProduction = signal(true);
   readonly isNavbarCollapsed = signal(true);
   readonly languages = LANGUAGES;
   readonly openAPIEnabled = signal(false);
-  readonly version: string;
   readonly account = inject(AccountService).account;
 
   private readonly loginService = inject(LoginService);
@@ -65,6 +65,7 @@ export default class Navbar implements OnInit {
     this.profileService.getProfileInfo().subscribe(profileInfo => {
       this.inProduction.set(profileInfo.inProduction ?? true);
       this.openAPIEnabled.set(profileInfo.openAPIEnabled ?? false);
+      this.version = profileInfo.version ?? 'v';
     });
   }
 
