@@ -748,6 +748,7 @@
               <includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
               <includeOnlyProperty>^git.commit.id.describe$</includeOnlyProperty>
               <includeOnlyProperty>^git.branch$</includeOnlyProperty>
+              <includeOnlyProperty>^git.tag$</includeOnlyProperty>
             </includeOnlyProperties>
           </configuration>
         </plugin>

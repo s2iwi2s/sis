@@ -26,12 +26,20 @@ export class ProfileService {
       map((response: InfoResponse) => {
         const { activeProfiles, git } = response;
         console.log('ProfileService.getProfileInfo() with git ', git);
+
+        let stageEnv = '';
+        if (activeProfiles && activeProfiles.length > 0) {
+          stageEnv = activeProfiles[0];
+        }
+
+        const version = `${git?.tag}-${stageEnv}`;
         const profileInfo: ProfileInfo = {
           activeProfiles,
           inProduction: activeProfiles?.includes('prod'),
           openAPIEnabled: activeProfiles?.includes('api-docs'),
-          version: git?.commit.id.describe,
+          version,
         };
+
         console.log('ProfileService.getProfileInfo() with profileInfo ', profileInfo);
         if (activeProfiles && response['display-ribbon-on-profiles']) {
           const displayRibbonOnProfiles = response['display-ribbon-on-profiles'].split(',');
