@@ -151,3 +151,6 @@ Desktop.ini
 ######################
 coverage/
 .nyc_output/
+/.run/
+*.run.run.xml
+/env-prod.bat
