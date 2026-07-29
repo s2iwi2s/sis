@@ -684,7 +684,7 @@
               </platforms>
             </from>
             <to>
-              <image>s2iwi2sorg/slra_sis</image>
+              <image>${REGISTRY_IMAGE}</image>
               <auth>
               <username>${REGISTRY_USERNAME}</username>
               <password>${REGISTRY_PASSWORD}</password>

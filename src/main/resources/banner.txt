@@ -1,6 +1,6 @@
 
-${AnsiColor.RED}+-----------------------------+
 ${AnsiColor.RED}
+${AnsiColor.RED}+-----------------------------+
 ${AnsiColor.RED}   sIs   .S     sIs
 ${AnsiColor.RED}  siSis  siS   SiSis${AnsiColor.GREEN}    ##
 ${AnsiColor.RED} siS'    SIS  siS'  ${AnsiColor.GREEN}    ##
