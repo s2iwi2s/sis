@@ -687,6 +687,7 @@
               <image>${REGISTRY_IMAGE}</image>
               <tags>
                 <tag>latest</tag>
+                <tag>dev</tag>
                 <tag>${REGISTRY_IMAGE_VERSION}</tag>
               </tags>
               <auth>
