@@ -685,13 +685,13 @@
             </from>
             <to>
               <image>${REGISTRY_IMAGE}</image>
-              <auth>
-              <username>${REGISTRY_USERNAME}</username>
-              <password>${REGISTRY_PASSWORD}</password>
               <tags>
                 <tag>latest</tag>
                 <tag>${REGISTRY_IMAGE_VERSION}</tag>
               </tags>
+              <auth>
+                <username>${REGISTRY_USERNAME}</username>
+                <password>${REGISTRY_PASSWORD}</password>
               </auth>
             </to>
             <container>
