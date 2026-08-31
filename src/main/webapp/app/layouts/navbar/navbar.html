@@ -145,12 +145,24 @@
               <li>
                 <a
                   class="dropdown-item"
+                  routerLink="/account-payables"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="collapseNavbar()"
+                >
+                  <fa-icon icon="asterisk" [fixedWidth]="true" />
+                  <span jhiTranslate="global.menu.entities.accountPayables">Account Payables</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
                   routerLink="/app-config"
                   routerLinkActive="active"
                   [routerLinkActiveOptions]="{ exact: true }"
                   (click)="collapseNavbar()"
                 >
-                  <fa-icon icon="gear" [fixedWidth]="true" />
+                  <fa-icon icon="asterisk" [fixedWidth]="true" />
                   <span jhiTranslate="global.menu.entities.appConfig">App Config</span>
                 </a>
               </li>
@@ -164,6 +176,18 @@
                 >
                   <fa-icon icon="asterisk" [fixedWidth]="true" />
                   <span jhiTranslate="global.menu.entities.assessment">Assessment</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  routerLink="/class-schedule"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="collapseNavbar()"
+                >
+                  <fa-icon icon="asterisk" [fixedWidth]="true" />
+                  <span jhiTranslate="global.menu.entities.classSchedule">Class Schedule</span>
                 </a>
               </li>
               <li>
@@ -198,7 +222,7 @@
                   [routerLinkActiveOptions]="{ exact: true }"
                   (click)="collapseNavbar()"
                 >
-                  <fa-icon icon="book-open-reader" [fixedWidth]="true" />
+                  <fa-icon icon="asterisk" [fixedWidth]="true" />
                   <span jhiTranslate="global.menu.entities.curriculumMap">Curriculum Map</span>
                 </a>
               </li>
@@ -217,6 +241,42 @@
               <li>
                 <a
                   class="dropdown-item"
+                  routerLink="/enrollment"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="collapseNavbar()"
+                >
+                  <fa-icon icon="asterisk" [fixedWidth]="true" />
+                  <span jhiTranslate="global.menu.entities.enrollment">Enrollment</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  routerLink="/grade-level-payables"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="collapseNavbar()"
+                >
+                  <fa-icon icon="asterisk" [fixedWidth]="true" />
+                  <span jhiTranslate="global.menu.entities.gradeLevelPayables">Grade Level Payables</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  routerLink="/invoices"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="collapseNavbar()"
+                >
+                  <fa-icon icon="asterisk" [fixedWidth]="true" />
+                  <span jhiTranslate="global.menu.entities.invoices">Invoices</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
                   routerLink="/instructor"
                   routerLinkActive="active"
                   [routerLinkActiveOptions]="{ exact: true }"
@@ -224,18 +284,6 @@
                 >
                   <fa-icon icon="person-chalkboard" [fixedWidth]="true" />
                   <span jhiTranslate="global.menu.entities.instructor">Instructor</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  class="dropdown-item"
-                  routerLink="/student"
-                  routerLinkActive="active"
-                  [routerLinkActiveOptions]="{ exact: true }"
-                  (click)="collapseNavbar()"
-                >
-                  <fa-icon icon="user-tie" [fixedWidth]="true" />
-                  <span jhiTranslate="global.menu.entities.student">Student</span>
                 </a>
               </li>
               <li>
@@ -253,13 +301,13 @@
               <li>
                 <a
                   class="dropdown-item"
-                  routerLink="/strategies"
+                  routerLink="/payments"
                   routerLinkActive="active"
                   [routerLinkActiveOptions]="{ exact: true }"
                   (click)="collapseNavbar()"
                 >
                   <fa-icon icon="asterisk" [fixedWidth]="true" />
-                  <span jhiTranslate="global.menu.entities.strategies">Strategies</span>
+                  <span jhiTranslate="global.menu.entities.payments">Payments</span>
                 </a>
               </li>
               <li>
@@ -272,6 +320,30 @@
                 >
                   <fa-icon icon="asterisk" [fixedWidth]="true" />
                   <span jhiTranslate="global.menu.entities.resources">Resources</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  routerLink="/student"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="collapseNavbar()"
+                >
+                  <fa-icon icon="user-tie" [fixedWidth]="true" />
+                  <span jhiTranslate="global.menu.entities.student">Student</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  routerLink="/strategies"
+                  routerLinkActive="active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  (click)="collapseNavbar()"
+                >
+                  <fa-icon icon="asterisk" [fixedWidth]="true" />
+                  <span jhiTranslate="global.menu.entities.strategies">Strategies</span>
                 </a>
               </li>
               <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
