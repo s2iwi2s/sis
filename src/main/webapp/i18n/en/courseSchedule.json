@@ -29,8 +29,9 @@
       "lastModifiedDate": "Last Modified Date",
       "terms": "Terms",
       "year": "Year",
-      "instructor": "Instructor",
-      "student": "Student"
+      "classSchedule": "Class Schedule",
+      "student": "Student",
+      "instructor": "Instructor"
     }
   }
 }

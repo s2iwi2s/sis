@@ -41,9 +41,11 @@ public class CourseScheduleDTO implements Serializable {
 
     private AcademicYearDTO year;
 
-    private Set<InstructorDTO> instructors = new HashSet<>();
+    private ClassScheduleDTO classSchedule;
 
     private Set<StudentDTO> students = new HashSet<>();
+
+    private Set<InstructorDTO> instructors = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -141,12 +143,12 @@ public class CourseScheduleDTO implements Serializable {
         this.year = year;
     }
 
-    public Set<InstructorDTO> getInstructors() {
-        return instructors;
+    public ClassScheduleDTO getClassSchedule() {
+        return classSchedule;
     }
 
-    public void setInstructors(Set<InstructorDTO> instructors) {
-        this.instructors = instructors;
+    public void setClassSchedule(ClassScheduleDTO classSchedule) {
+        this.classSchedule = classSchedule;
     }
 
     public Set<StudentDTO> getStudents() {
@@ -155,6 +157,14 @@ public class CourseScheduleDTO implements Serializable {
 
     public void setStudents(Set<StudentDTO> students) {
         this.students = students;
+    }
+
+    public Set<InstructorDTO> getInstructors() {
+        return instructors;
+    }
+
+    public void setInstructors(Set<InstructorDTO> instructors) {
+        this.instructors = instructors;
     }
 
     @Override
@@ -194,8 +204,9 @@ public class CourseScheduleDTO implements Serializable {
             ", lastModifiedDate='" + getLastModifiedDate() + "'" +
             ", terms=" + getTerms() +
             ", year=" + getYear() +
-            ", instructors=" + getInstructors() +
+            ", classSchedule=" + getClassSchedule() +
             ", students=" + getStudents() +
+            ", instructors=" + getInstructors() +
             "}";
     }
 }

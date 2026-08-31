@@ -31,8 +31,9 @@ describe('CourseSchedule Form Service', () => {
             lastModifiedDate: expect.any(Object),
             terms: expect.any(Object),
             year: expect.any(Object),
-            instructors: expect.any(Object),
+            classSchedule: expect.any(Object),
             students: expect.any(Object),
+            instructors: expect.any(Object),
           }),
         );
       });
@@ -54,8 +55,9 @@ describe('CourseSchedule Form Service', () => {
             lastModifiedDate: expect.any(Object),
             terms: expect.any(Object),
             year: expect.any(Object),
-            instructors: expect.any(Object),
+            classSchedule: expect.any(Object),
             students: expect.any(Object),
+            instructors: expect.any(Object),
           }),
         );
       });

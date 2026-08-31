@@ -5,6 +5,8 @@
     "baseName": "SchInfoSys",
     "buildTool": "maven",
     "clientFramework": "angular",
+    "creationTimestamp": 1788141034567,
+    "defaultCommand": "app",
     "devDatabaseType": "postgresql",
     "entities": [
       "Instructor",
@@ -19,12 +21,18 @@
       "Assessment",
       "Resources",
       "AcademicYear",
-      "AcademicTerms"
+      "AcademicTerms",
+      "ClassSchedule",
+      "Enrollment",
+      "AccountPayables",
+      "GradeLevelPayables",
+      "Invoices",
+      "Payments"
     ],
     "jhipsterVersion": "9.1.0",
     "jwtSecretKey": "MmQxM2FkNWQwNWRkYTAwZjM1YWJlYmQyNmExNmNjMGQ1ZDg2MjQwMjE4ODIxNDEwMmMxMzQ2YjJmMWUyZWExYjc4OTY2Y2U0NmM3NjY3NTdhYzYwOTg5MzhkYjZmNjVjYmY3NjIzM2I5YzFmZDI4NjBmM2RiM2I0NDQ2MzZhZDk=",
     "languages": ["en"],
-    "lastLiquibaseTimestamp": 1783350439000,
+    "lastLiquibaseTimestamp": 1788141044000,
     "nativeLanguage": "en",
     "packageName": "com.sis",
     "prodDatabaseType": "postgresql"

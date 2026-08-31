@@ -72,6 +72,36 @@ const routes: Routes = [
     loadChildren: () => import('./academic-terms/academic-terms.routes'),
   },
   {
+    path: 'class-schedule',
+    data: { pageTitle: 'schInfoSysApp.classSchedule.home.title' },
+    loadChildren: () => import('./class-schedule/class-schedule.routes'),
+  },
+  {
+    path: 'enrollment',
+    data: { pageTitle: 'schInfoSysApp.enrollment.home.title' },
+    loadChildren: () => import('./enrollment/enrollment.routes'),
+  },
+  {
+    path: 'account-payables',
+    data: { pageTitle: 'schInfoSysApp.accountPayables.home.title' },
+    loadChildren: () => import('./account-payables/account-payables.routes'),
+  },
+  {
+    path: 'grade-level-payables',
+    data: { pageTitle: 'schInfoSysApp.gradeLevelPayables.home.title' },
+    loadChildren: () => import('./grade-level-payables/grade-level-payables.routes'),
+  },
+  {
+    path: 'invoices',
+    data: { pageTitle: 'schInfoSysApp.invoices.home.title' },
+    loadChildren: () => import('./invoices/invoices.routes'),
+  },
+  {
+    path: 'payments',
+    data: { pageTitle: 'schInfoSysApp.payments.home.title' },
+    loadChildren: () => import('./payments/payments.routes'),
+  },
+  {
     path: 'user-management',
     data: { pageTitle: 'userManagement.home.title' },
     loadChildren: () => import('./admin/user-management/user-management.routes'),

@@ -11,6 +11,8 @@ import { IAcademicTerms } from 'app/entities/academic-terms/academic-terms.model
 import { AcademicTermsService } from 'app/entities/academic-terms/service/academic-terms.service';
 import { IAcademicYear } from 'app/entities/academic-year/academic-year.model';
 import { AcademicYearService } from 'app/entities/academic-year/service/academic-year.service';
+import { IClassSchedule } from 'app/entities/class-schedule/class-schedule.model';
+import { ClassScheduleService } from 'app/entities/class-schedule/service/class-schedule.service';
 import { IInstructor } from 'app/entities/instructor/instructor.model';
 import { InstructorService } from 'app/entities/instructor/service/instructor.service';
 import { StudentService } from 'app/entities/student/service/student.service';
@@ -29,8 +31,9 @@ describe('CourseSchedule Management Update Component', () => {
   let courseScheduleService: CourseScheduleService;
   let academicTermsService: AcademicTermsService;
   let academicYearService: AcademicYearService;
-  let instructorService: InstructorService;
+  let classScheduleService: ClassScheduleService;
   let studentService: StudentService;
+  let instructorService: InstructorService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -52,8 +55,9 @@ describe('CourseSchedule Management Update Component', () => {
     courseScheduleService = TestBed.inject(CourseScheduleService);
     academicTermsService = TestBed.inject(AcademicTermsService);
     academicYearService = TestBed.inject(AcademicYearService);
-    instructorService = TestBed.inject(InstructorService);
+    classScheduleService = TestBed.inject(ClassScheduleService);
     studentService = TestBed.inject(StudentService);
+    instructorService = TestBed.inject(InstructorService);
 
     comp = fixture.componentInstance;
   });
@@ -103,26 +107,26 @@ describe('CourseSchedule Management Update Component', () => {
       expect(comp.academicYearsSharedCollection()).toEqual(expectedCollection);
     });
 
-    it('should call Instructor query and add missing value', () => {
+    it('should call ClassSchedule query and add missing value', () => {
       const courseSchedule: ICourseSchedule = { id: 1257 };
-      const instructors: IInstructor[] = [{ id: 14207 }];
-      courseSchedule.instructors = instructors;
+      const classSchedule: IClassSchedule = { id: 13254 };
+      courseSchedule.classSchedule = classSchedule;
 
-      const instructorCollection: IInstructor[] = [{ id: 14207 }];
-      vitest.spyOn(instructorService, 'query').mockReturnValue(of(new HttpResponse({ body: instructorCollection })));
-      const additionalInstructors = [...instructors];
-      const expectedCollection: IInstructor[] = [...additionalInstructors, ...instructorCollection];
-      vitest.spyOn(instructorService, 'addInstructorToCollectionIfMissing').mockReturnValue(expectedCollection);
+      const classScheduleCollection: IClassSchedule[] = [{ id: 13254 }];
+      vitest.spyOn(classScheduleService, 'query').mockReturnValue(of(new HttpResponse({ body: classScheduleCollection })));
+      const additionalClassSchedules = [classSchedule];
+      const expectedCollection: IClassSchedule[] = [...additionalClassSchedules, ...classScheduleCollection];
+      vitest.spyOn(classScheduleService, 'addClassScheduleToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ courseSchedule });
       comp.ngOnInit();
 
-      expect(instructorService.query).toHaveBeenCalled();
-      expect(instructorService.addInstructorToCollectionIfMissing).toHaveBeenCalledWith(
-        instructorCollection,
-        ...additionalInstructors.map(i => expect.objectContaining(i) as typeof i),
+      expect(classScheduleService.query).toHaveBeenCalled();
+      expect(classScheduleService.addClassScheduleToCollectionIfMissing).toHaveBeenCalledWith(
+        classScheduleCollection,
+        ...additionalClassSchedules.map(i => expect.objectContaining(i) as typeof i),
       );
-      expect(comp.instructorsSharedCollection()).toEqual(expectedCollection);
+      expect(comp.classSchedulesSharedCollection()).toEqual(expectedCollection);
     });
 
     it('should call Student query and add missing value', () => {
@@ -147,24 +151,49 @@ describe('CourseSchedule Management Update Component', () => {
       expect(comp.studentsSharedCollection()).toEqual(expectedCollection);
     });
 
+    it('should call Instructor query and add missing value', () => {
+      const courseSchedule: ICourseSchedule = { id: 1257 };
+      const instructors: IInstructor[] = [{ id: 14207 }];
+      courseSchedule.instructors = instructors;
+
+      const instructorCollection: IInstructor[] = [{ id: 14207 }];
+      vitest.spyOn(instructorService, 'query').mockReturnValue(of(new HttpResponse({ body: instructorCollection })));
+      const additionalInstructors = [...instructors];
+      const expectedCollection: IInstructor[] = [...additionalInstructors, ...instructorCollection];
+      vitest.spyOn(instructorService, 'addInstructorToCollectionIfMissing').mockReturnValue(expectedCollection);
+
+      activatedRoute.data = of({ courseSchedule });
+      comp.ngOnInit();
+
+      expect(instructorService.query).toHaveBeenCalled();
+      expect(instructorService.addInstructorToCollectionIfMissing).toHaveBeenCalledWith(
+        instructorCollection,
+        ...additionalInstructors.map(i => expect.objectContaining(i) as typeof i),
+      );
+      expect(comp.instructorsSharedCollection()).toEqual(expectedCollection);
+    });
+
     it('should update editForm', () => {
       const courseSchedule: ICourseSchedule = { id: 1257 };
       const terms: IAcademicTerms = { id: 24556 };
       courseSchedule.terms = terms;
       const year: IAcademicYear = { id: 29518 };
       courseSchedule.year = year;
-      const instructor: IInstructor = { id: 14207 };
-      courseSchedule.instructors = [instructor];
+      const classSchedule: IClassSchedule = { id: 13254 };
+      courseSchedule.classSchedule = classSchedule;
       const student: IStudent = { id: 9978 };
       courseSchedule.students = [student];
+      const instructor: IInstructor = { id: 14207 };
+      courseSchedule.instructors = [instructor];
 
       activatedRoute.data = of({ courseSchedule });
       comp.ngOnInit();
 
       expect(comp.academicTermsesSharedCollection()).toContainEqual(terms);
       expect(comp.academicYearsSharedCollection()).toContainEqual(year);
-      expect(comp.instructorsSharedCollection()).toContainEqual(instructor);
+      expect(comp.classSchedulesSharedCollection()).toContainEqual(classSchedule);
       expect(comp.studentsSharedCollection()).toContainEqual(student);
+      expect(comp.instructorsSharedCollection()).toContainEqual(instructor);
       expect(comp.courseSchedule).toEqual(courseSchedule);
     });
   });
@@ -258,13 +287,13 @@ describe('CourseSchedule Management Update Component', () => {
       });
     });
 
-    describe('compareInstructor', () => {
-      it('should forward to instructorService', () => {
-        const entity = { id: 14207 };
-        const entity2 = { id: 32448 };
-        vitest.spyOn(instructorService, 'compareInstructor');
-        comp.compareInstructor(entity, entity2);
-        expect(instructorService.compareInstructor).toHaveBeenCalledWith(entity, entity2);
+    describe('compareClassSchedule', () => {
+      it('should forward to classScheduleService', () => {
+        const entity = { id: 13254 };
+        const entity2 = { id: 8851 };
+        vitest.spyOn(classScheduleService, 'compareClassSchedule');
+        comp.compareClassSchedule(entity, entity2);
+        expect(classScheduleService.compareClassSchedule).toHaveBeenCalledWith(entity, entity2);
       });
     });
 
@@ -275,6 +304,16 @@ describe('CourseSchedule Management Update Component', () => {
         vitest.spyOn(studentService, 'compareStudent');
         comp.compareStudent(entity, entity2);
         expect(studentService.compareStudent).toHaveBeenCalledWith(entity, entity2);
+      });
+    });
+
+    describe('compareInstructor', () => {
+      it('should forward to instructorService', () => {
+        const entity = { id: 14207 };
+        const entity2 = { id: 32448 };
+        vitest.spyOn(instructorService, 'compareInstructor');
+        comp.compareInstructor(entity, entity2);
+        expect(instructorService.compareInstructor).toHaveBeenCalledWith(entity, entity2);
       });
     });
   });

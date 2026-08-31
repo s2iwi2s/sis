@@ -115,6 +115,12 @@
                 <fa-icon class="p-1" icon="sort" />
               </div>
             </th>
+            <th scope="col" jhiSortBy="classSchedule.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.courseSchedule.classSchedule">Class Schedule</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
             <th scope="col"></th>
           </tr>
         </thead>
@@ -144,6 +150,13 @@
                 @if (courseSchedule.year) {
                   <div>
                     <a [routerLink]="['/academic-year', courseSchedule.year.id, 'view']">{{ courseSchedule.year.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (courseSchedule.classSchedule) {
+                  <div>
+                    <a [routerLink]="['/class-schedule', courseSchedule.classSchedule.id, 'view']">{{ courseSchedule.classSchedule.id }}</a>
                   </div>
                 }
               </td>

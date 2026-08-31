@@ -33,7 +33,7 @@ type NewCourseScheduleFormRawValue = FormValueOf<NewCourseSchedule>;
 
 type CourseScheduleFormDefaults = Pick<
   NewCourseSchedule,
-  'id' | 'startTime' | 'endTime' | 'createdDate' | 'lastModifiedDate' | 'instructors' | 'students'
+  'id' | 'startTime' | 'endTime' | 'createdDate' | 'lastModifiedDate' | 'students' | 'instructors'
 >;
 
 type CourseScheduleFormGroupContent = {
@@ -49,8 +49,9 @@ type CourseScheduleFormGroupContent = {
   lastModifiedDate: FormControl<CourseScheduleFormRawValue['lastModifiedDate']>;
   terms: FormControl<CourseScheduleFormRawValue['terms']>;
   year: FormControl<CourseScheduleFormRawValue['year']>;
-  instructors: FormControl<CourseScheduleFormRawValue['instructors']>;
+  classSchedule: FormControl<CourseScheduleFormRawValue['classSchedule']>;
   students: FormControl<CourseScheduleFormRawValue['students']>;
+  instructors: FormControl<CourseScheduleFormRawValue['instructors']>;
 };
 
 export type CourseScheduleFormGroup = FormGroup<CourseScheduleFormGroupContent>;
@@ -89,8 +90,9 @@ export class CourseScheduleFormService {
       lastModifiedDate: new FormControl(courseScheduleRawValue.lastModifiedDate),
       terms: new FormControl(courseScheduleRawValue.terms),
       year: new FormControl(courseScheduleRawValue.year),
-      instructors: new FormControl(courseScheduleRawValue.instructors ?? []),
+      classSchedule: new FormControl(courseScheduleRawValue.classSchedule),
       students: new FormControl(courseScheduleRawValue.students ?? []),
+      instructors: new FormControl(courseScheduleRawValue.instructors ?? []),
     });
   }
 
@@ -115,8 +117,8 @@ export class CourseScheduleFormService {
       endTime: currentTime,
       createdDate: currentTime,
       lastModifiedDate: currentTime,
-      instructors: [],
       students: [],
+      instructors: [],
     };
   }
 
@@ -141,8 +143,8 @@ export class CourseScheduleFormService {
       endTime: courseSchedule.endTime ? courseSchedule.endTime.format(DATE_TIME_FORMAT) : undefined,
       createdDate: courseSchedule.createdDate ? courseSchedule.createdDate.format(DATE_TIME_FORMAT) : undefined,
       lastModifiedDate: courseSchedule.lastModifiedDate ? courseSchedule.lastModifiedDate.format(DATE_TIME_FORMAT) : undefined,
-      instructors: courseSchedule.instructors ?? [],
       students: courseSchedule.students ?? [],
+      instructors: courseSchedule.instructors ?? [],
     };
   }
 }

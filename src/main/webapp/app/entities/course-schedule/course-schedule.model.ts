@@ -2,6 +2,7 @@ import dayjs from 'dayjs/esm';
 
 import { IAcademicTerms } from 'app/entities/academic-terms/academic-terms.model';
 import { IAcademicYear } from 'app/entities/academic-year/academic-year.model';
+import { IClassSchedule } from 'app/entities/class-schedule/class-schedule.model';
 import { IInstructor } from 'app/entities/instructor/instructor.model';
 import { IStudent } from 'app/entities/student/student.model';
 
@@ -18,8 +19,9 @@ export interface ICourseSchedule {
   lastModifiedDate?: dayjs.Dayjs | null;
   terms?: Pick<IAcademicTerms, 'id'> | null;
   year?: Pick<IAcademicYear, 'id'> | null;
-  instructors?: Pick<IInstructor, 'id'>[] | null;
+  classSchedule?: Pick<IClassSchedule, 'id'> | null;
   students?: Pick<IStudent, 'id'>[] | null;
+  instructors?: Pick<IInstructor, 'id'>[] | null;
 }
 
 export type NewCourseSchedule = Omit<ICourseSchedule, 'id'> & { id: null };

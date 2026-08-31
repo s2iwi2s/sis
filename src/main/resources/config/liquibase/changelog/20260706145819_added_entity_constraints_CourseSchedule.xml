@@ -23,5 +23,12 @@
                                  referencedColumnNames="id"
                                  referencedTableName="academic_year"
                                  />
+
+        <addForeignKeyConstraint baseColumnNames="class_schedule_id"
+                                 baseTableName="course_schedule"
+                                 constraintName="fk_course_schedule__class_schedule_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="class_schedule"
+                                 />
     </changeSet>
 </databaseChangeLog>

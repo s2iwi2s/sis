@@ -69,13 +69,14 @@
               </div>
             }
           </dd>
-          <dt><span jhiTranslate="schInfoSysApp.courseSchedule.instructor">Instructor</span></dt>
+          <dt><span jhiTranslate="schInfoSysApp.courseSchedule.classSchedule">Class Schedule</span></dt>
           <dd>
-            @for (instructor of courseScheduleRef.instructors; track $index; let last = $last) {
-              <span>
-                <a [routerLink]="['/instructor', instructor.id, 'view']">{{ instructor?.id }}</a
-                >{{ last ? '' : ', ' }}
-              </span>
+            @if (courseSchedule()!.classSchedule) {
+              <div>
+                <a [routerLink]="['/class-schedule', courseSchedule()!.classSchedule?.id, 'view']">{{
+                  courseScheduleRef.classSchedule?.id
+                }}</a>
+              </div>
             }
           </dd>
           <dt><span jhiTranslate="schInfoSysApp.courseSchedule.student">Student</span></dt>
@@ -83,6 +84,15 @@
             @for (student of courseScheduleRef.students; track $index; let last = $last) {
               <span>
                 <a [routerLink]="['/student', student.id, 'view']">{{ student?.id }}</a
+                >{{ last ? '' : ', ' }}
+              </span>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.courseSchedule.instructor">Instructor</span></dt>
+          <dd>
+            @for (instructor of courseScheduleRef.instructors; track $index; let last = $last) {
+              <span>
+                <a [routerLink]="['/instructor', instructor.id, 'view']">{{ instructor?.id }}</a
                 >{{ last ? '' : ', ' }}
               </span>
             }

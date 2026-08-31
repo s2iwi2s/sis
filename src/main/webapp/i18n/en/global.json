@@ -1,6 +1,6 @@
 {
   "global": {
-    "title": "SiS+",
+    "title": "SchInfoSys",
     "browsehappy": "You are using an <strong>outdated</strong> browser. Please <a href=\"https://browsehappy.com/?locale=en\">upgrade your browser</a> to improve your experience.",
     "menu": {
       "home": "Home",
@@ -31,7 +31,13 @@
         "assessment": "Assessment",
         "resources": "Resources",
         "academicYear": "Academic Year",
-        "academicTerms": "Academic Terms"
+        "academicTerms": "Academic Terms",
+        "classSchedule": "Class Schedule",
+        "enrollment": "Enrollment",
+        "accountPayables": "Account Payables",
+        "gradeLevelPayables": "Grade Level Payables",
+        "invoices": "Invoices",
+        "payments": "Payments"
       },
       "account": {
         "main": "Account",

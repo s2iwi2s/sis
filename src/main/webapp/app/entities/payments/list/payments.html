@@ -1,0 +1,169 @@
+<div>
+  <h2 id="page-heading" data-cy="PaymentsHeading">
+    <span jhiTranslate="schInfoSysApp.payments.home.title">Payments</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="schInfoSysApp.payments.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-payments"
+        [routerLink]="['/payments/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="schInfoSysApp.payments.home.createLabel">Create a new Payments</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (paymentses().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="schInfoSysApp.payments.home.notFound">No Payments found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="amount">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.payments.amount">Amount</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="transactionReference">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.payments.transactionReference">Transaction Reference</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.payments.createdBy">Created By</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.payments.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.payments.lastModifiedBy">Last Modified By</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.payments.lastModifiedDate">Last Modified Date</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="method.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.payments.method">Method</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="invoices.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.payments.invoices">Invoices</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (payments of paymentses(); track trackId(payments)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/payments', payments.id, 'view']">{{ payments.id }}</a>
+              </td>
+              <td>{{ payments.amount }}</td>
+              <td>{{ payments.transactionReference }}</td>
+              <td>{{ payments.createdBy }}</td>
+              <td>{{ payments.createdDate | formatMediumDate }}</td>
+              <td>{{ payments.lastModifiedBy }}</td>
+              <td>{{ payments.lastModifiedDate | formatMediumDate }}</td>
+              <td>
+                @if (payments.method) {
+                  <div>
+                    <a [routerLink]="['/app-config', payments.method.id, 'view']">{{ payments.method.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (payments.invoices) {
+                  <div>
+                    <a [routerLink]="['/invoices', payments.invoices.id, 'view']">{{ payments.invoices.id }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a [routerLink]="['/payments', payments.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                  </a>
+
+                  <a [routerLink]="['/payments', payments.id, 'edit']" class="btn btn-primary btn-sm" data-cy="entityEditButton">
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(payments)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (paymentses().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems()"
+          [page]="page()"
+          [pageSize]="itemsPerPage()"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        />
+      </div>
+    </div>
+  }
+</div>

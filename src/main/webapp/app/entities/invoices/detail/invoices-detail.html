@@ -1,0 +1,66 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (invoices(); as invoicesRef) {
+      <div>
+        <h2 data-cy="invoicesDetailsHeading"><span jhiTranslate="schInfoSysApp.invoices.detail.title">Invoices</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ invoicesRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.invoices.dueDate">Due Date</span></dt>
+          <dd>
+            <span>{{ invoicesRef.dueDate | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.invoices.amountPaid">Amount Paid</span></dt>
+          <dd>
+            <span>{{ invoicesRef.amountPaid }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.invoices.status">Status</span></dt>
+          <dd>
+            <span>{{ invoicesRef.status }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.invoices.createdBy">Created By</span></dt>
+          <dd>
+            <span>{{ invoicesRef.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.invoices.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ invoicesRef.createdDate | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.invoices.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ invoicesRef.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.invoices.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ invoicesRef.lastModifiedDate | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.invoices.student">Student</span></dt>
+          <dd>
+            @if (invoices()!.student) {
+              <div>
+                <a [routerLink]="['/student', invoices()!.student?.id, 'view']">{{ invoicesRef.student?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/invoices', invoicesRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-grade-level-payables-heading"
+        data-cy="GradeLevelPayablesCreateUpdateHeading"
+        jhiTranslate="schInfoSysApp.gradeLevelPayables.home.createOrEditLabel"
+      >
+        Create or edit a Grade Level Payables
+      </h2>
+
+      <div>
+        <jhi-alert-error />
+
+        @if (editForm.controls.id.value !== null) {
+          <div class="mb-3">
+            <label class="form-label" for="field_id" jhiTranslate="global.field.id">ID</label>
+            <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+          </div>
+        }
+
+        <div class="mb-3">
+          <label class="form-label" for="field_active" jhiTranslate="schInfoSysApp.gradeLevelPayables.active">Active</label>
+          <input type="checkbox" class="form-check" name="active" id="field_active" data-cy="active" formControlName="active" />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="field_gradelevel" jhiTranslate="schInfoSysApp.gradeLevelPayables.gradelevel">Gradelevel</label>
+          <select
+            class="form-control"
+            id="field_gradelevel"
+            data-cy="gradelevel"
+            name="gradelevel"
+            formControlName="gradelevel"
+            [compareWith]="compareAppConfig"
+          >
+            <option [ngValue]="null"></option>
+            @for (appConfigOption of gradelevelsCollection(); track $index) {
+              <option [ngValue]="appConfigOption">{{ appConfigOption.id }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban" />&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving()"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save" />&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

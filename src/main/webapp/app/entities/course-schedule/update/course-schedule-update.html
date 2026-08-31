@@ -197,18 +197,20 @@
         </div>
 
         <div class="mb-3">
-          <label for="field_instructors" jhiTranslate="schInfoSysApp.courseSchedule.instructor">Instructor</label>
+          <label class="form-label" for="field_classSchedule" jhiTranslate="schInfoSysApp.courseSchedule.classSchedule"
+            >Class Schedule</label
+          >
           <select
             class="form-control"
-            id="field_instructors"
-            data-cy="instructor"
-            multiple
-            name="instructors"
-            formControlName="instructors"
-            [compareWith]="compareInstructor"
+            id="field_classSchedule"
+            data-cy="classSchedule"
+            name="classSchedule"
+            formControlName="classSchedule"
+            [compareWith]="compareClassSchedule"
           >
-            @for (instructorOption of instructorsSharedCollection(); track $index) {
-              <option [ngValue]="instructorOption">{{ instructorOption.id }}</option>
+            <option [ngValue]="null"></option>
+            @for (classScheduleOption of classSchedulesSharedCollection(); track $index) {
+              <option [ngValue]="classScheduleOption">{{ classScheduleOption.id }}</option>
             }
           </select>
         </div>
@@ -226,6 +228,23 @@
           >
             @for (studentOption of studentsSharedCollection(); track $index) {
               <option [ngValue]="studentOption">{{ studentOption.id }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="field_instructors" jhiTranslate="schInfoSysApp.courseSchedule.instructor">Instructor</label>
+          <select
+            class="form-control"
+            id="field_instructors"
+            data-cy="instructor"
+            multiple
+            name="instructors"
+            formControlName="instructors"
+            [compareWith]="compareInstructor"
+          >
+            @for (instructorOption of instructorsSharedCollection(); track $index) {
+              <option [ngValue]="instructorOption">{{ instructorOption.id }}</option>
             }
           </select>
         </div>

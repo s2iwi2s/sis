@@ -1,0 +1,74 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (enrollment(); as enrollmentRef) {
+      <div>
+        <h2 data-cy="enrollmentDetailsHeading"><span jhiTranslate="schInfoSysApp.enrollment.detail.title">Enrollment</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ enrollmentRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.enrollment.active">Active</span></dt>
+          <dd>
+            <span>{{ enrollmentRef.active }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.enrollment.createdBy">Created By</span></dt>
+          <dd>
+            <span>{{ enrollmentRef.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.enrollment.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ enrollmentRef.createdDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.enrollment.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ enrollmentRef.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.enrollment.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ enrollmentRef.lastModifiedDate | formatMediumDatetime }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.enrollment.year">Year</span></dt>
+          <dd>
+            @if (enrollment()!.year) {
+              <div>
+                <a [routerLink]="['/academic-year', enrollment()!.year?.id, 'view']">{{ enrollmentRef.year?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.enrollment.terms">Terms</span></dt>
+          <dd>
+            @if (enrollment()!.terms) {
+              <div>
+                <a [routerLink]="['/academic-terms', enrollment()!.terms?.id, 'view']">{{ enrollmentRef.terms?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.enrollment.student">Student</span></dt>
+          <dd>
+            @if (enrollment()!.student) {
+              <div>
+                <a [routerLink]="['/student', enrollment()!.student?.id, 'view']">{{ enrollmentRef.student?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/enrollment', enrollmentRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

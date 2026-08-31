@@ -29,7 +29,10 @@
       "lastModifiedDate": "Last Modified Date",
       "instructor": "Instructor",
       "student": "Student",
-      "course": "Course"
+      "course": "Course",
+      "classSchedule": "Class Schedule",
+      "gradeLevelPayables": "Grade Level Payables",
+      "payments": "Payments"
     }
   }
 }

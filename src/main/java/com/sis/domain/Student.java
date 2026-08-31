@@ -169,8 +169,26 @@ public class Student extends AbstractAuditingEntity<Long> implements Serializabl
     @Column(name = "guardian_contacts", length = 50)
     private String guardianContacts;
 
-    @JsonIgnoreProperties(value = { "instructor", "student", "course" }, allowSetters = true)
+    @Size(max = 50)
+    @Column(name = "created_by", length = 50)
+    private String createdBy;
+
+    @Column(name = "created_date")
+    private Instant createdDate;
+
+    @Size(max = 50)
+    @Column(name = "last_modified_by", length = 50)
+    private String lastModifiedBy;
+
+    @Column(name = "last_modified_date")
+    private Instant lastModifiedDate;
+
+    @JsonIgnoreProperties(
+        value = { "instructor", "student", "course", "classSchedule", "gradeLevelPayables", "payments" },
+        allowSetters = true
+    )
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(unique = true)
     private AppConfig gender;
 
     @JsonIgnoreProperties(value = { "instructor", "student", "course" }, allowSetters = true)
@@ -181,6 +199,11 @@ public class Student extends AbstractAuditingEntity<Long> implements Serializabl
     @JoinColumn(unique = true)
     private User user;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "student")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "accountPayableses", "paymentses", "student" }, allowSetters = true)
+    private Set<Invoices> invoiceses = new HashSet<>();
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "rel_student__course_schedule",
@@ -188,8 +211,13 @@ public class Student extends AbstractAuditingEntity<Long> implements Serializabl
         inverseJoinColumns = @JoinColumn(name = "course_schedule_id")
     )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "terms", "year", "instructors", "students" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "terms", "year", "classSchedule", "students", "instructors" }, allowSetters = true)
     private Set<CourseSchedule> courseSchedules = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "student")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "year", "terms", "student" }, allowSetters = true)
+    private Set<Enrollment> enrollments = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -674,6 +702,58 @@ public class Student extends AbstractAuditingEntity<Long> implements Serializabl
         this.guardianContacts = guardianContacts;
     }
 
+    public String getCreatedBy() {
+        return this.createdBy;
+    }
+
+    public Student createdBy(String createdBy) {
+        this.setCreatedBy(createdBy);
+        return this;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedDate() {
+        return this.createdDate;
+    }
+
+    public Student createdDate(Instant createdDate) {
+        this.setCreatedDate(createdDate);
+        return this;
+    }
+
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public String getLastModifiedBy() {
+        return this.lastModifiedBy;
+    }
+
+    public Student lastModifiedBy(String lastModifiedBy) {
+        this.setLastModifiedBy(lastModifiedBy);
+        return this;
+    }
+
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
+
+    public Instant getLastModifiedDate() {
+        return this.lastModifiedDate;
+    }
+
+    public Student lastModifiedDate(Instant lastModifiedDate) {
+        this.setLastModifiedDate(lastModifiedDate);
+        return this;
+    }
+
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
     public AppConfig getGender() {
         return this.gender;
     }
@@ -712,6 +792,37 @@ public class Student extends AbstractAuditingEntity<Long> implements Serializabl
         return this;
     }
 
+    public Set<Invoices> getInvoiceses() {
+        return this.invoiceses;
+    }
+
+    public void setInvoiceses(Set<Invoices> invoiceses) {
+        if (this.invoiceses != null) {
+            this.invoiceses.forEach(i -> i.setStudent(null));
+        }
+        if (invoiceses != null) {
+            invoiceses.forEach(i -> i.setStudent(this));
+        }
+        this.invoiceses = invoiceses;
+    }
+
+    public Student invoiceses(Set<Invoices> invoiceses) {
+        this.setInvoiceses(invoiceses);
+        return this;
+    }
+
+    public Student addInvoices(Invoices invoices) {
+        this.invoiceses.add(invoices);
+        invoices.setStudent(this);
+        return this;
+    }
+
+    public Student removeInvoices(Invoices invoices) {
+        this.invoiceses.remove(invoices);
+        invoices.setStudent(null);
+        return this;
+    }
+
     public Set<CourseSchedule> getCourseSchedules() {
         return this.courseSchedules;
     }
@@ -732,6 +843,37 @@ public class Student extends AbstractAuditingEntity<Long> implements Serializabl
 
     public Student removeCourseSchedule(CourseSchedule courseSchedule) {
         this.courseSchedules.remove(courseSchedule);
+        return this;
+    }
+
+    public Set<Enrollment> getEnrollments() {
+        return this.enrollments;
+    }
+
+    public void setEnrollments(Set<Enrollment> enrollments) {
+        if (this.enrollments != null) {
+            this.enrollments.forEach(i -> i.setStudent(null));
+        }
+        if (enrollments != null) {
+            enrollments.forEach(i -> i.setStudent(this));
+        }
+        this.enrollments = enrollments;
+    }
+
+    public Student enrollments(Set<Enrollment> enrollments) {
+        this.setEnrollments(enrollments);
+        return this;
+    }
+
+    public Student addEnrollment(Enrollment enrollment) {
+        this.enrollments.add(enrollment);
+        enrollment.setStudent(this);
+        return this;
+    }
+
+    public Student removeEnrollment(Enrollment enrollment) {
+        this.enrollments.remove(enrollment);
+        enrollment.setStudent(null);
         return this;
     }
 

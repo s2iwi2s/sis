@@ -1,7 +1,6 @@
 {
   "annotations": {
-    "changelogDate": "20260706145819",
-    "enableAudit": true
+    "changelogDate": "20260706145819"
   },
   "applications": ["SchInfoSys"],
   "dto": "mapstruct",
@@ -65,6 +64,27 @@
       "relationshipName": "year",
       "relationshipSide": "left",
       "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "classSchedule",
+      "otherEntityRelationshipName": "courseSchedule",
+      "relationshipName": "classSchedule",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "student",
+      "otherEntityRelationshipName": "courseSchedule",
+      "relationshipName": "student",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "instructor",
+      "otherEntityRelationshipName": "courseSchedule",
+      "relationshipName": "instructor",
+      "relationshipSide": "right",
+      "relationshipType": "many-to-many"
     }
   ],
   "searchEngine": "no",

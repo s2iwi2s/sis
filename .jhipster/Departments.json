@@ -1,7 +1,6 @@
 {
   "annotations": {
-    "changelogDate": "20260706145919",
-    "enableAudit": true
+    "changelogDate": "20260706145919"
   },
   "applications": ["SchInfoSys"],
   "dto": "mapstruct",

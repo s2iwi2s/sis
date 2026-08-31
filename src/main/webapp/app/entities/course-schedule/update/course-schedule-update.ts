@@ -11,6 +11,8 @@ import { IAcademicTerms } from 'app/entities/academic-terms/academic-terms.model
 import { AcademicTermsService } from 'app/entities/academic-terms/service/academic-terms.service';
 import { IAcademicYear } from 'app/entities/academic-year/academic-year.model';
 import { AcademicYearService } from 'app/entities/academic-year/service/academic-year.service';
+import { IClassSchedule } from 'app/entities/class-schedule/class-schedule.model';
+import { ClassScheduleService } from 'app/entities/class-schedule/service/class-schedule.service';
 import { IInstructor } from 'app/entities/instructor/instructor.model';
 import { InstructorService } from 'app/entities/instructor/service/instructor.service';
 import { StudentService } from 'app/entities/student/service/student.service';
@@ -34,15 +36,17 @@ export class CourseScheduleUpdate implements OnInit {
 
   academicTermsesSharedCollection = signal<IAcademicTerms[]>([]);
   academicYearsSharedCollection = signal<IAcademicYear[]>([]);
-  instructorsSharedCollection = signal<IInstructor[]>([]);
+  classSchedulesSharedCollection = signal<IClassSchedule[]>([]);
   studentsSharedCollection = signal<IStudent[]>([]);
+  instructorsSharedCollection = signal<IInstructor[]>([]);
 
   protected courseScheduleService = inject(CourseScheduleService);
   protected courseScheduleFormService = inject(CourseScheduleFormService);
   protected academicTermsService = inject(AcademicTermsService);
   protected academicYearService = inject(AcademicYearService);
-  protected instructorService = inject(InstructorService);
+  protected classScheduleService = inject(ClassScheduleService);
   protected studentService = inject(StudentService);
+  protected instructorService = inject(InstructorService);
   protected activatedRoute = inject(ActivatedRoute);
 
   // eslint-disable-next-line @typescript-eslint/member-ordering
@@ -54,9 +58,12 @@ export class CourseScheduleUpdate implements OnInit {
   compareAcademicYear = (o1: IAcademicYear | null, o2: IAcademicYear | null): boolean =>
     this.academicYearService.compareAcademicYear(o1, o2);
 
-  compareInstructor = (o1: IInstructor | null, o2: IInstructor | null): boolean => this.instructorService.compareInstructor(o1, o2);
+  compareClassSchedule = (o1: IClassSchedule | null, o2: IClassSchedule | null): boolean =>
+    this.classScheduleService.compareClassSchedule(o1, o2);
 
   compareStudent = (o1: IStudent | null, o2: IStudent | null): boolean => this.studentService.compareStudent(o1, o2);
+
+  compareInstructor = (o1: IInstructor | null, o2: IInstructor | null): boolean => this.instructorService.compareInstructor(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ courseSchedule }) => {
@@ -112,11 +119,14 @@ export class CourseScheduleUpdate implements OnInit {
     this.academicYearsSharedCollection.update(academicYears =>
       this.academicYearService.addAcademicYearToCollectionIfMissing<IAcademicYear>(academicYears, courseSchedule.year),
     );
-    this.instructorsSharedCollection.update(instructors =>
-      this.instructorService.addInstructorToCollectionIfMissing<IInstructor>(instructors, ...(courseSchedule.instructors ?? [])),
+    this.classSchedulesSharedCollection.update(classSchedules =>
+      this.classScheduleService.addClassScheduleToCollectionIfMissing<IClassSchedule>(classSchedules, courseSchedule.classSchedule),
     );
     this.studentsSharedCollection.update(students =>
       this.studentService.addStudentToCollectionIfMissing<IStudent>(students, ...(courseSchedule.students ?? [])),
+    );
+    this.instructorsSharedCollection.update(instructors =>
+      this.instructorService.addInstructorToCollectionIfMissing<IInstructor>(instructors, ...(courseSchedule.instructors ?? [])),
     );
   }
 
@@ -141,15 +151,18 @@ export class CourseScheduleUpdate implements OnInit {
       )
       .subscribe((academicYears: IAcademicYear[]) => this.academicYearsSharedCollection.set(academicYears));
 
-    this.instructorService
+    this.classScheduleService
       .query()
-      .pipe(map((res: HttpResponse<IInstructor[]>) => res.body ?? []))
+      .pipe(map((res: HttpResponse<IClassSchedule[]>) => res.body ?? []))
       .pipe(
-        map((instructors: IInstructor[]) =>
-          this.instructorService.addInstructorToCollectionIfMissing<IInstructor>(instructors, ...(this.courseSchedule?.instructors ?? [])),
+        map((classSchedules: IClassSchedule[]) =>
+          this.classScheduleService.addClassScheduleToCollectionIfMissing<IClassSchedule>(
+            classSchedules,
+            this.courseSchedule?.classSchedule,
+          ),
         ),
       )
-      .subscribe((instructors: IInstructor[]) => this.instructorsSharedCollection.set(instructors));
+      .subscribe((classSchedules: IClassSchedule[]) => this.classSchedulesSharedCollection.set(classSchedules));
 
     this.studentService
       .query()
@@ -160,5 +173,15 @@ export class CourseScheduleUpdate implements OnInit {
         ),
       )
       .subscribe((students: IStudent[]) => this.studentsSharedCollection.set(students));
+
+    this.instructorService
+      .query()
+      .pipe(map((res: HttpResponse<IInstructor[]>) => res.body ?? []))
+      .pipe(
+        map((instructors: IInstructor[]) =>
+          this.instructorService.addInstructorToCollectionIfMissing<IInstructor>(instructors, ...(this.courseSchedule?.instructors ?? [])),
+        ),
+      )
+      .subscribe((instructors: IInstructor[]) => this.instructorsSharedCollection.set(instructors));
   }
 }

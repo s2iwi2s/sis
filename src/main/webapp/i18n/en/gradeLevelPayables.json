@@ -1,0 +1,26 @@
+{
+  "schInfoSysApp": {
+    "gradeLevelPayables": {
+      "home": {
+        "title": "Grade Level Payables",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Grade Level Payables",
+        "createOrEditLabel": "Create or edit a Grade Level Payables",
+        "notFound": "No Grade Level Payables found"
+      },
+      "created": "A new Grade Level Payables is created with identifier {{ param }}",
+      "updated": "A Grade Level Payables is updated with identifier {{ param }}",
+      "deleted": "A Grade Level Payables is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Grade Level Payables {{ id }}?"
+      },
+      "detail": {
+        "title": "Grade Level Payables"
+      },
+      "id": "ID",
+      "active": "Active",
+      "gradelevel": "Gradelevel",
+      "accountPayables": "Account Payables"
+    }
+  }
+}

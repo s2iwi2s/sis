@@ -61,7 +61,10 @@ public class Course implements Serializable {
     @Column(name = "last_modified_date")
     private Instant lastModifiedDate;
 
-    @JsonIgnoreProperties(value = { "instructor", "student", "course" }, allowSetters = true)
+    @JsonIgnoreProperties(
+        value = { "instructor", "student", "course", "classSchedule", "gradeLevelPayables", "payments" },
+        allowSetters = true
+    )
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private AppConfig gradelevel;

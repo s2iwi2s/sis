@@ -1,0 +1,70 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (payments(); as paymentsRef) {
+      <div>
+        <h2 data-cy="paymentsDetailsHeading"><span jhiTranslate="schInfoSysApp.payments.detail.title">Payments</span></h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ paymentsRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.payments.amount">Amount</span></dt>
+          <dd>
+            <span>{{ paymentsRef.amount }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.payments.transactionReference">Transaction Reference</span></dt>
+          <dd>
+            <span>{{ paymentsRef.transactionReference }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.payments.createdBy">Created By</span></dt>
+          <dd>
+            <span>{{ paymentsRef.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.payments.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ paymentsRef.createdDate | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.payments.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ paymentsRef.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.payments.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ paymentsRef.lastModifiedDate | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.payments.method">Method</span></dt>
+          <dd>
+            @if (payments()!.method) {
+              <div>
+                <a [routerLink]="['/app-config', payments()!.method?.id, 'view']">{{ paymentsRef.method?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.payments.invoices">Invoices</span></dt>
+          <dd>
+            @if (payments()!.invoices) {
+              <div>
+                <a [routerLink]="['/invoices', payments()!.invoices?.id, 'view']">{{ paymentsRef.invoices?.id }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/payments', paymentsRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

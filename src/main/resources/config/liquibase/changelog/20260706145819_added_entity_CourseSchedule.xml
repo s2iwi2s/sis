@@ -11,7 +11,7 @@
     -->
     <changeSet id="20260706145819-1" author="jhipster">
         <createTable tableName="course_schedule">
-            <column name="id" type="serial" incrementBy="1" startWith="3" valueSequenceNext="course_schedule_id_seq">
+            <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="room" type="varchar(50)">
@@ -29,12 +29,6 @@
             <column name="description" type="varchar(250)">
                 <constraints nullable="true" />
             </column>
-            <column name="terms_id" type="bigint">
-              <constraints nullable="true" />
-            </column>
-            <column name="year_id" type="bigint">
-              <constraints nullable="true" />
-            </column>
             <column name="created_by" type="varchar(50)">
                 <constraints nullable="true" />
             </column>
@@ -45,6 +39,15 @@
                 <constraints nullable="true" />
             </column>
             <column name="last_modified_date" type="${datetimeType}">
+                <constraints nullable="true" />
+            </column>
+            <column name="terms_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="year_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            <column name="class_schedule_id" type="bigint">
                 <constraints nullable="true" />
             </column>
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here -->
@@ -65,9 +68,9 @@
           This can be customized by adding or removing 'faker' in the 'spring.liquibase.contexts'
           Spring Boot configuration key.
     -->
-    <changeSet id="20260706145819-1-data" author="jhipster">
+    <changeSet id="20260706145819-1-data" author="jhipster" context="faker">
         <loadData
-                  file="../data/course_schedule.csv"
+                  file="../fake-data/course_schedule.csv"
                   relativeToChangelogFile="true"
                   separator=";"
                   tableName="course_schedule"
@@ -78,8 +81,6 @@
             <column name="start_time" type="date"/>
             <column name="end_time" type="date"/>
             <column name="description" type="string"/>
-            <column name="terms_id" type="numeric"/>
-            <column name="year_id" type="numeric"/>
             <column name="created_by" type="string"/>
             <column name="created_date" type="date"/>
             <column name="last_modified_by" type="string"/>

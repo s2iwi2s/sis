@@ -1,7 +1,6 @@
 {
   "annotations": {
-    "changelogDate": "20260706145519",
-    "enableAudit": true
+    "changelogDate": "20260706145519"
   },
   "applications": ["SchInfoSys"],
   "dto": "mapstruct",
@@ -78,6 +77,7 @@
     },
     {
       "otherEntityName": "courseSchedule",
+      "otherEntityRelationshipName": "instructor",
       "relationshipName": "courseSchedule",
       "relationshipSide": "left",
       "relationshipType": "many-to-many"

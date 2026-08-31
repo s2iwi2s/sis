@@ -1,0 +1,28 @@
+{
+  "schInfoSysApp": {
+    "classSchedule": {
+      "home": {
+        "title": "Class Schedules",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Class Schedule",
+        "createOrEditLabel": "Create or edit a Class Schedule",
+        "notFound": "No Class Schedules found"
+      },
+      "created": "A new Class Schedule is created with identifier {{ param }}",
+      "updated": "A Class Schedule is updated with identifier {{ param }}",
+      "deleted": "A Class Schedule is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Class Schedule {{ id }}?"
+      },
+      "detail": {
+        "title": "Class Schedule"
+      },
+      "id": "ID",
+      "name": "Name",
+      "gradelevel": "Gradelevel",
+      "courseSchedule": "Course Schedule",
+      "terms": "Terms",
+      "year": "Year"
+    }
+  }
+}

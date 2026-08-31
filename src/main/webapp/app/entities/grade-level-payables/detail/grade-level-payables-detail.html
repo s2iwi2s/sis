@@ -1,0 +1,46 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (gradeLevelPayables(); as gradeLevelPayablesRef) {
+      <div>
+        <h2 data-cy="gradeLevelPayablesDetailsHeading">
+          <span jhiTranslate="schInfoSysApp.gradeLevelPayables.detail.title">Grade Level Payables</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ gradeLevelPayablesRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.gradeLevelPayables.active">Active</span></dt>
+          <dd>
+            <span>{{ gradeLevelPayablesRef.active }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.gradeLevelPayables.gradelevel">Gradelevel</span></dt>
+          <dd>
+            @if (gradeLevelPayables()!.gradelevel) {
+              <div>
+                <a [routerLink]="['/app-config', gradeLevelPayables()!.gradelevel?.id, 'view']">{{
+                  gradeLevelPayablesRef.gradelevel?.id
+                }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/grade-level-payables', gradeLevelPayablesRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

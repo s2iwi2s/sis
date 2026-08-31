@@ -105,7 +105,7 @@ export class CourseScheduleService extends CourseSchedulesService {
     return o1 && o2 ? this.getCourseScheduleIdentifier(o1) === this.getCourseScheduleIdentifier(o2) : o1 === o2;
   }
 
-  addCourseScheduleToCollectionIfMissing<Type extends Pick<ICourseSchedule, 'id' | 'room' | 'startTime' | 'endTime'>>(
+  addCourseScheduleToCollectionIfMissing<Type extends Pick<ICourseSchedule, 'id'>>(
     courseScheduleCollection: Type[],
     ...courseSchedulesToCheck: (Type | null | undefined)[]
   ): Type[] {

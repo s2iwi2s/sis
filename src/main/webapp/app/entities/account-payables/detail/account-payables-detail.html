@@ -1,0 +1,86 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    @if (accountPayables(); as accountPayablesRef) {
+      <div>
+        <h2 data-cy="accountPayablesDetailsHeading">
+          <span jhiTranslate="schInfoSysApp.accountPayables.detail.title">Account Payables</span>
+        </h2>
+
+        <hr />
+
+        <jhi-alert-error />
+
+        <jhi-alert />
+
+        <dl class="row-md jh-entity-details">
+          <dt><span jhiTranslate="global.field.id">ID</span></dt>
+          <dd>
+            <span>{{ accountPayablesRef.id }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.accountPayables.name">Name</span></dt>
+          <dd>
+            <span>{{ accountPayablesRef.name }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.accountPayables.description">Description</span></dt>
+          <dd>
+            <span>{{ accountPayablesRef.description }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.accountPayables.amount">Amount</span></dt>
+          <dd>
+            <span>{{ accountPayablesRef.amount }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.accountPayables.priority">Priority</span></dt>
+          <dd>
+            <span>{{ accountPayablesRef.priority }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.accountPayables.active">Active</span></dt>
+          <dd>
+            <span>{{ accountPayablesRef.active }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.accountPayables.createdBy">Created By</span></dt>
+          <dd>
+            <span>{{ accountPayablesRef.createdBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.accountPayables.createdDate">Created Date</span></dt>
+          <dd>
+            <span>{{ accountPayablesRef.createdDate | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.accountPayables.lastModifiedBy">Last Modified By</span></dt>
+          <dd>
+            <span>{{ accountPayablesRef.lastModifiedBy }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.accountPayables.lastModifiedDate">Last Modified Date</span></dt>
+          <dd>
+            <span>{{ accountPayablesRef.lastModifiedDate | formatMediumDate }}</span>
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.accountPayables.invoices">Invoices</span></dt>
+          <dd>
+            @if (accountPayables()!.invoices) {
+              <div>
+                <a [routerLink]="['/invoices', accountPayables()!.invoices?.id, 'view']">{{ accountPayablesRef.invoices?.id }}</a>
+              </div>
+            }
+          </dd>
+          <dt><span jhiTranslate="schInfoSysApp.accountPayables.gradeLevelPayables">Grade Level Payables</span></dt>
+          <dd>
+            @if (accountPayables()!.gradeLevelPayables) {
+              <div>
+                <a [routerLink]="['/grade-level-payables', accountPayables()!.gradeLevelPayables?.id, 'view']">{{
+                  accountPayablesRef.gradeLevelPayables?.id
+                }}</a>
+              </div>
+            }
+          </dd>
+        </dl>
+
+        <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+          <fa-icon icon="arrow-left" />&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+        </button>
+
+        <button type="button" [routerLink]="['/account-payables', accountPayablesRef.id, 'edit']" class="btn btn-primary">
+          <fa-icon icon="pencil-alt" />&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+        </button>
+      </div>
+    }
+  </div>
+</div>

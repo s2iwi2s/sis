@@ -66,7 +66,10 @@ public class Instructor implements Serializable {
     @Column(name = "last_modified_date")
     private Instant lastModifiedDate;
 
-    @JsonIgnoreProperties(value = { "instructor", "student", "course" }, allowSetters = true)
+    @JsonIgnoreProperties(
+        value = { "instructor", "student", "course", "classSchedule", "gradeLevelPayables", "payments" },
+        allowSetters = true
+    )
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(unique = true)
     private AppConfig gender;
@@ -82,7 +85,7 @@ public class Instructor implements Serializable {
         inverseJoinColumns = @JoinColumn(name = "course_schedule_id")
     )
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "terms", "year", "instructors", "students" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "terms", "year", "classSchedule", "students", "instructors" }, allowSetters = true)
     private Set<CourseSchedule> courseSchedules = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here

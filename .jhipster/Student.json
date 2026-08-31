@@ -1,7 +1,6 @@
 {
   "annotations": {
-    "changelogDate": "20260706145619",
-    "enableAudit": true
+    "changelogDate": "20260706145619"
   },
   "applications": ["SchInfoSys"],
   "dto": "mapstruct",
@@ -219,10 +218,25 @@
       "relationshipWithBuiltInEntity": true
     },
     {
+      "otherEntityName": "invoices",
+      "otherEntityRelationshipName": "student",
+      "relationshipName": "invoices",
+      "relationshipSide": "left",
+      "relationshipType": "one-to-many"
+    },
+    {
       "otherEntityName": "courseSchedule",
+      "otherEntityRelationshipName": "student",
       "relationshipName": "courseSchedule",
       "relationshipSide": "left",
       "relationshipType": "many-to-many"
+    },
+    {
+      "otherEntityName": "enrollment",
+      "otherEntityRelationshipName": "student",
+      "relationshipName": "enrollment",
+      "relationshipSide": "right",
+      "relationshipType": "one-to-many"
     }
   ],
   "searchEngine": "no",

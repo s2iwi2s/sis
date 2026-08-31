@@ -2,6 +2,8 @@ package com.sis.domain;
 
 import static com.sis.domain.AppConfigTestSamples.*;
 import static com.sis.domain.CourseScheduleTestSamples.*;
+import static com.sis.domain.EnrollmentTestSamples.*;
+import static com.sis.domain.InvoicesTestSamples.*;
 import static com.sis.domain.StudentTestSamples.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,6 +41,28 @@ class StudentTest {
     }
 
     @Test
+    void invoicesTest() {
+        Student student = getStudentRandomSampleGenerator();
+        Invoices invoicesBack = getInvoicesRandomSampleGenerator();
+
+        student.addInvoices(invoicesBack);
+        assertThat(student.getInvoiceses()).containsOnly(invoicesBack);
+        assertThat(invoicesBack.getStudent()).isEqualTo(student);
+
+        student.removeInvoices(invoicesBack);
+        assertThat(student.getInvoiceses()).doesNotContain(invoicesBack);
+        assertThat(invoicesBack.getStudent()).isNull();
+
+        student.invoiceses(new HashSet<>(Set.of(invoicesBack)));
+        assertThat(student.getInvoiceses()).containsOnly(invoicesBack);
+        assertThat(invoicesBack.getStudent()).isEqualTo(student);
+
+        student.setInvoiceses(new HashSet<>());
+        assertThat(student.getInvoiceses()).doesNotContain(invoicesBack);
+        assertThat(invoicesBack.getStudent()).isNull();
+    }
+
+    @Test
     void courseScheduleTest() {
         Student student = getStudentRandomSampleGenerator();
         CourseSchedule courseScheduleBack = getCourseScheduleRandomSampleGenerator();
@@ -54,5 +78,27 @@ class StudentTest {
 
         student.setCourseSchedules(new HashSet<>());
         assertThat(student.getCourseSchedules()).doesNotContain(courseScheduleBack);
+    }
+
+    @Test
+    void enrollmentTest() {
+        Student student = getStudentRandomSampleGenerator();
+        Enrollment enrollmentBack = getEnrollmentRandomSampleGenerator();
+
+        student.addEnrollment(enrollmentBack);
+        assertThat(student.getEnrollments()).containsOnly(enrollmentBack);
+        assertThat(enrollmentBack.getStudent()).isEqualTo(student);
+
+        student.removeEnrollment(enrollmentBack);
+        assertThat(student.getEnrollments()).doesNotContain(enrollmentBack);
+        assertThat(enrollmentBack.getStudent()).isNull();
+
+        student.enrollments(new HashSet<>(Set.of(enrollmentBack)));
+        assertThat(student.getEnrollments()).containsOnly(enrollmentBack);
+        assertThat(enrollmentBack.getStudent()).isEqualTo(student);
+
+        student.setEnrollments(new HashSet<>());
+        assertThat(student.getEnrollments()).doesNotContain(enrollmentBack);
+        assertThat(enrollmentBack.getStudent()).isNull();
     }
 }

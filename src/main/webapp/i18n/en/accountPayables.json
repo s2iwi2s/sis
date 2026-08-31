@@ -1,0 +1,34 @@
+{
+  "schInfoSysApp": {
+    "accountPayables": {
+      "home": {
+        "title": "Account Payables",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Account Payables",
+        "createOrEditLabel": "Create or edit a Account Payables",
+        "notFound": "No Account Payables found"
+      },
+      "created": "A new Account Payables is created with identifier {{ param }}",
+      "updated": "A Account Payables is updated with identifier {{ param }}",
+      "deleted": "A Account Payables is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Account Payables {{ id }}?"
+      },
+      "detail": {
+        "title": "Account Payables"
+      },
+      "id": "ID",
+      "name": "Name",
+      "description": "Description",
+      "amount": "Amount",
+      "priority": "Priority",
+      "active": "Active",
+      "createdBy": "Created By",
+      "createdDate": "Created Date",
+      "lastModifiedBy": "Last Modified By",
+      "lastModifiedDate": "Last Modified Date",
+      "invoices": "Invoices",
+      "gradeLevelPayables": "Grade Level Payables"
+    }
+  }
+}

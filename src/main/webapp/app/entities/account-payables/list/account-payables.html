@@ -1,0 +1,203 @@
+<div>
+  <h2 id="page-heading" data-cy="AccountPayablesHeading">
+    <span jhiTranslate="schInfoSysApp.accountPayables.home.title">Account Payables</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading()">
+        <fa-icon icon="sync" [animation]="isLoading() ? 'spin' : undefined" />
+        <span jhiTranslate="schInfoSysApp.accountPayables.home.refreshListLabel">Refresh list</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-account-payables"
+        [routerLink]="['/account-payables/new']"
+      >
+        <fa-icon icon="plus" />
+        <span jhiTranslate="schInfoSysApp.accountPayables.home.createLabel">Create a new Account Payables</span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error />
+
+  <jhi-alert />
+
+  @if (accountPayableses().length === 0) {
+    <div class="alert alert-warning" id="no-result">
+      <span jhiTranslate="schInfoSysApp.accountPayables.home.notFound">No Account Payables found</span>
+    </div>
+  } @else {
+    <div class="table-responsive table-entities" id="entities">
+      <table class="table table-striped" aria-describedby="page-heading">
+        <thead>
+          <tr jhiSort [(sortState)]="sortState" (sortChange)="navigateToWithComponentValues($event)">
+            <th scope="col" jhiSortBy="id">
+              <div class="d-flex">
+                <span jhiTranslate="global.field.id">ID</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="name">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.accountPayables.name">Name</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="description">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.accountPayables.description">Description</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="amount">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.accountPayables.amount">Amount</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="priority">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.accountPayables.priority">Priority</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="active">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.accountPayables.active">Active</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.accountPayables.createdBy">Created By</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="createdDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.accountPayables.createdDate">Created Date</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedBy">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.accountPayables.lastModifiedBy">Last Modified By</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="lastModifiedDate">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.accountPayables.lastModifiedDate">Last Modified Date</span>
+
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="invoices.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.accountPayables.invoices">Invoices</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col" jhiSortBy="gradeLevelPayables.id">
+              <div class="d-flex">
+                <span jhiTranslate="schInfoSysApp.accountPayables.gradeLevelPayables">Grade Level Payables</span>
+                <fa-icon class="p-1" icon="sort" />
+              </div>
+            </th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (accountPayables of accountPayableses(); track trackId(accountPayables)) {
+            <tr data-cy="entityTable">
+              <td>
+                <a [routerLink]="['/account-payables', accountPayables.id, 'view']">{{ accountPayables.id }}</a>
+              </td>
+              <td>{{ accountPayables.name }}</td>
+              <td>{{ accountPayables.description }}</td>
+              <td>{{ accountPayables.amount }}</td>
+              <td>{{ accountPayables.priority }}</td>
+              <td>{{ accountPayables.active }}</td>
+              <td>{{ accountPayables.createdBy }}</td>
+              <td>{{ accountPayables.createdDate | formatMediumDate }}</td>
+              <td>{{ accountPayables.lastModifiedBy }}</td>
+              <td>{{ accountPayables.lastModifiedDate | formatMediumDate }}</td>
+              <td>
+                @if (accountPayables.invoices) {
+                  <div>
+                    <a [routerLink]="['/invoices', accountPayables.invoices.id, 'view']">{{ accountPayables.invoices.id }}</a>
+                  </div>
+                }
+              </td>
+              <td>
+                @if (accountPayables.gradeLevelPayables) {
+                  <div>
+                    <a [routerLink]="['/grade-level-payables', accountPayables.gradeLevelPayables.id, 'view']">{{
+                      accountPayables.gradeLevelPayables.id
+                    }}</a>
+                  </div>
+                }
+              </td>
+              <td class="text-end">
+                <div class="btn-group">
+                  <a
+                    [routerLink]="['/account-payables', accountPayables.id, 'view']"
+                    class="btn btn-info btn-sm"
+                    data-cy="entityDetailsButton"
+                  >
+                    <fa-icon icon="eye" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                  </a>
+
+                  <a
+                    [routerLink]="['/account-payables', accountPayables.id, 'edit']"
+                    class="btn btn-primary btn-sm"
+                    data-cy="entityEditButton"
+                  >
+                    <fa-icon icon="pencil-alt" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                  </a>
+
+                  <button type="submit" (click)="delete(accountPayables)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                    <fa-icon icon="times" />
+                    <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+  @if (accountPayableses().length > 0) {
+    <div>
+      <div class="d-flex justify-content-center">
+        <jhi-item-count [params]="{ page: page(), totalItems: totalItems(), itemsPerPage: itemsPerPage() }" />
+      </div>
+
+      <div class="d-flex justify-content-center">
+        <ngb-pagination
+          [collectionSize]="totalItems()"
+          [page]="page()"
+          [pageSize]="itemsPerPage()"
+          [maxSize]="5"
+          [rotate]="true"
+          [boundaryLinks]="true"
+          (pageChange)="navigateToPage($event)"
+        />
+      </div>
+    </div>
+  }
+</div>

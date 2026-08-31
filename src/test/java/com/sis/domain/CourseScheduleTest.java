@@ -2,6 +2,7 @@ package com.sis.domain;
 
 import static com.sis.domain.AcademicTermsTestSamples.*;
 import static com.sis.domain.AcademicYearTestSamples.*;
+import static com.sis.domain.ClassScheduleTestSamples.*;
 import static com.sis.domain.CourseScheduleTestSamples.*;
 import static com.sis.domain.InstructorTestSamples.*;
 import static com.sis.domain.StudentTestSamples.*;
@@ -53,25 +54,15 @@ class CourseScheduleTest {
     }
 
     @Test
-    void instructorTest() {
+    void classScheduleTest() {
         CourseSchedule courseSchedule = getCourseScheduleRandomSampleGenerator();
-        Instructor instructorBack = getInstructorRandomSampleGenerator();
+        ClassSchedule classScheduleBack = getClassScheduleRandomSampleGenerator();
 
-        courseSchedule.addInstructor(instructorBack);
-        assertThat(courseSchedule.getInstructors()).containsOnly(instructorBack);
-        assertThat(instructorBack.getCourseSchedules()).containsOnly(courseSchedule);
+        courseSchedule.setClassSchedule(classScheduleBack);
+        assertThat(courseSchedule.getClassSchedule()).isEqualTo(classScheduleBack);
 
-        courseSchedule.removeInstructor(instructorBack);
-        assertThat(courseSchedule.getInstructors()).doesNotContain(instructorBack);
-        assertThat(instructorBack.getCourseSchedules()).doesNotContain(courseSchedule);
-
-        courseSchedule.instructors(new HashSet<>(Set.of(instructorBack)));
-        assertThat(courseSchedule.getInstructors()).containsOnly(instructorBack);
-        assertThat(instructorBack.getCourseSchedules()).containsOnly(courseSchedule);
-
-        courseSchedule.setInstructors(new HashSet<>());
-        assertThat(courseSchedule.getInstructors()).doesNotContain(instructorBack);
-        assertThat(instructorBack.getCourseSchedules()).doesNotContain(courseSchedule);
+        courseSchedule.classSchedule(null);
+        assertThat(courseSchedule.getClassSchedule()).isNull();
     }
 
     @Test
@@ -94,5 +85,27 @@ class CourseScheduleTest {
         courseSchedule.setStudents(new HashSet<>());
         assertThat(courseSchedule.getStudents()).doesNotContain(studentBack);
         assertThat(studentBack.getCourseSchedules()).doesNotContain(courseSchedule);
+    }
+
+    @Test
+    void instructorTest() {
+        CourseSchedule courseSchedule = getCourseScheduleRandomSampleGenerator();
+        Instructor instructorBack = getInstructorRandomSampleGenerator();
+
+        courseSchedule.addInstructor(instructorBack);
+        assertThat(courseSchedule.getInstructors()).containsOnly(instructorBack);
+        assertThat(instructorBack.getCourseSchedules()).containsOnly(courseSchedule);
+
+        courseSchedule.removeInstructor(instructorBack);
+        assertThat(courseSchedule.getInstructors()).doesNotContain(instructorBack);
+        assertThat(instructorBack.getCourseSchedules()).doesNotContain(courseSchedule);
+
+        courseSchedule.instructors(new HashSet<>(Set.of(instructorBack)));
+        assertThat(courseSchedule.getInstructors()).containsOnly(instructorBack);
+        assertThat(instructorBack.getCourseSchedules()).containsOnly(courseSchedule);
+
+        courseSchedule.setInstructors(new HashSet<>());
+        assertThat(courseSchedule.getInstructors()).doesNotContain(instructorBack);
+        assertThat(instructorBack.getCourseSchedules()).doesNotContain(courseSchedule);
     }
 }
